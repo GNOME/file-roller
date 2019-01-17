@@ -16,23 +16,22 @@
 # Laurent Coudeur <laurentc@iol.ie>, 2011.
 # Bruno Brouard <annoa.b@gmail.com>, 2011-12
 # Alain Lojewski <allomervan@gmail.com>, 2011-2016
-# Charles Monzat <superboa@hotmail.fr>, 2018.
+# Charles Monzat <charles.monzat@numericable.fr>, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.HEAD\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=file-"
-"roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-03-05 14:55+0000\n"
-"PO-Revision-Date: 2018-04-18 23:15+0200\n"
-"Last-Translator: Charles Monzat <superboa@hotmail.fr>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
+"POT-Creation-Date: 2018-11-14 09:14+0000\n"
+"PO-Revision-Date: 2019-01-17 18:27+0100\n"
+"Last-Translator: Guillaume Bernard <associations@guillaume-bernard.fr>\n"
 "Language-Team: français <gnomefr@traduc.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 2.2\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -79,7 +78,7 @@ msgstr "les archives xz (.tar.xz)"
 msgid "Archive Manager"
 msgstr "Gestionnaire d’archives"
 
-# Utilisation de l'infinitif dans les infobulles du Bureau
+# Utilisation de l’infinitif dans les infobulles du Bureau
 #: data/org.gnome.FileRoller.desktop.in.in:4
 msgid "Create and modify an archive"
 msgstr "Créer et modifier des archives"
@@ -252,62 +251,62 @@ msgstr "Extraire vers…"
 msgid "Extract the selected archive"
 msgstr "Extraire l’archive sélectionnée"
 
-#: src/dlg-add.c:114
+#: src/dlg-add.c:96
 msgid "Could not add the files to the archive"
 msgstr "Impossible d’ajouter les fichiers à l’archive"
 
-#: src/dlg-add.c:115
+#: src/dlg-add.c:97
 #, c-format
 msgid "You don’t have the right permissions to read files from folder “%s”"
 msgstr "Vous n’avez pas la permission de lire les fichiers du dossier « %s »"
 
-#: src/dlg-add.c:182
+#: src/dlg-add.c:164
 msgctxt "Window title"
 msgid "Add Files"
 msgstr "Ajouter des fichiers"
 
-#: src/dlg-add.c:195
+#: src/dlg-add.c:177
 msgid "_Options"
 msgstr "_Options"
 
 #. load options
-#: src/dlg-add.c:204
+#: src/dlg-add.c:186
 msgctxt "Action"
 msgid "Load Options"
 msgstr "Charger les options"
 
 # Titre
 #. save options
-#: src/dlg-add.c:211
+#: src/dlg-add.c:193
 msgctxt "Action"
 msgid "Save Options"
 msgstr "Enregistrer les options"
 
 #. clear options
-#: src/dlg-add.c:218
+#: src/dlg-add.c:200
 msgid "Reset Options"
 msgstr "Réinitialiser les options"
 
-#: src/dlg-add.c:764
+#: src/dlg-add.c:746
 msgctxt "Window title"
 msgid "Load Options"
 msgstr "Charger les options"
 
-#: src/dlg-add.c:773
+#: src/dlg-add.c:755
 msgid "_Apply"
 msgstr "_Appliquer"
 
-#: src/dlg-add.c:774 src/dlg-delete.c:136
+#: src/dlg-add.c:756 src/dlg-delete.c:136
 msgid "_Delete"
 msgstr "_Supprimer"
 
 # Titre
-#: src/dlg-add.c:856
+#: src/dlg-add.c:838
 msgctxt "Window title"
 msgid "Save Options"
 msgstr "Enregistrer les options"
 
-#: src/dlg-add.c:857
+#: src/dlg-add.c:839
 msgid "_Options Name:"
 msgstr "Nom des _options :"
 
@@ -375,7 +374,7 @@ msgstr ""
 "Une erreur interne s’est produite en essayant de chercher des applications :"
 
 #: src/dlg-package-installer.c:296 src/dlg-package-installer.c:305
-#: src/dlg-package-installer.c:332 src/fr-archive.c:751 src/fr-window.c:4087
+#: src/dlg-package-installer.c:332 src/fr-archive.c:748 src/fr-window.c:4087
 #: src/fr-window.c:7640 src/fr-window.c:7997 src/fr-window.c:9512
 msgid "Archive type not supported."
 msgstr "Type d’archive non pris en charge."
@@ -427,7 +426,7 @@ msgstr[0] ""
 "perdues."
 msgstr[1] ""
 "%d fichiers ont été modifiés par une application extérieure. Si vous ne "
-"mettez pas à jour ces fichiers dans l’archive, toutes vos modifications "
+"mettez pas à jour les fichiers dans l’archive, toutes vos modifications "
 "seront perdues."
 
 #: src/dlg-update.c:190
@@ -530,15 +529,15 @@ msgstr "Extraire l’archive"
 msgid "— Create and modify an archive"
 msgstr "— Crée et modifie une archive"
 
-#: src/fr-archive.c:1852
+#: src/fr-archive.c:1849
 msgid "You don’t have the right permissions."
 msgstr "Vous n’avez pas les permissions nécessaires."
 
-#: src/fr-archive.c:1852
+#: src/fr-archive.c:1849
 msgid "This archive type cannot be modified"
 msgstr "Ce type d’archive ne peut pas être modifié"
 
-#: src/fr-archive.c:1866 src/fr-new-archive-dialog.c:475
+#: src/fr-archive.c:1863 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "Vous ne pouvez pas ajouter une archive dans elle-même."
 
@@ -586,42 +585,42 @@ msgstr "Archive introuvable"
 msgid "Could not load the location"
 msgstr "Impossible de charger l’emplacement"
 
-#: src/fr-new-archive-dialog.c:349 src/fr-new-archive-dialog.c:368
-#: src/fr-new-archive-dialog.c:384 src/fr-new-archive-dialog.c:433
-#: src/fr-new-archive-dialog.c:451 src/fr-new-archive-dialog.c:473
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:389 src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:456 src/fr-new-archive-dialog.c:478
 #: src/fr-window.c:3032
 msgid "Could not create the archive"
 msgstr "Impossible de créer l’archive"
 
-#: src/fr-new-archive-dialog.c:351 src/fr-new-archive-dialog.c:370
+#: src/fr-new-archive-dialog.c:356 src/fr-new-archive-dialog.c:375
 msgid "You have to specify an archive name."
 msgstr "Vous devez donner un nom à l’archive."
 
-#: src/fr-new-archive-dialog.c:435
+#: src/fr-new-archive-dialog.c:440
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Vous n’avez pas la permission de créer une archive dans ce dossier"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:453 src/fr-window.c:8311
+#: src/fr-new-archive-dialog.c:458 src/fr-window.c:8311
 msgid "New name is the same as old one, please type other name."
 msgstr "Le nouveau nom est identique à l’ancien, veuillez saisir un autre nom."
 
-#: src/fr-new-archive-dialog.c:496
+#: src/fr-new-archive-dialog.c:501
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Un fichier nommé « %s » existe déjà. Voulez-vous le remplacer ?"
 
-#: src/fr-new-archive-dialog.c:497
+#: src/fr-new-archive-dialog.c:502
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
 msgstr "Le fichier existe déjà dans « %s ». Le remplacer écrasera son contenu."
 
-#: src/fr-new-archive-dialog.c:503 src/fr-window.c:6758
+#: src/fr-new-archive-dialog.c:508 src/fr-window.c:6758
 msgid "_Replace"
 msgstr "_Remplacer"
 
-#: src/fr-new-archive-dialog.c:518
+#: src/fr-new-archive-dialog.c:523
 msgid "Could not delete the old archive."
 msgstr "Impossible de supprimer l’ancienne archive."
 
@@ -1026,7 +1025,7 @@ msgstr "C_oller"
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: src/glib-utils.c:769
+#: src/glib-utils.c:787
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
@@ -1186,7 +1185,7 @@ msgstr "Tout _sélectionner"
 
 #: src/ui/app-menubar.ui:89
 msgid "D_eselect All"
-msgstr "_Désélectionner tout"
+msgstr "Tout _désélectionner"
 
 #: src/ui/app-menubar.ui:94
 msgid "_Find"
@@ -1234,7 +1233,7 @@ msgstr "Ne p_as écraser les fichiers plus récents"
 
 #: src/ui/file-selector.ui:19
 msgid "Dese_lect All"
-msgstr "_Désélectionner tout"
+msgstr "Tout _désélectionner"
 
 #: src/ui/file-selector.ui:33
 msgid "Show Hidden Files"
@@ -1348,466 +1347,3 @@ msgstr "Nombre de fichiers :"
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "Sé_lectionnez les fichiers que vous souhaitez mettre à jour :"
-
-#~ msgid "Create a compressed archive with the selected objects"
-#~ msgstr "Créer une archive compressée avec les éléments sélectionnés"
-
-#~ msgid "_New Archive"
-#~ msgstr "_Nouvelle archive"
-
-#~ msgid "Password"
-#~ msgstr "Mot de passe"
-
-#~ msgid "File is not a valid .desktop file"
-#~ msgstr "Le fichier n'est pas un fichier .desktop valide"
-
-#~ msgid "Unrecognized desktop file Version '%s'"
-#~ msgstr "Version « %s » du fichier .desktop non reconnue"
-
-#~ msgid "Starting %s"
-#~ msgstr "Démarrage de %s"
-
-#~ msgid "Application does not accept documents on command line"
-#~ msgstr "L'application n'accepte pas les documents en ligne de commande"
-
-#~ msgid "Unrecognized launch option: %d"
-#~ msgstr "Option de lancement non reconnue : %d"
-
-#~ msgid "Can't pass documents to this desktop element"
-#~ msgstr "Impossible de passer des documents à cet élément de bureau"
-
-#~ msgid "Not a launchable item"
-#~ msgstr "L'élément ne peut pas être lancé"
-
-#~ msgid "Disable connection to session manager"
-#~ msgstr "Désactive la connexion au gestionnaire de sessions"
-
-#~ msgid "Specify file containing saved configuration"
-#~ msgstr "Indique le fichier contenant la configuration enregistrée"
-
-#~ msgid "FILE"
-#~ msgstr "FICHIER"
-
-#~ msgid "Specify session management ID"
-#~ msgstr "Indique l'ID de la gestion de sessions"
-
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#~ msgid "Session management options:"
-#~ msgstr "Options de gestion de sessions :"
-
-#~ msgid "Show session management options"
-#~ msgstr "Afficher les options de gestion de sessions"
-
-#~ msgid "Close"
-#~ msgstr "Fermer"
-
-#~ msgid "_Folders"
-#~ msgstr "_Dossiers"
-
-#~ msgid "_About Archive Manager"
-#~ msgstr "À pr_opos du gestionnaire d'archives"
-
-#~ msgid "Max history length"
-#~ msgstr "Longueur maximum de l'historique"
-
-#~ msgid "Max number of items in the 'Open Recents' submenu."
-#~ msgstr ""
-#~ "Nombre maximum d'éléments affichés dans le sous-menu « Récemment "
-#~ "ouverts »."
-
-#~ msgid "View statusbar"
-#~ msgstr "Afficher la barre d'état"
-
-#~ msgid "View the folders pane"
-#~ msgstr "Afficher le panneau des dossiers"
-
-#~ msgid "Whether to display the folders pane."
-#~ msgstr "Indique si le volet des dossiers doit être affiché."
-
-#~ msgid "%d object (%s)"
-#~ msgid_plural "%d objects (%s)"
-#~ msgstr[0] "%d objet (%s)"
-#~ msgstr[1] "%d objets (%s)"
-
-#~ msgid "%d object selected (%s)"
-#~ msgid_plural "%d objects selected (%s)"
-#~ msgstr[0] "%d objet sélectionné (%s)"
-#~ msgstr[1] "%d objets sélectionnés (%s)"
-
-#~ msgid "Open _Recent"
-#~ msgstr "Ré_cemment ouverts"
-
-#~ msgid "Open a recently used archive"
-#~ msgstr "Ouvre une archive récemment ouverte"
-
-#~ msgid "_Other Actions"
-#~ msgstr "_Autres actions"
-
-#~ msgid "Other actions"
-#~ msgstr "Autres actions"
-
-#~ msgid "Add files to an archive"
-#~ msgstr "Ajoute des fichiers à l'archive"
-
-#~ msgid "Information about the program"
-#~ msgstr "Informations à propos du programme"
-
-#~ msgid "Add files to the archive"
-#~ msgstr "Ajoute des fichiers à l'archive"
-
-#~ msgid "Close the current archive"
-#~ msgstr "Ferme l'archive actuelle"
-
-#~ msgid "Display the File Roller Manual"
-#~ msgstr "Affiche le manuel d'utilisation de File Roller"
-
-#~ msgid "Copy the selection"
-#~ msgstr "Copie l'élément sélectionné"
-
-#~ msgid "Cut the selection"
-#~ msgstr "Coupe l'élément sélectionné"
-
-#~ msgid "Paste the clipboard"
-#~ msgstr "Colle le contenu du presse-papiers"
-
-#~ msgid "Rename the selection"
-#~ msgstr "Renomme l'élément sélectionné"
-
-#~ msgid "Delete the selection from the archive"
-#~ msgstr "Supprime les éléments sélectionnés de l'archive"
-
-#~ msgid "Deselect all files"
-#~ msgstr "Désélectionne tous les fichiers"
-
-#~ msgid "Extract files from the archive"
-#~ msgstr "Extrait les fichiers de l'archive"
-
-#~ msgid "New…"
-#~ msgstr "Nouveau…"
-
-#~ msgid "Create a new archive"
-#~ msgstr "Crée une nouvelle archive"
-
-#~ msgid "Open archive"
-#~ msgstr "Ouvre une archive"
-
-#~ msgid "Open selected files with an application"
-#~ msgstr "Ouvre les fichiers sélectionnés avec une application"
-
-#~ msgid "Specify a password for this archive"
-#~ msgstr "Définit un mot de passe pour cette archive"
-
-#~ msgid "Show archive properties"
-#~ msgstr "Affiche les propriétés de l'archive"
-
-#~ msgid "Reload current archive"
-#~ msgstr "Recharge l'archive actuelle"
-
-#~ msgid "Save the current archive with a different name"
-#~ msgstr "Enregistre l'archive actuelle sous un nom différent"
-
-#~ msgid "Select all files"
-#~ msgstr "Sélectionne tous les fichiers"
-
-#~ msgid "Test whether the archive contains errors"
-#~ msgstr "Teste si l'archive contient des erreurs"
-
-#~ msgid "Open the selected file"
-#~ msgstr "Ouvre le fichier sélectionné"
-
-#~ msgid "Open the selected folder"
-#~ msgstr "Ouvre le dossier sélectionné"
-
-#~ msgid "Stat_usbar"
-#~ msgstr "Barre d'é_tat"
-
-#~ msgid "Find…"
-#~ msgstr "Rechercher…"
-
-#~ msgid "File System"
-#~ msgstr "Système de fichiers"
-
-#~ msgid "Places"
-#~ msgstr "Emplacements"
-
-#~ msgid "View toolbar"
-#~ msgstr "Afficher la barre d'outils"
-
-#~ msgid "Whether to display the toolbar."
-#~ msgstr "Indique s'il faut afficher la barre d'outils."
-
-#~ msgid "_Archive"
-#~ msgstr "Archi_ve"
-
-#~ msgid "_Arrange Files"
-#~ msgstr "Ran_ger les éléments"
-
-#~ msgid "_Toolbar"
-#~ msgstr "Barre d'_outils"
-
-#~ msgid "View the main toolbar"
-#~ msgstr "Affiche la barre d'outils principale"
-
-#~ msgid "Use mime icons"
-#~ msgstr "Utiliser les icônes MIME"
-
-#~ msgid ""
-#~ "If true will display icons depending on the file type (slower), otherwise "
-#~ "will use always the same icon for all files (faster)."
-#~ msgstr ""
-#~ "Si vrai, afficher les icônes en fonction du type de fichier (plus lent), "
-#~ "sinon utiliser la même icône pour tous les fichiers (plus rapide)."
-
-#~ msgid "Overwrite existing files"
-#~ msgstr "Écraser les fichiers existants"
-
-#~ msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
-#~ msgstr "<span weight=\"bold\" size=\"larger\">Mot de passe requis</span>"
-
-#~ msgid ""
-#~ "<i><b>Note:</b> the password will be used to encrypt files you add to the "
-#~ "current archive, and to decrypt files you extract from the current "
-#~ "archive. When the archive is closed the password will be deleted.</i>"
-#~ msgstr ""
-#~ "<i><b>Note :</b> le mot de passe sera utilisé pour chiffrer les fichiers "
-#~ "qui seront ajoutés à l'archive, et pour déchiffrer les fichiers que vous "
-#~ "extrairez de cette archive. Lorsque l'archive sera refermée le mot de "
-#~ "passe sera supprimé.</i>"
-
-#~ msgid "Add a Folder"
-#~ msgstr "Ajouter un dossier"
-
-#~ msgid "_Include subfolders"
-#~ msgstr "_Inclure les sous-dossiers"
-
-#~ msgid "Exclude folders that are symbolic lin_ks"
-#~ msgstr "Exclure les dossiers qui sont des _liens symboliques"
-
-#~ msgid "Sa_ve Options"
-#~ msgstr "_Enregistrer les options"
-
-#~ msgid ""
-#~ "The name \"%s\" is not valid because it cannot contain the characters: "
-#~ "%s\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Le nom « %s » n'est pas valide car il ne doit pas contenir les "
-#~ "caractères : %s\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You don't have the right permissions to create an archive in the "
-#~ "destination folder."
-#~ msgstr ""
-#~ "Vous n'avez pas la permission de créer une archive dans le dossier de "
-#~ "destination."
-
-#~ msgid "Archive not created"
-#~ msgstr "Archive non créée"
-
-#~ msgid "_Overwrite"
-#~ msgstr "É_craser"
-
-#~ msgid "Re-crea_te folders"
-#~ msgstr "_Recréer les dossiers"
-
-#~ msgid "Over_write existing files"
-#~ msgstr "É_craser les fichiers existants"
-
-#~ msgid "Do not e_xtract older files"
-#~ msgstr "Ne _pas extraire les fichiers plus anciens"
-
-#~ msgctxt "File"
-#~ msgid "New"
-#~ msgstr "Nouveau"
-
-#~ msgid "File _Format: %s"
-#~ msgstr "_Format de fichier : %s"
-
-#~ msgid "All Files"
-#~ msgstr "Tous les fichiers"
-
-#~ msgid "All Supported Files"
-#~ msgstr "Tous les fichiers pris en charge"
-
-#~ msgid "By Extension"
-#~ msgstr "Par extension"
-
-#~ msgid "File Format"
-#~ msgstr "Format de fichier"
-
-#~ msgid "Extension(s)"
-#~ msgstr "Extension(s)"
-
-#~ msgid ""
-#~ "The program was not able to find out the file format you want to use for `"
-#~ "%s'. Please make sure to use a known extension for that file or manually "
-#~ "choose a file format from the list below."
-#~ msgstr ""
-#~ "Le programme n'a pas réussi à trouver le format de fichier que vous "
-#~ "souhaitez utiliser pour « %s ». Assurez-vous d'utiliser une extension "
-#~ "connue pour ce fichier ou choisissez manuellement un format de fichier "
-#~ "dans la liste ci-dessous."
-
-#~ msgid "File format not recognized"
-#~ msgstr "Format de fichier non reconnu"
-
-#~ msgid "File not found."
-#~ msgstr "Fichier introuvable."
-
-#~ msgid "Adding file: "
-#~ msgstr "Ajout d'un fichier : "
-
-#~ msgid "Extracting file: "
-#~ msgstr "Extraction du fichier : "
-
-#~ msgid "7-Zip (.7z)"
-#~ msgstr "7-Zip (.7z)"
-
-#~ msgid "Tar compressed with 7z (.tar.7z)"
-#~ msgstr "Tar compressé avec 7z (.tar.7z)"
-
-#~ msgid "Ace (.ace)"
-#~ msgstr "Ace (.ace)"
-
-#~ msgid "Ar (.ar)"
-#~ msgstr "Ar (.ar)"
-
-#~ msgid "Arj (.arj)"
-#~ msgstr "Arj (.arj)"
-
-#~ msgid "Tar compressed with bzip2 (.tar.bz2)"
-#~ msgstr "Tar compressé avec bzip2 (.tar.bz2)"
-
-#~ msgid "Tar compressed with bzip (.tar.bz)"
-#~ msgstr "Tar compressé avec bzip (.tar.bz)"
-
-#~ msgid "Cabinet (.cab)"
-#~ msgstr "Cabinet (.cab)"
-
-#~ msgid "Rar Archived Comic Book (.cbr)"
-#~ msgstr "Archive de type Rar Comic Book (.cbr)"
-
-#~ msgid "Zip Archived Comic Book (.cbz)"
-#~ msgstr "Archive de type Zip Comic Book (.cbz)"
-
-#~ msgid "Tar compressed with gzip (.tar.gz)"
-#~ msgstr "Tar compressé avec gzip (.tar.gz)"
-
-#~ msgid "Ear (.ear)"
-#~ msgstr "Ear (.ear)"
-
-#~ msgid "Self-extracting zip (.exe)"
-#~ msgstr "Zip auto-extractible (.exe)"
-
-#~ msgid "Jar (.jar)"
-#~ msgstr "Jar (.jar)"
-
-#~ msgid "Lha (.lzh)"
-#~ msgstr "Lha (.lzh)"
-
-#~ msgid "Lrzip (.lrz)"
-#~ msgstr "Lrzip (.lrz)"
-
-#~ msgid "Tar compressed with lrzip (.tar.lrz)"
-#~ msgstr "Tar compressé avec lrzip (.tar.lrz)"
-
-#~ msgid "Tar compressed with lzip (.tar.lz)"
-#~ msgstr "Tar compressé avec lzip (.tar.lz)"
-
-#~ msgid "Tar compressed with lzma (.tar.lzma)"
-#~ msgstr "Tar compressé avec lzma (.tar.lzma)"
-
-#~ msgid "Tar compressed with lzop (.tar.lzo)"
-#~ msgstr "Tar compressé avec lzop (.tar.lzo)"
-
-#~ msgid "Windows Imaging Format (.wim)"
-#~ msgstr "Format Windows Imaging (.wim)"
-
-#~ msgid "Rar (.rar)"
-#~ msgstr "Rar (.rar)"
-
-#~ msgid "Tar uncompressed (.tar)"
-#~ msgstr "Tar non compressé (.tar)"
-
-#~ msgid "Tar compressed with compress (.tar.Z)"
-#~ msgstr "Tar compressé avec compress (.tar.Z)"
-
-#~ msgid "War (.war)"
-#~ msgstr "War (.war)"
-
-#~ msgid "Xz (.xz)"
-#~ msgstr "Xz (.xz)"
-
-#~ msgid "Tar compressed with xz (.tar.xz)"
-#~ msgstr "Tar compressé avec xz (.tar.xz)"
-
-#~ msgid "Zoo (.zoo)"
-#~ msgstr "Zoo (.zoo)"
-
-#~ msgid "Creating archive"
-#~ msgstr "Création de l'archive"
-
-#~ msgid "Loading archive"
-#~ msgstr "Chargement de l'archive"
-
-#~ msgid "Reading archive"
-#~ msgstr "Lecture de l'archive"
-
-#~ msgid "Testing archive"
-#~ msgstr "Test de l'archive"
-
-#~ msgid "Saving archive"
-#~ msgstr "Enregistrement de l'archive"
-
-#~ msgid "Close the folders pane"
-#~ msgstr "Ferme le panneau des dossiers"
-
-#~ msgid "Add a _Folder…"
-#~ msgstr "Ajouter un _dossier…"
-
-#~ msgid "Add a folder to the archive"
-#~ msgstr "Ajoute un dossier à l'archive"
-
-#~ msgid "Add Folder"
-#~ msgstr "Ajouter un dossier"
-
-#~ msgid "Stop current operation"
-#~ msgstr "Arrête l'opération en cours"
-
-#~ msgid "_Reversed Order"
-#~ msgstr "Ordre _inversé"
-
-#~ msgid "Reverse the list order"
-#~ msgstr "Inverse l'ordre de tri"
-
-#~ msgid "by _Name"
-#~ msgstr "par _nom"
-
-#~ msgid "by _Size"
-#~ msgstr "par _taille"
-
-#~ msgid "Sort file list by file size"
-#~ msgstr "Trie les fichiers par taille"
-
-#~ msgid "by T_ype"
-#~ msgstr "par t_ype"
-
-#~ msgid "Sort file list by type"
-#~ msgstr "Trie les fichiers par type"
-
-#~ msgid "by _Date Modified"
-#~ msgstr "par _date de modification"
-
-#~ msgid "Sort file list by modification time"
-#~ msgstr "Trie les fichiers par date de modification"
-
-#~ msgid "by _Location"
-#~ msgstr "par _emplacement"
-
-#~ msgid "Sort file list by location"
-#~ msgstr "Trie les fichiers par emplacement"
