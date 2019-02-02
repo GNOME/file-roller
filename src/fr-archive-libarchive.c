@@ -90,6 +90,9 @@ const char *libarchiver_mime_types[] = {
 	"application/x-tarz",
 	"application/x-xar",
 	"application/x-xz-compressed-tar",
+#if (ARCHIVE_VERSION_NUMBER >= 3003003)
+	"application/x-zstd-compressed-tar",
+#endif
 	"application/zip",
 	NULL
 };
@@ -1171,6 +1174,12 @@ _archive_write_set_format_from_context (struct archive *a,
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_XZ;
 	}
+#if (ARCHIVE_VERSION_NUMBER >= 3003003)
+	else if (_g_str_equal (mime_type, "application/x-zstd-compressed-tar")) {
+		archive_write_set_format_pax_restricted (a);
+		archive_filter = ARCHIVE_FILTER_ZSTD;
+	}
+#endif
 	else if (_g_str_equal (mime_type, "application/x-tar")) {
 		archive_write_add_filter_none (a);
 		archive_write_set_format_pax_restricted (a);
@@ -1225,6 +1234,11 @@ _archive_write_set_format_from_context (struct archive *a,
 		case ARCHIVE_FILTER_XZ:
 			archive_write_add_filter_xz (a);
 			break;
+#if (ARCHIVE_VERSION_NUMBER >= 3003003)
+		case ARCHIVE_FILTER_ZSTD:
+			archive_write_add_filter_zstd (a);
+			break;
+#endif
 		default:
 			break;
 		}
@@ -1232,19 +1246,40 @@ _archive_write_set_format_from_context (struct archive *a,
 		/* set the compression level */
 
 		compression_level = NULL;
-		switch (save_data->compression) {
-		case FR_COMPRESSION_VERY_FAST:
-			compression_level = "1";
-			break;
-		case FR_COMPRESSION_FAST:
-			compression_level = "3";
-			break;
-		case FR_COMPRESSION_NORMAL:
-			compression_level = "6";
-			break;
-		case FR_COMPRESSION_MAXIMUM:
-			compression_level = "9";
-			break;
+#if (ARCHIVE_VERSION_NUMBER >= 3003003)
+		if (archive_filter == ARCHIVE_FILTER_ZSTD) {
+			switch (save_data->compression) {
+			case FR_COMPRESSION_VERY_FAST:
+				compression_level = "1";
+				break;
+			case FR_COMPRESSION_FAST:
+				compression_level = "2";
+				break;
+			case FR_COMPRESSION_NORMAL:
+				compression_level = "3";
+				break;
+			case FR_COMPRESSION_MAXIMUM:
+				compression_level = "22";
+				break;
+			}
+		}
+		else
+#endif
+		{
+			switch (save_data->compression) {
+			case FR_COMPRESSION_VERY_FAST:
+				compression_level = "1";
+				break;
+			case FR_COMPRESSION_FAST:
+				compression_level = "3";
+				break;
+			case FR_COMPRESSION_NORMAL:
+				compression_level = "6";
+				break;
+			case FR_COMPRESSION_MAXIMUM:
+				compression_level = "9";
+				break;
+			}
 		}
 		if (compression_level != NULL)
 			archive_write_set_filter_option (a, NULL, "compression-level", compression_level);
