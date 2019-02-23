@@ -83,11 +83,11 @@ const char *libarchiver_mime_types[] = {
 	"application/x-lrzip-compressed-tar",
 	"application/x-lzip-compressed-tar",
 	"application/x-lzma-compressed-tar",
-	"application/x-lzop-compressed-tar",
 	"application/x-rar",
 	"application/x-rpm",
 	"application/x-tar",
 	"application/x-tarz",
+	"application/x-tzo",
 	"application/x-xar",
 	"application/x-xz-compressed-tar",
 	"application/zip",
@@ -1163,7 +1163,7 @@ _archive_write_set_format_from_context (struct archive *a,
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZMA;
 	}
-	else if (_g_str_equal (mime_type, "application/x-lzop-compressed-tar")) {
+	else if (_g_str_equal (mime_type, "application/x-tzo")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZOP;
 	}
