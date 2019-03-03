@@ -688,7 +688,8 @@ fr_window_enable_action (FrWindow   *window,
 	GAction *action;
 
 	action = g_action_map_lookup_action (G_ACTION_MAP (window), action_name);
-	g_object_set (action, "enabled", enabled, NULL);
+	if (action != NULL)
+		g_object_set (action, "enabled", enabled, NULL);
 }
 
 
@@ -700,7 +701,8 @@ fr_window_set_action_state (FrWindow   *window,
 	GAction *action;
 
 	action = g_action_map_lookup_action (G_ACTION_MAP (window), action_name);
-	g_simple_action_set_state (G_SIMPLE_ACTION (action), g_variant_new_boolean (active));
+	if (action != NULL)
+		g_simple_action_set_state (G_SIMPLE_ACTION (action), g_variant_new_boolean (active));
 }
 
 
@@ -741,6 +743,9 @@ fr_window_update_paste_command_sensitivity (FrWindow     *window,
 
 	if (clipboard == NULL)
 		clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window), _fr_window_get_clipboard_name (window));
+	if (clipboard == NULL)
+		return;
+
 	running    = window->priv->activity_ref > 0;
 	no_archive = (window->archive == NULL) || ! window->priv->archive_present;
 	ro         = ! no_archive && window->archive->read_only;
