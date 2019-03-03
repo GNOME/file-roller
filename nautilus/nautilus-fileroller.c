@@ -25,9 +25,7 @@
 #include <string.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
-#include <libnautilus-extension/nautilus-extension-types.h>
-#include <libnautilus-extension/nautilus-file-info.h>
-#include <libnautilus-extension/nautilus-menu-provider.h>
+#include <nautilus-extension.h>
 #include <locale.h>
 #include "nautilus-fileroller.h"
 
