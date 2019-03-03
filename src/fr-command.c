@@ -1389,7 +1389,7 @@ copy_remote_files (FrCommand           *self,
 	g_hash_table_destroy (created_folders);
 
 	xfer_data = g_new0 (XferData, 1);
-	xfer_data->archive = g_object_ref (self);
+	xfer_data->archive = g_object_ref (FR_ARCHIVE (self));
 	xfer_data->file_list = _g_object_list_ref (file_list);
 	xfer_data->base_dir = g_object_ref (base_dir);
 	xfer_data->dest_dir = g_strdup (dest_dir);
