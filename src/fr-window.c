@@ -5549,7 +5549,6 @@ fr_window_construct (FrWindow *window)
 	gtk_widget_show (window->priv->layout);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
-	gtk_window_set_has_resize_grip (GTK_WINDOW (window), TRUE);
 
 	g_signal_connect (G_OBJECT (window),
 			  "delete_event",
@@ -5646,7 +5645,6 @@ fr_window_construct (FrWindow *window)
 	g_object_set_data (G_OBJECT (window->priv->list_store), "FrWindow", window);
 	window->priv->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->priv->list_store));
 
-	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (window->priv->list_view), TRUE);
 	add_file_list_columns (window, GTK_TREE_VIEW (window->priv->list_view));
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (window->priv->list_view),
 					 TRUE);
