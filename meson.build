@@ -1,6 +1,6 @@
 project('file-roller', 'c',
   license : 'GPL2+',
-  version : '3.31.92',
+  version : '3.32.0',
   meson_version : '>=0.43'
 )
 
