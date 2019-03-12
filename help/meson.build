@@ -17,7 +17,6 @@ gnome.yelp('file-roller',
     'troubleshooting-password.page'
   ],
   media : [
-    'figures/file-roller-3-28.png',
     'figures/file-roller-icon.png'
   ]
 )
