@@ -4811,32 +4811,21 @@ key_press_cb (GtkWidget   *widget,
 	      gpointer     data)
 {
 	FrWindow *window = data;
-	gboolean  retval = FALSE;
+	gboolean  retval = GDK_EVENT_PROPAGATE;
 	gboolean  alt;
 
 	if (gtk_widget_has_focus (window->priv->location_entry))
-		return FALSE;
+		return GDK_EVENT_PROPAGATE;
 
-	if (gtk_widget_has_focus (window->priv->filter_entry)) {
-		switch (event->keyval) {
-		case GDK_KEY_Escape:
-			fr_window_deactivate_filter (window);
-			retval = TRUE;
-			break;
-		default:
-			break;
-		}
-		return retval;
-	}
+	if (gtk_widget_has_focus (window->priv->filter_entry))
+		return GDK_EVENT_PROPAGATE;
 
 	alt = (event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK;
 
 	switch (event->keyval) {
 	case GDK_KEY_Escape:
 		fr_window_stop (window);
-		if (window->priv->filter_mode)
-			fr_window_deactivate_filter (window);
-		retval = TRUE;
+		retval = GDK_EVENT_STOP;
 		break;
 
 	case GDK_KEY_F10:
@@ -4845,14 +4834,14 @@ key_press_cb (GtkWidget   *widget,
 
 			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
 			if (selection == NULL)
-				return FALSE;
+				return GDK_EVENT_PROPAGATE;
 
 			gtk_menu_popup (GTK_MENU (window->priv->file_popup_menu),
 					NULL, NULL, NULL,
 					window,
 					3,
 					GDK_CURRENT_TIME);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -4860,20 +4849,20 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_KP_Up:
 		if (alt) {
 			fr_window_go_up_one_level (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
 	case GDK_KEY_BackSpace:
 		fr_window_go_up_one_level (window);
-		retval = TRUE;
+		retval = GDK_EVENT_STOP;
 		break;
 
 	case GDK_KEY_Right:
 	case GDK_KEY_KP_Right:
 		if (alt) {
 			fr_window_go_forward (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -4881,22 +4870,22 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_KP_Left:
 		if (alt) {
 			fr_window_go_back (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
 	case GDK_KEY_Home:
 	case GDK_KEY_KP_Home:
 		if (alt) {
-			fr_window_go_to_location (window, "/", FALSE);
-			retval = TRUE;
+			fr_window_go_to_location (window, "/", GDK_EVENT_PROPAGATE);
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
 	case GDK_KEY_Delete:
 		if (! gtk_widget_has_focus (window->priv->filter_entry)) {
 			fr_window_activate_delete (NULL, NULL, window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -5435,6 +5424,12 @@ filter_entry_search_changed_cb (GtkEntry *entry,
 	fr_window_activate_filter (window);
 }
 
+static void
+filter_entry_stop_search_cb (GtkSearchEntry *entry,
+			     FrWindow *window)
+{
+	fr_window_deactivate_filter (window);
+}
 
 static void
 fr_window_attach (FrWindow      *window,
@@ -5719,6 +5714,10 @@ fr_window_construct (FrWindow *window)
 	g_signal_connect (G_OBJECT (window->priv->filter_entry),
 			  "search-changed",
 			  G_CALLBACK (filter_entry_search_changed_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->filter_entry),
+			  "stop-search",
+			  G_CALLBACK (filter_entry_stop_search_cb),
 			  window);
 	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (window->priv->filter_bar), GTK_ENTRY (window->priv->filter_entry));
 	gtk_container_add (GTK_CONTAINER (window->priv->filter_bar), filter_box);
