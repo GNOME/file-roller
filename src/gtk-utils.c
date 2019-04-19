@@ -737,7 +737,7 @@ accel_data_free (gpointer  user_data,
 }
 
 
-static void
+static gboolean
 window_accelerator_activated_cb (GtkAccelGroup	*accel_group,
 				 GObject		*object,
 				 guint		 key,
@@ -748,8 +748,12 @@ window_accelerator_activated_cb (GtkAccelGroup	*accel_group,
 	GAction   *action;
 
 	action = g_action_map_lookup_action (G_ACTION_MAP (accel_data->window), accel_data->action_name);
-	if (action != NULL)
+	if (action != NULL) {
 		g_action_activate (action, accel_data->target);
+		return GDK_EVENT_STOP;
+	}
+
+	return GDK_EVENT_PROPAGATE;
 }
 
 
