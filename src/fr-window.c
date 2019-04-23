@@ -4798,6 +4798,7 @@ key_press_cb (GtkWidget   *widget,
 	FrWindow *window = data;
 	gboolean  retval = GDK_EVENT_PROPAGATE;
 	gboolean  alt;
+	guint     modifiers;
 
 	if (gtk_widget_has_focus (window->priv->location_entry))
 		return GDK_EVENT_PROPAGATE;
@@ -4805,7 +4806,9 @@ key_press_cb (GtkWidget   *widget,
 	if (gtk_widget_has_focus (window->priv->filter_entry))
 		return GDK_EVENT_PROPAGATE;
 
-	alt = (event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK;
+	modifiers = gtk_accelerator_get_default_mod_mask ();
+
+	alt = (event->state & modifiers) == GDK_MOD1_MASK;
 
 	switch (event->keyval) {
 	case GDK_KEY_Escape:
@@ -4816,7 +4819,10 @@ key_press_cb (GtkWidget   *widget,
 		break;
 
 	case GDK_KEY_F10:
-		if (event->state & GDK_SHIFT_MASK) {
+	case GDK_KEY_Menu:
+		if ((event->keyval == GDK_KEY_Menu) ||
+		    ((event->keyval == GDK_KEY_F10) &&
+		     (event->state & modifiers) == GDK_SHIFT_MASK)) {
 			GtkTreeSelection *selection;
 			GList *selected_rows;
 			GtkTreePath *first_selected_row_path;
