@@ -4818,12 +4818,39 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_F10:
 		if (event->state & GDK_SHIFT_MASK) {
 			GtkTreeSelection *selection;
+			GList *selected_rows;
+			GtkTreePath *first_selected_row_path;
+			GtkTreeView *tree_view;
+			GdkRectangle rect;
+			GdkWindow   *win;
 
-			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
+			tree_view = GTK_TREE_VIEW (window->priv->list_view);
+			win = gtk_tree_view_get_bin_window (tree_view);
+
+			selection = gtk_tree_view_get_selection (tree_view);
+			selected_rows = gtk_tree_selection_get_selected_rows (selection,
+									      &window->priv->list_store);
 			if (selection == NULL)
 				return GDK_EVENT_PROPAGATE;
 
-			gtk_menu_popup_at_pointer (GTK_MENU (window->priv->file_popup_menu), (GdkEvent *) event);
+			if (selected_rows == NULL)
+				return GDK_EVENT_PROPAGATE;
+
+			first_selected_row_path = (GtkTreePath *) selected_rows->data;
+
+			gtk_tree_view_get_cell_area (tree_view,
+						     first_selected_row_path,
+						     NULL,
+						     &rect);
+
+			g_list_free_full (selected_rows, (GDestroyNotify) gtk_tree_path_free);
+
+			gtk_menu_popup_at_rect (GTK_MENU (window->priv->file_popup_menu),
+						win,
+						&rect,
+						GDK_GRAVITY_SOUTH_WEST,
+						GDK_GRAVITY_NORTH_WEST,
+						(const GdkEvent *) event);
 			retval = GDK_EVENT_STOP;
 		}
 		break;
