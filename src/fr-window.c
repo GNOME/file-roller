@@ -4811,17 +4811,17 @@ key_press_cb (GtkWidget   *widget,
 	      gpointer     data)
 {
 	FrWindow *window = data;
-	gboolean  retval = FALSE;
+	gboolean  retval = GDK_EVENT_PROPAGATE;
 	gboolean  alt;
 
 	if (gtk_widget_has_focus (window->priv->location_entry))
-		return FALSE;
+		return GDK_EVENT_PROPAGATE;
 
 	if (gtk_widget_has_focus (window->priv->filter_entry)) {
 		switch (event->keyval) {
 		case GDK_KEY_Escape:
 			fr_window_deactivate_filter (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 			break;
 		default:
 			break;
@@ -4836,7 +4836,7 @@ key_press_cb (GtkWidget   *widget,
 		fr_window_stop (window);
 		if (window->priv->filter_mode)
 			fr_window_deactivate_filter (window);
-		retval = TRUE;
+		retval = GDK_EVENT_STOP;
 		break;
 
 	case GDK_KEY_F10:
@@ -4845,14 +4845,14 @@ key_press_cb (GtkWidget   *widget,
 
 			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
 			if (selection == NULL)
-				return FALSE;
+				return GDK_EVENT_PROPAGATE;
 
 			gtk_menu_popup (GTK_MENU (window->priv->file_popup_menu),
 					NULL, NULL, NULL,
 					window,
 					3,
 					GDK_CURRENT_TIME);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -4860,20 +4860,20 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_KP_Up:
 		if (alt) {
 			fr_window_go_up_one_level (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
 	case GDK_KEY_BackSpace:
 		fr_window_go_up_one_level (window);
-		retval = TRUE;
+		retval = GDK_EVENT_STOP;
 		break;
 
 	case GDK_KEY_Right:
 	case GDK_KEY_KP_Right:
 		if (alt) {
 			fr_window_go_forward (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -4881,7 +4881,7 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_KP_Left:
 		if (alt) {
 			fr_window_go_back (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -4889,14 +4889,14 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_KP_Home:
 		if (alt) {
 			fr_window_go_to_location (window, "/", FALSE);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
 	case GDK_KEY_Delete:
 		if (! gtk_widget_has_focus (window->priv->filter_entry)) {
 			fr_window_activate_delete (NULL, NULL, window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
