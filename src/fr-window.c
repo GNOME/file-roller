@@ -4817,17 +4817,8 @@ key_press_cb (GtkWidget   *widget,
 	if (gtk_widget_has_focus (window->priv->location_entry))
 		return GDK_EVENT_PROPAGATE;
 
-	if (gtk_widget_has_focus (window->priv->filter_entry)) {
-		switch (event->keyval) {
-		case GDK_KEY_Escape:
-			fr_window_deactivate_filter (window);
-			retval = GDK_EVENT_STOP;
-			break;
-		default:
-			break;
-		}
-		return retval;
-	}
+	if (gtk_widget_has_focus (window->priv->filter_entry))
+		return GDK_EVENT_PROPAGATE;
 
 	alt = (event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK;
 
@@ -5435,6 +5426,12 @@ filter_entry_search_changed_cb (GtkEntry *entry,
 	fr_window_activate_filter (window);
 }
 
+static void
+filter_entry_stop_search_cb (GtkSearchEntry *entry,
+			     FrWindow *window)
+{
+	fr_window_deactivate_filter (window);
+}
 
 static void
 fr_window_attach (FrWindow      *window,
@@ -5719,6 +5716,10 @@ fr_window_construct (FrWindow *window)
 	g_signal_connect (G_OBJECT (window->priv->filter_entry),
 			  "search-changed",
 			  G_CALLBACK (filter_entry_search_changed_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->filter_entry),
+			  "stop-search",
+			  G_CALLBACK (filter_entry_stop_search_cb),
 			  window);
 	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (window->priv->filter_bar), GTK_ENTRY (window->priv->filter_entry));
 	gtk_container_add (GTK_CONTAINER (window->priv->filter_bar), filter_box);
