@@ -1,7 +1,7 @@
 project('file-roller', 'c',
   license : 'GPL2+',
   version : '3.32.1',
-  meson_version : '>=0.43'
+  meson_version : '>=0.50'
 )
 
 glib_version = '>=2.36'
