@@ -502,7 +502,7 @@ _gtk_show_help_dialog (GtkWindow  *parent,
 	GError *error = NULL;
 
 	uri = g_strconcat ("help:file-roller", section ? "?" : NULL, section, NULL);
-	if (! gtk_show_uri (gtk_window_get_screen (parent), uri, GDK_CURRENT_TIME, &error)) {
+	if (! gtk_show_uri_on_window (parent, uri, GDK_CURRENT_TIME, &error)) {
   		GtkWidget *dialog;
 
 		dialog = _gtk_message_dialog_new (parent,

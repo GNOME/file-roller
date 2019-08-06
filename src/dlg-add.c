@@ -73,6 +73,9 @@ file_selector_response_cb (GtkWidget    *widget,
 	const char  *exclude_folders;
 	GList       *files;
 
+	if (response == GTK_RESPONSE_NONE)
+		return TRUE;
+
 	dlg_add_folder_save_last_options (data);
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
@@ -207,11 +210,7 @@ dlg_add (FrWindow *window)
 	/* add the buttons */
 
 	if (! use_header)
-		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (data->dialog))),
-				    options_button,
-				    FALSE,
-				    FALSE,
-				    0);
+		gtk_dialog_add_action_widget (GTK_DIALOG (data->dialog), options_button, GTK_RESPONSE_NONE);
 
 	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
 			       _GTK_LABEL_CANCEL,

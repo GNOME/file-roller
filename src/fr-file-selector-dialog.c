@@ -574,13 +574,7 @@ files_treeview_button_press_event_cb (GtkWidget      *widget,
 	FrFileSelectorDialog *self = user_data;
 
 	if (event->button == 3) {
-		gtk_menu_popup (GTK_MENU (GET_WIDGET ("file_list_context_menu")),
-				NULL,
-				NULL,
-				NULL,
-				NULL,
-				event->button,
-				event->time);
+		gtk_menu_popup_at_pointer (GTK_MENU (GET_WIDGET ("file_list_context_menu")),  (GdkEvent *) event);
 
 		return TRUE;
 	}

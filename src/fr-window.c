@@ -2158,9 +2158,7 @@ show_folder (GtkWindow *parent_window,
 	char   *uri;
 
 	uri = g_file_get_uri (folder);
-	if (! gtk_show_uri (parent_window != NULL ? gtk_window_get_screen (parent_window) : NULL,
-			    uri,
-			    GDK_CURRENT_TIME, &error))
+	if (! gtk_show_uri_on_window (parent_window, uri, GDK_CURRENT_TIME, &error))
 	{
 		GtkWidget *d;
 		char      *utf8_name;
@@ -2567,7 +2565,6 @@ create_the_progress_dialog (FrWindow *window)
 	gtk_window_set_title (GTK_WINDOW (dialog), title);
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
 	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (gtk_dialog_get_action_area (GTK_DIALOG (dialog))), GTK_BUTTONBOX_EXPAND);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
 	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
@@ -3617,11 +3614,7 @@ dir_tree_button_press_cb (GtkWidget      *widget,
 				gtk_tree_selection_select_iter (selection, &iter);
 			}
 
-			gtk_menu_popup (GTK_MENU (window->priv->sidebar_folder_popup_menu),
-					NULL, NULL, NULL,
-					window,
-					event->button,
-					event->time);
+			gtk_menu_popup_at_pointer (GTK_MENU (window->priv->sidebar_folder_popup_menu), (GdkEvent *) event);
 		}
 		else
 			gtk_tree_selection_unselect_all (selection);
@@ -3809,17 +3802,9 @@ file_button_press_cb (GtkWidget      *widget,
 
 		n_selected = fr_window_get_n_selected_files (window);
 		if ((n_selected == 1) && selection_has_a_dir (window))
-			gtk_menu_popup (GTK_MENU (window->priv->folder_popup_menu),
-					NULL, NULL, NULL,
-					window,
-					event->button,
-					event->time);
+			gtk_menu_popup_at_pointer (GTK_MENU (window->priv->folder_popup_menu),  (GdkEvent *) event);
 		else
-			gtk_menu_popup (GTK_MENU (window->priv->file_popup_menu),
-					NULL, NULL, NULL,
-					window,
-					event->button,
-					event->time);
+			gtk_menu_popup_at_pointer (GTK_MENU (window->priv->file_popup_menu), (GdkEvent *) event);
 		return TRUE;
 	}
 	else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 1)) {
@@ -4847,11 +4832,7 @@ key_press_cb (GtkWidget   *widget,
 			if (selection == NULL)
 				return FALSE;
 
-			gtk_menu_popup (GTK_MENU (window->priv->file_popup_menu),
-					NULL, NULL, NULL,
-					window,
-					3,
-					GDK_CURRENT_TIME);
+			gtk_menu_popup_at_pointer (GTK_MENU (window->priv->file_popup_menu), (GdkEvent *) event);
 			retval = TRUE;
 		}
 		break;

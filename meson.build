@@ -5,7 +5,7 @@ project('file-roller', 'c',
 )
 
 glib_version = '>=2.36'
-gtk_version = '>=3.13.2'
+gtk_version = '>=3.22.0'
 nautilus_version = '>=2.22.2'
 json_glib_version = '>=0.14.0'
 libnotify_version = '>=0.4.3'
