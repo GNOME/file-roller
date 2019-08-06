@@ -274,6 +274,73 @@ load_data_read (struct archive  *a,
 }
 
 
+static gint64
+load_data_seek (struct archive *a,
+		void           *client_data,
+		gint64          request,
+		int             whence)
+{
+	GSeekable *seekable;
+	GSeekType  seektype;
+	off_t new_offset;
+
+	LoadData *load_data = client_data;
+
+	seekable = (GSeekable*)(load_data->istream);
+	if (load_data->error != NULL || load_data->istream == NULL)
+	return -1;
+
+	switch (whence) {
+		case SEEK_SET:
+			seektype = G_SEEK_SET;
+			break;
+		case SEEK_CUR:
+			seektype = G_SEEK_CUR;
+			break;
+		case SEEK_END:
+			seektype = G_SEEK_END;
+			break;
+		default:
+			return -1;
+	}
+
+	g_seekable_seek (seekable,
+			 request,
+			 seektype,
+			 load_data->cancellable,
+			 &load_data->error);
+	new_offset = g_seekable_tell (seekable);
+	if (load_data->error != NULL)
+		return -1;
+
+	return new_offset;
+}
+
+
+static gint64
+load_data_skip (struct archive *a,
+		void           *client_data,
+		gint64          request)
+{
+	GSeekable *seekable;
+	off_t old_offset, new_offset;
+
+	LoadData *load_data = client_data;
+
+	seekable = (GSeekable*)(load_data->istream);
+	if (load_data->error != NULL || load_data->istream == NULL)
+		return -1;
+
+	old_offset = g_seekable_tell (seekable);
+	new_offset = load_data_seek (a, client_data, request, SEEK_CUR);
+	if (new_offset > old_offset)
+		return (new_offset - old_offset);
+
+	return 0;
+}
+
+
+
 static int
 load_data_close (struct archive *a,
 		 void           *client_data)
@@ -289,6 +356,25 @@ load_data_close (struct archive *a,
 	}
 
 	return ARCHIVE_OK;
+}
+
+
+static int
+create_read_object (LoadData        *load_data,
+		    struct archive **a)
+{
+	*a = archive_read_new ();
+	archive_read_support_filter_all (*a);
+	archive_read_support_format_all (*a);
+
+	archive_read_set_open_callback (*a, load_data_open);
+	archive_read_set_read_callback (*a, load_data_read);
+	archive_read_set_close_callback (*a, load_data_close);
+	archive_read_set_seek_callback (*a, load_data_seek);
+	archive_read_set_skip_callback (*a, load_data_skip);
+	archive_read_set_callback_data (*a, load_data);
+
+	return archive_read_open1 (*a);
 }
 
 
@@ -349,10 +435,12 @@ list_archive_thread (GSimpleAsyncResult *result,
 	fr_archive_progress_set_total_bytes (load_data->archive,
 					     _g_file_get_size (fr_archive_get_file (load_data->archive), cancellable));
 
-	a = archive_read_new ();
-	archive_read_support_filter_all (a);
-	archive_read_support_format_all (a);
-	archive_read_open (a, load_data, load_data_open, load_data_read, load_data_close);
+	r = create_read_object (load_data, &a);
+	if (r != ARCHIVE_OK) {
+		archive_read_free(a);
+		return;
+	}
+
 	while ((r = archive_read_next_header (a, &entry)) == ARCHIVE_OK) {
 		FileData   *file_data;
 		const char *pathname;
@@ -620,15 +708,17 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	extract_data = g_simple_async_result_get_op_res_gpointer (result);
 	load_data = LOAD_DATA (extract_data);
 
+	r = create_read_object (load_data, &a);
+	if (r != ARCHIVE_OK) {
+		archive_read_free(a);
+		return;
+	}
+
 	checked_folders = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
 	created_files = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, g_object_unref);
 	folders_created_during_extraction = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
 	fr_archive_progress_set_total_files (load_data->archive, extract_data->n_files_to_extract);
 
-	a = archive_read_new ();
-	archive_read_support_filter_all (a);
-	archive_read_support_format_all (a);
-	archive_read_open (a, load_data, load_data_open, load_data_read, load_data_close);
 	while ((r = archive_read_next_header (a, &entry)) == ARCHIVE_OK) {
 		const char    *pathname;
 		char          *fullpath;
@@ -1436,10 +1526,7 @@ save_archive_thread (GSimpleAsyncResult *result,
 	archive_write_open (b, save_data, save_data_open, save_data_write, save_data_close);
 	archive_write_set_bytes_in_last_block (b, 1);
 
-	a = archive_read_new ();
-	archive_read_support_filter_all (a);
-	archive_read_support_format_all (a);
-	archive_read_open (a, load_data, load_data_open, load_data_read, load_data_close);
+	create_read_object (load_data, &a);
 
 	if (save_data->begin_operation != NULL)
 		save_data->begin_operation (save_data, save_data->user_data);
