@@ -1,0 +1,18 @@
+stages:
+  - build
+
+variables:
+  DEPENDENCIES: gcc meson ninja-build
+
+fedora:Werror:
+  image: fedora:latest
+  stage: build
+  before_script:
+    - dnf upgrade -y
+    - dnf install -y 'dnf-command(builddep)'
+    - dnf builddep -y file-roller
+    - dnf install -y $DEPENDENCIES
+  script:
+    - meson --werror _build
+    - meson test -C _build
+
