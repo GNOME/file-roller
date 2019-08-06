@@ -111,9 +111,13 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 
 	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 
-	/* write-only formats */
 	if (strcmp (mime_type, "application/x-7z-compressed") == 0) {
-		capabilities |= FR_ARCHIVE_CAN_WRITE;
+		if (_g_program_is_available ("7za", check_command) ||
+		    _g_program_is_available ("7zr", check_command) ||
+		    _g_program_is_available ("7z", check_command))
+			return capabilities;
+
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 		return capabilities;
 	}
 
