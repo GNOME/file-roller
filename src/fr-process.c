@@ -232,9 +232,6 @@ execute_data_free (ExecuteData *exec_data)
 /* -- FrProcess  -- */
 
 
-G_DEFINE_TYPE (FrProcess, fr_process, G_TYPE_OBJECT)
-
-
 enum {
 	STICKY_ONLY,
 	LAST_SIGNAL
@@ -266,6 +263,8 @@ struct _FrProcessPrivate {
 	ExecuteData *exec_data;
 };
 
+G_DEFINE_TYPE_WITH_PRIVATE (FrProcess, fr_process, G_TYPE_OBJECT)
+
 
 static void
 fr_process_finalize (GObject *object)
@@ -294,7 +293,6 @@ fr_process_class_init (FrProcessClass *klass)
 	GObjectClass *gobject_class;
 
 	fr_process_parent_class = g_type_class_peek_parent (klass);
-	g_type_class_add_private (klass, sizeof (FrProcessPrivate));
 
 	fr_process_signals[STICKY_ONLY] =
 		g_signal_new ("sticky_only",
@@ -313,7 +311,7 @@ fr_process_class_init (FrProcessClass *klass)
 static void
 fr_process_init (FrProcess *process)
 {
-	process->priv = G_TYPE_INSTANCE_GET_PRIVATE (process, FR_TYPE_PROCESS, FrProcessPrivate);
+	process->priv = fr_process_get_instance_private (process);
 
 	process->priv->comm = g_ptr_array_new ();
 	process->priv->n_comm = -1;

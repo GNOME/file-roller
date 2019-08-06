@@ -42,13 +42,13 @@
 #define FILE_ATTRIBUTES_NEEDED_BY_ARCHIVE_ENTRY ("standard::*,time::*,access::*,unix::*")
 
 
-G_DEFINE_TYPE (FrArchiveLibarchive, fr_archive_libarchive, FR_TYPE_ARCHIVE)
-
-
 struct _FrArchiveLibarchivePrivate {
 	gssize compressed_size;
 	gssize uncompressed_size;
 };
+
+
+G_DEFINE_TYPE_WITH_PRIVATE (FrArchiveLibarchive, fr_archive_libarchive, FR_TYPE_ARCHIVE)
 
 
 static void
@@ -2161,7 +2161,6 @@ fr_archive_libarchive_class_init (FrArchiveLibarchiveClass *klass)
 	FrArchiveClass *archive_class;
 
 	fr_archive_libarchive_parent_class = g_type_class_peek_parent (klass);
-	g_type_class_add_private (klass, sizeof (FrArchiveLibarchivePrivate));
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_archive_libarchive_finalize;
@@ -2186,7 +2185,7 @@ fr_archive_libarchive_init (FrArchiveLibarchive *self)
 {
 	FrArchive *base = FR_ARCHIVE (self);
 
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_ARCHIVE_LIBARCHIVE, FrArchiveLibarchivePrivate);
+	self->priv = fr_archive_libarchive_get_instance_private (self);
 
 	base->propAddCanReplace = TRUE;
 	base->propAddCanUpdate = TRUE;
