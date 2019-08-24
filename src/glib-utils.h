@@ -106,17 +106,6 @@ gboolean            _g_strv_remove                 (char               **str_arr
 void                _g_string_list_free            (GList               *path_list);
 GList *             _g_string_list_dup             (GList               *path_list);
 
-/* GPtrArray */
-
-GPtrArray *         _g_ptr_array_copy              (GPtrArray           *array);
-void                _g_ptr_array_free_full         (GPtrArray           *array,
-                       				    GFunc                func,
-                       				    gpointer             user_data);
-void                _g_ptr_array_reverse           (GPtrArray           *array);
-int                 _g_ptr_array_binary_search     (GPtrArray           *array,
-						    gpointer             value,
-						    GCompareFunc         func);
-
 /* GRegex */
 
 gboolean            _g_regexp_matchv               (GRegex             **regexps,

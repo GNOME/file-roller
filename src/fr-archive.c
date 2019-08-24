@@ -246,7 +246,7 @@ fr_archive_finalize (GObject *object)
 	}
 	g_mutex_clear (&archive->priv->progress_mutex);
 	g_hash_table_unref (archive->files_hash);
-	_g_ptr_array_free_full (archive->files, (GFunc) file_data_free, NULL);
+	g_ptr_array_unref (archive->files);
 	if (archive->priv->dropped_items_data != NULL) {
 		dropped_items_data_free (archive->priv->dropped_items_data);
 		archive->priv->dropped_items_data = NULL;
@@ -432,7 +432,7 @@ fr_archive_init (FrArchive *self)
 	self->priv = fr_archive_get_instance_private (self);
 
 	self->mime_type = NULL;
-	self->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
+	self->files = g_ptr_array_new_full (FILE_ARRAY_INITIAL_SIZE, (GDestroyNotify) file_data_free);
 	self->files_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	self->n_regular_files = 0;
         self->password = NULL;
@@ -854,8 +854,8 @@ fr_archive_list (FrArchive           *archive,
 
 	if (archive->files != NULL) {
 		g_hash_table_remove_all (archive->files_hash);
-		_g_ptr_array_free_full (archive->files, (GFunc) file_data_free, NULL);
-		archive->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
+		g_ptr_array_unref (archive->files);
+		archive->files = g_ptr_array_new_full (FILE_ARRAY_INITIAL_SIZE, (GDestroyNotify) file_data_free);
 		archive->n_regular_files = 0;
 	}
 
