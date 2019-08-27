@@ -1242,9 +1242,8 @@ fr_command_tar_get_capabilities (FrArchive  *archive,
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
 		char *try_command[5] = { "7zzs", "7zz", "7za", "7zr", "7z" };
-		int   i;
 
-		for (i = 0; i < G_N_ELEMENTS (try_command); i++) {
+		for (size_t i = 0; i < G_N_ELEMENTS (try_command); i++) {
 			if (_g_program_is_available (try_command[i], check_command)) {
 				capabilities |= FR_ARCHIVE_CAN_WRITE;
 				break;
@@ -1274,9 +1273,8 @@ fr_command_tar_set_mime_type (FrArchive  *archive,
 
 	if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
 		char *try_command[5] = { "7zzs", "7zz", "7za", "7zr", "7z" };
-		int   i;
 
-		for (i = 0; i < G_N_ELEMENTS (try_command); i++) {
+		for (size_t i = 0; i < G_N_ELEMENTS (try_command); i++) {
 			if (_g_program_is_in_path (try_command[i])) {
 				comm_tar->compress_command = g_strdup (try_command[i]);
 				break;

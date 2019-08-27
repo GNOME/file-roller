@@ -1511,9 +1511,7 @@ delete_from_archive (FrCommand *self,
 	/* file_list == NULL means delete all the files in the archive. */
 
 	if (file_list == NULL) {
-		int i;
-
-		for (i = 0; i < archive->files->len; i++) {
+		for (guint i = 0; i < archive->files->len; i++) {
 			FileData *fdata = g_ptr_array_index (archive->files, i);
 			file_list = g_list_prepend (file_list, fdata->original_path);
 		}
@@ -1807,7 +1805,7 @@ move_files_in_chunks (FrCommand  *self,
 {
 	GList *scan;
 	char  *temp_dir_path;
-	int    temp_dir_l;
+	size_t temp_dir_l;
 	char  *dest_dir;
 
 	temp_dir_path = g_file_get_path (temp_dir);
@@ -2036,7 +2034,7 @@ remove_files_contained_in_this_dir (GList *file_list,
 				    GList *dir_pointer)
 {
 	char  *dirname = dir_pointer->data;
-	int    dirname_l = strlen (dirname);
+	size_t dirname_l = strlen (dirname);
 	GList *scan;
 
 	for (scan = dir_pointer->next; scan; /* empty */) {
@@ -2099,10 +2097,8 @@ _fr_command_extract (FrCommand  *self,
 
 	extract_all = (file_list == NULL);
 	if (extract_all && (! all_options_supported || ! archive->propCanExtractAll)) {
-		int i;
-
 		file_list = NULL;
-		for (i = 0; i < archive->files->len; i++) {
+		for (guint i = 0; i < archive->files->len; i++) {
 			FileData *fdata = g_ptr_array_index (archive->files, i);
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}
@@ -2152,10 +2148,8 @@ _fr_command_extract (FrCommand  *self,
 				 && ! archive->propExtractCanJunkPaths)));
 
 	if (extract_all && ! file_list_created) {
-		int i;
-
 		file_list = NULL;
-		for (i = 0; i < archive->files->len; i++) {
+		for (guint i = 0; i < archive->files->len; i++) {
 			FileData *fdata = g_ptr_array_index (archive->files, i);
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}

@@ -948,7 +948,7 @@ _g_path_get_relative_basename (const char *path,
 			       const char *base_dir,
 			       gboolean    junk_paths)
 {
-	int         base_dir_len;
+	size_t      base_dir_len;
 	const char *base_path;
 
 	if (junk_paths)
@@ -1059,7 +1059,7 @@ gboolean
 _g_filename_has_extension (const char *filename,
 		   const char *ext)
 {
-	int filename_l, ext_l;
+	size_t filename_l, ext_l;
 
 	filename_l = strlen (filename);
 	ext_l = strlen (ext);
@@ -1136,9 +1136,7 @@ _g_mime_type_get_from_content (char  *buffer,
 		{ 0,  4, "\x28\xB5\x2F\xFD",                     "application/zstd"            },
 	};
 
-	int  i;
-
-	for (i = 0; i < G_N_ELEMENTS (magic_ids); i++) {
+	for (size_t i = 0; i < G_N_ELEMENTS (magic_ids); i++) {
 		const struct magic * const magic = &magic_ids[i];
 
 		if ((magic->off + magic->len) > buffer_size)
@@ -1382,7 +1380,7 @@ int
 _g_line_get_index_from_pattern (const char *line,
 				const char *pattern)
 {
-	int         line_l, pattern_l;
+	size_t      line_l, pattern_l;
 	const char *l;
 
 	line_l = strlen (line);

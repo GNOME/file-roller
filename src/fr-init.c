@@ -243,7 +243,6 @@ fr_registered_archive_new (GType command_type)
 	FrRegisteredArchive  *reg_com;
 	FrArchive            *archive;
 	const char          **mime_types;
-	int                   i;
 
 	reg_com = g_new0 (FrRegisteredArchive, 1);
 	reg_com->ref = 1;
@@ -253,7 +252,7 @@ fr_registered_archive_new (GType command_type)
 
 	archive = (FrArchive*) g_object_new (reg_com->type, NULL);
 	mime_types = fr_archive_get_supported_types (archive);
-	for (i = 0; mime_types[i] != NULL; i++) {
+	for (size_t i = 0; mime_types[i] != NULL; i++) {
 		const char         *mime_type;
 		FrMimeTypeCap      *cap;
 		FrMimeTypePackages *packages;
@@ -301,9 +300,7 @@ static FrArchiveCaps
 fr_registered_archive_get_capabilities (FrRegisteredArchive *reg_com,
 				        const char          *mime_type)
 {
-	int i;
-
-	for (i = 0; i < reg_com->caps->len; i++) {
+	for (guint i = 0; i < reg_com->caps->len; i++) {
 		FrMimeTypeCap *cap;
 
 		cap = g_ptr_array_index (reg_com->caps, i);
@@ -319,12 +316,10 @@ static FrArchiveCaps
 fr_registered_archive_get_potential_capabilities (FrRegisteredArchive *reg_com,
 						  const char          *mime_type)
 {
-	int i;
-
 	if (mime_type == NULL)
 		return FR_ARCHIVE_CAN_DO_NOTHING;
 
-	for (i = 0; i < reg_com->caps->len; i++) {
+	for (guint i = 0; i < reg_com->caps->len; i++) {
 		FrMimeTypeCap *cap;
 
 		cap = g_ptr_array_index (reg_com->caps, i);
@@ -348,9 +343,7 @@ register_archive (GType command_type)
 G_GNUC_UNUSED static gboolean
 unregister_archive (GType command_type)
 {
-	int i;
-
-	for (i = 0; i < Registered_Archives->len; i++) {
+	for (guint i = 0; i < Registered_Archives->len; i++) {
 		FrRegisteredArchive *archive;
 
 		archive = g_ptr_array_index (Registered_Archives, i);
@@ -407,12 +400,10 @@ GType
 get_archive_type_from_mime_type (const char    *mime_type,
 				 FrArchiveCaps  requested_capabilities)
 {
-	int i;
-
 	if (mime_type == NULL)
 		return 0;
 
-	for (i = 0; i < Registered_Archives->len; i++) {
+	for (guint i = 0; i < Registered_Archives->len; i++) {
 		FrRegisteredArchive *command;
 		FrArchiveCaps        capabilities;
 
@@ -432,9 +423,7 @@ GType
 get_preferred_archive_for_mime_type (const char    *mime_type,
 				     FrArchiveCaps  requested_capabilities)
 {
-	int i;
-
-	for (i = 0; i < Registered_Archives->len; i++) {
+	for (guint i = 0; i < Registered_Archives->len; i++) {
 		FrRegisteredArchive *archive;
 		FrArchiveCaps        capabilities;
 
@@ -453,18 +442,15 @@ get_preferred_archive_for_mime_type (const char    *mime_type,
 void
 update_registered_archives_capabilities (void)
 {
-	int i;
-
 	g_hash_table_remove_all (ProgramsCache);
 
-	for (i = 0; i < Registered_Archives->len; i++) {
+	for (guint i = 0; i < Registered_Archives->len; i++) {
 		FrRegisteredArchive *reg_com;
 		FrArchive           *archive;
-		int                  j;
 
 		reg_com = g_ptr_array_index (Registered_Archives, i);
 		archive = g_object_new (reg_com->type, NULL);
-		for (j = 0; j < reg_com->caps->len; j++) {
+		for (guint j = 0; j < reg_com->caps->len; j++) {
 			FrMimeTypeCap *cap = g_ptr_array_index (reg_com->caps, j);
 
 			cap->current_capabilities = fr_archive_get_capabilities (archive, cap->mime_type, TRUE);
@@ -599,14 +585,12 @@ static void
 compute_supported_archive_types (void)
 {
 	int sf_i = 0, s_i = 0, o_i = 0, c_i = 0;
-	int i;
 
-	for (i = 0; i < Registered_Archives->len; i++) {
+	for (guint i = 0; i < Registered_Archives->len; i++) {
 		FrRegisteredArchive *reg_com;
-		int                  j;
 
 		reg_com = g_ptr_array_index (Registered_Archives, i);
-		for (j = 0; j < reg_com->caps->len; j++) {
+		for (guint j = 0; j < reg_com->caps->len; j++) {
 			FrMimeTypeCap *cap;
 			int            idx;
 

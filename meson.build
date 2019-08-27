@@ -120,7 +120,7 @@ if get_option('buildtype').contains('debug')
     '-Wmissing-prototypes',
     '-Wnested-externs', 
     '-Wpointer-arith', 
-    '-Wno-sign-compare', 
+    '-Wsign-compare',
     '-Wformat-security'
   ]
 else

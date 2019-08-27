@@ -926,8 +926,7 @@ static gboolean
 fr_window_dir_exists_in_archive (FrWindow   *window,
 				 const char *dir_name)
 {
-	int dir_name_len;
-	int i;
+	size_t dir_name_len;
 
 	if (dir_name == NULL)
 		return FALSE;
@@ -939,7 +938,7 @@ fr_window_dir_exists_in_archive (FrWindow   *window,
 	if (strcmp (dir_name, "/") == 0)
 		return TRUE;
 
-	for (i = 0; i < window->archive->files->len; i++) {
+	for (guint i = 0; i < window->archive->files->len; i++) {
 		FileData *fdata = g_ptr_array_index (window->archive->files, i);
 
 		if (strncmp (dir_name, fdata->full_path, dir_name_len) == 0) {
@@ -1174,11 +1173,10 @@ static GPtrArray *
 fr_window_get_current_dir_list (FrWindow *window)
 {
 	GPtrArray *files;
-	int        i;
 
 	files = g_ptr_array_sized_new (128);
 
-	for (i = 0; i < window->archive->files->len; i++) {
+	for (guint i = 0; i < window->archive->files->len; i++) {
 		FileData *fdata = g_ptr_array_index (window->archive->files, i);
 
 		if (fdata->list_name == NULL)
@@ -1225,14 +1223,13 @@ get_dir_size (FrWindow   *window,
 {
 	guint64  size;
 	char    *dirname;
-	int      dirname_l;
-	int      i;
+	size_t   dirname_l;
 
 	dirname = g_strconcat (current_dir, name, "/", NULL);
 	dirname_l = strlen (dirname);
 
 	size = 0;
-	for (i = 0; i < window->archive->files->len; i++) {
+	for (guint i = 0; i < window->archive->files->len; i++) {
 		FileData *fd = g_ptr_array_index (window->archive->files, i);
 
 		if (strncmp (dirname, fd->full_path, dirname_l) == 0)
@@ -1265,7 +1262,7 @@ compute_file_list_name (FrWindow   *window,
 			GRegex     *filter,
 			FileData   *fdata,
 			const char *current_dir,
-			int         current_dir_len,
+			size_t      current_dir_len,
 			GHashTable *names_hash,
 			gboolean   *different_name)
 {
@@ -1350,10 +1347,9 @@ fr_window_compute_list_names (FrWindow  *window,
 			      GPtrArray *files)
 {
 	const char *current_dir;
-	int         current_dir_len;
+	size_t      current_dir_len;
 	GHashTable *names_hash;
 	GRegex     *filter;
-	int         i;
 	gboolean    visible_list_started = FALSE;
 	gboolean    visible_list_completed = FALSE;
 	gboolean    different_name;
@@ -1363,7 +1359,7 @@ fr_window_compute_list_names (FrWindow  *window,
 	names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
 	filter = _fr_window_create_filter (window);
-	for (i = 0; i < files->len; i++) {
+	for (guint i = 0; i < files->len; i++) {
 		FileData *fdata = g_ptr_array_index (files, i);
 
 		file_data_set_list_name (fdata, NULL);
@@ -1521,7 +1517,6 @@ fr_window_populate_file_list (FrWindow  *window,
 {
 	int         sort_column_id;
 	GtkSortType order;
-	int         i;
 
 	if (! gtk_widget_get_realized (GTK_WIDGET (window))) {
 		_fr_window_stop_activity_mode (window);
@@ -1538,7 +1533,7 @@ fr_window_populate_file_list (FrWindow  *window,
 	 				      GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
 	 				      0);
 
-	for (i = 0; i < files->len; i++) {
+	for (guint i = 0; i < files->len; i++) {
 		FileData    *fdata = g_ptr_array_index (files, i);
 		GtkTreeIter  iter;
 		GdkPixbuf   *icon, *emblem;
@@ -1742,7 +1737,6 @@ fr_window_update_dir_tree (FrWindow *window)
 	GPtrArray  *dirs;
 	GRegex     *filter;
 	GHashTable *dir_cache;
-	int         i;
 	GdkPixbuf  *icon;
 
 	if (! gtk_widget_get_realized (GTK_WIDGET (window)))
@@ -1773,7 +1767,7 @@ fr_window_update_dir_tree (FrWindow *window)
 
 	filter = _fr_window_create_filter (window);
 	dir_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, NULL);
-	for (i = 0; i < window->archive->files->len; i++) {
+	for (guint i = 0; i < window->archive->files->len; i++) {
 		FileData *fdata = g_ptr_array_index (window->archive->files, i);
 		char     *dir;
 
@@ -1832,7 +1826,7 @@ fr_window_update_dir_tree (FrWindow *window)
 	/**/
 
 	icon = get_mime_type_icon (window, MIME_TYPE_DIRECTORY);
-	for (i = 0; i < dirs->len; i++) {
+	for (guint i = 0; i < dirs->len; i++) {
 		char        *dir = g_ptr_array_index (dirs, i);
 		char        *parent_dir;
 		GtkTreePath *parent_path;
@@ -3270,16 +3264,15 @@ get_dir_list_from_path (FrWindow *window,
 	      		char     *path)
 {
 	char  *dirname;
-	int    dirname_l;
+	size_t dirname_l;
 	GList *list = NULL;
-	int    i;
 
 	if (path[strlen (path) - 1] != '/')
 		dirname = g_strconcat (path, "/", NULL);
 	else
 		dirname = g_strdup (path);
 	dirname_l = strlen (dirname);
-	for (i = 0; i < window->archive->files->len; i++) {
+	for (guint i = 0; i < window->archive->files->len; i++) {
 		FileData *fd = g_ptr_array_index (window->archive->files, i);
 		gboolean  matches = FALSE;
 
@@ -3288,7 +3281,7 @@ get_dir_list_from_path (FrWindow *window,
 #endif
 
 		if (fd->dir) {
-			int full_path_l = strlen (fd->full_path);
+			size_t full_path_l = strlen (fd->full_path);
 			if ((full_path_l == dirname_l - 1) && (strncmp (dirname, fd->full_path, full_path_l) == 0))
 				/* example: dirname is '/path/to/dir/' and fd->full_path is '/path/to/dir' */
 				matches = TRUE;
@@ -3475,13 +3468,12 @@ fr_window_get_file_list_pattern (FrWindow    *window,
 {
 	GRegex **regexps;
 	GList   *list;
-	int      i;
 
 	g_return_val_if_fail (window != NULL, NULL);
 
 	regexps = _g_regexp_split_from_patterns (pattern, G_REGEX_CASELESS);
 	list = NULL;
-	for (i = 0; i < window->archive->files->len; i++) {
+	for (guint i = 0; i < window->archive->files->len; i++) {
 		FileData *fd = g_ptr_array_index (window->archive->files, i);
 		char     *utf8_name;
 
@@ -3503,12 +3495,11 @@ static GList *
 fr_window_get_file_list (FrWindow *window)
 {
 	GList *list;
-	int    i;
 
 	g_return_val_if_fail (window != NULL, NULL);
 
 	list = NULL;
-	for (i = 0; i < window->archive->files->len; i++) {
+	for (guint i = 0; i < window->archive->files->len; i++) {
 		FileData *fd = g_ptr_array_index (window->archive->files, i);
 		list = g_list_prepend (list, g_strdup (fd->original_path));
 	}
@@ -3941,13 +3932,12 @@ get_file_list_from_selection_data (char *uri_list)
 {
 	GList  *list = NULL;
 	char  **uris;
-	int     i;
 
 	if (uri_list == NULL)
 		return NULL;
 
 	uris = g_uri_list_extract_uris (uri_list);
-	for (i = 0; uris[i] != NULL; i++)
+	for (size_t i = 0; uris[i] != NULL; i++)
 		list = g_list_prepend (list, g_file_new_for_uri (uris[i]));
 	g_strfreev (uris);
 
@@ -3985,7 +3975,6 @@ get_clipboard_data_from_selection_data (FrWindow   *window,
 {
 	FrClipboardData  *clipboard_data;
 	char            **uris;
-	int               i;
 
 	clipboard_data = fr_clipboard_data_new ();
 
@@ -3998,7 +3987,7 @@ get_clipboard_data_from_selection_data (FrWindow   *window,
 		clipboard_data->password = g_strdup (uris[1]);
 	clipboard_data->op = (strcmp (uris[2], "copy") == 0) ? FR_CLIPBOARD_OP_COPY : FR_CLIPBOARD_OP_CUT;
 	clipboard_data->base_dir = g_strdup (uris[3]);
-	for (i = 4; uris[i] != NULL; i++)
+	for (size_t i = 4; uris[i] != NULL; i++)
 		if (uris[i][0] != '\0')
 			clipboard_data->files = g_list_prepend (clipboard_data->files, g_strdup (uris[i]));
 	clipboard_data->files = g_list_reverse (clipboard_data->files);
@@ -4992,7 +4981,7 @@ add_file_list_columns (FrWindow    *window,
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
 	GValue             value = { 0, };
-	int                i, j, w;
+	int                w;
 
 	/* First column. */
 
@@ -5048,7 +5037,7 @@ add_file_list_columns (FrWindow    *window,
 
 	/* Other columns */
 
-	for (j = 0, i = COLUMN_SIZE; i < NUMBER_OF_COLUMNS; i++, j++) {
+	for (guint j = 0, i = COLUMN_SIZE; i < NUMBER_OF_COLUMNS; i++, j++) {
 		GValue  value = { 0, };
 
 		renderer = gtk_cell_renderer_text_new ();
@@ -6403,10 +6392,9 @@ archive_extraction_ready_cb (GObject      *source_object,
 
 		GHashTable *names_hash;
 		gboolean    stop = FALSE;
-		int         i;
 
 		names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-		for (i = 0; ! stop && (i < window->archive->files->len); i++) {
+		for (guint i = 0; ! stop && (i < window->archive->files->len); i++) {
 			FileData *fdata = g_ptr_array_index (window->archive->files, i);
 			char     *first_level;
 			char     *second_slash;
@@ -6740,9 +6728,7 @@ archive_is_encrypted (FrWindow *window,
 	gboolean encrypted = FALSE;
 
 	if (file_list == NULL) {
-		int i;
-
-		for (i = 0; ! encrypted && i < window->archive->files->len; i++) {
+		for (guint i = 0; ! encrypted && i < window->archive->files->len; i++) {
 			FileData *fdata = g_ptr_array_index (window->archive->files, i);
 
 			if (fdata->encrypted)
@@ -6913,11 +6899,11 @@ _archive_extraction_generates_a_tarbomb (FrArchive *archive)
 {
 	gboolean    tarbomb = FALSE;
 	GHashTable *names_hash;
-	int         n_toplevel_items, i;
+	guint         n_toplevel_items;
 
 	names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	n_toplevel_items = 0;
-	for (i = 0; ! tarbomb && (i < archive->files->len); i++) {
+	for (guint i = 0; ! tarbomb && (i < archive->files->len); i++) {
 		FileData *fdata = g_ptr_array_index (archive->files, i);
 		char     *second_separator;
 		char     *name = NULL;
@@ -8218,16 +8204,15 @@ name_is_present (FrWindow    *window,
 		 char       **reason)
 {
 	gboolean  retval = FALSE;
-	int       i;
 	char     *new_filename;
-	int       new_filename_l;
+	size_t    new_filename_l;
 
 	*reason = NULL;
 
 	new_filename = g_build_filename (current_dir, new_name, NULL);
 	new_filename_l = strlen (new_filename);
 
-	for (i = 0; i < window->archive->files->len; i++) {
+	for (guint i = 0; i < window->archive->files->len; i++) {
 		FileData   *fdata = g_ptr_array_index (window->archive->files, i);
 		const char *filename = fdata->full_path;
 

@@ -250,7 +250,6 @@ get_package_name_from_class_file (char *fname)
 	guint16        length = 0, end = 0, utf_index = 0;
 	guint32        magic;
 	guint16        major, minor, count;
-	int            i = 0;
 
 	if (! g_file_test (fname, G_FILE_TEST_EXISTS))
 		return NULL;
@@ -260,7 +259,7 @@ get_package_name_from_class_file (char *fname)
 	if (cfile->fd == -1)
 		return close_and_exit (cfile);
 
-	if ((i = read (cfile->fd, &magic, 4)) != 4)
+	if (read (cfile->fd, &magic, 4) != 4)
 		return close_and_exit (cfile);
 	cfile->magic_no = GUINT32_FROM_BE (magic);
 
@@ -287,7 +286,7 @@ get_package_name_from_class_file (char *fname)
 
 	/* now search for the class structure with index = cfile->this_class */
 
-	for (i = 0; (i < g_slist_length (cfile->const_pool_class)) && (utf_index == 0); i++ ) {
+	for (guint i = 0; (i < g_slist_length (cfile->const_pool_class)) && (utf_index == 0); i++ ) {
 		struct class_info *class = g_slist_nth_data (cfile->const_pool_class, i);
 		if (class->index == cfile->this_class)
 			utf_index = class->name_index; /* terminates loop */
@@ -295,7 +294,7 @@ get_package_name_from_class_file (char *fname)
 
 	/* now search for the utf8 string with index = utf_index */
 
-	for (i = 0; i < g_slist_length (cfile->const_pool_utf); i++) {
+	for (guint i = 0; i < g_slist_length (cfile->const_pool_utf); i++) {
 		struct utf_string *data = g_slist_nth_data (cfile->const_pool_utf, i);
 		if (data->index == utf_index) {
 			package = g_strndup (data->str, data->length);
@@ -307,7 +306,7 @@ get_package_name_from_class_file (char *fname)
 	if (package != NULL) {
 		char *tmp;
 
-		for (i = length; (i >= 0) && (end == 0); i--)
+		for (int i = length; (i >= 0) && (end == 0); i--)
 			if (package[i] == '/')
 				end = i;
 		tmp = g_strndup (package, end);

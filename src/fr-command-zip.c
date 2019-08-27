@@ -99,7 +99,7 @@ list__process_line (char     *line,
 	FileData            *fdata;
 	char               **fields;
 	const char          *name_field;
-	gint                 line_l;
+	size_t               line_l;
 
 	g_return_if_fail (line != NULL);
 

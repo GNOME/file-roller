@@ -878,14 +878,12 @@ fr_archive_operation_finish (FrArchive     *archive,
 	success = ! g_simple_async_result_propagate_error (G_SIMPLE_ASYNC_RESULT (result), error);
 
 	if (success && (g_simple_async_result_get_source_tag (G_SIMPLE_ASYNC_RESULT (result)) == fr_archive_list)) {
-		int i;
-
 		/* order the list by name to speed up search */
 		g_ptr_array_sort (archive->files, file_data_compare_by_path);
 
 		/* update the file_data hash */
 		g_hash_table_remove_all (archive->files_hash);
-		for (i = 0; i < archive->files->len; i++) {
+		for (guint i = 0; i < archive->files->len; i++) {
 			FileData *file_data = g_ptr_array_index (archive->files, i);
 			g_hash_table_insert (archive->files_hash, file_data->original_path, file_data);
 		}
