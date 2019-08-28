@@ -526,25 +526,6 @@ _gtk_show_help_dialog (GtkWindow  *parent,
 }
 
 
-GtkBuilder *
-_gtk_builder_new_from_file (const char *ui_file)
-{
-	char       *filename;
-	GtkBuilder *builder;
-	GError     *error = NULL;
-
-	filename = g_build_filename (UIDIR, ui_file, NULL);
-	builder = gtk_builder_new ();
-        if (! gtk_builder_add_from_file (builder, filename, &error)) {
-                g_warning ("%s\n", error->message);
-                g_clear_error (&error);
-        }
-	g_free (filename);
-
-        return builder;
-}
-
-
 GtkWidget *
 _gtk_builder_get_widget (GtkBuilder *builder,
 			 const char *name)

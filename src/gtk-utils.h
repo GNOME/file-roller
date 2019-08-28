@@ -86,7 +86,6 @@ GdkPixbuf *   _g_mime_type_get_icon                (const char       *mime_type,
 						    GtkIconTheme     *icon_theme);
 void          _gtk_show_help_dialog                (GtkWindow        *parent,
 						    const char       *section);
-GtkBuilder *  _gtk_builder_new_from_file           (const char       *filename);
 GtkWidget *   _gtk_builder_get_widget              (GtkBuilder       *builder,
 						    const char       *name);
 int           _gtk_widget_lookup_for_size          (GtkWidget        *widget,
