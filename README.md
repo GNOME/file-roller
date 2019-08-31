@@ -1,4 +1,3 @@
-
 			   * File Roller *
 
 		  an archive manager utility for the
