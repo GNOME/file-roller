@@ -28,37 +28,135 @@
 #include "fr-window-actions-callbacks.h"
 
 static const GActionEntry fr_window_actions[] = {
-	{ "add-files", fr_window_activate_add_files },
-	{ "close", fr_window_activate_close },
-	{ "delete", fr_window_activate_delete },
-	{ "deselect-all", fr_window_activate_deselect_all },
-	{ "edit-copy", fr_window_activate_edit_copy },
-	{ "edit-cut", fr_window_activate_edit_cut },
-	{ "edit-password", fr_window_activate_edit_password },
-	{ "edit-paste", fr_window_activate_edit_paste },
-	{ "extract-files", fr_window_activate_extract_files },
-	{ "find", toggle_action_activated, NULL, "false", fr_window_activate_find },
-	{ "go-back", fr_window_activate_go_back },
-	{ "go-forward", fr_window_activate_go_forward },
-	{ "go-home", fr_window_activate_go_home },
-	{ "open-folder", fr_window_activate_open_folder },
-	{ "open-with", fr_window_activate_open_with },
-	{ "reload", fr_window_activate_reload },
-	{ "rename", fr_window_activate_rename },
-	{ "save-as", fr_window_activate_save_as },
-	{ "select-all", fr_window_activate_select_all },
-	{ "sidebar-delete", fr_window_activate_sidebar_delete },
-	{ "sidebar-edit-copy", fr_window_activate_sidebar_edit_copy },
-	{ "sidebar-edit-cut", fr_window_activate_sidebar_edit_cut },
-	{ "sidebar-edit-paste", fr_window_activate_sidebar_edit_paste },
-	{ "sidebar-extract-files", fr_window_activate_sidebar_extract_files },
-	{ "sidebar-open-folder", fr_window_activate_sidebar_open_folder },
-	{ "sidebar-rename", fr_window_activate_sidebar_rename },
-	{ "stop", fr_window_activate_stop },
-	{ "test-archive", fr_window_activate_test_archive },
-	{ "view-properties", fr_window_activate_view_properties },
-	{ "view-selection", fr_window_activate_view_selection },
-	{ "view-sidebar", toggle_action_activated, NULL, "false", fr_window_activate_view_sidebar }
+	{
+		.name = "add-files",
+		.activate = fr_window_activate_add_files,
+	},
+	{
+		.name = "close",
+		.activate = fr_window_activate_close,
+	},
+	{
+		.name = "delete",
+		.activate = fr_window_activate_delete,
+	},
+	{
+		.name = "deselect-all",
+		.activate = fr_window_activate_deselect_all,
+	},
+	{
+		.name = "edit-copy",
+		.activate = fr_window_activate_edit_copy,
+	},
+	{
+		.name = "edit-cut",
+		.activate = fr_window_activate_edit_cut,
+	},
+	{
+		.name = "edit-password",
+		.activate = fr_window_activate_edit_password,
+	},
+	{
+		.name = "edit-paste",
+		.activate = fr_window_activate_edit_paste,
+	},
+	{
+		.name = "extract-files",
+		.activate = fr_window_activate_extract_files,
+	},
+	{
+		.name = "find",
+		.activate = toggle_action_activated,
+		.state = "false",
+		.change_state = fr_window_activate_find,
+	},
+	{
+		.name = "go-back",
+		.activate = fr_window_activate_go_back,
+	},
+	{
+		.name = "go-forward",
+		.activate = fr_window_activate_go_forward,
+	},
+	{
+		.name = "go-home",
+		.activate = fr_window_activate_go_home,
+	},
+	{
+		.name = "open-folder",
+		.activate = fr_window_activate_open_folder,
+	},
+	{
+		.name = "open-with",
+		.activate = fr_window_activate_open_with,
+	},
+	{
+		.name = "reload",
+		.activate = fr_window_activate_reload,
+	},
+	{
+		.name = "rename",
+		.activate = fr_window_activate_rename,
+	},
+	{
+		.name = "save-as",
+		.activate = fr_window_activate_save_as,
+	},
+	{
+		.name = "select-all",
+		.activate = fr_window_activate_select_all,
+	},
+	{
+		.name = "sidebar-delete",
+		.activate = fr_window_activate_sidebar_delete,
+	},
+	{
+		.name = "sidebar-edit-copy",
+		.activate = fr_window_activate_sidebar_edit_copy,
+	},
+	{
+		.name = "sidebar-edit-cut",
+		.activate = fr_window_activate_sidebar_edit_cut,
+	},
+	{
+		.name = "sidebar-edit-paste",
+		.activate = fr_window_activate_sidebar_edit_paste,
+	},
+	{
+		.name = "sidebar-extract-files",
+		.activate = fr_window_activate_sidebar_extract_files,
+	},
+	{
+		.name = "sidebar-open-folder",
+		.activate = fr_window_activate_sidebar_open_folder,
+	},
+	{
+		.name = "sidebar-rename",
+		.activate = fr_window_activate_sidebar_rename,
+	},
+	{
+		.name = "stop",
+		.activate = fr_window_activate_stop,
+	},
+	{
+		.name = "test-archive",
+		.activate = fr_window_activate_test_archive,
+	},
+	{
+		.name = "view-properties",
+		.activate = fr_window_activate_view_properties,
+	},
+	{
+		.name = "view-selection",
+		.activate = fr_window_activate_view_selection,
+	},
+	{
+		.name = "view-sidebar",
+		.activate = toggle_action_activated,
+		.parameter_type = NULL,
+		.state = "false",
+		.change_state = fr_window_activate_view_sidebar,
+	},
 };
 
 

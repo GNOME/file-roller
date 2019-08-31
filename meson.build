@@ -121,7 +121,8 @@ if get_option('buildtype').contains('debug')
     '-Wnested-externs', 
     '-Wpointer-arith', 
     '-Wsign-compare',
-    '-Wformat-security'
+    '-Wformat-security',
+    '-Wmissing-field-initializers',
   ]
 else
   c_args += [ '-Wno-deprecated-declarations' ]

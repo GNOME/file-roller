@@ -672,9 +672,20 @@ activate_toggle (GSimpleAction *action,
 
 
 static GActionEntry dlg_entries[] = {
-  { "select-all", select_all_activate_cb, NULL, NULL, NULL },
-  { "deselect-all", unselect_all_activate_cb, NULL, NULL, NULL },
-  { "show-hidden", activate_toggle, NULL, "false", show_hidden_files_toggled_cb }
+	{
+		.name = "select-all",
+		.activate = select_all_activate_cb,
+	},
+	{
+		.name = "deselect-all",
+		.activate = unselect_all_activate_cb,
+	},
+	{
+		.name = "show-hidden",
+		.activate = activate_toggle,
+		.state = "false",
+		.change_state = show_hidden_files_toggled_cb,
+	},
 };
 
 

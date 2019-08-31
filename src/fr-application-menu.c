@@ -150,13 +150,37 @@ fr_application_activate_quit (GSimpleAction *action,
 
 
 static const GActionEntry app_menu_entries[] = {
-	{ "new",  fr_application_activate_new },
-	{ "open",  fr_application_activate_open },
-	{ PREF_UI_VIEW_SIDEBAR, toggle_action_activated, NULL, "true", fr_application_activate_view_sidebar },
-	{ PREF_LISTING_LIST_MODE, fr_application_activate_list_mode, "s", "'as-dir'", NULL },
-	{ "help",  fr_application_activate_help },
-	{ "about", fr_application_activate_about },
-	{ "quit",  fr_application_activate_quit }
+	{
+		.name = "new",
+		.activate = fr_application_activate_new,
+	},
+	{
+		.name = "open",
+		.activate = fr_application_activate_open,
+	},
+	{
+		.name = PREF_UI_VIEW_SIDEBAR,
+		.activate = toggle_action_activated,
+		.state = "true",
+		.change_state = fr_application_activate_view_sidebar },
+	{
+		.name = PREF_LISTING_LIST_MODE,
+		.activate = fr_application_activate_list_mode,
+		.parameter_type = "s",
+		.state = "'as-dir'",
+	},
+	{
+		.name = "help",
+		.activate = fr_application_activate_help,
+	},
+	{
+		.name = "about",
+		.activate = fr_application_activate_about,
+	},
+	{
+		.name = "quit",
+		.activate = fr_application_activate_quit,
+	},
 };
 
 

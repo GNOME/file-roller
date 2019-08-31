@@ -326,15 +326,15 @@ void
 nautilus_fr_register_type (GTypeModule *module)
 {
 	static const GTypeInfo info = {
-		sizeof (NautilusFrClass),
-		(GBaseInitFunc) NULL,
-		(GBaseFinalizeFunc) NULL,
-		(GClassInitFunc) nautilus_fr_class_init,
-		NULL,
-		NULL,
-		sizeof (NautilusFr),
-		0,
-		(GInstanceInitFunc) nautilus_fr_instance_init,
+		.class_size = sizeof (NautilusFrClass),
+		.base_init = (GBaseInitFunc) NULL,
+		.base_finalize = (GBaseFinalizeFunc) NULL,
+		.class_init = (GClassInitFunc) nautilus_fr_class_init,
+		.class_finalize = NULL,
+		.class_data = NULL,
+		.instance_size = sizeof (NautilusFr),
+		.n_preallocs = 0,
+		.instance_init = (GInstanceInitFunc) nautilus_fr_instance_init,
 	};
 
 	static const GInterfaceInfo menu_provider_interface_info = {

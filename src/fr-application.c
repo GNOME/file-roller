@@ -118,7 +118,11 @@ action_open_archive (GSimpleAction      *action,
 
 
 static GActionEntry entries[] = {
-	{ "open-archive", action_open_archive, "s", NULL, NULL },
+	{
+		.name = "open-archive",
+		.activate = action_open_archive,
+		.parameter_type = "s",
+	},
 };
 
 
@@ -353,9 +357,7 @@ handle_method_call (GDBusConnection       *connection,
 
 
 static const GDBusInterfaceVTable interface_vtable = {
-	handle_method_call,
-	NULL, 			/* handle_get_property */
-	NULL 			/* handle_set_property */
+	.method_call = handle_method_call,
 };
 
 

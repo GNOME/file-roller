@@ -154,9 +154,18 @@ static void dlg_add_folder_load_last_options (DialogData *data);
 
 
 static GActionEntry dlg_entries[] = {
-  { "load-options", load_options_activate_cb, NULL, NULL, NULL },
-  { "save-options", save_options_activate_cb, NULL, NULL, NULL },
-  { "clear-options", clear_options_activate_cb, NULL, NULL, NULL }
+	{
+		.name = "load-options",
+		.activate = load_options_activate_cb,
+	},
+	{
+		.name = "save-options",
+		.activate = save_options_activate_cb,
+	},
+	{
+		.name = "clear-options",
+		.activate = clear_options_activate_cb,
+	},
 };
 
 

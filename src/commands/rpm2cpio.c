@@ -38,17 +38,16 @@ get_mime_type_from_magic_numbers (char *buffer)
 		{ "application/x-bzip2", "BZh", 0, 3 },
 		{ "application/x-gzip", "\037\213", 0, 2 },
 		{ "application/x-xz", "\3757zXZ\000", 0, 6 },
-		{ NULL, NULL, 0 }
 	};
-	int  i;
 
-	for (i = 0; sniffer_data[i].mime_type != NULL; i++)
+	for (size_t i = 0; i < G_N_ELEMENTS (sniffer_data); i++) {
 		if (memcmp (sniffer_data[i].first_bytes,
 			    buffer + sniffer_data[i].offset,
 			    sniffer_data[i].len) == 0)
 		{
 			return sniffer_data[i].mime_type;
 		}
+	}
 
 	return NULL;
 }
