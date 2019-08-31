@@ -50,9 +50,12 @@ like tar and zip. The supported file types are:
 * Single files compressed with gzip (.gz), brotli (.br), bzip (.bz),
   bzip2 (.bz2), compress (.Z), lrzip (.lrz), lzip (.lz), lzop (.lzo), rzip(.rz), and xz (.xz).
 
-## Home Page
+## Useful links
 
-<https://wiki.gnome.org/Apps/FileRoller>
+* Homepage: <https://wiki.gnome.org/Apps/FileRoller>
+* Report issues: <https://gitlab.gnome.org/GNOME/file-roller/issues/>
+* Donate: <https://www.gnome.org/friends/>
+* Translate: <https://wiki.gnome.org/TranslationProject>
 
 ## Licensing
 
