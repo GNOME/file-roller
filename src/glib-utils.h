@@ -116,10 +116,6 @@ char **             _g_regexp_get_patternv         (const char          *pattern
 GRegex **           _g_regexp_split_from_patterns  (const char          *pattern_string,
 			                            GRegexCompileFlags   compile_options);
 
-/* time */
-
-char *              _g_time_to_string              (time_t               time);
-
 /* uri/path/filename */
 
 const char *        _g_uri_get_home                (void);

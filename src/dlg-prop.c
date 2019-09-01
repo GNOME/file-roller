@@ -113,10 +113,15 @@ dlg_prop (FrWindow *window)
 
 	/**/
 
-	label = _gtk_builder_get_widget (data->builder, "p_date_label");
-	s = _g_time_to_string (_g_file_get_file_mtime (fr_window_get_archive_file (window)));
-	gtk_label_set_text (GTK_LABEL (label), s);
-	g_free (s);
+	{
+		g_autoptr (GDateTime) date_time;
+
+		label = _gtk_builder_get_widget (data->builder, "p_date_label");
+		date_time = g_date_time_new_from_unix_local (_g_file_get_file_mtime (fr_window_get_archive_file (window)));
+		s = g_date_time_format (date_time, _("%d %B %Y, %H:%M"));
+		gtk_label_set_text (GTK_LABEL (label), s);
+		g_free (s);
+	}
 
 	/**/
 

@@ -1570,10 +1570,13 @@ fr_window_populate_file_list (FrWindow  *window,
 
 			s_size = g_format_size (fdata->dir_size);
 
-			if (fdata->list_dir)
+			if (fdata->list_dir) {
 				s_time = g_strdup ("");
-			else
-				s_time = _g_time_to_string (fdata->modified);
+			} else {
+				g_autoptr (GDateTime) date_time;
+				date_time = g_date_time_new_from_unix_local (fdata->modified);
+				s_time = g_date_time_format (date_time, _("%d %B %Y, %H:%M"));
+			}
 
 			gtk_list_store_set (window->priv->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
@@ -1590,6 +1593,7 @@ fr_window_populate_file_list (FrWindow  *window,
 			g_free (s_time);
 		}
 		else {
+			g_autoptr (GDateTime) date_time;
 			char *utf8_path;
 			char *s_size;
 			char *s_time;
@@ -1598,7 +1602,8 @@ fr_window_populate_file_list (FrWindow  *window,
 			utf8_path = g_filename_display_name (fdata->path);
 
 			s_size = g_format_size (fdata->size);
-			s_time = _g_time_to_string (fdata->modified);
+			date_time = g_date_time_new_from_unix_local (fdata->modified);
+			s_time = g_date_time_format (date_time, _("%d %B %Y, %H:%M"));
 			desc = g_content_type_get_description (fdata->content_type);
 
 			gtk_list_store_set (window->priv->list_store, &iter,
