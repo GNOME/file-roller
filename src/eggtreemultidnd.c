@@ -205,8 +205,7 @@ selection_foreach (GtkTreeModel *model,
 static void
 path_list_free (GList *path_list)
 {
-  g_list_foreach (path_list, (GFunc) gtk_tree_row_reference_free, NULL);
-  g_list_free (path_list);
+  g_list_free_full (path_list, (GDestroyNotify) gtk_tree_row_reference_free);
 }
 
 

@@ -193,8 +193,7 @@ fr_clipboard_data_unref (FrClipboardData *clipboard_data)
 	g_free (clipboard_data->base_dir);
 	_g_object_unref (clipboard_data->tmp_dir);
 	g_free (clipboard_data->current_dir);
-	g_list_foreach (clipboard_data->files, (GFunc) g_free, NULL);
-	g_list_free (clipboard_data->files);
+	g_list_free_full (clipboard_data->files, g_free);
 	g_free (clipboard_data);
 }
 

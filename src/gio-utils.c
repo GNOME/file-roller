@@ -61,8 +61,7 @@ file_info_free (FileInfo *file_info)
 void
 file_info_list_free (GList *list)
 {
-	g_list_foreach (list, (GFunc) file_info_free, NULL);
-	g_list_free (list);
+	g_list_free_full (list, (GDestroyNotify) file_info_free);
 }
 
 
@@ -185,8 +184,7 @@ for_each_child_data_free (ForEachChildData *fec)
 	_g_info_data_freev (&(fec->current));
 	g_free (fec->attributes);
 	if (fec->to_visit != NULL) {
-		g_list_foreach (fec->to_visit, (GFunc) file_info_free, NULL);
-		g_list_free (fec->to_visit);
+		g_list_free_full (fec->to_visit, (GDestroyNotify) file_info_free);
 	}
 	_g_object_unref (fec->cancellable);
 	g_free (fec);
@@ -947,8 +945,7 @@ directory_copy_data_free (DirectoryCopyData *dcd)
 		g_object_unref (dcd->current_destination);
 		dcd->current_destination = NULL;
 	}
-	g_list_foreach (dcd->to_copy, (GFunc) file_info_free, NULL);
-	g_list_free (dcd->to_copy);
+	g_list_free_full (dcd->to_copy, (GDestroyNotify) file_info_free);
 	g_free (dcd);
 }
 

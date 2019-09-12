@@ -125,8 +125,7 @@ java_class_file_free (JavaClassFile *cfile)
 	GSList *scan;
 
 	if (cfile->const_pool_class != NULL) {
-		g_slist_foreach (cfile->const_pool_class, (GFunc)g_free, NULL);
-		g_slist_free (cfile->const_pool_class);
+		g_slist_free_full (cfile->const_pool_class, g_free);
 	}
 
 	for (scan = cfile->const_pool_utf; scan ; scan = scan->next) {
@@ -135,8 +134,7 @@ java_class_file_free (JavaClassFile *cfile)
 	}
 
 	if (cfile->const_pool_utf != NULL) {
-		g_slist_foreach (cfile->const_pool_utf, (GFunc)g_free, NULL);
-		g_slist_free (cfile->const_pool_utf);
+		g_slist_free_full (cfile->const_pool_utf, g_free);
 	}
 
 	if (cfile->fd != -1)
