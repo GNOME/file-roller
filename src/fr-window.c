@@ -4811,48 +4811,68 @@ key_press_cb (GtkWidget   *widget,
 	      gpointer     data)
 {
 	FrWindow *window = data;
-	gboolean  retval = FALSE;
+	gboolean  retval = GDK_EVENT_PROPAGATE;
 	gboolean  alt;
+	guint     modifiers;
 
 	if (gtk_widget_has_focus (window->priv->location_entry))
-		return FALSE;
+		return GDK_EVENT_PROPAGATE;
 
-	if (gtk_widget_has_focus (window->priv->filter_entry)) {
-		switch (event->keyval) {
-		case GDK_KEY_Escape:
-			fr_window_deactivate_filter (window);
-			retval = TRUE;
-			break;
-		default:
-			break;
-		}
-		return retval;
-	}
+	if (gtk_widget_has_focus (window->priv->filter_entry))
+		return GDK_EVENT_PROPAGATE;
 
-	alt = (event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK;
+	modifiers = gtk_accelerator_get_default_mod_mask ();
+
+	alt = (event->state & modifiers) == GDK_MOD1_MASK;
 
 	switch (event->keyval) {
 	case GDK_KEY_Escape:
 		fr_window_stop (window);
 		if (window->priv->filter_mode)
 			fr_window_deactivate_filter (window);
-		retval = TRUE;
+		retval = GDK_EVENT_STOP;
 		break;
 
 	case GDK_KEY_F10:
-		if (event->state & GDK_SHIFT_MASK) {
+	case GDK_KEY_Menu:
+		if ((event->keyval == GDK_KEY_Menu) ||
+		    ((event->keyval == GDK_KEY_F10) &&
+		     (event->state & modifiers) == GDK_SHIFT_MASK)) {
 			GtkTreeSelection *selection;
+			GList *selected_rows;
+			GtkTreePath *first_selected_row_path;
+			GtkTreeView *tree_view;
+			GdkRectangle rect;
+			GdkWindow   *win;
 
-			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
+			tree_view = GTK_TREE_VIEW (window->priv->list_view);
+			win = gtk_tree_view_get_bin_window (tree_view);
+
+			selection = gtk_tree_view_get_selection (tree_view);
+			selected_rows = gtk_tree_selection_get_selected_rows (selection,
+									      &window->priv->list_store);
 			if (selection == NULL)
-				return FALSE;
+				return GDK_EVENT_PROPAGATE;
 
-			gtk_menu_popup (GTK_MENU (window->priv->file_popup_menu),
-					NULL, NULL, NULL,
-					window,
-					3,
-					GDK_CURRENT_TIME);
-			retval = TRUE;
+			if (selected_rows == NULL)
+				return GDK_EVENT_PROPAGATE;
+
+			first_selected_row_path = (GtkTreePath *) selected_rows->data;
+
+			gtk_tree_view_get_cell_area (tree_view,
+						     first_selected_row_path,
+						     NULL,
+						     &rect);
+
+			g_list_free_full (selected_rows, (GDestroyNotify) gtk_tree_path_free);
+
+			gtk_menu_popup_at_rect (GTK_MENU (window->priv->file_popup_menu),
+						win,
+						&rect,
+						GDK_GRAVITY_SOUTH_WEST,
+						GDK_GRAVITY_NORTH_WEST,
+						(const GdkEvent *) event);
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -4860,20 +4880,20 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_KP_Up:
 		if (alt) {
 			fr_window_go_up_one_level (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
 	case GDK_KEY_BackSpace:
 		fr_window_go_up_one_level (window);
-		retval = TRUE;
+		retval = GDK_EVENT_STOP;
 		break;
 
 	case GDK_KEY_Right:
 	case GDK_KEY_KP_Right:
 		if (alt) {
 			fr_window_go_forward (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -4881,7 +4901,7 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_KP_Left:
 		if (alt) {
 			fr_window_go_back (window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -4889,14 +4909,14 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_KEY_KP_Home:
 		if (alt) {
 			fr_window_go_to_location (window, "/", FALSE);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
 	case GDK_KEY_Delete:
 		if (! gtk_widget_has_focus (window->priv->filter_entry)) {
 			fr_window_activate_delete (NULL, NULL, window);
-			retval = TRUE;
+			retval = GDK_EVENT_STOP;
 		}
 		break;
 
@@ -5435,6 +5455,12 @@ filter_entry_search_changed_cb (GtkEntry *entry,
 	fr_window_activate_filter (window);
 }
 
+static void
+filter_entry_stop_search_cb (GtkSearchEntry *entry,
+			     FrWindow *window)
+{
+	fr_window_deactivate_filter (window);
+}
 
 static void
 fr_window_attach (FrWindow      *window,
@@ -5719,6 +5745,10 @@ fr_window_construct (FrWindow *window)
 	g_signal_connect (G_OBJECT (window->priv->filter_entry),
 			  "search-changed",
 			  G_CALLBACK (filter_entry_search_changed_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->filter_entry),
+			  "stop-search",
+			  G_CALLBACK (filter_entry_stop_search_cb),
 			  window);
 	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (window->priv->filter_bar), GTK_ENTRY (window->priv->filter_entry));
 	gtk_container_add (GTK_CONTAINER (window->priv->filter_bar), filter_box);
