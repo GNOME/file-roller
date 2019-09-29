@@ -1227,6 +1227,7 @@ _g_mime_type_get_from_content (char  *buffer,
 		{ 0,  4, "PK\003\004",                           "application/zip"             },
 		{ 0,  8, "PK00PK\003\004",                       "application/zip"             },
 		{ 0,  4, "LRZI",                                 "application/x-lrzip"         },
+		{ 0,  4, "\x28\xB5\x2F\xFD",                     "application/zstd"            },
 	};
 
 	int  i;
