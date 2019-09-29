@@ -1,0 +1,51 @@
+{
+    "app-id": "org.gnome.FileRoller",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "master",
+    "sdk" : "org.gnome.Sdk",
+    "command": "file-roller",
+    "tags": ["nightly"],
+    "desktop-file-name-prefix": "(Nightly) ",
+    "rename-icon": "org.gnome.ArchiveManager",
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--talk-name=org.gtk.vfs",
+        "--talk-name=org.gtk.vfs.*",
+        "--filesystem=home",
+        "--filesystem=xdg-run/dconf",
+        "--filesystem=~/.config/dconf:ro",
+        "--talk-name=ca.desrt.dconf",
+        "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
+    ],
+    "modules": [
+        {
+            "name": "gcpio",
+            "buildsystem": "autotools",
+            "cleanup": [
+                "/share/man/"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://ftp.gnu.org/gnu/cpio/cpio-2.12.tar.gz",
+                    "sha256": "08a35e92deb3c85d269a0059a27d4140a9667a6369459299d08c17f713a92e73"
+                }
+            ]
+        },
+        {
+            "name": "file-roller",
+            "buildsystem": "meson",
+            "cleanup": [
+                "org.gnome.FileRoller.ArchiveManager1.service"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/GNOME/file-roller.git"
+                }
+            ]
+        }
+    ]
+}
