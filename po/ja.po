@@ -2,11 +2,10 @@
 # Copyright (C) 2001-2019 Free Software Foundation, Inc.
 # Takeshi AIHANA <takeshi.aihana@gmail.com>, 2001-2009.
 # Hideki Yamane (Debian-JP) <henrich@debian.or.jp>, 2009.
-# Hideki Yamane <henrich@debian.org>, 2011-2012.
-# KUSANO Takayuki <AE5T-KSN@asahi-net.or.jp>, 2010, 2012.
 # Yasumichi Akahoshi <yasumichi@vinelinux.org>, 2010.
+# Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2010, 2012.
+# Hideki Yamane <henrich@debian.org>, 2011-2012.
 # Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2012, 2013, 2014, 2016.
-# Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2012.
 # Hajime Taira <htaira@redhat.com>, 2015.
 # sujiniku <sujinikusityuu@gmail.com>, 2016.
 # Shushi Kurose <md81bird@hitaki.net>, 2017.
@@ -16,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2019-09-17 11:17+0000\n"
-"PO-Revision-Date: 2019-09-27 23:00+0900\n"
+"POT-Creation-Date: 2019-09-27 14:52+0000\n"
+"PO-Revision-Date: 2019-10-05 01:01+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -242,7 +241,7 @@ msgstr "アーカイブにファイルを追加できません"
 #: src/dlg-add.c:97
 #, c-format
 msgid "You don’t have the right permissions to read files from folder “%s”"
-msgstr "フォルダー“%s”からファイルを読み取る権限がありません。"
+msgstr "フォルダー“%s”からファイルを読み取る権限がありません"
 
 #: src/dlg-add.c:164
 msgctxt "Window title"
@@ -335,13 +334,13 @@ msgstr "アーカイブの展開を中止します"
 #: src/dlg-extract.c:123 src/fr-window.c:6964
 #, c-format
 msgid "Could not create the destination folder: %s."
-msgstr "展開先のフォルダーを生成できません: %s"
+msgstr "展開先のフォルダーを作成できません: %s"
 
 #: src/dlg-extract.c:167 src/fr-window.c:4652 src/fr-window.c:4754
 #, c-format
 msgid ""
 "You don’t have the right permissions to extract archives in the folder “%s”"
-msgstr "フォルダー“%s”の中にアーカイブを展開する権限がありません。"
+msgstr "フォルダー“%s”の中にアーカイブを展開する権限がありません"
 
 #: src/dlg-extract.c:279
 msgctxt "Window title"
@@ -369,7 +368,7 @@ msgstr ""
 
 #: src/dlg-package-installer.c:319
 msgid "Could not open this file type"
-msgstr "この種類のファイルは開けませんでした"
+msgstr "この種類のファイルは開けません"
 
 #: src/dlg-package-installer.c:322
 msgid "_Search Command"
@@ -532,7 +531,7 @@ msgstr "“%s”を削除中"
 #: src/fr-command-rar.c:758
 #, c-format
 msgid "Could not find the volume: %s"
-msgstr "ボリュームが見つかりませんでした: %s"
+msgstr "ボリュームが見つかりません: %s"
 
 #: src/fr-command-tar.c:398
 msgid "Deleting files from archive"
@@ -560,7 +559,7 @@ msgstr "開く場所を読み込めません"
 #: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
 #: src/fr-window.c:3037
 msgid "Could not create the archive"
-msgstr "アーカイブを生成できません"
+msgstr "アーカイブを作成できません"
 
 #: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
 msgid "You have to specify an archive name."
@@ -642,7 +641,7 @@ msgstr "“%s”を読込中"
 #: src/fr-window.c:2351
 #, c-format
 msgid "Reading “%s”"
-msgstr "“%s”を読込中"
+msgstr "“%s”を読取中"
 
 #. Translators: %s is a filename
 #: src/fr-window.c:2355
@@ -739,7 +738,7 @@ msgstr "ファイルの展開中にエラーが発生しました。"
 #: src/fr-window.c:3048
 #, c-format
 msgid "Could not open “%s”"
-msgstr "“%s”を開けませんでした"
+msgstr "“%s”を開けません"
 
 #: src/fr-window.c:3053
 msgid "An error occurred while loading the archive."
@@ -918,8 +917,7 @@ msgid ""
 "Name “%s” is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
-"名前“%s”には、以下の文字列のうちの少なくとも一つを含んでいるので無効です: "
-"%s 。他の名前を入力してください。"
+"名前“%s”には不正な文字 %s が含まれています。他の名前を入力してください。"
 
 #: src/fr-window.c:8382
 #, c-format
