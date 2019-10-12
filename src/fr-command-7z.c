@@ -337,7 +337,7 @@ fr_command_7z_add (FrCommand  *command,
 	    || _g_mime_type_matches (archive->mime_type, "application/x-cbz"))
 	{
 		fr_process_add_arg (command->process, "-tzip");
-		fr_process_add_arg (command->process, "-mem=AES128");
+		fr_process_add_arg (command->process, "-mem=ZipCrypto");
 	}
 
 	fr_process_add_arg (command->process, "-bd");
