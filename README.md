@@ -49,15 +49,15 @@ like tar and zip. The supported file types are:
 * ZIP Archived Comic Book (.cbz)
 * ZOO Compressed Archive File (.zoo)
 * Single files compressed with gzip (.gz), brotli (.br), bzip (.bz),
-  bzip2 (.bz2), compress (.Z), lrzip (.lrz), lzip (.lz), lzop (.lzo), 
+  bzip2 (.bz2), compress (.Z), lrzip (.lrz), lzip (.lz), lzop (.lzo),
   rzip(.rz), and xz (.xz), Zstandard (.zst).
 
 ## Useful links
 
-* Homepage: <https://wiki.gnome.org/Apps/FileRoller>
-* Report issues: <https://gitlab.gnome.org/GNOME/file-roller/issues/>
-* Donate: <https://www.gnome.org/friends/>
-* Translate: <https://wiki.gnome.org/TranslationProject>
+* Homepage: https://wiki.gnome.org/Apps/FileRoller
+* Report issues: https://gitlab.gnome.org/GNOME/file-roller/issues/
+* Donate: https://www.gnome.org/friends/
+* Translate: https://wiki.gnome.org/TranslationProject
 
 ## Licensing
 
@@ -68,15 +68,15 @@ You can find a copy of the license in the file COPYING.
 ## Dependencies
 
 In order to build this program from the source code you need a working
-GNOME environment version 2.x, with the development tools installed
+GNOME environment version 3.x, with the development tools installed
 properly.
 
 Also you need the following libraries:
 
 * glib >= 2.36
 * gtk+ >= 3.13.2
-  * libnautilus-extension >= 2.22.2 (optional)
-  * libarchive >= 3.0.0 (optional)
+* libnautilus-extension >= 2.22.2 (optional)
+* libarchive >= 3.0.0 (optional)
 
 ## Install
 
