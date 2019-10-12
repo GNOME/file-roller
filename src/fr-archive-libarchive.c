@@ -289,26 +289,26 @@ load_data_seek (struct archive *a,
 {
 	GSeekable *seekable;
 	GSeekType  seektype;
-	off_t new_offset;
+	off_t      new_offset;
 
 	LoadData *load_data = client_data;
 
 	seekable = (GSeekable*)(load_data->istream);
-	if (load_data->error != NULL || load_data->istream == NULL)
-	return -1;
+	if ((load_data->error != NULL) || (load_data->istream == NULL))
+		return -1;
 
 	switch (whence) {
-		case SEEK_SET:
-			seektype = G_SEEK_SET;
-			break;
-		case SEEK_CUR:
-			seektype = G_SEEK_CUR;
-			break;
-		case SEEK_END:
-			seektype = G_SEEK_END;
-			break;
-		default:
-			return -1;
+	case SEEK_SET:
+		seektype = G_SEEK_SET;
+		break;
+	case SEEK_CUR:
+		seektype = G_SEEK_CUR;
+		break;
+	case SEEK_END:
+		seektype = G_SEEK_END;
+		break;
+	default:
+		return -1;
 	}
 
 	g_seekable_seek (seekable,
@@ -330,7 +330,7 @@ load_data_skip (struct archive *a,
 		gint64          request)
 {
 	GSeekable *seekable;
-	off_t old_offset, new_offset;
+	off_t      old_offset, new_offset;
 
 	LoadData *load_data = client_data;
 
