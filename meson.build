@@ -4,7 +4,7 @@ project('file-roller', 'c',
   meson_version : '>=0.50'
 )
 
-glib_version = '>=2.36'
+glib_version = '>=2.38'
 gtk_version = '>=3.13.2'
 nautilus_version = '>=2.22.2'
 json_glib_version = '>=0.14.0'
