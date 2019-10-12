@@ -114,14 +114,14 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 
 	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 
+	/* give priority to 7z* for 7z archives. */
 	if (strcmp (mime_type, "application/x-7z-compressed") == 0) {
-		if (_g_program_is_available ("7za", check_command) ||
-		    _g_program_is_available ("7zr", check_command) ||
-		    _g_program_is_available ("7z", check_command))
+		if (_g_program_is_available ("7za", check_command)
+		    || _g_program_is_available ("7zr", check_command)
+		    || _g_program_is_available ("7z", check_command))
+		{
 			return capabilities;
-
-		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
-		return capabilities;
+		}
 	}
 
 	/* give priority to 7za that supports CAB files better. */
