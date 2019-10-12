@@ -175,7 +175,7 @@ install_packages (InstallerData *idata)
 		if (window != NULL) {
 			GdkCursor *cursor;
 
-			cursor = gdk_cursor_new (GDK_WATCH);
+			cursor = gdk_cursor_new_for_display (gdk_display_get_default(), GDK_WATCH);
 			gdk_window_set_cursor (window, cursor);
 
 			g_object_unref (cursor);
