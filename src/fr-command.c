@@ -89,9 +89,6 @@ xfer_data_free (XferData *data)
 /* -- FrCommand -- */
 
 
-G_DEFINE_TYPE (FrCommand, fr_command, FR_TYPE_ARCHIVE)
-
-
 /* Properties */
 enum {
         PROP_0,
@@ -107,6 +104,9 @@ struct _FrCommandPrivate {
 	GFile     *temp_extraction_dir;
 	gboolean   remote_extraction;
 };
+
+
+G_DEFINE_TYPE_WITH_PRIVATE (FrCommand, fr_command, FR_TYPE_ARCHIVE)
 
 
 static void
@@ -2947,7 +2947,6 @@ fr_command_class_init (FrCommandClass *klass)
 	FrArchiveClass *archive_class;
 
 	fr_command_parent_class = g_type_class_peek_parent (klass);
-	g_type_class_add_private (klass, sizeof (FrCommandPrivate));
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->set_property = fr_command_set_property;
@@ -3073,7 +3072,7 @@ fr_command_init (FrCommand *self)
 {
 	FrProcess *process;
 
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_COMMAND, FrCommandPrivate);
+	self->priv = fr_command_get_instance_private (self);
 
 	self->priv->local_copy = NULL;
 	self->priv->is_remote = FALSE;

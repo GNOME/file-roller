@@ -65,9 +65,6 @@ char *action_names[] = { "NONE",
 			 "UPDATING_FILES" };
 
 
-G_DEFINE_TYPE (FrArchive, fr_archive, G_TYPE_OBJECT)
-
-
 typedef struct _DroppedItemsData DroppedItemsData;
 
 
@@ -95,6 +92,9 @@ struct _FrArchivePrivate {
 						    * file. */
 	DroppedItemsData *dropped_items_data;
 };
+
+
+G_DEFINE_TYPE_WITH_PRIVATE (FrArchive, fr_archive, G_TYPE_OBJECT)
 
 
 enum {
@@ -301,7 +301,6 @@ fr_archive_class_init (FrArchiveClass *klass)
 	GObjectClass *gobject_class;
 
 	fr_archive_parent_class = g_type_class_peek_parent (klass);
-	g_type_class_add_private (klass, sizeof (FrArchivePrivate));
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_archive_finalize;
@@ -430,7 +429,7 @@ fr_archive_class_init (FrArchiveClass *klass)
 static void
 fr_archive_init (FrArchive *self)
 {
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_ARCHIVE, FrArchivePrivate);
+	self->priv = fr_archive_get_instance_private (self);
 
 	self->mime_type = NULL;
 	self->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
