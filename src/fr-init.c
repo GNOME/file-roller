@@ -116,7 +116,9 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-xz",                      ".xz",       0 },
 	{ "application/x-xz-compressed-tar",       ".tar.xz",   0 },
 	{ "application/x-zoo",                     ".zoo",      0 },
+	{ "application/x-zstd-compressed-tar",     ".tar.zst",  0 },
 	{ "application/zip",                       ".zip",      0 },
+	{ "application/zstd",                      ".zst",      0 },
 	{ NULL, NULL, 0 }
 };
 
@@ -172,6 +174,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".tar.rz", "application/x-rzip-compressed-tar" },
 	{ ".tar.xz", "application/x-xz-compressed-tar" },
 	{ ".tar.Z", "application/x-tarz" },
+	{ ".tar.zst", "application/x-zstd-compressed-tar" },
 	{ ".taz", "application/x-tarz" },
 	{ ".tbz", "application/x-bzip-compressed-tar" },
 	{ ".tbz2", "application/x-bzip-compressed-tar" },
@@ -181,6 +184,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".tlz4", "application/x-lz4-compressed-tar" },
 	{ ".tzma", "application/x-lzma-compressed-tar" },
 	{ ".tzo", "application/x-lzop-compressed-tar" },
+	{ ".tzst", "application/x-zstd-compressed-tar" },
 	{ ".war", "application/x-war" },
 	{ ".wim", "application/x-ms-wim" },
 	{ ".xar", "application/x-xar" },
@@ -189,6 +193,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".Z", "application/x-compress" },
 	{ ".zip", "application/zip" },
 	{ ".zoo", "application/x-zoo" },
+	{ ".zst", "application/zstd" },
 	{ NULL, NULL }
 };
 

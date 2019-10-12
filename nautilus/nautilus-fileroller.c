@@ -136,6 +136,8 @@ static struct {
 		{ "application/x-stuffit", TRUE },
 		{ "application/x-war", TRUE },
 		{ "application/x-zoo", TRUE },
+		{ "application/x-zstd-compressed-tar", TRUE },
+		{ "application/zstd", TRUE },
 		{ "multipart/x-zip", TRUE },
 		{ NULL, FALSE }
 };
