@@ -42,7 +42,6 @@
 #define SERVICE_TIMEOUT 10
 
 
-gint                ForceDirectoryCreation;
 static char       **remaining_args;
 static char        *arg_add_to = NULL;
 static int          arg_add = FALSE;
