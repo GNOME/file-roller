@@ -40,7 +40,6 @@ typedef struct {
 	const char *accelerator;
 } FrAccelerator;
 
-int           _gtk_tree_selection_count_selected   (GtkTreeSelection *selection);
 GtkWidget *   _gtk_message_dialog_new              (GtkWindow        *parent,
 						    GtkDialogFlags    flags,
 						    const char       *message,
