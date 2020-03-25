@@ -199,7 +199,6 @@ FrExtensionType file_ext_type[] = {
 
 
 GList        *CommandList;
-gint          ForceDirectoryCreation;
 GHashTable   *ProgramsCache;
 GPtrArray    *Registered_Archives;
 int           single_file_save_type[64];
