@@ -11,20 +11,21 @@
 # Mickael Albertus <mickael.albertus@gmail.com>, 2012.
 # Alexandre Franke <alexandre.franke@gmail.com>, 2012.
 # Charles Monzat <charles.monzat@free.fr>, 2018-2020.
+# Guillaume Bernard <associations@guillaume-bernard.fr>, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller doc\n"
-"POT-Creation-Date: 2020-02-09 19:48+0000\n"
-"PO-Revision-Date: 2020-03-18 18:52+0100\n"
-"Last-Translator: Charles Monzat <charles.monzat@free.fr>\n"
+"POT-Creation-Date: 2020-03-31 16:42+0000\n"
+"PO-Revision-Date: 2020-04-03 14:49+0200\n"
+"Last-Translator: Guillaume Bernard <associations@guillaume-bernard.fr>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Gtranslator 3.34.0\n"
+"X-Generator: Gtranslator 3.36.0\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -37,7 +38,8 @@ msgstr ""
 "Bruno Brouard <annoa.b@gmail.com>, 2012\n"
 "Mickael Albertus <mickael.albertus@gmail.com>, 2012\n"
 "Alexandre Franke <alexandre.franke@gmail.com>, 2012\n"
-"Charles Monzat <charles.monzat@free.fr>, 2020"
+"Charles Monzat <charles.monzat@free.fr>, 2020\n"
+"Guillaume Bernard <associations@guillaume-bernard.fr>, 2020"
 
 #. (itstool) path: credit/name
 #: C/archive-create.page:15 C/archive-edit.page:16 C/archive-extract.page:18
@@ -90,18 +92,23 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/archive-create.page:39
 msgid ""
-"Name your new archive file and choose the location where it will be saved, "
-"then click <gui>Create</gui> to continue."
+"Name your new archive file and select the file format from the dropdown."
 msgstr ""
-"Donnez un nom à votre nouvelle archive, choisissez son emplacement et "
-"cliquez sur <gui>Créer</gui>."
+"Nommez le fichier d’archive et sélectionnez le format de fichier depuis la "
+"liste déroulante."
+
+#. (itstool) path: item/p
+#: C/archive-create.page:42
+msgid "Choose the location where the archive file will be saved."
+msgstr "Choisissez l’emplacement où le fichier d’archive sera enregistré."
+
+#. (itstool) path: item/p
+#: C/archive-create.page:45
+msgid "Click <gui>Create</gui> to continue."
+msgstr "Cliquez sur <gui>Créer</gui>."
 
 #. (itstool) path: note/p
-#: C/archive-create.page:42
-#| msgid ""
-#| "By clicking <gui>Other Options</gui> you can set a password or split your "
-#| "new archive into smaller, individual files by selecting the relevant "
-#| "option and specifying the volume for each part in <gui>MB</gui>."
+#: C/archive-create.page:47
 msgid ""
 "By clicking <gui>Other Options</gui> you can set a password or split your "
 "new archive into smaller, individual files by selecting the relevant option "
@@ -115,11 +122,7 @@ msgstr ""
 "disponibles uniquement si le format de fichier d’archive les prend en charge."
 
 #. (itstool) path: item/p
-#: C/archive-create.page:50
-#| msgid ""
-#| "Add the desired files and folders to your archive by pressing <gui>+</"
-#| "gui> in the toolbar button. Check the box next to the files and folders "
-#| "that you want to add."
+#: C/archive-create.page:55
 msgid ""
 "Add the desired files and folders to your archive by pressing <gui>+</gui> "
 "in the header bar. Check the box next to the files and folders that you want "
@@ -130,7 +133,7 @@ msgstr ""
 "fichiers et dossiers que vous souhaitez ajouter."
 
 #. (itstool) path: note/p
-#: C/archive-create.page:54
+#: C/archive-create.page:59
 msgid ""
 "Not all archive file formats support folders — if the file format that you "
 "are using does not, you will not be warned. If the file format that you are "
@@ -143,7 +146,7 @@ msgstr ""
 "mais pas le dossier lui-même."
 
 #. (itstool) path: item/p
-#: C/archive-create.page:61
+#: C/archive-create.page:66
 msgid ""
 "Once you finish adding files, the archive is ready; you do not need to save "
 "it."
@@ -437,10 +440,6 @@ msgstr "Ouverture d’une archive"
 # ATTENTION : ne pas traduire les points de suspension de cette chaîne (Charles).
 #. (itstool) path: page/p
 #: C/archive-open.page:30
-#| msgid ""
-#| "You can open an existing archive with <app>Archive Manager</app> by "
-#| "clicking <guiseq><gui style=\"menu\">Archive Manager</gui><gui style="
-#| "\"menuitem\">Open…</gui></guiseq>"
 msgid ""
 "You can open an existing archive with <app>Archive Manager</app> by pressing "
 "the menu button in the top-right corner of the window and selecting <gui "
@@ -492,11 +491,6 @@ msgstr "Affichage de tous les fichiers"
 
 #. (itstool) path: item/p
 #: C/archive-view.page:33
-#| msgid ""
-#| "Click <guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem\">View "
-#| "All Files</gui></guiseq>. <app>Archive Manager</app> will list all files "
-#| "inside the archive. You will see their names, sizes, types, dates of the "
-#| "last modification and locations."
 msgid ""
 "Press the menu button in the top-right corner of the window and select <gui "
 "style=\"menuitem\">View All Files</gui>. <app>Archive Manager</app> will "
@@ -527,10 +521,6 @@ msgstr "Affichage comme un dossier"
 
 #. (itstool) path: item/p
 #: C/archive-view.page:46
-#| msgid ""
-#| "This view displays the classic directory structure. To use this, click "
-#| "<guiseq><gui style=\"menu\">View</gui> <gui style=\"menuitem\">View as a "
-#| "Folder</gui></guiseq>."
 msgid ""
 "This view displays the classic directory structure. To use this, press the "
 "menu button in the top-right corner of the window and select <gui style="
@@ -543,11 +533,6 @@ msgstr ""
 
 #. (itstool) path: note/p
 #: C/archive-view.page:50
-#| msgid ""
-#| "While viewing your archive in this way, you can press <key>F9</key>, or "
-#| "click <guiseq><gui style=\"menu\">View</gui> <gui style=\"menuitem"
-#| "\">Folders</gui></guiseq> option, to see a tree view of the folders in "
-#| "the side pane. It allows you to navigate easily between folders."
 msgid ""
 "While viewing your archive in this way, you can press <key>F9</key>, or "
 "press the menu button in the top-right corner of the window and select <gui "
@@ -568,11 +553,6 @@ msgstr "Ouverture des fichiers contenus dans votre archive"
 
 #. (itstool) path: section/p
 #: C/archive-view.page:62
-#| msgid ""
-#| "Open files which are in your archive by double-clicking on the file name, "
-#| "or by right-clicking on the file name and selecting <gui>Open</gui>. "
-#| "<app>Archive Manager</app> will open the file with the default "
-#| "application for that file type."
 msgid ""
 "Open files which are in your archive by double-clicking on the file name, or "
 "by right-clicking on the file name and selecting <gui style=\"menuitem"
@@ -597,14 +577,11 @@ msgstr "Faites un clic droit sur le fichier."
 # ATTENTION : ne pas traduire les points de suspension de cette chaîne (Charles).
 #. (itstool) path: item/p
 #: C/archive-view.page:74
-#| msgid "Click <gui>Open With…</gui>."
 msgid "Click <gui style=\"menuitem\">Open With…</gui>."
 msgstr "Cliquez sur <gui style=\"menuitem\">Ouvrir avec</gui>."
 
 #. (itstool) path: item/p
 #: C/archive-view.page:77
-#| msgid ""
-#| "Select the application that you want to use and click <gui>Select</gui>."
 msgid ""
 "Select the application that you want to use and click <gui style=\"menuitem"
 "\">Select</gui>."
@@ -982,17 +959,29 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/password-protection.page:48
 msgid ""
-"At the bottom of the file chooser dialog you can choose a <gui>File Format</"
-"gui> and enter a password into the <gui style=\"input\">Password</gui> field "
-"in <gui>Other Options</gui>."
+"At the bottom of the file chooser dialog, expand <gui>Other Options</gui>."
 msgstr ""
-"En bas de la boîte de dialogue de sélection de fichier, vous pouvez "
-"sélectionner un <gui>Format de fichier</gui> et saisir un mot de passe dans "
-"le champ <gui style=\"input\">Mot de passe</gui> des <gui>Autres options</"
+"En bas de la boîte de dialogue de sélection de fichier, déroulez <gui>Autres "
+"options</gui>."
+
+#. (itstool) path: item/p
+#: C/password-protection.page:51
+msgid "Enter a password into the <gui style=\"input\">Password</gui> field."
+msgstr ""
+"Saisissez un mot de passe dans le champ <gui style=\"input\">Mot de passe</"
 "gui>."
 
 #. (itstool) path: note/p
-#: C/password-protection.page:52
+#: C/password-protection.page:53
+msgid ""
+"If you want to encrypt the list of files tick <gui style=\"checkbox"
+"\">Encrypt the file list too</gui>."
+msgstr ""
+"Si vous souhaitez chiffrer la liste des fichiers, cochez la case <gui style="
+"\"checkbox\">Chiffrer aussi la liste des fichiers</gui>."
+
+#. (itstool) path: note/p
+#: C/password-protection.page:57
 msgid ""
 "You may not be able to type a password, because not all archive types "
 "support encryption, so choose an archive type that can be password protected "
@@ -1004,7 +993,7 @@ msgstr ""
 "de définir un mot de passe."
 
 #. (itstool) path: item/p
-#: C/password-protection.page:58
+#: C/password-protection.page:63
 msgid ""
 "Continue with <link xref=\"archive-create\">creating a new archive</link>."
 msgstr ""
@@ -1012,18 +1001,18 @@ msgstr ""
 "link>."
 
 #. (itstool) path: page/p
-#: C/password-protection.page:63
+#: C/password-protection.page:68
 msgid "Protect an existing archive by setting a password:"
 msgstr "Protégez une archive existante en définissant un mot de passe :"
 
 #. (itstool) path: item/p
-#: C/password-protection.page:66
+#: C/password-protection.page:71
 msgid "<link xref=\"archive-open\">Open an archive</link>."
 msgstr "<link xref=\"archive-open\">Ouvrir une archive</link>."
 
 # ATTENTION : ne pas traduire les points de suspension de cette chaîne (Charles).
 #. (itstool) path: item/p
-#: C/password-protection.page:69
+#: C/password-protection.page:74
 msgid ""
 "Press the menu button in the top-right corner of the window and select <gui "
 "style=\"menuitem\">Password…</gui>."
@@ -1032,15 +1021,12 @@ msgstr ""
 "fenêtre et sélectionnez <gui style=\"menuitem\">Mot de passe</gui>."
 
 #. (itstool) path: item/p
-#: C/password-protection.page:73
+#: C/password-protection.page:78
 msgid "Enter a password."
 msgstr "Saisissez un mot de passe."
 
 #. (itstool) path: note/p
-#: C/password-protection.page:75
-#| msgid ""
-#| "If you want to encrypt the list of files tick <gui style=\"checkbox"
-#| "\">Encrypt the file list too</gui>."
+#: C/password-protection.page:80
 msgid ""
 "If you want to encrypt the list of files tick <gui style=\"checkbox"
 "\">Encrypt the file list</gui>."
@@ -1049,13 +1035,12 @@ msgstr ""
 "\"checkbox\">Chiffrer la liste des fichiers</gui>."
 
 #. (itstool) path: item/p
-#: C/password-protection.page:80
-#| msgid "Click <gui style=\"button\">OK</gui> to continue."
+#: C/password-protection.page:85
 msgid "Click <gui style=\"button\">Save</gui> to continue."
 msgstr "Cliquez sur <gui style=\"button\">Enregistrer</gui>."
 
 #. (itstool) path: note/p
-#: C/password-protection.page:82
+#: C/password-protection.page:87
 msgid ""
 "<app>Archive Manager</app> will encrypt only new files which will be added "
 "to the archive!"
@@ -1194,11 +1179,6 @@ msgstr "Test de l’intégrité"
 
 #. (itstool) path: page/p
 #: C/test-integrity.page:28
-#| msgid ""
-#| "<app>Archive Manager</app> allows you to check whether the compressed "
-#| "data in an archive contains any errors. Do this by clicking <guiseq><gui "
-#| "style=\"menu\">Archive</gui><gui style=\"menuitem\">Test Integrity</gui></"
-#| "guiseq>."
 msgid ""
 "<app>Archive Manager</app> allows you to check whether the compressed data "
 "in an archive contains any errors. Do this by pressing the menu button in "
@@ -1286,6 +1266,23 @@ msgstr ""
 "\"password-protection\">Protection par mot de passe</link>."
 
 #~ msgid ""
+#~ "Name your new archive file and choose the location where it will be "
+#~ "saved, then click <gui>Create</gui> to continue."
+#~ msgstr ""
+#~ "Donnez un nom à votre nouvelle archive, choisissez son emplacement et "
+#~ "cliquez sur <gui>Créer</gui>."
+
+#~ msgid ""
+#~ "At the bottom of the file chooser dialog you can choose a <gui>File "
+#~ "Format</gui> and enter a password into the <gui style=\"input\">Password</"
+#~ "gui> field in <gui>Other Options</gui>."
+#~ msgstr ""
+#~ "En bas de la boîte de dialogue de sélection de fichier, vous pouvez "
+#~ "sélectionner un <gui>Format de fichier</gui> et saisir un mot de passe "
+#~ "dans le champ <gui style=\"input\">Mot de passe</gui> des <gui>Autres "
+#~ "options</gui>."
+
+#~ msgid ""
 #~ "Select <guiseq><gui style=\"menu\">Archive Manager</gui><gui style="
 #~ "\"menuitem\">New Archive</gui></guiseq>."
 #~ msgstr ""
@@ -1317,11 +1314,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Cliquez sur <guiseq><gui style=\"menu\">Édition</gui><gui style=\"menuitem"
 #~ "\">Mot de passe…</gui></guiseq>"
-
-#~ msgid "Type a password into the <gui style=\"input\">Password</gui> field."
-#~ msgstr ""
-#~ "Saisissez un mot de passe dans le champ <gui style=\"input\">Mot de "
-#~ "passe</gui>."
 
 #~ msgid ""
 #~ "Click the <gui>Create a new archive</gui> toolbar button, or click "
