@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller-help\n"
-"POT-Creation-Date: 2020-02-09 19:48+0000\n"
-"PO-Revision-Date: 2020-03-01 16:55+0100\n"
+"POT-Creation-Date: 2020-03-31 15:33+0000\n"
+"PO-Revision-Date: 2020-04-05 11:03+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -74,14 +74,21 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/archive-create.page:39
 msgid ""
-"Name your new archive file and choose the location where it will be saved, "
-"then click <gui>Create</gui> to continue."
-msgstr ""
-"Nazwij nowe archiwum i wybierz miejsce zapisu, a następnie kliknij przycisk "
-"<gui>Utwórz</gui>, aby kontynuować."
+"Name your new archive file and select the file format from the dropdown."
+msgstr "Nazwij nowe archiwum i wybierz format pliku z rozwijanej listy."
+
+#. (itstool) path: item/p
+#: C/archive-create.page:42
+msgid "Choose the location where the archive file will be saved."
+msgstr "Wybierz położenie, w którym archiwum zostanie zapisane."
+
+#. (itstool) path: item/p
+#: C/archive-create.page:45
+msgid "Click <gui>Create</gui> to continue."
+msgstr "Kliknij przycisk <gui>Utwórz</gui>, aby kontynuować."
 
 #. (itstool) path: note/p
-#: C/archive-create.page:42
+#: C/archive-create.page:47
 msgid ""
 "By clicking <gui>Other Options</gui> you can set a password or split your "
 "new archive into smaller, individual files by selecting the relevant option "
@@ -94,7 +101,7 @@ msgstr ""
 "wybrany format pliku archiwum je obsługuje."
 
 #. (itstool) path: item/p
-#: C/archive-create.page:50
+#: C/archive-create.page:55
 msgid ""
 "Add the desired files and folders to your archive by pressing <gui>+</gui> "
 "in the header bar. Check the box next to the files and folders that you want "
@@ -105,7 +112,7 @@ msgstr ""
 "dodane."
 
 #. (itstool) path: note/p
-#: C/archive-create.page:54
+#: C/archive-create.page:59
 msgid ""
 "Not all archive file formats support folders — if the file format that you "
 "are using does not, you will not be warned. If the file format that you are "
@@ -117,7 +124,7 @@ msgstr ""
 "dodane, ale same katalogu nie."
 
 #. (itstool) path: item/p
-#: C/archive-create.page:61
+#: C/archive-create.page:66
 msgid ""
 "Once you finish adding files, the archive is ready; you do not need to save "
 "it."
@@ -897,15 +904,25 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/password-protection.page:48
 msgid ""
-"At the bottom of the file chooser dialog you can choose a <gui>File Format</"
-"gui> and enter a password into the <gui style=\"input\">Password</gui> field "
-"in <gui>Other Options</gui>."
-msgstr ""
-"Na dole okna wyboru plików można wybrać <gui>Format</gui> i wpisać hasło "
-"w polu <gui style=\"input\">Hasło</gui> w sekcji <gui>Inne opcje</gui>."
+"At the bottom of the file chooser dialog, expand <gui>Other Options</gui>."
+msgstr "Rozwiń sekcję <gui>Inne opcje</gui> na dole okna wyboru pliku."
+
+#. (itstool) path: item/p
+#: C/password-protection.page:51
+msgid "Enter a password into the <gui style=\"input\">Password</gui> field."
+msgstr "Wpisz hasło w polu <gui style=\"input\">Hasło</gui>."
 
 #. (itstool) path: note/p
-#: C/password-protection.page:52
+#: C/password-protection.page:53
+msgid ""
+"If you want to encrypt the list of files tick <gui style=\"checkbox"
+"\">Encrypt the file list too</gui>."
+msgstr ""
+"Aby zaszyfrować listę plików, zaznacz opcję <gui style=\"checkbox"
+"\">Szyfrowanie także listy plików</gui>."
+
+#. (itstool) path: note/p
+#: C/password-protection.page:57
 msgid ""
 "You may not be able to type a password, because not all archive types "
 "support encryption, so choose an archive type that can be password protected "
@@ -915,24 +932,24 @@ msgstr ""
 "typ przed ustawieniem hasła."
 
 #. (itstool) path: item/p
-#: C/password-protection.page:58
+#: C/password-protection.page:63
 msgid ""
 "Continue with <link xref=\"archive-create\">creating a new archive</link>."
 msgstr ""
 "Kontynuuj <link xref=\"archive-create\">tworzenie nowego archiwum</link>."
 
 #. (itstool) path: page/p
-#: C/password-protection.page:63
+#: C/password-protection.page:68
 msgid "Protect an existing archive by setting a password:"
 msgstr "Aby ochronić hasłem istniejące archiwum:"
 
 #. (itstool) path: item/p
-#: C/password-protection.page:66
+#: C/password-protection.page:71
 msgid "<link xref=\"archive-open\">Open an archive</link>."
 msgstr "<link xref=\"archive-open\">Otwórz archiwum</link>."
 
 #. (itstool) path: item/p
-#: C/password-protection.page:69
+#: C/password-protection.page:74
 msgid ""
 "Press the menu button in the top-right corner of the window and select <gui "
 "style=\"menuitem\">Password…</gui>."
@@ -941,26 +958,26 @@ msgstr ""
 "\"menuitem\">Hasło…</gui>."
 
 #. (itstool) path: item/p
-#: C/password-protection.page:73
+#: C/password-protection.page:78
 msgid "Enter a password."
 msgstr "Wpisz hasło."
 
 #. (itstool) path: note/p
-#: C/password-protection.page:75
+#: C/password-protection.page:80
 msgid ""
 "If you want to encrypt the list of files tick <gui style=\"checkbox"
 "\">Encrypt the file list</gui>."
 msgstr ""
-"Aby zaszyfrować listę plików, zaznacz pole <gui style=\"checkbox"
+"Aby zaszyfrować listę plików, zaznacz opcję <gui style=\"checkbox"
 "\">Szyfrowanie listy plików</gui>."
 
 #. (itstool) path: item/p
-#: C/password-protection.page:80
+#: C/password-protection.page:85
 msgid "Click <gui style=\"button\">Save</gui> to continue."
 msgstr "Kliknij przycisk <gui style=\"button\">Zapisz</gui>, aby kontynuować."
 
 #. (itstool) path: note/p
-#: C/password-protection.page:82
+#: C/password-protection.page:87
 msgid ""
 "<app>Archive Manager</app> will encrypt only new files which will be added "
 "to the archive!"
