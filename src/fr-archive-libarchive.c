@@ -1109,11 +1109,21 @@ extract_archive_thread (GSimpleAsyncResult *result,
 
 			case AE_IFLNK:
 				if (! g_file_make_symbolic_link (file, archive_entry_symlink (entry), cancellable, &local_error)) {
-					if (! g_error_matches (local_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
+					if (g_error_matches (local_error, G_IO_ERROR, G_IO_ERROR_EXISTS)) {
+						g_clear_error (&local_error);
+						if (g_file_delete (file, cancellable, &local_error)) {
+							g_clear_error (&local_error);
+							if (! g_file_make_symbolic_link (file, archive_entry_symlink (entry), cancellable, &local_error))
+								load_data->error = g_error_copy (local_error);
+						}
+						else
+							load_data->error = g_error_copy (local_error);
+					}
+					else
 						load_data->error = g_error_copy (local_error);
 					g_clear_error (&local_error);
 				}
-				else if (_symlink_is_external_to_destination (file, archive_entry_symlink (entry), extract_data->destination, external_links))
+				if ((load_data->error == NULL) && _symlink_is_external_to_destination (file, archive_entry_symlink (entry), extract_data->destination, external_links))
 					g_hash_table_insert (external_links, g_object_ref (file), GINT_TO_POINTER (1));
 				archive_read_data_skip (a);
 				break;
