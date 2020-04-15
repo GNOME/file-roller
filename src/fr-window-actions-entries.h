@@ -70,6 +70,7 @@ static const FrAccelerator fr_window_accelerators[] = {
 	{ "find", "<Control>f" },
 	{ "reload", "<Control>r" },
 	{ "rename", "F2" },
+	{ "save-as", "<Shift><Control>s" },	
 	{ "select-all", "<control>a" },
 	{ "view-properties", "<alt>Return" },
 	{ "view-sidebar", "F9" }
