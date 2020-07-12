@@ -307,10 +307,14 @@ get_package_name_from_class_file (char *fname)
 	}
 
 	if (package != NULL) {
-		for (i = length; (i >= 0) && (end == 0); i-- )
+		char *tmp;
+
+		for (i = length; (i >= 0) && (end == 0); i--)
 			if (package[i] == '/')
 				end = i;
-		package = g_strndup (package, end);
+		tmp = g_strndup (package, end);
+		g_free (package);
+		package = tmp;
 	}
 
 	java_class_file_free (cfile);
