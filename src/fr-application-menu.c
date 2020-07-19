@@ -134,6 +134,7 @@ fr_application_activate_about (GSimpleAction *action,
 			       "translator-credits", _("translator-credits"),
 			       "logo-icon-name", "org.gnome.ArchiveManager",
 			       "license-type", GTK_LICENSE_GPL_2_0,
+			       "website", "https://wiki.gnome.org/Apps/FileRoller",
 			       "wrap-license", TRUE,
 			       NULL);
 }
