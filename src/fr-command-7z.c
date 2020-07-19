@@ -303,7 +303,7 @@ process_line__add (char     *line,
 	}
 
 	if (fr_archive_progress_get_total_files (archive) > 0)
-		parse_progress_line (archive, "Compressing  ", _("Adding “%s”"), line);
+		parse_progress_line (archive, "+ ", _("Adding “%s”"), line);
 }
 
 
@@ -341,6 +341,7 @@ fr_command_7z_add (FrCommand  *command,
 	}
 
 	fr_process_add_arg (command->process, "-bd");
+	fr_process_add_arg (command->process, "-bb1");
 	fr_process_add_arg (command->process, "-y");
 	if (follow_links)
 		fr_process_add_arg (command->process, "-l");
@@ -455,7 +456,7 @@ process_line__extract (char     *line,
 	FrArchive *archive = FR_ARCHIVE (data);
 
 	if (fr_archive_progress_get_total_files (archive) > 0)
-		parse_progress_line (archive, "Extracting  ", _("Extracting “%s”"), line);
+		parse_progress_line (archive, "- ", _("Extracting “%s”"), line);
 }
 
 
@@ -483,6 +484,7 @@ fr_command_7z_extract (FrCommand  *command,
 		fr_process_add_arg (command->process, "x");
 
 	fr_process_add_arg (command->process, "-bd");
+	fr_process_add_arg (command->process, "-bb1");
 	fr_process_add_arg (command->process, "-y");
 	add_password_arg (command, archive->password, FALSE);
 
