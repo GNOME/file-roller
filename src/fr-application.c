@@ -26,6 +26,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <glib/gprintf.h>
 #ifdef ENABLE_NOTIFICATION
 #  include <libnotify/notify.h>
@@ -449,6 +450,7 @@ fr_application_startup (GApplication *application)
 	GtkSettings	*gtk_settings;
 	gboolean	 shell_shows_menubar;
 
+    g_application_set_resource_base_path (application, "/org/gnome/FileRoller");
 	G_APPLICATION_CLASS (fr_application_parent_class)->startup (application);
 
 	g_set_application_name (_("Archive Manager"));
