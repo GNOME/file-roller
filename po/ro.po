@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2020-07-19 07:07+0000\n"
-"PO-Revision-Date: 2020-07-19 11:37+0200\n"
-"Last-Translator: Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
+"POT-Creation-Date: 2020-07-19 11:13+0000\n"
+"PO-Revision-Date: 2020-07-19 14:55+0300\n"
+"Last-Translator: Florentina Mușat <florentina.musat.28@gmail.com>\n"
 "Language-Team: Gnome Romanian Translation Team\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -348,17 +348,17 @@ msgctxt "Window title"
 msgid "Extract"
 msgstr "Dezarhivare"
 
-#: src/dlg-package-installer.c:114 src/dlg-package-installer.c:227
+#: src/dlg-package-installer.c:111 src/dlg-package-installer.c:223
 msgid "There was an internal error trying to search for applications:"
 msgstr "S-a produs o eroare internă în timpul căutarii după aplicații:"
 
-#: src/dlg-package-installer.c:296 src/dlg-package-installer.c:305
-#: src/dlg-package-installer.c:332 src/fr-archive.c:747 src/fr-window.c:4077
+#: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
+#: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
 #: src/fr-window.c:7651 src/fr-window.c:8008 src/fr-window.c:9523
 msgid "Archive type not supported."
 msgstr "Tip nesuportat de arhivă."
 
-#: src/dlg-package-installer.c:315
+#: src/dlg-package-installer.c:311
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -367,11 +367,11 @@ msgstr ""
 "Nu există nici o comandă instalată pentru fișiere %s.\n"
 "Doriți să căutați după o comandă pentru a deschide acest fișier?"
 
-#: src/dlg-package-installer.c:319
+#: src/dlg-package-installer.c:315
 msgid "Could not open this file type"
 msgstr "Nu s-a putut deschide acest tip de fișier"
 
-#: src/dlg-package-installer.c:322
+#: src/dlg-package-installer.c:318
 msgid "_Search Command"
 msgstr "_Caută comandă"
 
@@ -437,7 +437,8 @@ msgstr ""
 "Mugurel Tudor <mugurelu@gnome.ro>\n"
 "Bogdan Mințoi <mintoi.bogdan@gmail.com>\n"
 "Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
-"Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2019\n"
+"Florentina Mușat <florentina [dot] musat [dot] 28 [at] gmail [dot] com>, "
+"2019-2020\n"
 "\n"
 "Contribuții Launchpad:\n"
 "  Adi Roiban https://launchpad.net/~adiroiban\n"
@@ -521,13 +522,13 @@ msgid "You can’t add an archive to itself."
 msgstr "Nu puteți adăuga o arhivă la ea însăși."
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:306 src/fr-command-rar.c:495 src/fr-command-tar.c:325
+#: src/fr-command-7z.c:288 src/fr-command-rar.c:495 src/fr-command-tar.c:325
 #, c-format
 msgid "Adding “%s”"
 msgstr "Se adaugă „%s”"
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:458 src/fr-command-rar.c:627 src/fr-command-tar.c:446
+#: src/fr-command-7z.c:441 src/fr-command-rar.c:627 src/fr-command-tar.c:446
 #, c-format
 msgid "Extracting “%s”"
 msgstr "Se dezarhivează „%s”"
@@ -1250,6 +1251,121 @@ msgstr "Scurtături de _tastatură"
 msgid "_About Archive Manager"
 msgstr "_Despre administrator de arhive"
 
+#: src/ui/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Generale"
+
+#: src/ui/help-overlay.ui:18
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Arată ajutorul"
+
+#: src/ui/help-overlay.ui:24
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Scurtături de tastatură"
+
+#: src/ui/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Închide fereastra"
+
+#: src/ui/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Ieșire"
+
+#: src/ui/help-overlay.ui:47
+msgctxt "shortcut window"
+msgid "Archive"
+msgstr "Arhivează"
+
+#: src/ui/help-overlay.ui:52
+msgctxt "shortcut window"
+msgid "Create new archive"
+msgstr "Creează o nouă arhivă"
+
+#: src/ui/help-overlay.ui:59
+msgctxt "shortcut window"
+msgid "Open an archive"
+msgstr "Deschide o arhivă"
+
+#: src/ui/help-overlay.ui:66
+msgctxt "shortcut window"
+msgid "Extract an archive"
+msgstr "Extrage o arhivă"
+
+#: src/ui/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Save with another name"
+msgstr "Salvează cu alt nume"
+
+#: src/ui/help-overlay.ui:80
+msgctxt "shortcut window"
+msgid "View archive properties"
+msgstr "Vizualizează proprietățile arhivei"
+
+#: src/ui/help-overlay.ui:87
+msgctxt "shortcut window"
+msgid "Rename file or folder in an archive"
+msgstr "Redenumește fișierul sau dosarul într-o arhivă"
+
+#: src/ui/help-overlay.ui:95
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Vizualizează"
+
+#: src/ui/help-overlay.ui:100
+msgctxt "shortcut window"
+msgid "Display the tree view of the folders in the side pane"
+msgstr "Afișează vizualizarea arbore a dosarelor în panoul lateral"
+
+#: src/ui/help-overlay.ui:107
+msgctxt "shortcut window"
+msgid "View the content of an archive as a list of files"
+msgstr "Vizualizează conținutul unei arhive ca o listă de fișiere"
+
+#: src/ui/help-overlay.ui:114
+msgctxt "shortcut window"
+msgid "View the content of an archive as a folder structure"
+msgstr "Vizualizează conținutul unei arhive ca o structură de dosare"
+
+#: src/ui/help-overlay.ui:121
+msgctxt "shortcut window"
+msgid "Refresh"
+msgstr "Reîmprospătează"
+
+#: src/ui/help-overlay.ui:129
+msgctxt "shortcut window"
+msgid "Common"
+msgstr "Comune"
+
+#: src/ui/help-overlay.ui:134
+msgctxt "shortcut window"
+msgid "Find"
+msgstr "Caută"
+
+#: src/ui/help-overlay.ui:141
+msgctxt "shortcut window"
+msgid "Select all"
+msgstr "Selectează toate"
+
+#: src/ui/help-overlay.ui:148
+msgctxt "shortcut window"
+msgid "Deselect all"
+msgstr "Deselectează toate"
+
+#: src/ui/help-overlay.ui:155
+msgctxt "shortcut window"
+msgid "Delete files or folders from an archive"
+msgstr "Șterge fișiere sau dosare de la o arhivă"
+
+#: src/ui/help-overlay.ui:162
+msgctxt "shortcut window"
+msgid "Stop the operation"
+msgstr "Oprește operația"
+
 #: src/ui/menus.ui:11
 msgid "_Open With…"
 msgstr "De_schide cu…"
@@ -1354,9 +1470,6 @@ msgstr "Al_egeți fișierele pe care doriți să le actualizați:"
 #~ msgid "file-roller"
 #~ msgstr "file-roller"
 
-#~ msgid "_Quit"
-#~ msgstr "_Ieșire"
-
 #~ msgid "Extract To..."
 #~ msgstr "Dezarhivează în..."
 
@@ -1377,9 +1490,6 @@ msgstr "Al_egeți fișierele pe care doriți să le actualizați:"
 
 #~ msgid "Extract"
 #~ msgstr "Dezarhivează"
-
-#~ msgid "Extract archive"
-#~ msgstr "Extrage conținutul arhivei"
 
 #~ msgid "Open"
 #~ msgstr "Deschide"
@@ -1660,9 +1770,6 @@ msgstr "Al_egeți fișierele pe care doriți să le actualizați:"
 #~ msgid "Close the folders pane"
 #~ msgstr "Închide panoul de dosare"
 
-#~ msgid "Open archive"
-#~ msgstr "Deschide o arhivă"
-
 #~ msgid "Open a recently used archive"
 #~ msgstr "Deschide o arhivă recent accesată"
 
@@ -1745,9 +1852,6 @@ msgstr "Al_egeți fișierele pe care doriți să le actualizați:"
 #~ msgid "New..."
 #~ msgstr "Nou..."
 
-#~ msgid "Create a new archive"
-#~ msgstr "Creează o nouă arhivă"
-
 #~ msgctxt "File"
 #~ msgid "Open..."
 #~ msgstr "Deschide..."
@@ -1761,9 +1865,6 @@ msgstr "Al_egeți fișierele pe care doriți să le actualizați:"
 #~ msgid "Specify a password for this archive"
 #~ msgstr "Alegeți o parolă pentru această arhivă"
 
-#~ msgid "Show archive properties"
-#~ msgstr "Arată proprietățile arhivei"
-
 #~ msgid "Reload current archive"
 #~ msgstr "Reîncarcă arhiva curentă"
 
@@ -1772,9 +1873,6 @@ msgstr "Al_egeți fișierele pe care doriți să le actualizați:"
 
 #~ msgid "Select all files"
 #~ msgstr "Selectează toate fișierele"
-
-#~ msgid "Stop current operation"
-#~ msgstr "Oprește operația curentă"
 
 #~ msgid "Test whether the archive contains errors"
 #~ msgstr "Testează arhiva pentru erori"
