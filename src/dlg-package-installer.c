@@ -91,7 +91,7 @@ packagekit_install_package_names_ready_cb (GObject      *source_object,
 	GDBusProxy      *proxy;
 	GVariant        *values;
 	GError          *error = NULL;
-	FrErrorType  error_type = FR_ERROR_NONE;
+	FrErrorType      error_type = FR_ERROR_NONE;
 	char            *error_message = NULL;
 
 	proxy = G_DBUS_PROXY (source_object);
@@ -188,10 +188,10 @@ install_packages (InstallerData *idata)
 					       &error);
 
 		if (proxy != NULL) {
-			char    **names;
-			char    **real_names;
-			char     *desktop_startup_id;
-			GVariant *platform_data;
+			char     **names;
+			char     **real_names;
+			char      *desktop_startup_id;
+			GVariant  *platform_data;
 
 			names = g_strsplit (idata->packages, ",", -1);
 			real_names = get_packages_real_names (names);
@@ -201,10 +201,10 @@ install_packages (InstallerData *idata)
 			g_dbus_proxy_call (proxy,
 					   "InstallPackageNames",
 					   g_variant_new ("(^asss@a{sv})",
-					   real_names,
-					   "hide-confirm-search,hide-finished,hide-warning",
-					   "org.gnome.FileRoller",
-					   platform_data),
+							  real_names,
+							  "hide-confirm-search,hide-finished,hide-warning",
+							  "org.gnome.FileRoller",
+							  platform_data),
 					   G_DBUS_CALL_FLAGS_NONE,
 					   G_MAXINT,
 					   idata->cancellable,
