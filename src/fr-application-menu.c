@@ -163,7 +163,9 @@ static const FrAccelerator fr_app_accelerators[] = {
 	{ "app.new", "<Control>n" },
 	{ "app.open", "<Control>o" },
 	{ "app.help", "F1" },
-	{ "app.quit", "<Control>q" }
+	{ "app.quit", "<Control>q" },
+	{ "app.list-mode::flat", "<Control>1" },
+	{ "app.list-mode::as-dir", "<Control>2" },
 };
 
 
