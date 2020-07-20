@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2020-07-19 07:07+0000\n"
-"PO-Revision-Date: 2020-07-19 10:09+0300\n"
+"POT-Creation-Date: 2020-07-19 11:13+0000\n"
+"PO-Revision-Date: 2020-07-20 10:06+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -343,17 +343,17 @@ msgctxt "Window title"
 msgid "Extract"
 msgstr "Розпакувати"
 
-#: src/dlg-package-installer.c:114 src/dlg-package-installer.c:227
+#: src/dlg-package-installer.c:111 src/dlg-package-installer.c:223
 msgid "There was an internal error trying to search for applications:"
 msgstr "Внутрішня помилка при спробі запуску програми:"
 
-#: src/dlg-package-installer.c:296 src/dlg-package-installer.c:305
-#: src/dlg-package-installer.c:332 src/fr-archive.c:747 src/fr-window.c:4077
+#: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
+#: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
 #: src/fr-window.c:7651 src/fr-window.c:8008 src/fr-window.c:9523
 msgid "Archive type not supported."
 msgstr "Непідтримуваний тип архіву."
 
-#: src/dlg-package-installer.c:315
+#: src/dlg-package-installer.c:311
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -362,11 +362,11 @@ msgstr ""
 "Для файлів %s не встановлено команди.\n"
 "Знайти команду, що відкриває цей файл?"
 
-#: src/dlg-package-installer.c:319
+#: src/dlg-package-installer.c:315
 msgid "Could not open this file type"
 msgstr "Не вдалось відкрити цей тип архіву"
 
-#: src/dlg-package-installer.c:322
+#: src/dlg-package-installer.c:318
 msgid "_Search Command"
 msgstr "Команда _пошуку"
 
@@ -505,13 +505,13 @@ msgid "You can’t add an archive to itself."
 msgstr "Не можна додавати архів до самого себе."
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:306 src/fr-command-rar.c:495 src/fr-command-tar.c:325
+#: src/fr-command-7z.c:288 src/fr-command-rar.c:495 src/fr-command-tar.c:325
 #, c-format
 msgid "Adding “%s”"
 msgstr "Додавання «%s»"
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:458 src/fr-command-rar.c:627 src/fr-command-tar.c:446
+#: src/fr-command-7z.c:441 src/fr-command-rar.c:627 src/fr-command-tar.c:446
 #, c-format
 msgid "Extracting “%s”"
 msgstr "Розпакування «%s»"
@@ -1161,7 +1161,6 @@ msgid "Contents"
 msgstr "Зміст"
 
 #: src/ui/app-menubar.ui:138
-#| msgid "_Keyboard Shortcuts"
 msgid "Keyboard Shortcuts"
 msgstr "Клавіатурні скорочення"
 
@@ -1210,7 +1209,6 @@ msgid "Go up one level"
 msgstr "Піднятись рівнем вище"
 
 #: src/ui/gears-menu.ui:19
-#| msgid "Save As…"
 msgid "_Save As…"
 msgstr "Зберегти _як…"
 
@@ -1219,12 +1217,10 @@ msgid "Pass_word…"
 msgstr "Паро_ль…"
 
 #: src/ui/gears-menu.ui:31
-#| msgid "Properties"
 msgid "_Properties"
 msgstr "В_ластивості"
 
 #: src/ui/gears-menu.ui:49
-#| msgid "Sidebar"
 msgid "Side_bar"
 msgstr "_Бічна панель"
 
@@ -1235,6 +1231,136 @@ msgstr "_Клавіатурні скорочення"
 #: src/ui/gears-menu.ui:64
 msgid "_About Archive Manager"
 msgstr "_Про менеджер архівів"
+
+#: src/ui/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Загальні"
+
+#: src/ui/help-overlay.ui:18
+#| msgid "_Show the Files"
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Показати довідку"
+
+#: src/ui/help-overlay.ui:24
+#| msgid "Keyboard Shortcuts"
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Клавіатурні скорочення"
+
+#: src/ui/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Закрити вікно"
+
+#: src/ui/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Вийти"
+
+#: src/ui/help-overlay.ui:47
+#| msgid "New Archive"
+msgctxt "shortcut window"
+msgid "Archive"
+msgstr "Архівувати"
+
+#: src/ui/help-overlay.ui:52
+#| msgid "Create _Archive"
+msgctxt "shortcut window"
+msgid "Create new archive"
+msgstr "Створити архів"
+
+#: src/ui/help-overlay.ui:59
+#| msgid "_Open the Archive"
+msgctxt "shortcut window"
+msgid "Open an archive"
+msgstr "Відкриття архіву"
+
+#: src/ui/help-overlay.ui:66
+#| msgctxt "Window title"
+#| msgid "Extract archive"
+msgctxt "shortcut window"
+msgid "Extract an archive"
+msgstr "Видобування з архіву"
+
+#: src/ui/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Save with another name"
+msgstr "Зберегти з іншою назвою"
+
+#: src/ui/help-overlay.ui:80
+msgctxt "shortcut window"
+msgid "View archive properties"
+msgstr "Переглянути властивості архіву"
+
+#: src/ui/help-overlay.ui:87
+#| msgid "Recreate the folders stored in the archive"
+msgctxt "shortcut window"
+msgid "Rename file or folder in an archive"
+msgstr "Перейменувати файл або теку в архіві"
+
+#: src/ui/help-overlay.ui:95
+#| msgid "_View"
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Переглянути"
+
+#: src/ui/help-overlay.ui:100
+#| msgid "Display the time column in the main window."
+msgctxt "shortcut window"
+msgid "Display the tree view of the folders in the side pane"
+msgstr "Показати панель ієрархії тек на бічній панелі"
+
+#: src/ui/help-overlay.ui:107
+msgctxt "shortcut window"
+msgid "View the content of an archive as a list of files"
+msgstr "Показати вміст архіву як список файлів"
+
+#: src/ui/help-overlay.ui:114
+msgctxt "shortcut window"
+msgid "View the content of an archive as a folder structure"
+msgstr "Показати вміст архіву як структуру тек"
+
+#: src/ui/help-overlay.ui:121
+msgctxt "shortcut window"
+msgid "Refresh"
+msgstr "Оновити"
+
+#: src/ui/help-overlay.ui:129
+msgctxt "shortcut window"
+msgid "Common"
+msgstr "Типове"
+
+#: src/ui/help-overlay.ui:134
+#| msgid "_Find"
+msgctxt "shortcut window"
+msgid "Find"
+msgstr "Знайти"
+
+#: src/ui/help-overlay.ui:141
+#| msgid "_Select All"
+msgctxt "shortcut window"
+msgid "Select all"
+msgstr "Вибрати все"
+
+#: src/ui/help-overlay.ui:148
+#| msgid "D_eselect All"
+msgctxt "shortcut window"
+msgid "Deselect all"
+msgstr "Зняти позначення з усіх"
+
+#: src/ui/help-overlay.ui:155
+#| msgid "Deleting files from archive"
+msgctxt "shortcut window"
+msgid "Delete files or folders from an archive"
+msgstr "Вилучити файли або теки з архіву"
+
+#: src/ui/help-overlay.ui:162
+#| msgid "Go to the home location"
+msgctxt "shortcut window"
+msgid "Stop the operation"
+msgstr "Припинити виконання дії"
 
 #: src/ui/menus.ui:11
 msgid "_Open With…"
@@ -1332,6 +1458,3 @@ msgstr "Кількість файлів:"
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "_Виберіть файли, які треба оновити:"
-
-#~ msgid "Keyboard Shorcuts"
-#~ msgstr "Клавіатурні скорочення"
