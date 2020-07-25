@@ -9974,7 +9974,7 @@ fr_window_dnd_extraction_finished (FrWindow *window,
 {
 	if (window->priv->dnd_extract_is_running == TRUE) {
 		window->priv->dnd_extract_is_running = FALSE;
-		window->priv->dnd_extract_finished_with_error = TRUE;
+		window->priv->dnd_extract_finished_with_error = error;
 	}
 }
 
