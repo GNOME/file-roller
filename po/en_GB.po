@@ -3,23 +3,23 @@
 # This file is distributed under the same license as the file-roller package.
 # Gareth Owen <gowen72@yahoo.com>, David Lodge <dave@cirt.net>, 2004.
 # Philip Withnall <philip@tecnocode.co.uk>, 2009.
-# Zander Brown <zbrown@gnome.org>, 2019.
 # Bruce Cowan <bruce@bcowan.me.uk>, 2010-2020.
+# Zander Brown <zbrown@gnome.org>, 2019-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2019-10-12 15:50+0000\n"
-"PO-Revision-Date: 2020-02-25 20:32+0000\n"
-"Last-Translator: Bruce Cowan <bruce@bcowan.me.uk>\n"
+"POT-Creation-Date: 2020-07-19 11:13+0000\n"
+"PO-Revision-Date: 2020-08-06 15:10+0100\n"
+"Last-Translator: Zander Brown <zbrown@gnome.org>\n"
 "Language-Team: English - United Kingdom <en_GB@li.org>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 3.34.0\n"
+"X-Generator: Gtranslator 3.36.0\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -59,7 +59,7 @@ msgstr "Zip archives (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "xz archives (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:455
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:456
 #: src/fr-window.c:2022 src/fr-window.c:5532
 msgid "Archive Manager"
 msgstr "Archive Manager"
@@ -300,7 +300,7 @@ msgid "Wrong password."
 msgstr "Wrong password."
 
 #: src/dlg-batch-add.c:88 src/fr-application.c:226 src/fr-application.c:262
-#: src/fr-application.c:583
+#: src/fr-application.c:584
 msgid "Compress"
 msgstr "Compress"
 
@@ -342,17 +342,17 @@ msgctxt "Window title"
 msgid "Extract"
 msgstr "Extract"
 
-#: src/dlg-package-installer.c:114 src/dlg-package-installer.c:227
+#: src/dlg-package-installer.c:111 src/dlg-package-installer.c:223
 msgid "There was an internal error trying to search for applications:"
 msgstr "There was an internal error trying to search for applications:"
 
-#: src/dlg-package-installer.c:296 src/dlg-package-installer.c:305
-#: src/dlg-package-installer.c:332 src/fr-archive.c:747 src/fr-window.c:4077
+#: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
+#: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
 #: src/fr-window.c:7651 src/fr-window.c:8008 src/fr-window.c:9523
 msgid "Archive type not supported."
 msgstr "Archive type not supported."
 
-#: src/dlg-package-installer.c:315
+#: src/dlg-package-installer.c:311
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -361,11 +361,11 @@ msgstr ""
 "There is no command installed for %s files.\n"
 "Do you want to search for a command to open this file?"
 
-#: src/dlg-package-installer.c:319
+#: src/dlg-package-installer.c:315
 msgid "Could not open this file type"
 msgstr "Could not open this file type"
 
-#: src/dlg-package-installer.c:322
+#: src/dlg-package-installer.c:318
 msgid "_Search Command"
 msgstr "_Search Command"
 
@@ -485,12 +485,12 @@ msgstr "Start as a service"
 msgid "Show version"
 msgstr "Show version"
 
-#: src/fr-application.c:298 src/fr-application.c:324 src/fr-application.c:606
+#: src/fr-application.c:298 src/fr-application.c:324 src/fr-application.c:607
 msgctxt "Window title"
 msgid "Extract archive"
 msgstr "Extract archive"
 
-#: src/fr-application.c:486
+#: src/fr-application.c:487
 msgid "— Create and modify an archive"
 msgstr "— Create and modify an archive"
 
@@ -507,13 +507,13 @@ msgid "You can’t add an archive to itself."
 msgstr "You can’t add an archive to itself."
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:306 src/fr-command-rar.c:495 src/fr-command-tar.c:325
+#: src/fr-command-7z.c:288 src/fr-command-rar.c:495 src/fr-command-tar.c:325
 #, c-format
 msgid "Adding “%s”"
 msgstr "Adding “%s”"
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:458 src/fr-command-rar.c:627 src/fr-command-tar.c:446
+#: src/fr-command-7z.c:441 src/fr-command-rar.c:627 src/fr-command-tar.c:446
 #, c-format
 msgid "Extracting “%s”"
 msgstr "Extracting “%s”"
@@ -1095,7 +1095,7 @@ msgstr "Save _As…"
 msgid "_Test Integrity"
 msgstr "_Test Integrity"
 
-#: src/ui/app-menubar.ui:34 src/ui/gears-menu.ui:31
+#: src/ui/app-menubar.ui:34
 msgid "Properties"
 msgstr "Properties"
 
@@ -1144,7 +1144,7 @@ msgstr "Set Pass_word…"
 msgid "_View"
 msgstr "_View"
 
-#: src/ui/app-menubar.ui:110 src/ui/gears-menu.ui:49
+#: src/ui/app-menubar.ui:110
 msgid "Sidebar"
 msgstr "Sidebar"
 
@@ -1156,7 +1156,7 @@ msgstr "View All _Files"
 msgid "View as a F_older"
 msgstr "View as a F_older"
 
-#: src/ui/app-menubar.ui:130 src/ui/gears-menu.ui:55
+#: src/ui/app-menubar.ui:130 src/ui/gears-menu.ui:59
 msgid "_Help"
 msgstr "_Help"
 
@@ -1165,6 +1165,10 @@ msgid "Contents"
 msgstr "Contents"
 
 #: src/ui/app-menubar.ui:138
+msgid "Keyboard Shortcuts"
+msgstr "Keyboard Shortcuts"
+
+#: src/ui/app-menubar.ui:143
 msgid "_About"
 msgstr "_About"
 
@@ -1209,16 +1213,162 @@ msgid "Go up one level"
 msgstr "Go up one level"
 
 #: src/ui/gears-menu.ui:19
-msgid "Save As…"
-msgstr "Save As…"
+#| msgid "Save As…"
+msgid "_Save As…"
+msgstr "_Save As…"
 
 #: src/ui/gears-menu.ui:23
 msgid "Pass_word…"
 msgstr "Pass_word…"
 
-#: src/ui/gears-menu.ui:60
+#: src/ui/gears-menu.ui:31
+#| msgid "Properties"
+msgid "_Properties"
+msgstr "_Properties"
+
+#: src/ui/gears-menu.ui:49
+#| msgid "Sidebar"
+msgid "Side_bar"
+msgstr "Side_bar"
+
+#: src/ui/gears-menu.ui:55
+msgid "_Keyboard Shortcuts"
+msgstr "_Keyboard Shortcuts"
+
+#: src/ui/gears-menu.ui:64
 msgid "_About Archive Manager"
 msgstr "_About Archive Manager"
+
+#: src/ui/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "General"
+
+#: src/ui/help-overlay.ui:18
+#| msgid "_Show the Files"
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Show help"
+
+#: src/ui/help-overlay.ui:24
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Keyboard shortcuts"
+
+#: src/ui/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Close window"
+
+#: src/ui/help-overlay.ui:38
+#| msgid "_Quit"
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Quit"
+
+#: src/ui/help-overlay.ui:47
+#| msgid "_Archive"
+msgctxt "shortcut window"
+msgid "Archive"
+msgstr "Archive"
+
+#: src/ui/help-overlay.ui:52
+#| msgid "Create a new archive"
+msgctxt "shortcut window"
+msgid "Create new archive"
+msgstr "Create new archive"
+
+#: src/ui/help-overlay.ui:59
+#| msgid "Open archive"
+msgctxt "shortcut window"
+msgid "Open an archive"
+msgstr "Open an archive"
+
+#: src/ui/help-overlay.ui:66
+#| msgctxt "Window title"
+#| msgid "Extract archive"
+msgctxt "shortcut window"
+msgid "Extract an archive"
+msgstr "Extract an archive"
+
+#: src/ui/help-overlay.ui:73
+msgctxt "shortcut window"
+msgid "Save with another name"
+msgstr "Save with another name"
+
+#: src/ui/help-overlay.ui:80
+#| msgid "Show archive properties"
+msgctxt "shortcut window"
+msgid "View archive properties"
+msgstr "View archive properties"
+
+#: src/ui/help-overlay.ui:87
+#| msgid "Recreate the folders stored in the archive"
+msgctxt "shortcut window"
+msgid "Rename file or folder in an archive"
+msgstr "Rename file or folder in an archive"
+
+#: src/ui/help-overlay.ui:95
+#| msgid "_View"
+msgctxt "shortcut window"
+msgid "View"
+msgstr "View"
+
+#: src/ui/help-overlay.ui:100
+#| msgid "Display the time column in the main window."
+msgctxt "shortcut window"
+msgid "Display the tree view of the folders in the side pane"
+msgstr "Display the tree view of the folders in the side pane"
+
+#: src/ui/help-overlay.ui:107
+msgctxt "shortcut window"
+msgid "View the content of an archive as a list of files"
+msgstr "View the content of an archive as a list of files"
+
+#: src/ui/help-overlay.ui:114
+msgctxt "shortcut window"
+msgid "View the content of an archive as a folder structure"
+msgstr "View the content of an archive as a folder structure"
+
+#: src/ui/help-overlay.ui:121
+msgctxt "shortcut window"
+msgid "Refresh"
+msgstr "Refresh"
+
+#: src/ui/help-overlay.ui:129
+msgctxt "shortcut window"
+msgid "Common"
+msgstr "Common"
+
+#: src/ui/help-overlay.ui:134
+#| msgid "_Find"
+msgctxt "shortcut window"
+msgid "Find"
+msgstr "Find"
+
+#: src/ui/help-overlay.ui:141
+#| msgid "_Select All"
+msgctxt "shortcut window"
+msgid "Select all"
+msgstr "Select all"
+
+#: src/ui/help-overlay.ui:148
+#| msgid "D_eselect All"
+msgctxt "shortcut window"
+msgid "Deselect all"
+msgstr "Deselect all"
+
+#: src/ui/help-overlay.ui:155
+#| msgid "Deleting files from archive"
+msgctxt "shortcut window"
+msgid "Delete files or folders from an archive"
+msgstr "Delete files or folders from an archive"
+
+#: src/ui/help-overlay.ui:162
+#| msgid "Stop current operation"
+msgctxt "shortcut window"
+msgid "Stop the operation"
+msgstr "Stop the operation"
 
 #: src/ui/menus.ui:11
 msgid "_Open With…"
@@ -1321,9 +1471,6 @@ msgstr "S_elect the files you want to update:"
 #~ msgid "file-roller"
 #~ msgstr "file-roller"
 
-#~ msgid "_Quit"
-#~ msgstr "_Quit"
-
 #~ msgid "File is not a valid .desktop file"
 #~ msgstr "File is not a valid .desktop file"
 
@@ -1421,9 +1568,6 @@ msgstr "S_elect the files you want to update:"
 #~ msgid "Places"
 #~ msgstr "Places"
 
-#~ msgid "_Archive"
-#~ msgstr "_Archive"
-
 #~ msgid "_Arrange Files"
 #~ msgstr "_Arrange Files"
 
@@ -1466,20 +1610,11 @@ msgstr "S_elect the files you want to update:"
 #~ msgid "New…"
 #~ msgstr "New…"
 
-#~ msgid "Create a new archive"
-#~ msgstr "Create a new archive"
-
-#~ msgid "Open archive"
-#~ msgstr "Open archive"
-
 #~ msgid "Open selected files with an application"
 #~ msgstr "Open selected files with an application"
 
 #~ msgid "Specify a password for this archive"
 #~ msgstr "Specify a password for this archive"
-
-#~ msgid "Show archive properties"
-#~ msgstr "Show archive properties"
 
 #~ msgid "Reload current archive"
 #~ msgstr "Reload current archive"
@@ -1746,9 +1881,6 @@ msgstr "S_elect the files you want to update:"
 
 #~ msgid "Add Folder"
 #~ msgstr "Add Folder"
-
-#~ msgid "Stop current operation"
-#~ msgstr "Stop current operation"
 
 #~ msgid "_Reversed Order"
 #~ msgstr "_Reversed Order"
