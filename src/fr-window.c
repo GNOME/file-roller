@@ -6700,6 +6700,7 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 
 	if (do_not_extract) {
 		fr_window_batch_stop (odata->window);
+		fr_window_dnd_extraction_finished (odata->window, FALSE);
 		overwrite_data_free (odata);
 		return;
 	}
@@ -9973,7 +9974,7 @@ fr_window_dnd_extraction_finished (FrWindow *window,
 {
 	if (window->priv->dnd_extract_is_running == TRUE) {
 		window->priv->dnd_extract_is_running = FALSE;
-		window->priv->dnd_extract_finished_with_error = TRUE;
+		window->priv->dnd_extract_finished_with_error = error;
 	}
 }
 
