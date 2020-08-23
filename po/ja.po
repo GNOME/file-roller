@@ -1,11 +1,11 @@
 # file-roller ja.po.
-# Copyright (C) 2001-2020 Free Software Foundation, Inc.
+# Copyright (C) 2001-2017, 2019-2020 Free Software Foundation, Inc.
 # Takeshi AIHANA <takeshi.aihana@gmail.com>, 2001-2009.
 # Hideki Yamane (Debian-JP) <henrich@debian.or.jp>, 2009.
 # Yasumichi Akahoshi <yasumichi@vinelinux.org>, 2010.
 # Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2010, 2012.
 # Hideki Yamane <henrich@debian.org>, 2011-2012.
-# Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2012, 2013, 2014, 2016.
+# Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2012-2014, 2016.
 # Hajime Taira <htaira@redhat.com>, 2015.
 # sujiniku <sujinikusityuu@gmail.com>, 2016.
 # Shushi Kurose <md81bird@hitaki.net>, 2017.
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
 "POT-Creation-Date: 2020-07-19 11:13+0000\n"
-"PO-Revision-Date: 2020-03-02 23:30+0900\n"
+"PO-Revision-Date: 2020-08-23 23:30+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -158,7 +158,7 @@ msgstr "サイドバーを表示する"
 
 #: data/org.gnome.FileRoller.gschema.xml:111
 msgid "Whether to display the sidebar."
-msgstr "サイドバーを表示するかどうかの設定です。"
+msgstr "サイドバーを表示するかどうかです。"
 
 #: data/org.gnome.FileRoller.gschema.xml:130
 msgid "Editors"
@@ -181,8 +181,8 @@ msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
 msgstr ""
-"圧縮レベルはアーカイブへファイルを追加する際に使われます。利用可能な値: very-"
-"fast, fast, normal, maximum."
+"圧縮レベルはファイルをアーカイブへ追加するときに使用します。利用可能な値: "
+"very-fast, fast, normal, maximum."
 
 #: data/org.gnome.FileRoller.gschema.xml:140
 #: data/org.gnome.FileRoller.gschema.xml:172
@@ -234,7 +234,7 @@ msgstr "指定したアーカイブを展開します"
 
 #: src/dlg-add.c:99
 msgid "Could not add the files to the archive"
-msgstr "アーカイブにファイルを追加できません"
+msgstr "アーカイブにファイルを追加できませんでした"
 
 #: src/dlg-add.c:100
 #, c-format
@@ -419,7 +419,7 @@ msgstr "Copyright © 2001–2014 Free Software Foundation, Inc."
 
 #: src/fr-application-menu.c:131
 msgid "An archive manager for GNOME."
-msgstr "GNOME 向けのアーカイブマネージャーです。"
+msgstr "GNOME のアーカイブマネージャーです。"
 
 #: src/fr-application-menu.c:134
 msgid "translator-credits"
@@ -548,7 +548,7 @@ msgstr "アーカイブを展開"
 #: src/fr-command.c:597
 #, c-format
 msgid "Archive not found"
-msgstr "アーカイブが見つかりません"
+msgstr "アーカイブが見つかりませんでした"
 
 #: src/fr-file-selector-dialog.c:765 src/fr-file-selector-dialog.c:810
 msgid "Could not load the location"
@@ -559,7 +559,7 @@ msgstr "開く場所を読み込めません"
 #: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
 #: src/fr-window.c:3034
 msgid "Could not create the archive"
-msgstr "アーカイブを作成できません"
+msgstr "アーカイブを作成できませんでした"
 
 #: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
 msgid "You have to specify an archive name."
@@ -738,7 +738,7 @@ msgstr "ファイルの展開中にエラーが発生しました。"
 #: src/fr-window.c:3045
 #, c-format
 msgid "Could not open “%s”"
-msgstr "“%s”を開けません"
+msgstr "“%s”を開けませんでした"
 
 #: src/fr-window.c:3050
 msgid "An error occurred while loading the archive."
@@ -754,7 +754,7 @@ msgstr "アーカイブへのファイルの追加中にエラーが発生しま
 
 #: src/fr-window.c:3064
 msgid "An error occurred while testing archive."
-msgstr "アーカイブのテスト中にエラーが発生しました。"
+msgstr "アーカイブの検査中にエラーが発生しました。"
 
 #: src/fr-window.c:3069
 msgid "An error occurred while saving the archive."
@@ -778,12 +778,12 @@ msgstr "コマンドが見つかりませんでした。"
 
 #: src/fr-window.c:3243
 msgid "Test Result"
-msgstr "テスト結果"
+msgstr "検査結果"
 
 #: src/fr-window.c:4202 src/fr-window.c:9006 src/fr-window.c:9040
 #: src/fr-window.c:9320
 msgid "Could not perform the operation"
-msgstr "作業を実行できません"
+msgstr "操作を実行できませんでした"
 
 #: src/fr-window.c:4227
 msgid ""
@@ -873,7 +873,7 @@ msgstr "開く"
 #: src/fr-window.c:6752
 #, c-format
 msgid "Replace file “%s”?"
-msgstr "ファイル“%s”を置換しますか?"
+msgstr "“%s”を置換しますか?"
 
 #: src/fr-window.c:6755
 #, c-format
@@ -964,11 +964,11 @@ msgstr "名前を変更(_R)"
 
 #: src/fr-window.c:8457 src/fr-window.c:8475
 msgid "Could not rename the folder"
-msgstr "フォルダー名を変更できません"
+msgstr "フォルダー名を変更できませんでした"
 
 #: src/fr-window.c:8457 src/fr-window.c:8475
 msgid "Could not rename the file"
-msgstr "ファイル名を変更できません"
+msgstr "ファイル名を変更できませんでした"
 
 #. Translators: %s are archive filenames
 #: src/fr-window.c:8913
@@ -1007,7 +1007,7 @@ msgstr "コマンドライン出力(_O)"
 
 #: src/gtk-utils.c:510
 msgid "Could not display help"
-msgstr "ヘルプを表示できません"
+msgstr "ヘルプを表示できませんでした"
 
 #: src/gtk-utils.c:605
 msgid "Change password visibility"
@@ -1169,7 +1169,7 @@ msgstr "目次"
 
 #: src/ui/app-menubar.ui:138
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "キーボードショートカット"
 
 #: src/ui/app-menubar.ui:143
 msgid "_About"
@@ -1216,30 +1216,24 @@ msgid "Go up one level"
 msgstr "一つ上の階層へ移動します"
 
 #: src/ui/gears-menu.ui:19
-#, fuzzy
-#| msgid "Save As…"
 msgid "_Save As…"
-msgstr "名前を付けて保存…"
+msgstr "名前を付けて保存(_S)…"
 
 #: src/ui/gears-menu.ui:23
 msgid "Pass_word…"
 msgstr "パスワード(_W)…"
 
 #: src/ui/gears-menu.ui:31
-#, fuzzy
-#| msgid "Properties"
 msgid "_Properties"
-msgstr "プロパティ"
+msgstr "プロパティ(_P)"
 
 #: src/ui/gears-menu.ui:49
-#, fuzzy
-#| msgid "Sidebar"
 msgid "Side_bar"
-msgstr "サイドバー"
+msgstr "サイドバー(_B)"
 
 #: src/ui/gears-menu.ui:55
 msgid "_Keyboard Shortcuts"
-msgstr ""
+msgstr "キーボードショートカット(_K)"
 
 #: src/ui/gears-menu.ui:64
 msgid "_About Archive Manager"
@@ -1248,144 +1242,117 @@ msgstr "アーカイブマネージャーについて(_A)"
 #: src/ui/help-overlay.ui:13
 msgctxt "shortcut window"
 msgid "General"
-msgstr ""
+msgstr "全般"
 
 #: src/ui/help-overlay.ui:18
-#, fuzzy
-#| msgid "_Show the Files"
 msgctxt "shortcut window"
 msgid "Show help"
-msgstr "ファイルを表示(_S)"
+msgstr "ヘルプを表示する"
 
 #: src/ui/help-overlay.ui:24
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
-msgstr ""
+msgstr "キーボードショートカットを表示する"
 
 #: src/ui/help-overlay.ui:31
 msgctxt "shortcut window"
 msgid "Close window"
-msgstr ""
+msgstr "ウィンドウを閉じる"
 
 #: src/ui/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr ""
+msgstr "終了する"
 
 #: src/ui/help-overlay.ui:47
-#, fuzzy
-#| msgid "New Archive"
 msgctxt "shortcut window"
 msgid "Archive"
-msgstr "新しいアーカイブ"
+msgstr "アーカイブ"
 
 #: src/ui/help-overlay.ui:52
-#, fuzzy
-#| msgid "Create _Archive"
 msgctxt "shortcut window"
 msgid "Create new archive"
-msgstr "新しいアーカイブを作成(_A)"
+msgstr "新しいアーカイブを作成する"
 
 #: src/ui/help-overlay.ui:59
-#, fuzzy
-#| msgid "_Open the Archive"
 msgctxt "shortcut window"
 msgid "Open an archive"
-msgstr "アーカイブを開く(_O)"
+msgstr "アーカイブを開く"
 
 #: src/ui/help-overlay.ui:66
-#, fuzzy
-#| msgctxt "Window title"
-#| msgid "Extract archive"
 msgctxt "shortcut window"
 msgid "Extract an archive"
-msgstr "アーカイブを展開"
+msgstr "アーカイブを展開する"
 
 #: src/ui/help-overlay.ui:73
 msgctxt "shortcut window"
 msgid "Save with another name"
-msgstr ""
+msgstr "名前を付けて保存する"
 
 #: src/ui/help-overlay.ui:80
 msgctxt "shortcut window"
 msgid "View archive properties"
-msgstr ""
+msgstr "アーカイブのプロパティを表示する"
 
 #: src/ui/help-overlay.ui:87
-#, fuzzy
-#| msgid "Recreate the folders stored in the archive"
 msgctxt "shortcut window"
 msgid "Rename file or folder in an archive"
-msgstr "アーカイブ中に保存されているフォルダーを再作成する"
+msgstr "アーカイブ内のファイル/フォルダーの名前を変更する"
 
 #: src/ui/help-overlay.ui:95
-#, fuzzy
-#| msgid "_View"
 msgctxt "shortcut window"
 msgid "View"
-msgstr "表示(_V)"
+msgstr "表示"
 
 #: src/ui/help-overlay.ui:100
-#, fuzzy
-#| msgid "Display the time column in the main window."
 msgctxt "shortcut window"
 msgid "Display the tree view of the folders in the side pane"
-msgstr "メインウィンドウに更新日時の列を表示します。"
+msgstr "サイドペインにフォルダーをツリー表示する"
 
 #: src/ui/help-overlay.ui:107
 msgctxt "shortcut window"
 msgid "View the content of an archive as a list of files"
-msgstr ""
+msgstr "アーカイブ内のファイルを一覧表示する"
 
 #: src/ui/help-overlay.ui:114
 msgctxt "shortcut window"
 msgid "View the content of an archive as a folder structure"
-msgstr ""
+msgstr "アーカイブ内のファイルをフォルダー形式で表示する"
 
 #: src/ui/help-overlay.ui:121
 msgctxt "shortcut window"
 msgid "Refresh"
-msgstr ""
+msgstr "表示を更新する"
 
 #: src/ui/help-overlay.ui:129
 msgctxt "shortcut window"
 msgid "Common"
-msgstr ""
+msgstr "一般"
 
 #: src/ui/help-overlay.ui:134
-#, fuzzy
-#| msgid "_Find"
 msgctxt "shortcut window"
 msgid "Find"
-msgstr "検索(_F)"
+msgstr "検索する"
 
 #: src/ui/help-overlay.ui:141
-#, fuzzy
-#| msgid "_Select All"
 msgctxt "shortcut window"
 msgid "Select all"
-msgstr "すべて選択(_S)"
+msgstr "すべて選択する"
 
 #: src/ui/help-overlay.ui:148
-#, fuzzy
-#| msgid "D_eselect All"
 msgctxt "shortcut window"
 msgid "Deselect all"
-msgstr "すべて選択解除(_E)"
+msgstr "すべて選択解除する"
 
 #: src/ui/help-overlay.ui:155
-#, fuzzy
-#| msgid "Deleting files from archive"
 msgctxt "shortcut window"
 msgid "Delete files or folders from an archive"
-msgstr "アーカイブからファイルを削除"
+msgstr "アーカイブからファイル/フォルダーを削除する"
 
 #: src/ui/help-overlay.ui:162
-#, fuzzy
-#| msgid "Go to the home location"
 msgctxt "shortcut window"
 msgid "Stop the operation"
-msgstr "アーカイブのルートへ移動します"
+msgstr "操作を中止する"
 
 #: src/ui/menus.ui:11
 msgid "_Open With…"
