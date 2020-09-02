@@ -1,8 +1,8 @@
 # German File Roller translation
 # Copyright (C) 2001-2004 Free Software Foundation, Inc.
 # Erik Vetters <j-o-n-e-s@web.de>
-# 
-# 
+#
+#
 # Stefan Furtmayr <sf@paf.net>, 2002.
 # Christian Neumair <chris@gnome-de.org>, 2002-2004.
 # Hendrik Richter <hendrikr@gnome.org>, 2004, 2005, 2006, 2007, 2008.
@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2020-07-19 11:13+0000\n"
-"PO-Revision-Date: 2020-08-15 18:35+0200\n"
+"POT-Creation-Date: 2020-08-21 11:19+0000\n"
+"PO-Revision-Date: 2020-09-01 20:55+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 20.04.3\n"
+"X-Generator: Lokalize 20.08.0\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -178,8 +178,8 @@ msgid ""
 "List of applications entered in the “Open File” dialog and not associated "
 "with the file type."
 msgstr ""
-"Liste von Anwendungen, die im »Datei öffnen«-Dialog angegeben sind und keinem "
-"Dateityp zugeordnet sind."
+"Liste von Anwendungen, die im »Datei öffnen«-Dialog angegeben sind und "
+"keinem Dateityp zugeordnet sind."
 
 #: data/org.gnome.FileRoller.gschema.xml:135
 msgid "Compression level"
@@ -187,8 +187,8 @@ msgstr "Kompressionsgrad"
 
 #: data/org.gnome.FileRoller.gschema.xml:136
 msgid ""
-"Compression level used when adding files to an archive. Possible values: very-"
-"fast, fast, normal, maximum."
+"Compression level used when adding files to an archive. Possible values: "
+"very-fast, fast, normal, maximum."
 msgstr ""
 "Kompressionsgrad beim Hinzufügen von Dateien zu einem Archiv. Mögliche Werte "
 "sind: »very-fast«, »fast«, »normal«, »maximum«."
@@ -318,7 +318,7 @@ msgstr "Falsches Passwort."
 msgid "Compress"
 msgstr "Komprimieren"
 
-#: src/dlg-extract.c:95 src/fr-window.c:6920
+#: src/dlg-extract.c:95 src/fr-window.c:6921
 #, c-format
 msgid ""
 "Destination folder “%s” does not exist.\n"
@@ -329,17 +329,17 @@ msgstr ""
 "\n"
 "Soll er angelegt werden?"
 
-#: src/dlg-extract.c:103 src/fr-window.c:6928
+#: src/dlg-extract.c:103 src/fr-window.c:6929
 msgid "Create _Folder"
 msgstr "_Ordner anlegen"
 
 #: src/dlg-extract.c:122 src/dlg-extract.c:139 src/dlg-extract.c:166
-#: src/fr-window.c:4410 src/fr-window.c:6844 src/fr-window.c:6849
-#: src/fr-window.c:6949 src/fr-window.c:6968 src/fr-window.c:6973
+#: src/fr-window.c:4410 src/fr-window.c:6845 src/fr-window.c:6850
+#: src/fr-window.c:6950 src/fr-window.c:6969 src/fr-window.c:6974
 msgid "Extraction not performed"
 msgstr "Es wurden keine Dateien entpackt"
 
-#: src/dlg-extract.c:123 src/fr-window.c:6945
+#: src/dlg-extract.c:123 src/fr-window.c:6946
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Der Zielordner konnte nicht angelegt werden: %s."
@@ -363,7 +363,7 @@ msgstr "Ein interner Fehler ist bei der Suche nach Anwendungen aufgetreten:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
 #: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
-#: src/fr-window.c:7651 src/fr-window.c:8008 src/fr-window.c:9523
+#: src/fr-window.c:7652 src/fr-window.c:8009 src/fr-window.c:9524
 msgid "Archive type not supported."
 msgstr "Archivtyp wird nicht unterstützt."
 
@@ -406,8 +406,8 @@ msgid ""
 "The file has been modified with an external application. If you don’t update "
 "the file in the archive, all of your changes will be lost."
 msgid_plural ""
-"%d files have been modified with an external application. If you don’t update "
-"the files in the archive, all of your changes will be lost."
+"%d files have been modified with an external application. If you don’t "
+"update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
 "Die Datei wurde durch eine externe Anwendung verändert. Wenn Sie die Version "
 "im Archiv nicht aktualisieren, werden all Ihre Änderungen verloren gehen."
@@ -492,7 +492,8 @@ msgstr "Den Zielordner ohne Nachfrage anlegen"
 
 #: src/fr-application.c:89
 msgid "Use the notification system to notify the operation completion"
-msgstr "Benachrichtigungssystem nutzen, um den Abschluss des Vorgangs zu melden"
+msgstr ""
+"Benachrichtigungssystem nutzen, um den Abschluss des Vorgangs zu melden"
 
 #: src/fr-application.c:92
 msgid "Start as a service"
@@ -586,7 +587,7 @@ msgstr ""
 "Archive anzulegen"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8322
+#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8323
 msgid "New name is the same as old one, please type other name."
 msgstr ""
 "Der neue Name ist der selbe wie der alte. Bitte wählen Sie einen anderen "
@@ -606,7 +607,7 @@ msgstr ""
 "Die Datei existiert bereits in »%s«. Wenn sie ersetzt wird, werden ihre "
 "Inhalte überschrieben."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6764
+#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6765
 msgid "_Replace"
 msgstr "E_rsetzen"
 
@@ -800,8 +801,8 @@ msgstr "Befehl wurde nicht gefunden."
 msgid "Test Result"
 msgstr "Ergebnis der Überprüfung"
 
-#: src/fr-window.c:4202 src/fr-window.c:9006 src/fr-window.c:9040
-#: src/fr-window.c:9320
+#: src/fr-window.c:4202 src/fr-window.c:9007 src/fr-window.c:9041
+#: src/fr-window.c:9321
 msgid "Could not perform the operation"
 msgstr "Die Aktion konnte nicht ausgeführt werden"
 
@@ -821,7 +822,7 @@ msgstr "Soll ein neues Archiv mit diesen Dateien erstellt werden?"
 msgid "Create _Archive"
 msgstr "_Archiv anlegen"
 
-#: src/fr-window.c:4288 src/fr-window.c:7459
+#: src/fr-window.c:4288 src/fr-window.c:7460
 msgid "New Archive"
 msgstr "Neues Archiv"
 
@@ -891,48 +892,48 @@ msgctxt "Action"
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/fr-window.c:6752
+#: src/fr-window.c:6753
 #, c-format
 msgid "Replace file “%s”?"
 msgstr "Datei »%s« ersetzen?"
 
-#: src/fr-window.c:6755
+#: src/fr-window.c:6756
 #, c-format
 msgid "Another file with the same name already exists in “%s”."
 msgstr "Eine Datei gleichen Namens existiert bereits in »%s«."
 
-#: src/fr-window.c:6761
+#: src/fr-window.c:6762
 msgid "Replace _All"
 msgstr "_Alle ersetzen"
 
-#: src/fr-window.c:6762
+#: src/fr-window.c:6763
 msgid "Replace _Nothing"
 msgstr "_Nichts ersetzen"
 
-#: src/fr-window.c:6763
+#: src/fr-window.c:6764
 msgid "_Skip"
 msgstr "Ü_berspringen"
 
-#: src/fr-window.c:7643 src/fr-window.c:8000
+#: src/fr-window.c:7644 src/fr-window.c:8001
 #, c-format
 msgid "Could not save the archive “%s”"
 msgstr "Das Archiv »%s« konnte nicht gespeichert werden"
 
-#: src/fr-window.c:7770
+#: src/fr-window.c:7771
 msgid "Save"
 msgstr "Speichern"
 
-#: src/fr-window.c:8094
+#: src/fr-window.c:8095
 msgid "Last Output"
 msgstr "Letzte Ausgabe"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8317
+#: src/fr-window.c:8318
 msgid "New name is void, please type a name."
 msgstr "Der neue Name ist leer. Bitte geben Sie einen Namen an."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8327
+#: src/fr-window.c:8328
 #, c-format
 msgid ""
 "Name “%s” is not valid because it contains at least one of the following "
@@ -941,7 +942,7 @@ msgstr ""
 "Der Name »%s« ist ungültig, da er eines der folgenden Zeichen enthält: %s. "
 "Bitte wählen Sie einen anderen Namen."
 
-#: src/fr-window.c:8363
+#: src/fr-window.c:8364
 #, c-format
 msgid ""
 "A folder named “%s” already exists.\n"
@@ -952,11 +953,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8363 src/fr-window.c:8365
+#: src/fr-window.c:8364 src/fr-window.c:8366
 msgid "Please use a different name."
 msgstr "Bitte geben Sie einen anderen Namen an."
 
-#: src/fr-window.c:8365
+#: src/fr-window.c:8366
 #, c-format
 msgid ""
 "A file named “%s” already exists.\n"
@@ -967,51 +968,51 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8435
+#: src/fr-window.c:8436
 msgid "Rename"
 msgstr "Umbenennen"
 
-#: src/fr-window.c:8436
+#: src/fr-window.c:8437
 msgid "_New folder name:"
 msgstr "_Neuer Ordnername:"
 
-#: src/fr-window.c:8436
+#: src/fr-window.c:8437
 msgid "_New file name:"
 msgstr "_Neuer Dateiname:"
 
-#: src/fr-window.c:8440
+#: src/fr-window.c:8441
 msgid "_Rename"
 msgstr "_Umbenennen"
 
-#: src/fr-window.c:8457 src/fr-window.c:8475
+#: src/fr-window.c:8458 src/fr-window.c:8476
 msgid "Could not rename the folder"
 msgstr "Der Ordner konnte nicht umbenannt werden"
 
-#: src/fr-window.c:8457 src/fr-window.c:8475
+#: src/fr-window.c:8458 src/fr-window.c:8476
 msgid "Could not rename the file"
 msgstr "Die Datei konnte nicht umbenannt werden"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8913
+#: src/fr-window.c:8914
 #, c-format
 msgid "Moving the files from “%s” to “%s”"
 msgstr "Die Dateien werden von »%s« nach »%s« verschoben"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8916
+#: src/fr-window.c:8917
 #, c-format
 msgid "Copying the files from “%s” to “%s”"
 msgstr "Die Dateien werden von »%s« nach »%s« kopiert"
 
-#: src/fr-window.c:8967
+#: src/fr-window.c:8968
 msgid "Paste Selection"
 msgstr "Auswahl einfügen"
 
-#: src/fr-window.c:8968
+#: src/fr-window.c:8969
 msgid "_Destination folder:"
 msgstr "_Zielordner:"
 
-#: src/fr-window.c:8972 src/ui/app-menubar.ui:61
+#: src/fr-window.c:8973 src/ui/app-menubar.ui:61
 msgid "_Paste"
 msgstr "E_infügen"
 
@@ -1237,7 +1238,6 @@ msgid "Go up one level"
 msgstr "Eine Ebene nach oben gehen"
 
 #: src/ui/gears-menu.ui:19
-#| msgid "Save As…"
 msgid "_Save As…"
 msgstr "Speichern _unter …"
 
@@ -1246,12 +1246,10 @@ msgid "Pass_word…"
 msgstr "_Passwort …"
 
 #: src/ui/gears-menu.ui:31
-#| msgid "Properties"
 msgid "_Properties"
 msgstr "_Eigenschaften"
 
 #: src/ui/gears-menu.ui:49
-#| msgid "Sidebar"
 msgid "Side_bar"
 msgstr "Seiten_leiste"
 
@@ -1269,7 +1267,6 @@ msgid "General"
 msgstr "Allgemein"
 
 #: src/ui/help-overlay.ui:18
-#| msgid "_Show the Files"
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Hilfe anzeigen"
@@ -1285,32 +1282,26 @@ msgid "Close window"
 msgstr "Fenster schließen"
 
 #: src/ui/help-overlay.ui:38
-#| msgid "_Quit"
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Beenden"
 
 #: src/ui/help-overlay.ui:47
-#| msgid "New Archive"
 msgctxt "shortcut window"
 msgid "Archive"
 msgstr "Archiv"
 
 #: src/ui/help-overlay.ui:52
-#| msgid "Create _Archive"
 msgctxt "shortcut window"
 msgid "Create new archive"
 msgstr "Neues Archiv anlegen"
 
 #: src/ui/help-overlay.ui:59
-#| msgid "_Open the Archive"
 msgctxt "shortcut window"
 msgid "Open an archive"
 msgstr "Ein Archiv öffnen"
 
 #: src/ui/help-overlay.ui:66
-#| msgctxt "Window title"
-#| msgid "Extract archive"
 msgctxt "shortcut window"
 msgid "Extract an archive"
 msgstr "Ein Archiv entpacken"
@@ -1326,19 +1317,16 @@ msgid "View archive properties"
 msgstr "Archiveigenschaften anzeigen"
 
 #: src/ui/help-overlay.ui:87
-#| msgid "Recreate the folders stored in the archive"
 msgctxt "shortcut window"
 msgid "Rename file or folder in an archive"
 msgstr "Datei oder Ordner in einem Archiv umbenennen"
 
 #: src/ui/help-overlay.ui:95
-#| msgid "_View"
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Anzeigen"
 
 #: src/ui/help-overlay.ui:100
-#| msgid "Display the time column in the main window."
 msgctxt "shortcut window"
 msgid "Display the tree view of the folders in the side pane"
 msgstr "Die Baumansicht der Ordner in der Seitenleiste anzeigen"
@@ -1361,34 +1349,29 @@ msgstr "Neu laden"
 #: src/ui/help-overlay.ui:129
 msgctxt "shortcut window"
 msgid "Common"
-msgstr ""
+msgstr "Allgemein"
 
 #: src/ui/help-overlay.ui:134
-#| msgid "_Find"
 msgctxt "shortcut window"
 msgid "Find"
 msgstr "Suchen"
 
 #: src/ui/help-overlay.ui:141
-#| msgid "_Select All"
 msgctxt "shortcut window"
 msgid "Select all"
 msgstr "Alle auswählen"
 
 #: src/ui/help-overlay.ui:148
-#| msgid "D_eselect All"
 msgctxt "shortcut window"
 msgid "Deselect all"
 msgstr "Alle abwählen"
 
 #: src/ui/help-overlay.ui:155
-#| msgid "Deleting files from archive"
 msgctxt "shortcut window"
 msgid "Delete files or folders from an archive"
 msgstr "Dateien oder Ordner aus einem Archiv löschen"
 
 #: src/ui/help-overlay.ui:162
-#| msgid "Go to the home location"
 msgctxt "shortcut window"
 msgid "Stop the operation"
 msgstr "Den Vorgang abbrechen"
