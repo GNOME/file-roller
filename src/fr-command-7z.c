@@ -704,7 +704,8 @@ fr_command_7z_get_capabilities (FrArchive  *archive,
 		else
 			capabilities |= FR_ARCHIVE_CAN_READ;
 
-		if (_g_mime_type_matches (mime_type, "application/x-cbz")
+		if (_g_mime_type_matches (mime_type, "application/epub+zip")
+		    || _g_mime_type_matches (mime_type, "application/x-cbz")
 		    || _g_mime_type_matches (mime_type, "application/x-ms-dos-executable")
 		    || _g_mime_type_matches (mime_type, "application/zip"))
 		{
