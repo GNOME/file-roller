@@ -5,14 +5,14 @@ option('run-in-place',
 )
 
 option('nautilus-actions',
-  type : 'boolean', 
-  value : true, 
+  type : 'feature',
+  value : 'auto',
   description : 'Build the nautilus context menu actions'
 )
 
 option('notification',
-  type : 'boolean', 
-  value : true, 
+  type : 'feature',
+  value : 'auto',
   description : 'Enable operation completion notification'
 )
 
@@ -23,8 +23,8 @@ option('packagekit',
 )
 
 option('libarchive',
-  type : 'boolean', 
-  value : true, 
+  type : 'feature',
+  value : 'auto',
   description : 'Enable code that requires libarchive'
 )
 

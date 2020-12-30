@@ -31,29 +31,17 @@ gtk_dep = dependency('gtk+-3.0', version : gtk_version)
 
 # Optional dependencies
 
-if get_option('nautilus-actions')
-  libnautilus_extension_dep = dependency('libnautilus-extension', version : nautilus_version, required : false)
-  build_nautilus_actions = libnautilus_extension_dep.found()
-else
-  build_nautilus_actions = false
-endif
+libnautilus_extension_dep = dependency('libnautilus-extension', version : nautilus_version, required : get_option('nautilus-actions'))
+build_nautilus_actions = libnautilus_extension_dep.found()
 
 libjson_glib_dep = dependency('json-glib-1.0', version : json_glib_version, required : false)
 use_json_glib = libjson_glib_dep.found()
  
-if get_option('notification')
-  libnotify_dep = dependency('libnotify', version : libnotify_version, required : false)
-  use_libnotify = libnotify_dep.found()
-else
-  use_libnotify = false
-endif
+libnotify_dep = dependency('libnotify', version : libnotify_version, required : get_option('notification'))
+use_libnotify = libnotify_dep.found()
 
-if get_option('libarchive')
-  libarchive_dep = dependency('libarchive', version : libarchive_version, required : false)
-  use_libarchive = libarchive_dep.found()
-else
-  use_libarchive = false
-endif
+libarchive_dep = dependency('libarchive', version : libarchive_version, required : get_option('libarchive'))
+use_libarchive = libarchive_dep.found()
 
 have_mkdtemp = c_comp.has_function('mkdtemp')
 
