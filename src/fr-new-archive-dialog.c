@@ -87,6 +87,7 @@ fr_new_archive_dialog_unmap (GtkWidget *widget)
 	self = FR_NEW_ARCHIVE_DIALOG (widget);
 
 	g_settings_set_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton"))));
+	g_settings_set_boolean (self->settings, PREF_NEW_EXPAND_OPTIONS, gtk_expander_get_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander"))));
 	g_settings_set_int (self->settings, PREF_NEW_VOLUME_SIZE, gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton"))) * MEGABYTE);
 
 	n_format = get_selected_format (self);
@@ -250,7 +251,8 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 		folder = _g_file_get_home ();
 	gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (GET_WIDGET ("parent_filechooserbutton")), folder, NULL);
 
-	gtk_expander_set_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander")), FALSE);
+	gtk_expander_set_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander")),
+				      g_settings_get_boolean (self->settings, PREF_NEW_EXPAND_OPTIONS));
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
 				      g_settings_get_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER));
