@@ -454,7 +454,7 @@ fr_application_startup (GApplication *application)
 	G_APPLICATION_CLASS (fr_application_parent_class)->startup (application);
 
 	g_set_application_name (_("Archive Manager"));
-	gtk_window_set_default_icon_name ("file-roller");
+	gtk_window_set_default_icon_name ("org.gnome.ArchiveManager");
 
 #ifdef ENABLE_NOTIFICATION
 	if (! notify_init (g_get_application_name ()))
