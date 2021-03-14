@@ -44,6 +44,7 @@ source_files = files(
   'fr-location-bar.c',
   'fr-new-archive-dialog.c',
   'fr-process.c',
+  'fr-thread-count.c',
   'fr-window-actions-callbacks.c',
   'fr-window.c',
   'gio-utils.c',
