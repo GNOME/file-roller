@@ -17,6 +17,6 @@ gnome.yelp('file-roller',
     'troubleshooting-password.page'
   ],
   media : [
-    'figures/file-roller-icon.png'
+    'figures/org.gnome.ArchiveManager.svg'
   ]
 )
