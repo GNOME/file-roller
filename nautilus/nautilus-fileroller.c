@@ -128,8 +128,6 @@ static struct {
 		{ "application/x-lhz", TRUE },
 		{ "application/x-lzop", TRUE },
 		{ "application/x-ms-wim", TRUE },
-		{ "application/x-rar", TRUE },
-		{ "application/x-rar-compressed", TRUE },
 		{ "application/x-rpm", TRUE },
 		{ "application/x-rzip", TRUE },
 		{ "application/x-stuffit", TRUE },
