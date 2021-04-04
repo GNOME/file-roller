@@ -498,7 +498,6 @@ list_archive_thread (GSimpleAsyncResult *result,
 
 		archive_read_data_skip (a);
 	}
-	archive_read_free (a);
 
 	if ((load_data->error == NULL) && (r != ARCHIVE_EOF) && (archive_error_string (a) != NULL))
 		load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
@@ -507,6 +506,7 @@ list_archive_thread (GSimpleAsyncResult *result,
 	if (load_data->error != NULL)
 		g_simple_async_result_set_from_error (result, load_data->error);
 
+	archive_read_free (a);
 	load_data_free (load_data);
 }
 
