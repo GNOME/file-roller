@@ -107,7 +107,7 @@ config_inc = include_directories('.')
 
 # C args
 
-c_args = []
+c_args = [ '-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38' ]
 if get_option('buildtype').contains('debug')
   test_args = [ 
     '-Wall', 
