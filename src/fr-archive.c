@@ -725,7 +725,7 @@ open_archive_buffer_ready_cb (GObject      *source_object,
 	uri = g_file_get_uri (open_data->file);
 	local_mime_type = g_content_type_guess (uri, (guchar *) open_data->buffer, open_data->buffer_size, &result_uncertain);
 	if (! result_uncertain) {
-		const char const *mime_type_from_filename;
+		const char *mime_type_from_filename;
 
 		/* for example: "application/x-lrzip" --> "application/x-lrzip-compressed-tar" */
 		mime_type_from_filename = _g_mime_type_get_from_filename (open_data->file);
