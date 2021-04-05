@@ -205,6 +205,10 @@ char*               _g_line_get_prev_field         (const char          *line,
 						    int                  start_from,
 						    int                  field_n);
 
+/* threading */
+
+gchar * 	   fr_get_thread_count 		   (void);
+
 /* debug */
 
 void                debug                          (const char          *file,

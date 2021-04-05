@@ -1552,6 +1552,20 @@ _g_line_get_prev_field (const char *line,
 	return g_strndup (f_start + 1, f_end - f_start);
 }
 
+/* threading */
+
+gchar *
+fr_get_thread_count (void)
+{
+	gchar *cpus;
+	if (g_get_num_processors() >= 8)
+		cpus = g_strdup_printf("%u", g_get_num_processors() - 2);
+	else if (g_get_num_processors() >= 4)
+		cpus = g_strdup_printf("%u", g_get_num_processors() - 1);
+	else
+		cpus = g_strdup_printf("%u", g_get_num_processors());
+	return cpus;
+}
 
 /* debug */
 

@@ -33,7 +33,6 @@
 #include "file-utils.h"
 #include "fr-error.h"
 #include "fr-archive-libarchive.h"
-#include "fr-thread-count.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
 #include "typedefs.h"
