@@ -69,6 +69,7 @@
 #define PREF_NEW_DEFAULT_EXTENSION        "default-extension"
 #define PREF_NEW_ENCRYPT_HEADER           "encrypt-header"
 #define PREF_NEW_VOLUME_SIZE              "volume-size"
+#define PREF_NEW_EXPAND_OPTIONS		  "expand-options"
 
 #define NAUTILUS_SCHEMA                   "org.gnome.nautilus.preferences"
 #define NAUTILUS_CLICK_POLICY             "click-policy"
