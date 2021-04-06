@@ -76,7 +76,7 @@ Also you need the following libraries:
 * glib >= 2.38
 * gtk+ >= 3.22.0
 * libnautilus-extension >= 3.28.0 (optional)
-* libarchive >= 3.0.0 (optional)
+* libarchive >= 3.1.900a (optional)
 
 ## Install
 

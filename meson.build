@@ -9,7 +9,7 @@ gtk_version = '>=3.22.0'
 nautilus_version = '>=3.28.0'
 json_glib_version = '>=0.14.0'
 libnotify_version = '>=0.4.3'
-libarchive_version = '>=3.0.0'
+libarchive_version = '>=3.1.900a'
 
 gnome = import('gnome')
 i18n = import('i18n')

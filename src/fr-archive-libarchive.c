@@ -1448,6 +1448,12 @@ _archive_write_set_format_from_context (struct archive *a,
 		}
 		if (compression_level != NULL)
 			archive_write_set_filter_option (a, NULL, "compression-level", compression_level);
+
+		/* set the amount of threads */
+
+		if (archive_filter == ARCHIVE_FILTER_XZ) {
+			archive_write_set_filter_option (a, NULL, "threads", fr_get_thread_count());
+                }
 	}
 }
 
