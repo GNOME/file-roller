@@ -41,8 +41,8 @@ configure_file(
 )
 
 configure_file(
-  input : 'org.gnome.FileRoller.ArchiveManager1.service.in',
-  output : 'org.gnome.FileRoller.ArchiveManager1.service',
+  input : 'org.gnome.ArchiveManager1.service.in',
+  output : 'org.gnome.ArchiveManager1.service',
   configuration : service_data,
   install : true,
   install_dir : join_paths(datadir, 'dbus-1/services')
