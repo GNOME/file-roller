@@ -1527,7 +1527,7 @@ get_emblem (FrWindow *window,
 
 	emblem_name = NULL;
 	if (fdata->encrypted)
-		emblem_name = "emblem-nowrite";
+		emblem_name = "emblem-readonly";
 
 	if (emblem_name == NULL)
 		return NULL;
