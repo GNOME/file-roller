@@ -603,6 +603,9 @@ fr_archive_create (GFile      *file,
 						mime_type,
 						FR_ARCHIVE_CAN_WRITE);
 
+	if (archive == NULL)
+		return NULL;
+
 	parent = g_file_get_parent (file);
 	archive->priv->have_write_permissions = _g_file_check_permissions (parent, W_OK);
 	archive->read_only = ! fr_archive_is_capable_of (archive, FR_ARCHIVE_CAN_WRITE) || ! archive->priv->have_write_permissions;
