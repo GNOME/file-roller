@@ -6519,15 +6519,15 @@ archive_extraction_ready_cb (GObject      *source_object,
 	_g_clear_object (&window->priv->last_extraction_destination);
 	window->priv->last_extraction_destination = _g_object_ref (fr_archive_get_last_extraction_destination (window->archive));
 
-	if (ask_to_open_destination) {
+	_g_object_list_unref (window->priv->last_extraction_files_first_level);
+	window->priv->last_extraction_files_first_level = NULL;
+
+	if (ask_to_open_destination && ! edata->junk_paths) {
 		/* collect the files to show in the file manager */
 
 		GHashTable *names_hash;
 		gboolean    stop = FALSE;
 		int         i;
-
-		_g_object_list_unref (window->priv->last_extraction_files_first_level);
-		window->priv->last_extraction_files_first_level = NULL;
 
 		names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 		for (i = 0; ! stop && (i < window->archive->files->len); i++) {
