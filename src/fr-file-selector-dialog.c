@@ -600,6 +600,8 @@ select_all_files (FrFileSelectorDialog *self,
 	                            -1);
 	}
 	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
+
+	_update_sensitivity (self);
 }
 
 
