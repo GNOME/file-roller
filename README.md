@@ -75,6 +75,8 @@ Also you need the following libraries:
 
 * glib >= 2.38
 * gtk+ >= 3.22.0
+* libportal >= 0.5
+* libportal-gtk3 >= 0.5
 * libnautilus-extension >= 3.28.0 (optional)
 * libarchive >= 3.1.900a (optional)
 

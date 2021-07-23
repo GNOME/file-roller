@@ -22,12 +22,16 @@ c_comp = meson.get_compiler('c')
 
 # Dependencies
 
+use_native_appchooser = get_option('use_native_appchooser')
+
 libm_dep = c_comp.find_library('m')
 thread_dep = dependency('threads')
 glib_dep = dependency('glib-2.0', version : glib_version)
 gthread_dep = dependency('gthread-2.0')
 gtk_dep = dependency('gtk+-3.0', version : gtk_version)
 hdy_dep = dependency('libhandy-1', version: hdy_version)
+libportal_dep = dependency('libportal', version: '>= 0.5', required: use_native_appchooser)
+libportal_gtk3_dep = dependency('libportal-gtk3', version: '>= 0.5', required: use_native_appchooser)
 
 # Optional dependencies
 use_gobject_introspection = get_option('introspection')
@@ -92,6 +96,7 @@ if have_mkdtemp
   config_data.set('HAVE_MKDTEMP', 1)
 endif
 config_data.set_quoted('CPIO_PATH', cpio_path)
+config_data.set('USE_NATIVE_APPCHOOSER', use_native_appchooser)
 config_file = configure_file(output : 'config.h', configuration : config_data)
 config_inc = include_directories('.')
 

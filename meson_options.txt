@@ -16,6 +16,14 @@ option('notification',
   description : 'Enable operation completion notification'
 )
 
+option('use_native_appchooser',
+  type : 'boolean',
+  value : true,
+  description : '''Whether to use desktop environment’s native app chooser via
+  XDG portal. Offers better desktop integration but ‘Open with…’ dialogue will
+  ask for each file individually, when opening multiple files.'''
+)
+
 option('packagekit',
   type : 'boolean', 
   value : true, 

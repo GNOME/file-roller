@@ -29,6 +29,10 @@
 #include "fr-window.h"
 #include "dlg-open-with.h"
 
+#ifdef USE_NATIVE_APPCHOOSER
+# include <libportal/portal.h>
+# include <libportal-gtk3/portal-gtk3.h>
+#endif
 
 typedef struct {
 	FrWindow *window;
@@ -36,6 +40,26 @@ typedef struct {
 } OpenData;
 
 
+#ifdef USE_NATIVE_APPCHOOSER
+static void
+open_with_portal_cb (GObject	  *source_obj,
+		     GAsyncResult *result,
+		     gpointer	   user_data)
+{
+	XdpPortal *portal = XDP_PORTAL (source_obj);
+	GtkWindow *window = GTK_WINDOW (user_data);
+	g_autoptr (GError) error = NULL;
+
+	if (!xdp_portal_open_uri_finish (portal, result, &error)
+	    && !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+	{
+		_gtk_error_dialog_run (GTK_WINDOW (window),
+				       _("Could not perform the operation"),
+				       "%s",
+				       error->message);
+	}
+}
+#else
 static void
 app_chooser_response_cb (GtkDialog *dialog,
 			 int        response_id,
@@ -66,10 +90,33 @@ app_chooser_response_cb (GtkDialog *dialog,
 	}
 }
 
+#endif
 
-void
-dlg_open_with (FrWindow *window,
-	       GList    *file_list)
+
+#ifdef USE_NATIVE_APPCHOOSER
+static void
+dlg_open_with_native_appchooser (FrWindow *window,
+				 GList    *file_list)
+{
+	GList     *scan;
+	g_autoptr(XdpParent) parent = NULL;
+	g_autoptr(XdpPortal) portal = NULL;
+
+	portal = xdp_portal_new ();
+	parent = xdp_parent_new_gtk (GTK_WINDOW (window));
+
+	for (scan = file_list; scan; scan = scan->next) {
+		g_autofree char *uri;
+		uri = g_file_get_uri (G_FILE (scan->data));
+		xdp_portal_open_uri (portal, parent, uri,
+				     XDP_OPEN_URI_FLAG_ASK, NULL,
+				     open_with_portal_cb, window);
+	}
+}
+#else
+static void
+dlg_open_with_nonnative_appchooser (FrWindow *window,
+			  GList    *file_list)
 {
 	OpenData  *o_data;
 	GtkWidget *app_chooser;
@@ -86,6 +133,20 @@ dlg_open_with (FrWindow *window,
 			  G_CALLBACK (app_chooser_response_cb),
 			  o_data);
 	gtk_widget_show (app_chooser);
+}
+
+#endif
+
+
+void
+dlg_open_with (FrWindow *window,
+	       GList    *file_list)
+{
+#ifdef USE_NATIVE_APPCHOOSER
+	dlg_open_with_native_appchooser (window, file_list);
+#else
+	dlg_open_with_nonnative_appchooser (window, file_list);
+#endif
 }
 
 

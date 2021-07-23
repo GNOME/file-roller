@@ -9172,8 +9172,45 @@ monitor_extracted_files (OpenFilesData *odata)
 }
 
 
+#ifdef USE_NATIVE_APPCHOOSER
+static void
+open_extracted_files_with_native_appchooser (OpenFilesData *odata)
+{
+	GList               *file_list = odata->cdata->file_list;
+	GList               *scan;
+	GError              *error = NULL;
+	GtkWindow           *window;
+
+	g_return_if_fail (file_list != NULL);
+
+	if (file_list->data == NULL)
+		return;
+
+	window = GTK_WINDOW (odata->window);
+
+	if (! odata->window->archive->read_only)
+		monitor_extracted_files (odata);
+
+	if (odata->ask_application) {
+		dlg_open_with (odata->window, file_list);
+		return;
+	}
+
+	for (scan = file_list; scan; scan = scan->next) {
+		g_autofree char *uri;
+		uri = g_file_get_uri (G_FILE (scan->data));
+		if (!gtk_show_uri_on_window (window, uri, GDK_CURRENT_TIME, &error)) {
+			_gtk_error_dialog_run (window,
+					_("Could not perform the operation"),
+					"%s",
+					error->message);
+			g_clear_error (&error);
+		}
+	}
+}
+#else
 static gboolean
-fr_window_open_extracted_files (OpenFilesData *odata)
+open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 {
 	GList               *file_list = odata->cdata->file_list;
 	GFile               *first_file;
@@ -9250,6 +9287,18 @@ fr_window_open_extracted_files (OpenFilesData *odata)
 	_g_string_list_free (files_to_open);
 
 	return result;
+}
+#endif
+
+
+static void
+fr_window_open_extracted_files (OpenFilesData *odata)
+{
+#ifdef USE_NATIVE_APPCHOOSER
+	open_extracted_files_with_native_appchooser (odata);
+#else
+	open_extracted_files_with_nonnative_appchooser (odata);
+#endif
 }
 
 

@@ -130,6 +130,8 @@ fr_exe = executable('file-roller',
     gthread_dep, 
     gtk_dep, 
     hdy_dep,
+    use_native_appchooser ? libportal_dep : [],
+    use_native_appchooser ? libportal_gtk3_dep : [],
     use_gobject_introspection ? gobject_introspection_dep : [],
     use_json_glib ? libjson_glib_dep : [],
     use_libarchive ? libarchive_dep : []

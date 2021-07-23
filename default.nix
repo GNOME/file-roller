@@ -112,6 +112,7 @@ makeDerivation rec {
     json-glib
     libarchive
     libhandy
+    libportal-gtk3
   ];
 
   inherit doCheck;
