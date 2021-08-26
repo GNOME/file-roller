@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2020-08-08 17:52+0000\n"
-"PO-Revision-Date: 2020-08-20 19:50+0300\n"
+"POT-Creation-Date: 2021-04-25 17:51+0000\n"
+"PO-Revision-Date: 2021-08-26 11:57+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 3.0\n"
 "X-POT-Import-Date: 2012-03-05 14:50:08+0000\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
@@ -208,27 +208,35 @@ msgid "Recreate the folders stored in the archive"
 msgstr "Uudelleenluodaanko kansiot, jotka on tallennettu arkistossa"
 
 #: data/org.gnome.FileRoller.gschema.xml:177
+msgid "Show/hide the extra options"
+msgstr "Näytä/piilota lisävalinnat"
+
+#: data/org.gnome.FileRoller.gschema.xml:178
+msgid "Whether to show other options. If set the extra options will be shown."
+msgstr "Näytetäänkö lisävalinnat. Jos asetettu, lisävalinnat näytetään."
+
+#: data/org.gnome.FileRoller.gschema.xml:182
 msgid "Default volume size"
 msgstr "Oletustaltiokoko"
 
-#: data/org.gnome.FileRoller.gschema.xml:178
+#: data/org.gnome.FileRoller.gschema.xml:183
 msgid "The default size for volumes."
 msgstr "Oletuskoko taltioille."
 
-#: nautilus/nautilus-fileroller.c:264
+#: nautilus/nautilus-fileroller.c:262
 msgid "Extract Here"
 msgstr "Pura tähän"
 
 #. Translators: the current position is the current folder
-#: nautilus/nautilus-fileroller.c:266
+#: nautilus/nautilus-fileroller.c:264
 msgid "Extract the selected archive to the current position"
 msgstr "Pura valittu arkisto nykyiseen sijaintiin"
 
-#: nautilus/nautilus-fileroller.c:283
+#: nautilus/nautilus-fileroller.c:281
 msgid "Extract To…"
 msgstr "_Pura…"
 
-#: nautilus/nautilus-fileroller.c:284
+#: nautilus/nautilus-fileroller.c:282
 msgid "Extract the selected archive"
 msgstr "Pura valittu arkisto"
 
@@ -427,7 +435,7 @@ msgstr "Gnomen arkistonkäsittelyohjelma."
 #: src/fr-application-menu.c:134
 msgid "translator-credits"
 msgstr ""
-"Jiri Grönroos, 2012-2020\n"
+"Jiri Grönroos, 2012-2021\n"
 "Tommi Vainikainen, 2010-2011\n"
 "Ilkka Tuohela , 2005-2009\n"
 "Pauli Virtanen, 2003-2004\n"
@@ -502,7 +510,7 @@ msgstr "Sinulla ei ole tarvittavia oikeuksia."
 msgid "This archive type cannot be modified"
 msgstr "Tätä arkistotyyppiä ei voi muokata"
 
-#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:478
+#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "Arkistoa ei voi lisätä itseensä."
 
@@ -550,32 +558,32 @@ msgstr "Arkistoa ei löydy"
 msgid "Could not load the location"
 msgstr "Sijainnin lataus ei onnistunut"
 
-#: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
-#: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
-#: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:389 src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:456 src/fr-new-archive-dialog.c:478
 #: src/fr-window.c:3034
 msgid "Could not create the archive"
 msgstr "Arkiston luominen ei onnistunut"
 
-#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:356 src/fr-new-archive-dialog.c:375
 msgid "You have to specify an archive name."
 msgstr "Arkiston nimi täytyy antaa."
 
-#: src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:440
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Sinulla ei ole oikeuksia luoda arkistoa tähän kansioon"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8323
+#: src/fr-new-archive-dialog.c:458 src/fr-window.c:8323
 msgid "New name is the same as old one, please type other name."
 msgstr "Uusi nimi on sama kuin vanha nimi, yritä antaa toinen nimi."
 
-#: src/fr-new-archive-dialog.c:499
+#: src/fr-new-archive-dialog.c:501
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Tiedosto nimeltä “%s” on jo olemassa. Haluatko korvata sen?"
 
-#: src/fr-new-archive-dialog.c:500
+#: src/fr-new-archive-dialog.c:502
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
@@ -583,11 +591,11 @@ msgstr ""
 "Tiedosto on olemassa kohteessa “%s”. Tiedoston korvaaminen korvaa nykyisen "
 "tiedoston sisällön."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6765
+#: src/fr-new-archive-dialog.c:508 src/fr-window.c:6765
 msgid "_Replace"
 msgstr "_Korvaa"
 
-#: src/fr-new-archive-dialog.c:521
+#: src/fr-new-archive-dialog.c:523
 msgid "Could not delete the old archive."
 msgstr "Vanhan arkiston poisto ei onnistunut."
 
@@ -1384,25 +1392,25 @@ msgstr "_Tiedosto:"
 msgid "Location"
 msgstr "Sijainti"
 
-#: src/ui/new-archive-dialog.ui:193
+#: src/ui/new-archive-dialog.ui:194
 msgid "_Encrypt the file list too"
 msgstr "_Salaa myös tiedostolista"
 
 #. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: src/ui/new-archive-dialog.ui:215
+#: src/ui/new-archive-dialog.ui:216
 msgid "Split into _volumes of"
 msgstr "Jaa _osiin koossa"
 
-#: src/ui/new-archive-dialog.ui:236
+#: src/ui/new-archive-dialog.ui:237
 msgid "10,0"
 msgstr "10,0"
 
 #. MB means megabytes
-#: src/ui/new-archive-dialog.ui:253
+#: src/ui/new-archive-dialog.ui:254
 msgid "MB"
 msgstr "Mt"
 
-#: src/ui/new-archive-dialog.ui:276
+#: src/ui/new-archive-dialog.ui:277
 msgid "_Other Options"
 msgstr "_Muut valinnat"
 
