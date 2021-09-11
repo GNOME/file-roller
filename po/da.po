@@ -19,15 +19,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2020-09-09 20:28+0000\n"
-"PO-Revision-Date: 2020-12-31 00:00+0200\n"
-"Last-Translator: scootergrisen\n"
+"POT-Creation-Date: 2021-04-25 17:51+0000\n"
+"PO-Revision-Date: 2021-08-28 16:07+0200\n"
+"Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -213,27 +214,37 @@ msgid "Recreate the folders stored in the archive"
 msgstr "Gendan mapperne som er gemt i dette arkiv"
 
 #: data/org.gnome.FileRoller.gschema.xml:177
+msgid "Show/hide the extra options"
+msgstr "Vis/skjul de ekstra indstillinger"
+
+#: data/org.gnome.FileRoller.gschema.xml:178
+msgid "Whether to show other options. If set the extra options will be shown."
+msgstr ""
+"Om andre indstillinger skal vises. Hvis angivet, vises de ekstra "
+"indstillinger."
+
+#: data/org.gnome.FileRoller.gschema.xml:182
 msgid "Default volume size"
 msgstr "Standardbindstørrelse"
 
-#: data/org.gnome.FileRoller.gschema.xml:178
+#: data/org.gnome.FileRoller.gschema.xml:183
 msgid "The default size for volumes."
 msgstr "Standardstørrelsen for bind."
 
-#: nautilus/nautilus-fileroller.c:264
+#: nautilus/nautilus-fileroller.c:262
 msgid "Extract Here"
 msgstr "Udpak her"
 
 #. Translators: the current position is the current folder
-#: nautilus/nautilus-fileroller.c:266
+#: nautilus/nautilus-fileroller.c:264
 msgid "Extract the selected archive to the current position"
 msgstr "Udpak det markerede arkiv til den nuværende placering"
 
-#: nautilus/nautilus-fileroller.c:283
+#: nautilus/nautilus-fileroller.c:281
 msgid "Extract To…"
 msgstr "_Udpak til …"
 
-#: nautilus/nautilus-fileroller.c:284
+#: nautilus/nautilus-fileroller.c:282
 msgid "Extract the selected archive"
 msgstr "Udpak det markerede arkiv"
 
@@ -517,7 +528,7 @@ msgstr "Du har ikke de nødvendige rettigheder."
 msgid "This archive type cannot be modified"
 msgstr "Denne arkivtype kan ikke modificeres"
 
-#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:478
+#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "Du kan ikke tilføje et arkiv til sig selv."
 
@@ -565,44 +576,44 @@ msgstr "Arkiv ikke fundet"
 msgid "Could not load the location"
 msgstr "Kunne ikke indlæse stedet"
 
-#: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
-#: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
-#: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:389 src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:456 src/fr-new-archive-dialog.c:478
 #: src/fr-window.c:3034
 msgid "Could not create the archive"
 msgstr "Kunne ikke oprette arkivet"
 
-#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:356 src/fr-new-archive-dialog.c:375
 msgid "You have to specify an archive name."
 msgstr "Du skal angive et arkivnavn."
 
-#: src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:440
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Du har ikke rettighed til at oprette et arkiv i denne mappe"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8323
+#: src/fr-new-archive-dialog.c:458 src/fr-window.c:8323
 msgid "New name is the same as old one, please type other name."
 msgstr ""
 "Det nye navn er det samme som det gamle, indtast venligst et andet navn."
 
-#: src/fr-new-archive-dialog.c:499
+#: src/fr-new-archive-dialog.c:501
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Der findes allerede en fil ved navn “%s”. Vil du erstatte den?"
 
-#: src/fr-new-archive-dialog.c:500
+#: src/fr-new-archive-dialog.c:502
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
 msgstr ""
 "Filen findes allerede i “%s”. At erstatte den vil overskrive dens indhold."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6765
+#: src/fr-new-archive-dialog.c:508 src/fr-window.c:6765
 msgid "_Replace"
 msgstr "_Erstat"
 
-#: src/fr-new-archive-dialog.c:521
+#: src/fr-new-archive-dialog.c:523
 msgid "Could not delete the old archive."
 msgstr "Kunne ikke slette det gamle arkiv."
 
@@ -1399,25 +1410,25 @@ msgstr "_Filnavn:"
 msgid "Location"
 msgstr "Placering"
 
-#: src/ui/new-archive-dialog.ui:193
+#: src/ui/new-archive-dialog.ui:194
 msgid "_Encrypt the file list too"
 msgstr "_Kryptér også fillisten"
 
 #. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: src/ui/new-archive-dialog.ui:215
+#: src/ui/new-archive-dialog.ui:216
 msgid "Split into _volumes of"
 msgstr "Opdel i _bind af"
 
-#: src/ui/new-archive-dialog.ui:236
+#: src/ui/new-archive-dialog.ui:237
 msgid "10,0"
 msgstr "10,0"
 
 #. MB means megabytes
-#: src/ui/new-archive-dialog.ui:253
+#: src/ui/new-archive-dialog.ui:254
 msgid "MB"
 msgstr "MB"
 
-#: src/ui/new-archive-dialog.ui:276
+#: src/ui/new-archive-dialog.ui:277
 msgid "_Other Options"
 msgstr "Andre _indstillinger"
 
