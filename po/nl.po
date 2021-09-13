@@ -11,21 +11,21 @@
 # Erwin Poeze <donnut@outlook.com>, 2013, 2014.
 # Jannick Hemelhof <clone1612@me.com>, 2014.
 # Hannie Dumoleyn <hannie@ubuntu-nl.org>, 2014, 2016.
-# Nathan Follens <nthn@unseen.is>, 2017-2020.
+# Nathan Follens <nfollens@gnome.org>, 2017-2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2020-07-19 11:13+0000\n"
-"PO-Revision-Date: 2020-08-25 17:53+0200\n"
-"Last-Translator: Nathan Follens <nthn@unseen.is>\n"
+"POT-Creation-Date: 2021-04-25 17:51+0000\n"
+"PO-Revision-Date: 2021-09-02 15:29+0200\n"
+"Last-Translator: Nathan Follens <nfollens@gnome.org>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 3.0\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -212,29 +212,40 @@ msgstr "Nieuwere bestanden niet overschrijven"
 msgid "Recreate the folders stored in the archive"
 msgstr "De mappen in het archief opnieuw aanmaken"
 
+# bedoeld wordt de hoofdmap van het archief.
 #: data/org.gnome.FileRoller.gschema.xml:177
+msgid "Show/hide the extra options"
+msgstr "Extra opties tonen/verbergen"
+
+#: data/org.gnome.FileRoller.gschema.xml:178
+msgid "Whether to show other options. If set the extra options will be shown."
+msgstr ""
+"Bepaalt of andere opties getoond worden. Indien ingesteld worden de extra "
+"opties getoond."
+
+#: data/org.gnome.FileRoller.gschema.xml:182
 msgid "Default volume size"
 msgstr "Standaard volumegrootte"
 
-#: data/org.gnome.FileRoller.gschema.xml:178
+#: data/org.gnome.FileRoller.gschema.xml:183
 msgid "The default size for volumes."
 msgstr "De standaard grootte voor volumes."
 
-#: nautilus/nautilus-fileroller.c:264
+#: nautilus/nautilus-fileroller.c:262
 msgid "Extract Here"
 msgstr "Hier uitpakken"
 
 # Vrij vertaald (Wouter Bolsterlee)
 #. Translators: the current position is the current folder
-#: nautilus/nautilus-fileroller.c:266
+#: nautilus/nautilus-fileroller.c:264
 msgid "Extract the selected archive to the current position"
 msgstr "Het geselecteerde archief uitpakken naar de huidige locatie"
 
-#: nautilus/nautilus-fileroller.c:283
+#: nautilus/nautilus-fileroller.c:281
 msgid "Extract To…"
 msgstr "Uitpakken naar…"
 
-#: nautilus/nautilus-fileroller.c:284
+#: nautilus/nautilus-fileroller.c:282
 msgid "Extract the selected archive"
 msgstr "Het geselecteerde archief uitpakken"
 
@@ -318,7 +329,7 @@ msgstr "Onjuist wachtwoord."
 msgid "Compress"
 msgstr "Comprimeren"
 
-#: src/dlg-extract.c:95 src/fr-window.c:6920
+#: src/dlg-extract.c:95 src/fr-window.c:6921
 #, c-format
 msgid ""
 "Destination folder “%s” does not exist.\n"
@@ -329,17 +340,17 @@ msgstr ""
 "\n"
 "Wilt u deze aanmaken?"
 
-#: src/dlg-extract.c:103 src/fr-window.c:6928
+#: src/dlg-extract.c:103 src/fr-window.c:6929
 msgid "Create _Folder"
 msgstr "_Nieuwe map"
 
 #: src/dlg-extract.c:122 src/dlg-extract.c:139 src/dlg-extract.c:166
-#: src/fr-window.c:4410 src/fr-window.c:6844 src/fr-window.c:6849
-#: src/fr-window.c:6949 src/fr-window.c:6968 src/fr-window.c:6973
+#: src/fr-window.c:4410 src/fr-window.c:6845 src/fr-window.c:6850
+#: src/fr-window.c:6950 src/fr-window.c:6969 src/fr-window.c:6974
 msgid "Extraction not performed"
 msgstr "Archief niet uitgepakt"
 
-#: src/dlg-extract.c:123 src/fr-window.c:6945
+#: src/dlg-extract.c:123 src/fr-window.c:6946
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Aanmaken van de doelmap ‘%s’ is mislukt."
@@ -361,7 +372,7 @@ msgstr "Interne fout bij het zoeken naar toepassingen:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
 #: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
-#: src/fr-window.c:7651 src/fr-window.c:8008 src/fr-window.c:9523
+#: src/fr-window.c:7652 src/fr-window.c:8009 src/fr-window.c:9524
 msgid "Archive type not supported."
 msgstr "Archieftype wordt niet ondersteund."
 
@@ -527,7 +538,7 @@ msgstr "U beschikt niet over de juiste rechten."
 msgid "This archive type cannot be modified"
 msgstr "Dit archieftype kan niet gewijzigd worden"
 
-#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:478
+#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "U kunt een archief niet aan zichzelf toevoegen."
 
@@ -576,32 +587,32 @@ msgstr "Archief niet gevonden"
 msgid "Could not load the location"
 msgstr "Openen van de locatie is mislukt"
 
-#: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
-#: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
-#: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:389 src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:456 src/fr-new-archive-dialog.c:478
 #: src/fr-window.c:3034
 msgid "Could not create the archive"
 msgstr "Aanmaken van het archief is mislukt"
 
-#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:356 src/fr-new-archive-dialog.c:375
 msgid "You have to specify an archive name."
 msgstr "U dient een archiefnaam op te geven."
 
-#: src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:440
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "U heeft geen rechten om een archief in deze map aan te maken"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8322
+#: src/fr-new-archive-dialog.c:458 src/fr-window.c:8323
 msgid "New name is the same as old one, please type other name."
 msgstr "De naam is gelijk aan de bestaande, gebruik een andere naam."
 
-#: src/fr-new-archive-dialog.c:499
+#: src/fr-new-archive-dialog.c:501
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Er bestaat al een bestand met de naam ‘%s’. Wilt u het vervangen?"
 
-#: src/fr-new-archive-dialog.c:500
+#: src/fr-new-archive-dialog.c:502
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
@@ -609,11 +620,11 @@ msgstr ""
 "Het bestand bestaat al in ‘%s’. De inhoud zal worden overschreven bij "
 "vervanging."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6764
+#: src/fr-new-archive-dialog.c:508 src/fr-window.c:6765
 msgid "_Replace"
 msgstr "_Vervangen"
 
-#: src/fr-new-archive-dialog.c:521
+#: src/fr-new-archive-dialog.c:523
 msgid "Could not delete the old archive."
 msgstr "Het oude archief kan niet verwijderd worden."
 
@@ -805,8 +816,8 @@ msgstr "Opdracht niet gevonden."
 msgid "Test Result"
 msgstr "Testresultaten"
 
-#: src/fr-window.c:4202 src/fr-window.c:9006 src/fr-window.c:9040
-#: src/fr-window.c:9320
+#: src/fr-window.c:4202 src/fr-window.c:9007 src/fr-window.c:9041
+#: src/fr-window.c:9321
 msgid "Could not perform the operation"
 msgstr "Uitvoeren van de opdracht is mislukt"
 
@@ -826,7 +837,7 @@ msgstr "Wilt u een nieuw archief aanmaken met deze bestanden?"
 msgid "Create _Archive"
 msgstr "_Nieuw archief aanmaken"
 
-#: src/fr-window.c:4288 src/fr-window.c:7459
+#: src/fr-window.c:4288 src/fr-window.c:7460
 msgid "New Archive"
 msgstr "Nieuw archief"
 
@@ -897,49 +908,49 @@ msgctxt "Action"
 msgid "Open"
 msgstr "Openen"
 
-#: src/fr-window.c:6752
+#: src/fr-window.c:6753
 #, c-format
 msgid "Replace file “%s”?"
 msgstr "Bestand ‘%s’ vervangen?"
 
-#: src/fr-window.c:6755
+#: src/fr-window.c:6756
 #, c-format
 msgid "Another file with the same name already exists in “%s”."
 msgstr "Er bestaat al een bestand met dezelfde naam in ‘%s’."
 
-#: src/fr-window.c:6761
+#: src/fr-window.c:6762
 msgid "Replace _All"
 msgstr "_Alles vervangen"
 
-#: src/fr-window.c:6762
+#: src/fr-window.c:6763
 msgid "Replace _Nothing"
 msgstr "_Niets vervangen"
 
-#: src/fr-window.c:6763
+#: src/fr-window.c:6764
 msgid "_Skip"
 msgstr "_Overslaan"
 
 # kan niet/kon niet vermijden (Hannie)
-#: src/fr-window.c:7643 src/fr-window.c:8000
+#: src/fr-window.c:7644 src/fr-window.c:8001
 #, c-format
 msgid "Could not save the archive “%s”"
 msgstr "Opslaan van het archief ‘%s’ is mislukt"
 
-#: src/fr-window.c:7770
+#: src/fr-window.c:7771
 msgid "Save"
 msgstr "Opslaan"
 
-#: src/fr-window.c:8094
+#: src/fr-window.c:8095
 msgid "Last Output"
 msgstr "Laatste uitvoer"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8317
+#: src/fr-window.c:8318
 msgid "New name is void, please type a name."
 msgstr "Een nieuwe naam ontbreekt, voer een naam in."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8327
+#: src/fr-window.c:8328
 #, c-format
 msgid ""
 "Name “%s” is not valid because it contains at least one of the following "
@@ -948,7 +959,7 @@ msgstr ""
 "De naam ‘%s’ is niet geldig omdat het een of meerdere van de volgende tekens "
 "bevat: %s. Kies een andere naam."
 
-#: src/fr-window.c:8363
+#: src/fr-window.c:8364
 #, c-format
 msgid ""
 "A folder named “%s” already exists.\n"
@@ -959,11 +970,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8363 src/fr-window.c:8365
+#: src/fr-window.c:8364 src/fr-window.c:8366
 msgid "Please use a different name."
 msgstr "Gebruik een andere naam."
 
-#: src/fr-window.c:8365
+#: src/fr-window.c:8366
 #, c-format
 msgid ""
 "A file named “%s” already exists.\n"
@@ -974,51 +985,51 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8435
+#: src/fr-window.c:8436
 msgid "Rename"
 msgstr "Hernoemen"
 
-#: src/fr-window.c:8436
+#: src/fr-window.c:8437
 msgid "_New folder name:"
 msgstr "_Nieuwe mapnaam:"
 
-#: src/fr-window.c:8436
+#: src/fr-window.c:8437
 msgid "_New file name:"
 msgstr "_Nieuwe bestandsnaam:"
 
-#: src/fr-window.c:8440
+#: src/fr-window.c:8441
 msgid "_Rename"
 msgstr "_Hernoemen"
 
-#: src/fr-window.c:8457 src/fr-window.c:8475
+#: src/fr-window.c:8458 src/fr-window.c:8476
 msgid "Could not rename the folder"
 msgstr "Hernoemen van de map is mislukt"
 
-#: src/fr-window.c:8457 src/fr-window.c:8475
+#: src/fr-window.c:8458 src/fr-window.c:8476
 msgid "Could not rename the file"
 msgstr "Hernoemen van het archief is mislukt"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8913
+#: src/fr-window.c:8914
 #, c-format
 msgid "Moving the files from “%s” to “%s”"
 msgstr "Bestanden verplaatsen van ‘%s’ naar ‘%s’"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8916
+#: src/fr-window.c:8917
 #, c-format
 msgid "Copying the files from “%s” to “%s”"
 msgstr "Bestanden kopiëren van ‘%s’ naar ‘%s’"
 
-#: src/fr-window.c:8967
+#: src/fr-window.c:8968
 msgid "Paste Selection"
 msgstr "De selectie plakken"
 
-#: src/fr-window.c:8968
+#: src/fr-window.c:8969
 msgid "_Destination folder:"
 msgstr "_Doelmap:"
 
-#: src/fr-window.c:8972 src/ui/app-menubar.ui:61
+#: src/fr-window.c:8973 src/ui/app-menubar.ui:61
 msgid "_Paste"
 msgstr "_Plakken"
 
@@ -1419,25 +1430,25 @@ msgstr "_Bestandsnaam:"
 msgid "Location"
 msgstr "Locatie"
 
-#: src/ui/new-archive-dialog.ui:193
+#: src/ui/new-archive-dialog.ui:194
 msgid "_Encrypt the file list too"
 msgstr "Bestandenlijst ook ver_sleutelen"
 
 #. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: src/ui/new-archive-dialog.ui:215
+#: src/ui/new-archive-dialog.ui:216
 msgid "Split into _volumes of"
 msgstr "Splitsen in _volumina van"
 
-#: src/ui/new-archive-dialog.ui:236
+#: src/ui/new-archive-dialog.ui:237
 msgid "10,0"
 msgstr "10,0"
 
 #. MB means megabytes
-#: src/ui/new-archive-dialog.ui:253
+#: src/ui/new-archive-dialog.ui:254
 msgid "MB"
 msgstr "MB"
 
-#: src/ui/new-archive-dialog.ui:276
+#: src/ui/new-archive-dialog.ui:277
 msgid "_Other Options"
 msgstr "_Overige instellingen"
 
