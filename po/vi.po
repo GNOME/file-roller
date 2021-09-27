@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2021-03-13 14:54+0000\n"
-"PO-Revision-Date: 2021-03-22 08:11+0700\n"
+"POT-Creation-Date: 2021-09-27 02:03+0000\n"
+"PO-Revision-Date: 2021-09-27 15:02+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <gnome-vi-list@gnome.org>\n"
 "Language: vi\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Gtranslator 3.38.0\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
-msgstr "Trình quản lý nén tập tin File Roller"
+msgstr "Trình nén tập tin"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:10
 msgid "Open, modify and create compressed archive files"
@@ -204,27 +204,37 @@ msgid "Recreate the folders stored in the archive"
 msgstr "Tạo lại thư mục được lưu trong kho"
 
 #: data/org.gnome.FileRoller.gschema.xml:177
+msgid "Show/hide the extra options"
+msgstr "Hiện/ẩn tùy chọn cấp mở rộng"
+
+#: data/org.gnome.FileRoller.gschema.xml:178
+msgid "Whether to show other options. If set the extra options will be shown."
+msgstr ""
+"Có cho hiển thị các tùy chọn khác không. Nếu chọn thì các tùy chọn mở rộng "
+"sẽ được hiển thị."
+
+#: data/org.gnome.FileRoller.gschema.xml:182
 msgid "Default volume size"
 msgstr "Cỡ khối mặc định"
 
-#: data/org.gnome.FileRoller.gschema.xml:178
+#: data/org.gnome.FileRoller.gschema.xml:183
 msgid "The default size for volumes."
 msgstr "Cỡ mặc định cho kho."
 
-#: nautilus/nautilus-fileroller.c:264
+#: nautilus/nautilus-fileroller.c:262
 msgid "Extract Here"
 msgstr "Giải nén vào đây"
 
 #. Translators: the current position is the current folder
-#: nautilus/nautilus-fileroller.c:266
+#: nautilus/nautilus-fileroller.c:264
 msgid "Extract the selected archive to the current position"
 msgstr "Giải nén kho đã được chọn vào thư mục hiện tại"
 
-#: nautilus/nautilus-fileroller.c:283
+#: nautilus/nautilus-fileroller.c:281
 msgid "Extract To…"
 msgstr "Giải nén vào…"
 
-#: nautilus/nautilus-fileroller.c:284
+#: nautilus/nautilus-fileroller.c:282
 msgid "Extract the selected archive"
 msgstr "Giải nén kho đã chọn"
 
@@ -346,7 +356,7 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "Gặp lỗi nội bộ trong khi thử tìm kiếm ứng dụng:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
-#: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
+#: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4077
 #: src/fr-window.c:7652 src/fr-window.c:8009 src/fr-window.c:9524
 msgid "Archive type not supported."
 msgstr "Không hỗ trợ kiểu kho đó."
@@ -483,15 +493,15 @@ msgstr "Giải nén kho"
 msgid "— Create and modify an archive"
 msgstr "- Tạo mới và sửa một kho nén"
 
-#: src/fr-archive.c:1848
+#: src/fr-archive.c:1851
 msgid "You don’t have the right permissions."
 msgstr "Bạn không có đủ thẩm quyền truy cập."
 
-#: src/fr-archive.c:1848
+#: src/fr-archive.c:1851
 msgid "This archive type cannot be modified"
 msgstr "Bạn không thể thay đổi kho nén kiểu này"
 
-#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:478
+#: src/fr-archive.c:1865 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "Bạn không thể thêm một kho vào chính bản thân nó."
 
@@ -516,7 +526,7 @@ msgstr "Đang xóa bỏ “%s”"
 #: src/fr-command-rar.c:758
 #, c-format
 msgid "Could not find the volume: %s"
-msgstr "Không tìm thấy khối: %s"
+msgstr "Không tìm thấy phân vùng: %s"
 
 #: src/fr-command-tar.c:401
 msgid "Deleting files from archive"
@@ -533,38 +543,38 @@ msgstr "Đang giải nén kho"
 #: src/fr-command.c:597
 #, c-format
 msgid "Archive not found"
-msgstr "Không tìm thấy kho lưu"
+msgstr "Không tìm thấy kho"
 
 #: src/fr-file-selector-dialog.c:765 src/fr-file-selector-dialog.c:810
 msgid "Could not load the location"
 msgstr "Không thể tải vị trí"
 
-#: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
-#: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
-#: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:389 src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:456 src/fr-new-archive-dialog.c:478
 #: src/fr-window.c:3034
 msgid "Could not create the archive"
 msgstr "Không thể tạo kho"
 
-#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:356 src/fr-new-archive-dialog.c:375
 msgid "You have to specify an archive name."
 msgstr "Cần phải đặt tên cho kho nén."
 
-#: src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:440
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Bạn không có quyền tạo kho nén trong thư mục này"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8323
+#: src/fr-new-archive-dialog.c:458 src/fr-window.c:8323
 msgid "New name is the same as old one, please type other name."
 msgstr "Tên mới trùng với tên cũ, vui lòng nhập tên khác."
 
-#: src/fr-new-archive-dialog.c:499
+#: src/fr-new-archive-dialog.c:501
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Đã có tập tin mang tên “%s”. Bạn có muốn thay thế nó không?"
 
-#: src/fr-new-archive-dialog.c:500
+#: src/fr-new-archive-dialog.c:502
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
@@ -572,11 +582,11 @@ msgstr ""
 "Tập tin đã có trong “%s”. Thay thế nó đồng nghĩa với việc ghi đè lên nội "
 "dung cũ."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6765
+#: src/fr-new-archive-dialog.c:508 src/fr-window.c:6765
 msgid "_Replace"
 msgstr "Th_ay thế"
 
-#: src/fr-new-archive-dialog.c:521
+#: src/fr-new-archive-dialog.c:523
 msgid "Could not delete the old archive."
 msgstr "Không thể xóa kho nén cũ."
 
@@ -1372,25 +1382,25 @@ msgstr "_Tên tập tin:"
 msgid "Location"
 msgstr "Vị trí"
 
-#: src/ui/new-archive-dialog.ui:193
+#: src/ui/new-archive-dialog.ui:194
 msgid "_Encrypt the file list too"
 msgstr "_Mã hóa cả danh sách tập tin"
 
 #. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: src/ui/new-archive-dialog.ui:215
+#: src/ui/new-archive-dialog.ui:216
 msgid "Split into _volumes of"
 msgstr "Chia thành những _phần"
 
-#: src/ui/new-archive-dialog.ui:236
+#: src/ui/new-archive-dialog.ui:237
 msgid "10,0"
 msgstr "10,0"
 
 #. MB means megabytes
-#: src/ui/new-archive-dialog.ui:253
+#: src/ui/new-archive-dialog.ui:254
 msgid "MB"
 msgstr "MB"
 
-#: src/ui/new-archive-dialog.ui:276
+#: src/ui/new-archive-dialog.ui:277
 msgid "_Other Options"
 msgstr "Tùy chọn _khác"
 
