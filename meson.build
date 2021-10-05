@@ -6,6 +6,7 @@ project('file-roller', 'c',
 
 glib_version = '>=2.38'
 gtk_version = '>=3.22.0'
+hdy_version = '>=1.4.0'
 nautilus_version = '>=3.28.0'
 json_glib_version = '>=0.14.0'
 libnotify_version = '>=0.4.3'
@@ -28,6 +29,7 @@ thread_dep = dependency('threads')
 glib_dep = dependency('glib-2.0', version : glib_version)
 gthread_dep = dependency('gthread-2.0')
 gtk_dep = dependency('gtk+-3.0', version : gtk_version)
+hdy_dep = dependency('libhandy-1', version: hdy_version)
 
 # Optional dependencies
 

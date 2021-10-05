@@ -28,6 +28,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <glib/gprintf.h>
+#include <handy.h>
 #ifdef ENABLE_NOTIFICATION
 #  include <libnotify/notify.h>
 #endif
@@ -448,6 +449,7 @@ static void
 fr_application_startup (GApplication *application)
 {
 	GtkSettings	*gtk_settings;
+	HdyStyleManager *style_manager;
 	gboolean	 shell_shows_menubar;
 
     g_application_set_resource_base_path (application, "/org/gnome/FileRoller");
@@ -470,6 +472,10 @@ fr_application_startup (GApplication *application)
 	g_object_get (G_OBJECT (gtk_settings),
 		      "gtk-shell-shows-menubar", &shell_shows_menubar,
 		      NULL);
+
+	hdy_init ();
+	hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
+					    HDY_COLOR_SCHEME_PREFER_LIGHT);
 
 	if (shell_shows_menubar)
 		initialize_app_menubar (application);

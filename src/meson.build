@@ -90,6 +90,7 @@ executable('file-roller',
     glib_dep, 
     gthread_dep, 
     gtk_dep, 
+    hdy_dep,
     use_json_glib ? libjson_glib_dep : [],
     use_libnotify ? libnotify_dep : [],
     use_libarchive ? libarchive_dep : []
