@@ -307,9 +307,11 @@ file_buffer_ready_cb (GObject      *source_object,
 	{
 		char      *secondary_text;
 		GtkWidget *dialog;
+		g_autofree char *description;
 
+		description = g_content_type_get_description (mime_type);
 		secondary_text = g_strdup_printf (_("There is no command installed for %s files.\nDo you want to search for a command to open this file?"),
-						  g_content_type_get_description (mime_type));
+		                                  description);
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (idata->window),
 						  GTK_DIALOG_MODAL,
 						  _("Could not open this file type"),
