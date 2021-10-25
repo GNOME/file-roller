@@ -202,7 +202,7 @@ count_chars_to_escape (const char *str,
 }
 
 
-char *
+static char *
 _g_str_escape_full (const char *str,
 		    const char *meta_chars,
 		    const char  prefix,

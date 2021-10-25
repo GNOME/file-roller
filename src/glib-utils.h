@@ -73,10 +73,6 @@ char *              _g_str_substitute              (const char          *str,
 						    const char          *to_str);
 gboolean            _g_str_equal                   (const char          *s1,
 						    const char          *s2);
-char*               _g_str_escape_full             (const char          *str,
-						    const char          *meta_chars,
-						    const char           prefix,
-						    const char           postfix);
 char*               _g_str_escape                  (const char          *str,
 						    const char          *meta_chars);
 char *              _g_str_shell_escape            (const char          *filename);
