@@ -39,13 +39,12 @@ fileroller_getsupportedtypes_ready_cb (GObject      *source_object,
 {
 	GDBusProxy *proxy;
 	GVariant   *values;
-	GError     *error = NULL;
+	g_autoptr (GError) error = NULL;
 
 	proxy = G_DBUS_PROXY (source_object);
 	values = g_dbus_proxy_call_finish (proxy, res, &error);
 	if (values == NULL) {
 		g_error ("%s\n", error->message);
-		g_clear_error (&error);
 	}
 	else {
 		GVariantIter  argument_iter;
@@ -99,13 +98,12 @@ fileroller_addtoarchive_ready_cb (GObject      *source_object,
 {
 	GDBusProxy *proxy;
 	GVariant   *values;
-	GError     *error = NULL;
+	g_autoptr (GError) error = NULL;
 
 	proxy = G_DBUS_PROXY (source_object);
 	values = g_dbus_proxy_call_finish (proxy, res, &error);
 	if (values == NULL) {
 		g_error ("%s\n", error->message);
-		g_clear_error (&error);
 	}
 
 	if (values != NULL)
@@ -139,7 +137,7 @@ int
 main (int argc, char *argv[])
 {
 	GDBusConnection *connection;
-	GError          *error = NULL;
+	g_autoptr (GError) error = NULL;
 
 	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
 	if (connection != NULL) {
@@ -268,7 +266,6 @@ main (int argc, char *argv[])
 		}
 		else {
 			g_error ("%s\n", error->message);
-			g_clear_error (&error);
 		}
 	}
 

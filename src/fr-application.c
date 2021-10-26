@@ -399,7 +399,7 @@ on_bus_acquired_for_archive_manager (GDBusConnection *connection,
 {
 	FrApplication *self = user_data;
 	guint          registration_id;
-	GError        *error = NULL;
+	g_autoptr (GError) error = NULL;
 
 	registration_id = g_dbus_connection_register_object (connection,
 							     "/org/gnome/ArchiveManager1",
@@ -410,7 +410,6 @@ on_bus_acquired_for_archive_manager (GDBusConnection *connection,
 							     &error); /* GError** */
 	if (registration_id == 0) {
 		g_error ("%s", error->message);
-		g_clear_error (&error);
 	}
 }
 
