@@ -3603,6 +3603,8 @@ dir_tree_button_press_cb (GtkWidget      *widget,
 		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->priv->tree_view),
 						   event->x, event->y,
 						   &path, NULL, NULL, NULL)) {
+			int wx;
+			int wy;
 
 			if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->tree_store), &iter, path)) {
 				gtk_tree_path_free (path);
@@ -3615,7 +3617,8 @@ dir_tree_button_press_cb (GtkWidget      *widget,
 				gtk_tree_selection_select_iter (selection, &iter);
 			}
 
-			gtk_menu_popup_at_pointer (GTK_MENU (window->priv->sidebar_folder_popup_menu), (GdkEvent *) event);
+			gtk_tree_view_convert_bin_window_to_widget_coords (GTK_TREE_VIEW (widget), event->x, event->y, &wx, &wy);
+			_gtk_popover_popup_at_position (GTK_POPOVER (window->priv->sidebar_folder_popup_menu), wx, wy);
 		}
 		else
 			gtk_tree_selection_unselect_all (selection);
@@ -3782,6 +3785,8 @@ file_button_press_cb (GtkWidget      *widget,
 		GtkTreePath *path;
 		GtkTreeIter  iter;
 		int          n_selected;
+		int wx;
+		int wy;
 
 		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->priv->list_view),
 						   event->x, event->y,
@@ -3801,11 +3806,12 @@ file_button_press_cb (GtkWidget      *widget,
 		else
 			gtk_tree_selection_unselect_all (selection);
 
+		gtk_tree_view_convert_bin_window_to_widget_coords (GTK_TREE_VIEW (window->priv->list_view), event->x, event->y, &wx, &wy);
 		n_selected = fr_window_get_n_selected_files (window);
 		if ((n_selected == 1) && selection_has_a_dir (window))
-			gtk_menu_popup_at_pointer (GTK_MENU (window->priv->folder_popup_menu),  (GdkEvent *) event);
+			_gtk_popover_popup_at_position (GTK_POPOVER (window->priv->folder_popup_menu), wx, wy);
 		else
-			gtk_menu_popup_at_pointer (GTK_MENU (window->priv->file_popup_menu), (GdkEvent *) event);
+			_gtk_popover_popup_at_position (GTK_POPOVER (window->priv->file_popup_menu), wx, wy);
 		return TRUE;
 	}
 	else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 1)) {
@@ -4825,38 +4831,12 @@ key_press_cb (GtkWidget   *widget,
 		    ((event->keyval == GDK_KEY_F10) &&
 		     (event->state & modifiers) == GDK_SHIFT_MASK)) {
 			GtkTreeSelection *selection;
-			GList *selected_rows;
-			GtkTreePath *first_selected_row_path;
-			GtkTreeView *tree_view;
-			GdkRectangle rect;
-			GdkWindow   *win;
 
-			tree_view = GTK_TREE_VIEW (window->priv->list_view);
-			win = gtk_tree_view_get_bin_window (tree_view);
-
-			selection = gtk_tree_view_get_selection (tree_view);
-			selected_rows = gtk_tree_selection_get_selected_rows (selection, NULL);
+			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
 			if (selection == NULL)
 				return GDK_EVENT_PROPAGATE;
 
-			if (selected_rows == NULL)
-				return GDK_EVENT_PROPAGATE;
-
-			first_selected_row_path = (GtkTreePath *) selected_rows->data;
-
-			gtk_tree_view_get_cell_area (tree_view,
-						     first_selected_row_path,
-						     NULL,
-						     &rect);
-
-			g_list_free_full (selected_rows, (GDestroyNotify) gtk_tree_path_free);
-
-			gtk_menu_popup_at_rect (GTK_MENU (window->priv->file_popup_menu),
-						win,
-						&rect,
-						GDK_GRAVITY_SOUTH_WEST,
-						GDK_GRAVITY_NORTH_WEST,
-						(const GdkEvent *) event);
+			_gtk_popover_popup_at_selected (GTK_POPOVER (window->priv->file_popup_menu), GTK_TREE_VIEW (window->priv->list_view));
 			retval = GDK_EVENT_STOP;
 		}
 		break;
@@ -5930,14 +5910,9 @@ fr_window_construct (FrWindow *window)
 
 		builder = _gtk_builder_new_from_resource ("menus.ui");
 
-		window->priv->file_popup_menu = gtk_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (builder, "file-popup")));
-		gtk_menu_attach_to_widget (GTK_MENU (window->priv->file_popup_menu), GTK_WIDGET (window), NULL);
-
-		window->priv->folder_popup_menu = gtk_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (builder, "folder-popup")));
-		gtk_menu_attach_to_widget (GTK_MENU (window->priv->folder_popup_menu), GTK_WIDGET (window), NULL);
-
-		window->priv->sidebar_folder_popup_menu = gtk_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (builder, "sidebar-popup")));
-		gtk_menu_attach_to_widget (GTK_MENU (window->priv->sidebar_folder_popup_menu), GTK_WIDGET (window), NULL);
+		window->priv->file_popup_menu = gtk_popover_new_from_model (window->priv->list_view, G_MENU_MODEL (gtk_builder_get_object (builder, "file-popup")));
+		window->priv->folder_popup_menu = gtk_popover_new_from_model (window->priv->list_view, G_MENU_MODEL (gtk_builder_get_object (builder, "folder-popup")));
+		window->priv->sidebar_folder_popup_menu = gtk_popover_new_from_model (window->priv->tree_view, G_MENU_MODEL (gtk_builder_get_object (builder, "sidebar-popup")));
 
 		g_object_unref (builder);
 	}

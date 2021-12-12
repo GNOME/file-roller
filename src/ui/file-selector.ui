@@ -1,39 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.10 -->
-  <object class="GtkMenu" id="file_list_context_menu">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkMenuItem" id="select_all_menuitem">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">_Select All</property>
-        <property name="use_underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="unselect_all_menuitem">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Dese_lect All</property>
-        <property name="use_underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSeparatorMenuItem" id="menuitem3">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkCheckMenuItem" id="show_hidden_files_menuitem">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Show Hidden Files</property>
-      </object>
-    </child>
-  </object>
+  <menu id="file_list_context_menu_model">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Select All</attribute>
+        <attribute name="action">file-selector-dialog.select-all</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Dese_lect All</attribute>
+        <attribute name="action">file-selector-dialog.deselect-all</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Show Hidden Files</attribute>
+        <attribute name="action">file-selector-dialog.show-hidden</attribute>
+      </item>
+    </section>
+  </menu>
   <object class="GtkListStore" id="files_liststore">
     <columns>
       <!-- column-name icon -->

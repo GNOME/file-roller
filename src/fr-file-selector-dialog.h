@@ -37,5 +37,6 @@ GFile *         fr_file_selector_dialog_get_current_folder  (FrFileSelectorDialo
 void            fr_file_selector_dialog_set_selected_files  (FrFileSelectorDialog   *dialog,
 							     GList                  *files /* GFile list */);
 GList *         fr_file_selector_dialog_get_selected_files  (FrFileSelectorDialog   *dialog);
+GSimpleActionGroup *fr_file_selector_dialog_get_action_map (FrFileSelectorDialog   *dialog);
 
 #endif /* FR_FILE_SELECTOR_DIALOG_H */

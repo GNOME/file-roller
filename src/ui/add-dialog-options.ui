@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.10 -->
+  <menu id="options-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Load Options</attribute>
+        <attribute name="action">file-selector-dialog.load-options</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Save Options</attribute>
+        <attribute name="action">file-selector-dialog.save-options</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Reset Options</attribute>
+        <attribute name="action">file-selector-dialog.clear-options</attribute>
+      </item>
+    </section>
+  </menu>
   <object class="GtkBox" id="extra_widget">
     <property name="visible">True</property>
     <property name="can_focus">False</property>

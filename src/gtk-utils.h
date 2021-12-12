@@ -122,5 +122,7 @@ void          _gtk_application_add_accelerator_for_action
 void	      _gtk_application_add_accelerators    (GtkApplication   *app,
 						    const FrAccelerator *accelerators,
 						    int               n_accelerators);
+void	      _gtk_popover_popup_at_selected (GtkPopover *popover, GtkTreeView *view);
+void	      _gtk_popover_popup_at_position (GtkPopover *popover, gdouble x, gdouble y);
 
 #endif

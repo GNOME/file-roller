@@ -911,3 +911,66 @@ _gtk_application_add_accelerators (GtkApplication *app,
 							     acc->accelerator);
 	}
 }
+
+void
+_gtk_popover_popup_at_selected (GtkPopover *popover, GtkTreeView *tree_view)
+{
+	int width = gtk_widget_get_allocated_width (GTK_WIDGET (tree_view));
+	int height = gtk_widget_get_allocated_height (GTK_WIDGET (tree_view));
+	gdouble center_x = 0.5 * width;
+	gdouble center_y = 0.5 * height;
+
+	GdkRectangle rect;
+	GtkTreeSelection *selection;
+	GList *list;
+
+	selection = gtk_tree_view_get_selection (tree_view);
+	list = gtk_tree_selection_get_selected_rows (selection, NULL);
+	if (list) {
+		int min_y = height;
+		int max_y = 0;
+		int max_height = 0;
+
+		for (GList *item = list; item; item = item->next) {
+			GtkTreePath *path = list->data;
+
+			gtk_tree_view_get_cell_area (tree_view, path, NULL, &rect);
+			gtk_tree_view_convert_bin_window_to_widget_coords (tree_view, rect.x, rect.y, &rect.x, &rect.y);
+
+			min_y = MIN (min_y, rect.y);
+			if (rect.y > max_y) {
+				max_y = rect.y;
+				max_height = rect.height;
+			}
+		}
+
+		rect.x = CLAMP (center_x - 20, 0, width - 40);
+		rect.y = min_y;
+		rect.width = 40;
+		rect.height = max_y + max_height - min_y;
+
+		g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
+	} else {
+		rect.x = center_x;
+		rect.y = center_y;
+		rect.width = 1;
+		rect.height = 1;
+	}
+
+	gtk_popover_set_pointing_to (GTK_POPOVER (popover), &rect);
+	gtk_popover_popup (GTK_POPOVER (popover));
+}
+
+void
+_gtk_popover_popup_at_position (GtkPopover *popover, gdouble x, gdouble y)
+{
+	GdkRectangle rect;
+
+	rect.x = x;
+	rect.y = y;
+	rect.width = 1;
+	rect.height = 1;
+
+	gtk_popover_set_pointing_to (GTK_POPOVER (popover), &rect);
+	gtk_popover_popup (GTK_POPOVER (popover));
+}

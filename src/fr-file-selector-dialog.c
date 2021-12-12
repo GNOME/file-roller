@@ -105,6 +105,9 @@ struct _FrFileSelectorDialog {
 	GthIconCache  *icon_cache;
 	GSettings     *settings;
 	gboolean       show_hidden;
+	GSimpleActionGroup *action_map;
+	GtkPopover *file_context_menu;
+
 };
 
 
@@ -123,6 +126,8 @@ fr_file_selector_dialog_finalize (GObject *object)
 	g_object_unref (self->builder);
 	_g_object_unref (self->current_folder);
 	g_object_unref (self->settings);
+	g_clear_object (&self->action_map);
+
 
 	G_OBJECT_CLASS (fr_file_selector_dialog_parent_class)->finalize (object);
 }
@@ -574,7 +579,10 @@ files_treeview_button_press_event_cb (GtkWidget      *widget,
 	FrFileSelectorDialog *self = user_data;
 
 	if (event->button == 3) {
-		gtk_menu_popup_at_pointer (GTK_MENU (GET_WIDGET ("file_list_context_menu")),  (GdkEvent *) event);
+		int wx;
+		int wy;
+		gtk_tree_view_convert_bin_window_to_widget_coords (GTK_TREE_VIEW (widget), event->x, event->y, &wx, &wy);
+		_gtk_popover_popup_at_position (self->file_context_menu, wx, wy);
 
 		return TRUE;
 	}
@@ -606,16 +614,18 @@ select_all_files (FrFileSelectorDialog *self,
 
 
 static void
-select_all_menuitem_activate_cb (GtkMenuItem *menu_item,
-			  	 gpointer     user_data)
+select_all_activate_cb (GSimpleAction *action,
+			  GVariant *state,
+			  gpointer user_data)
 {
 	select_all_files (FR_FILE_SELECTOR_DIALOG (user_data), TRUE);
 }
 
 
 static void
-unselect_all_menuitem_activate_cb (GtkMenuItem *menu_item,
-				   gpointer     user_data)
+unselect_all_activate_cb (GSimpleAction *action,
+				   GVariant *state,
+				    gpointer user_data)
 {
 	select_all_files (FR_FILE_SELECTOR_DIALOG (user_data), FALSE);
 }
@@ -628,21 +638,44 @@ _set_current_folder (FrFileSelectorDialog *self,
 
 
 static void
-show_hidden_files_menuitem_toggled_cb (GtkCheckMenuItem *checkmenuitem,
-				       gpointer          user_data)
+show_hidden_files_toggled_cb (GSimpleAction *action,
+				       GVariant *state,
+				        gpointer user_data)
 {
 	FrFileSelectorDialog *self = user_data;
 	GFile                *folder;
 	GList                *selected_files;
 
-	self->show_hidden = gtk_check_menu_item_get_active (checkmenuitem);
+	self->show_hidden = g_variant_get_boolean (state);
 	folder = fr_file_selector_dialog_get_current_folder (self);
 	selected_files = fr_file_selector_dialog_get_selected_files (self);
 	_set_current_folder (self, folder, selected_files);
 
+	g_simple_action_set_state (action, state);
+
 	_g_object_list_unref (selected_files);
 	_g_object_unref (folder);
 }
+
+
+static void
+activate_toggle (GSimpleAction *action,
+                 GVariant      *parameter,
+                 gpointer       user_data)
+{
+	GVariant *state;
+
+	state = g_action_get_state (G_ACTION (action));
+	g_action_change_state (G_ACTION (action), g_variant_new_boolean (!g_variant_get_boolean (state)));
+	g_variant_unref (state);
+}
+
+
+static GActionEntry dlg_entries[] = {
+  { "select-all", select_all_activate_cb, NULL, NULL, NULL },
+  { "deselect-all", unselect_all_activate_cb, NULL, NULL, NULL },
+  { "show-hidden", activate_toggle, NULL, "false", show_hidden_files_toggled_cb }
+};
 
 
 static void
@@ -653,6 +686,8 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	self->icon_cache = NULL;
 	self->settings = g_settings_new ("org.gnome.FileRoller.FileSelector");
 	self->show_hidden = g_settings_get_boolean (self->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN);
+	self->action_map = g_simple_action_group_new ();
+	self->file_context_menu = GTK_POPOVER (gtk_popover_new_from_model (GET_WIDGET ("files_treeview"), G_MENU_MODEL (gtk_builder_get_object (self->builder, "file_list_context_menu_model"))));
 
 	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"), TRUE, TRUE, 0);
@@ -661,8 +696,6 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_SIZE, files_size_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_MODIFIED, files_modified_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, GTK_SORT_ASCENDING);
-
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (GET_WIDGET ("show_hidden_files_menuitem")), self->show_hidden);
 
 	g_signal_connect (GET_WIDGET ("is_selected_cellrenderertoggle"),
 			  "toggled",
@@ -684,18 +717,13 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  "button-press-event",
 			  G_CALLBACK (files_treeview_button_press_event_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("select_all_menuitem"),
-			  "activate",
-			  G_CALLBACK (select_all_menuitem_activate_cb),
-			  self);
-	g_signal_connect (GET_WIDGET ("unselect_all_menuitem"),
-			  "activate",
-			  G_CALLBACK (unselect_all_menuitem_activate_cb),
-			  self);
-	g_signal_connect (GET_WIDGET ("show_hidden_files_menuitem"),
-			  "toggled",
-			  G_CALLBACK (show_hidden_files_menuitem_toggled_cb),
-			  self);
+
+	g_action_map_add_action_entries (G_ACTION_MAP (self->action_map),
+			dlg_entries, G_N_ELEMENTS (dlg_entries),
+			self);
+	gtk_widget_insert_action_group (GTK_WIDGET (self), "file-selector-dialog", G_ACTION_GROUP (self->action_map));
+
+	g_simple_action_set_state (G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (self->action_map), "show-hidden")), g_variant_new_boolean (self->show_hidden));
 
 	_fr_file_selector_dialog_update_size (self);
 	gtk_widget_grab_focus (GET_WIDGET ("files_treeview"));
@@ -730,6 +758,13 @@ GtkWidget *
 fr_file_selector_dialog_get_extra_widget (FrFileSelectorDialog *self)
 {
 	return self->extra_widget;
+}
+
+
+GSimpleActionGroup *
+fr_file_selector_dialog_get_action_map (FrFileSelectorDialog *self)
+{
+	return self->action_map;
 }
 
 

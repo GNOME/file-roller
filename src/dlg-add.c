@@ -144,10 +144,23 @@ file_selector_response_cb (GtkWidget    *widget,
 }
 
 
-static void load_options_activate_cb (GtkMenuItem *menu_item, DialogData *data);
-static void save_options_activate_cb (GtkMenuItem *menu_item, DialogData *data);
-static void clear_options_activate_cb (GtkMenuItem *menu_item, DialogData *data);
+static void load_options_activate_cb (GSimpleAction *action,
+	GVariant *parameter,
+	gpointer user_data);
+static void save_options_activate_cb (GSimpleAction *action,
+	GVariant *parameter,
+	gpointer user_data);
+static void clear_options_activate_cb (GSimpleAction *action,
+	GVariant *parameter,
+	gpointer user_data);
 static void dlg_add_folder_load_last_options (DialogData *data);
+
+
+static GActionEntry dlg_entries[] = {
+  { "load-options", load_options_activate_cb, NULL, NULL, NULL },
+  { "save-options", save_options_activate_cb, NULL, NULL, NULL },
+  { "clear-options", clear_options_activate_cb, NULL, NULL, NULL }
+};
 
 
 /* create the "add" dialog. */
@@ -156,8 +169,6 @@ dlg_add (FrWindow *window)
 {
 	DialogData *data;
 	GtkWidget  *options_button;
-	GtkWidget  *options_menu;
-	GtkWidget  *menu_item;
 	gboolean    use_header;
 	GtkWidget  *button;
 
@@ -182,30 +193,18 @@ dlg_add (FrWindow *window)
 	gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (options_button), TRUE);
 	gtk_widget_show (options_button);
 
-	options_menu = gtk_menu_new ();
-
 	/* load options */
 
-	menu_item = gtk_menu_item_new_with_label (C_("Action", "Load Options"));
-	gtk_widget_show (menu_item);
-	g_signal_connect (menu_item, "activate", G_CALLBACK (load_options_activate_cb), data);
-	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
+	g_action_map_add_action_entries (G_ACTION_MAP (fr_file_selector_dialog_get_action_map (FR_FILE_SELECTOR_DIALOG (data->dialog))),
+			dlg_entries, G_N_ELEMENTS (dlg_entries),
+			data);
 
-	/* save options */
+	{
+		GMenuModel *menu;
 
-	menu_item = gtk_menu_item_new_with_label (C_("Action", "Save Options"));
-	gtk_widget_show (menu_item);
-	g_signal_connect (menu_item, "activate", G_CALLBACK (save_options_activate_cb), data);
-	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
-
-	/* clear options */
-
-	menu_item = gtk_menu_item_new_with_label (_("Reset Options"));
-	gtk_widget_show (menu_item);
-	g_signal_connect (menu_item, "activate", G_CALLBACK (clear_options_activate_cb), data);
-	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
-
-	gtk_menu_button_set_popup (GTK_MENU_BUTTON (options_button), options_menu);
+		menu = G_MENU_MODEL (gtk_builder_get_object (data->builder, "options-menu"));
+		gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (options_button), menu);
+	}
 
 	/* add the buttons */
 
@@ -299,10 +298,12 @@ sync_widgets_with_options (DialogData *data,
 
 
 static void
-clear_options_activate_cb (GtkMenuItem *menu_item,
-			   DialogData  *data)
+clear_options_activate_cb (GSimpleAction *action,
+			   GVariant *parameter,
+			   gpointer user_data)
 {
 	GFile *folder;
+	DialogData *data = user_data;
 
 	folder = fr_file_selector_dialog_get_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog));
 	sync_widgets_with_options (data,
@@ -720,8 +721,9 @@ aod_remove_cb (GtkWidget             *widget,
 
 
 static void
-load_options_activate_cb (GtkMenuItem *menu_item,
-			  DialogData  *data)
+load_options_activate_cb (GSimpleAction *action,
+			  GVariant *parameter,
+			  gpointer user_data)
 {
 	LoadOptionsDialogData *aod_data;
 	GtkWidget             *ok_button;
@@ -729,6 +731,7 @@ load_options_activate_cb (GtkMenuItem *menu_item,
 	GtkWidget             *remove_button;
 	GtkCellRenderer       *renderer;
 	GtkTreeViewColumn     *column;
+	DialogData *data = user_data;
 
 	aod_data = g_new0 (LoadOptionsDialogData, 1);
 
@@ -822,12 +825,14 @@ load_options_activate_cb (GtkMenuItem *menu_item,
 
 
 static void
-save_options_activate_cb (GtkMenuItem *menu_item,
-			  DialogData  *data)
+save_options_activate_cb (GSimpleAction *action,
+			  GVariant *parameter,
+			  gpointer user_data)
 {
 	GFile *options_dir;
 	GFile *options_file;
 	char  *opt_filename;
+	DialogData *data = user_data;
 
 	options_dir = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, TRUE);
 	_g_file_make_directory_tree (options_dir, 0700, NULL);
