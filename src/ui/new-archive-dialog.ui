@@ -28,7 +28,7 @@
                 <property name="use_underline">True</property>
                 <property name="justify">center</property>
                 <property name="mnemonic_widget">filename_entry</property>
-                <property name="xalign">0</property>
+                <property name="halign">start</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -93,7 +93,7 @@
                 <property name="label" translatable="yes">_Location:</property>
                 <property name="use_underline">True</property>
                 <property name="mnemonic_widget">parent_filechooserbutton</property>
-                <property name="xalign">0</property>
+                <property name="halign">start</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -136,52 +136,27 @@
         <property name="can_focus">True</property>
         <property name="expanded">True</property>
         <child>
-          <object class="GtkAlignment" id="alignment2">
+          <object class="GtkBox" id="box4">
+            <property name="margin_top">6</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="top_padding">6</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkBox" id="box4">
+              <object class="GtkBox" id="box5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_top">12</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkBox" id="box5">
+                  <object class="GtkLabel" id="password_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_top">12</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkLabel" id="password_label">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Password:</property>
-                        <property name="use_underline">True</property>
-                        <property name="mnemonic_widget">password_entry</property>
-                        <property name="xalign">0</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEntry" id="password_entry">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="visibility">False</property>
-                        <property name="invisible_char">●</property>
-                        <property name="activates_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
+                    <property name="label" translatable="yes">_Password:</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">password_entry</property>
+                    <property name="halign">start</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -190,15 +165,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="encrypt_header_checkbutton">
-                    <property name="label" translatable="yes">_Encrypt the file list too</property>
-                    <property name="use_action_appearance">False</property>
+                  <object class="GtkEntry" id="password_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
-                    <property name="xalign">0</property>
-                    <property name="draw_indicator">True</property>
+                    <property name="visibility">False</property>
+                    <property name="invisible_char">●</property>
+                    <property name="activates_default">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -206,67 +178,89 @@
                     <property name="position">1</property>
                   </packing>
                 </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="encrypt_header_checkbutton">
+                <property name="label" translatable="yes">_Encrypt the file list too</property>
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_underline">True</property>
+                <property name="halign">start</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="volume_box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="spacing">6</property>
                 <child>
-                  <object class="GtkBox" id="volume_box">
+                  <object class="GtkCheckButton" id="volume_checkbutton">
+                    <property name="label" translatable="yes" comments="this is part of a sentence, for example &quot;split into volumes of 10.0 MB&quot;, where MB stands for megabyte.">Split into _volumes of</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkCheckButton" id="volume_checkbutton">
-                        <property name="label" translatable="yes" comments="this is part of a sentence, for example &quot;split into volumes of 10.0 MB&quot;, where MB stands for megabyte.">Split into _volumes of</property>
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkSpinButton" id="volume_spinbutton">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="width_chars">4</property>
-                        <property name="text" translatable="yes">10,0</property>
-                        <property name="adjustment">volume_adjustment</property>
-                        <property name="climb_rate">1</property>
-                        <property name="digits">1</property>
-                        <property name="numeric">True</property>
-                        <property name="value">10</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="label50">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes" comments="MB means megabytes">MB</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="halign">start</property>
+                    <property name="draw_indicator">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="volume_spinbutton">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">●</property>
+                    <property name="width_chars">4</property>
+                    <property name="text" translatable="yes">10,0</property>
+                    <property name="adjustment">volume_adjustment</property>
+                    <property name="climb_rate">1</property>
+                    <property name="digits">1</property>
+                    <property name="numeric">True</property>
+                    <property name="value">10</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label50">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes" comments="MB means megabytes">MB</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
               </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
             </child>
           </object>
         </child>
