@@ -127,7 +127,7 @@ dlg_ask_password__common (FrWindow       *window,
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog),
 					 GTK_RESPONSE_OK);
 	gtk_style_context_add_class (gtk_widget_get_style_context (gtk_dialog_get_widget_for_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK)),
-				     GTK_STYLE_CLASS_SUGGESTED_ACTION);
+				     "suggested-action");
 
 	data->password_entry = GET_WIDGET ("password_entry");
 

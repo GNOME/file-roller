@@ -5849,8 +5849,8 @@ fr_window_construct (FrWindow *window)
 			    FALSE,
 			    0);
 	gtk_widget_show_all (navigation_commands);
-	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), GTK_STYLE_CLASS_RAISED);
-	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), GTK_STYLE_CLASS_LINKED);
+	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
+	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
 	gtk_box_pack_start (GTK_BOX (location_bar_content), navigation_commands, FALSE, FALSE, 0);
 
 	gtk_box_pack_start (GTK_BOX (location_bar_content),

@@ -85,8 +85,8 @@ fr_location_bar_init (FrLocationBar *self)
 	gtk_box_set_spacing (GTK_BOX (self), 6);
 
 	style_context = gtk_widget_get_style_context (GTK_WIDGET (self));
-	gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_TOOLBAR);
-	gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
+	gtk_style_context_add_class (style_context, "toolbar");
+	gtk_style_context_add_class (style_context, "primary-toolbar");
 	gtk_style_context_add_class (style_context, "location-bar");
 
 	css_provider = gtk_css_provider_new ();

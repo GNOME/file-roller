@@ -137,7 +137,7 @@ dlg_delete__common (FrWindow *window,
 				NULL);
 
 	ok_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
-	gtk_style_context_add_class (gtk_widget_get_style_context (ok_button), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+	gtk_style_context_add_class (gtk_widget_get_style_context (ok_button), "destructive-action");
 
 	delete_box = _gtk_builder_get_widget (data->builder, "delete_box");
 

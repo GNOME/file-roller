@@ -217,7 +217,7 @@ dlg_add (FrWindow *window)
 	button = gtk_dialog_add_button (GTK_DIALOG (data->dialog),
 					_GTK_LABEL_ADD,
 					GTK_RESPONSE_OK);
-	gtk_style_context_add_class (gtk_widget_get_style_context (button), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	gtk_style_context_add_class (gtk_widget_get_style_context (button), "suggested-action");
 
 	if (use_header)
 		gtk_header_bar_pack_end (GTK_HEADER_BAR (gtk_dialog_get_header_bar (GTK_DIALOG (data->dialog))),
@@ -761,10 +761,10 @@ load_options_activate_cb (GSimpleAction *action,
 	aod_data->aod_treeview = _gtk_builder_get_widget (aod_data->builder, "aod_treeview");
 
 	ok_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (aod_data->dialog), GTK_RESPONSE_OK);
-	gtk_style_context_add_class (gtk_widget_get_style_context (ok_button), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	gtk_style_context_add_class (gtk_widget_get_style_context (ok_button), "suggested-action");
 	cancel_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (aod_data->dialog), GTK_RESPONSE_CANCEL);
 	remove_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (aod_data->dialog), RESPONSE_DELETE_OPTIONS);
-	gtk_style_context_add_class (gtk_widget_get_style_context (remove_button), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+	gtk_style_context_add_class (gtk_widget_get_style_context (remove_button), "destructive-action");
 
 	/* Set the signals handlers. */
 
