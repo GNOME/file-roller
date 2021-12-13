@@ -247,7 +247,6 @@ struct _FrWindowPrivate {
 	GtkTreePath       *list_hover_path;
 	GtkTreeViewColumn *filename_column;
 	GtkWindowGroup    *window_group;
-	GtkAccelGroup     *accel_group;
 	GHashTable        *named_dialogs;
 
 	gboolean         filter_mode;
@@ -571,7 +570,6 @@ fr_window_free_private_data (FrWindow *window)
 	_g_object_unref (window->priv->cancellable);
 	g_hash_table_unref (window->priv->named_dialogs);
 	g_object_unref (window->priv->window_group);
-	g_object_unref (window->priv->accel_group);
 }
 
 
@@ -911,12 +909,10 @@ fr_window_init (FrWindow *window)
 	window->priv->cancellable = g_cancellable_new ();
 	window->priv->compression = FR_COMPRESSION_NORMAL;
 	window->priv->window_group = gtk_window_group_new ();
-	window->priv->accel_group = gtk_accel_group_new ();
 	window->priv->populating_file_list = FALSE;
 	window->priv->named_dialogs = g_hash_table_new (g_str_hash, g_str_equal);
 
 	gtk_window_group_add_window (window->priv->window_group, GTK_WINDOW (window));
-	gtk_window_add_accel_group (GTK_WINDOW (window), window->priv->accel_group);
 
 	window->archive = NULL;
 }
@@ -5479,33 +5475,17 @@ fr_window_attach (FrWindow      *window,
 /* -- fr_window_add_accelerators -- */
 
 
-static GtkAccelGroup *
-gth_window_get_accel_group (FrWindow *window)
-{
-	if (window->priv->accel_group == NULL) {
-		window->priv->accel_group = gtk_accel_group_new ();
-		gtk_window_add_accel_group (GTK_WINDOW (window), window->priv->accel_group);
-	}
-
-	return window->priv->accel_group;
-}
-
-
 static void
 fr_window_add_accelerators (FrWindow                 *window,
 			    const FrAccelerator      *accelerators,
 			    int                       n_accelerators)
 {
-	GtkAccelGroup *accel_group;
 	int            i;
 
-	accel_group = gth_window_get_accel_group (window);
 	for (i = 0; i < n_accelerators; i++) {
 		const FrAccelerator *acc = accelerators + i;
 
-		_gtk_window_add_accelerator_for_action (GTK_WINDOW (window),
-						        accel_group,
-						        acc->action_name,
+		_gtk_add_accelerator_for_action (acc->action_name,
 						        acc->accelerator,
 						        NULL);
 	}
@@ -5838,7 +5818,7 @@ fr_window_construct (FrWindow *window)
                 gtk_widget_show_all (button);
                 gtk_header_bar_pack_end (GTK_HEADER_BAR (window->priv->headerbar), button);
 
-                _gtk_window_add_accelerators_from_menu ((GTK_WINDOW (window)), menu);
+                _gtk_add_accelerators_from_menu (menu);
 
                 g_object_unref (builder);
         }

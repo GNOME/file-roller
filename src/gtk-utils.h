@@ -105,15 +105,11 @@ GtkWidget *   _gtk_header_bar_create_image_toggle_button
 						   (const char       *icon_name,
 						    const char       *tooltip,
 						    const char       *action_name);
-void          _gtk_window_add_accelerator_for_action
-						   (GtkWindow	     *window,
-						    GtkAccelGroup    *accel_group,
-						    const char       *action_name,
+void          _gtk_add_accelerator_for_action
+						   (const char       *action_name,
 						    const char       *accel,
 						    GVariant         *target);
-void          _gtk_window_add_accelerators_from_menu
-						   (GtkWindow        *window,
-						    GMenuModel       *menu);
+void          _gtk_add_accelerators_from_menu (GMenuModel       *menu);
 gboolean      _gtk_settings_get_dialogs_use_header (void);
 void          _gtk_application_add_accelerator_for_action
 						   (GtkApplication   *app,

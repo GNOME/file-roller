@@ -63,17 +63,17 @@ static const GActionEntry fr_window_actions[] = {
 
 
 static const FrAccelerator fr_window_accelerators[] = {
-	{ "close", "<Control>w" },
-	{ "deselect-all", "<Shift><Control>a" },
-	{ "edit-copy", "<Control>c" },
-	{ "extract-files", "<Control>e" },
-	{ "find", "<Control>f" },
-	{ "reload", "<Control>r" },
-	{ "rename", "F2" },
-	{ "save-as", "<Shift><Control>s" },	
-	{ "select-all", "<control>a" },
-	{ "view-properties", "<alt>Return" },
-	{ "view-sidebar", "F9" }
+	{ "win.close", "<Control>w" },
+	{ "win.deselect-all", "<Shift><Control>a" },
+	{ "win.edit-copy", "<Control>c" },
+	{ "win.extract-files", "<Control>e" },
+	{ "win.find", "<Control>f" },
+	{ "win.reload", "<Control>r" },
+	{ "win.rename", "F2" },
+	{ "win.save-as", "<Shift><Control>s" },	
+	{ "win.select-all", "<control>a" },
+	{ "win.view-properties", "<alt>Return" },
+	{ "win.view-sidebar", "F9" }
 };
 
 
