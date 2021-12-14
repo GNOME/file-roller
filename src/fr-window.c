@@ -3923,8 +3923,8 @@ file_motion_notify_callback (GtkWidget *widget,
 				       NULL, NULL, NULL);
 
 	if (window->priv->list_hover_path != NULL)
-		cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (window)),
-						     GDK_HAND2);
+		cursor = gdk_cursor_new_from_name (gtk_widget_get_display (GTK_WIDGET (window)),
+						     "pointer");
 	else
 		cursor = NULL;
 
