@@ -42,6 +42,8 @@ typedef struct {
 	GtkWidget    *dialog;
 	GtkBuilder   *builder;
 	gboolean      extract_clicked;
+	gboolean      do_not_extract;
+	GFile        *destination;
 } DialogData;
 
 
@@ -57,43 +59,36 @@ file_selector_destroy_cb (GtkWidget  *widget,
 	_g_string_list_free (data->selected_files);
 	g_free (data->base_dir_for_selection);
 	g_object_unref (data->settings);
+	g_clear_object (&data->destination);
 	g_free (data);
 }
 
+static void extract_cb1 (GtkWidget *w, DialogData *data);
+static void extract_cb2 (GtkWidget *w, DialogData *data);
+static void extract_cb3 (GtkWidget *w, DialogData *data);
+static void extract_cb4 (GtkWidget *w, DialogData *data);
+static void create_destination_response_cb (GtkWidget *widget, int response, DialogData *data);
 
-static int
+static void
 extract_cb (GtkWidget   *w,
 	    DialogData  *data)
 {
-	FrWindow   *window = data->window;
-	gboolean    do_not_extract = FALSE;
-	GFile      *destination;
-	gboolean    skip_newer;
-	gboolean    selected_files;
-	gboolean    pattern_files;
-	gboolean    junk_paths;
-	GList      *file_list;
-	char       *base_dir = NULL;
-	GError     *error = NULL;
-
 	data->extract_clicked = TRUE;
 
 	/* collect extraction options. */
 
-	destination = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (data->dialog));
+	data->destination = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (data->dialog));
 
 	/* check directory existence. */
 
-	if (! _g_file_query_is_dir (destination)) {
+	if (! _g_file_query_is_dir (data->destination)) {
 		if (! ForceDirectoryCreation) {
 			GtkWidget *d;
-			int        r;
-			char      *folder_name;
-			char      *msg;
+			g_autofree char *folder_name;
+			g_autofree char *msg;
 
-			folder_name = _g_file_get_display_basename (destination);
+			folder_name = _g_file_get_display_basename (data->destination);
 			msg = g_strdup_printf (_("Destination folder “%s” does not exist.\n\nDo you want to create it?"), folder_name);
-			g_free (folder_name);
 
 			d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
 						     GTK_DIALOG_MODAL,
@@ -104,76 +99,129 @@ extract_cb (GtkWidget   *w,
 						     NULL);
 
 			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
-			r = gtk_dialog_run (GTK_DIALOG (d));
-			gtk_widget_destroy (GTK_WIDGET (d));
-
-			g_free (msg);
-
-			if (r != GTK_RESPONSE_YES)
-				do_not_extract = TRUE;
+			g_signal_connect (d, "response", G_CALLBACK (create_destination_response_cb), data);
+			gtk_widget_show (d);
+		} else {
+			extract_cb1 (w, data);
 		}
+	} else {
+		extract_cb2 (w, data);
+	}
+}
 
-		if (! do_not_extract && ! _g_file_make_directory_tree (destination, 0755, &error)) {
-			GtkWidget  *d;
 
-			d = _gtk_error_dialog_new (GTK_WINDOW (window),
-						   GTK_DIALOG_DESTROY_WITH_PARENT,
-						   NULL,
-						   _("Extraction not performed"),
-						   _("Could not create the destination folder: %s."),
-						   error->message);
-			gtk_dialog_run (GTK_DIALOG (d));
-			gtk_widget_destroy (GTK_WIDGET (d));
+static void
+create_destination_response_cb (GtkWidget    *widget,
+		      int           response,
+		      DialogData   *data)
+{
+	gtk_widget_destroy (GTK_WIDGET (widget));
 
-			g_error_free (error);
-
-			return FALSE;
-		}
+	if (response != GTK_RESPONSE_YES) {
+		data->do_not_extract = TRUE;
 	}
 
-	if (do_not_extract) {
+	extract_cb1 (widget, data);
+}
+
+
+static void
+extract_cb1 (GtkWidget   *w,
+	    DialogData  *data)
+{
+	g_autofree GError *error = NULL;
+	if (! data->do_not_extract && ! _g_file_make_directory_tree (data->destination, 0755, &error)) {
+		GtkWidget  *d;
+
+		d = _gtk_error_dialog_new (GTK_WINDOW (data->window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   _("Extraction not performed"),
+					   _("Could not create the destination folder: %s."),
+					   error->message);
+		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		gtk_widget_show (d);
+	} else {
+		extract_cb2 (w, data);
+	}
+}
+
+
+static void
+extraction_not_performed_cb (GtkWidget    *widget,
+		      int           response,
+		      DialogData   *data)
+{
+	gtk_widget_destroy (widget);
+
+	if (fr_window_is_batch_mode (data->window)) {
+		gtk_widget_destroy (data->dialog);
+	}
+}
+
+
+static void
+extract_cb2 (GtkWidget   *w,
+	    DialogData  *data)
+{
+	if (data->do_not_extract) {
 		GtkWidget *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
+		d = _gtk_message_dialog_new (GTK_WINDOW (data->window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     _("Extraction not performed"),
 					     NULL,
 					     _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
-
-		if (fr_window_is_batch_mode (data->window))
-			gtk_widget_destroy (data->dialog);
-
-		return FALSE;
+		g_signal_connect (d, "response", G_CALLBACK (extraction_not_performed_cb), data);
+		gtk_widget_show (d);
+	} else {
+		extract_cb3 (w, data);
 	}
+}
 
+
+static void
+extract_cb3 (GtkWidget   *w,
+	    DialogData  *data)
+{
 	/* check extraction directory permissions. */
 
-	if (_g_file_query_is_dir (destination)
-	    && ! _g_file_check_permissions (destination, R_OK | W_OK))
+	if (_g_file_query_is_dir (data->destination)
+	    && ! _g_file_check_permissions (data->destination, R_OK | W_OK))
 	{
 		GtkWidget *d;
-		char      *utf8_path;
+		g_autofree char *utf8_path;
 
-		utf8_path = _g_file_get_display_basename (destination);
+		utf8_path = _g_file_get_display_basename (data->destination);
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+		d = _gtk_error_dialog_new (GTK_WINDOW (data->window),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Extraction not performed"),
 					   _("You don’t have the right permissions to extract archives in the folder “%s”"),
 					   utf8_path);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
-
-		g_free (utf8_path);
-		g_object_unref (destination);
-
-		return FALSE;
+		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		gtk_widget_show (d);
+	} else {
+		extract_cb4 (w, data);
 	}
+}
+
+
+static void
+extract_cb4 (GtkWidget   *w,
+	    DialogData  *data)
+{
+	FrWindow   *window = data->window;
+	GFile      *destination = data->destination;
+	gboolean    skip_newer;
+	gboolean    selected_files;
+	gboolean    pattern_files;
+	gboolean    junk_paths;
+	GList      *file_list;
+	char       *base_dir;
 
 	fr_window_set_extract_default_dir (window, destination);
 
@@ -202,8 +250,7 @@ extract_cb (GtkWidget   *w,
 		file_list = fr_window_get_file_list_pattern (window, pattern);
 		if (file_list == NULL) {
 			gtk_widget_destroy (data->dialog);
-			g_object_unref (destination);
-			return FALSE;
+			return;
 		}
 	}
 
@@ -229,27 +276,20 @@ extract_cb (GtkWidget   *w,
 						junk_paths);
 
 	_g_string_list_free (file_list);
-	g_object_unref (destination);
 	g_free (base_dir);
-
-	return TRUE;
 }
 
 
-static int
+static void
 file_selector_response_cb (GtkWidget    *widget,
 		      int           response,
 		      DialogData   *data)
 {
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
-		return TRUE;
+	} else if (response == GTK_RESPONSE_OK) {
+		extract_cb (widget, data);
 	}
-
-	if (response == GTK_RESPONSE_OK)
-		return extract_cb (widget, data);
-
-	return FALSE;
 }
 
 
@@ -275,6 +315,8 @@ dlg_extract__common (FrWindow *window,
 	data->selected_files = selected_files;
 	data->base_dir_for_selection = base_dir_for_selection;
 	data->extract_clicked = FALSE;
+	data->do_not_extract = FALSE;
+	data->destination = NULL;
 
 	data->dialog = gtk_file_chooser_dialog_new (C_("Window title", "Extract"),
 						    GTK_WINDOW (data->window),
