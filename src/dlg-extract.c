@@ -63,14 +63,14 @@ file_selector_destroy_cb (GtkWidget  *widget,
 	g_free (data);
 }
 
-static void extract_cb1 (GtkWidget *w, DialogData *data);
-static void extract_cb2 (GtkWidget *w, DialogData *data);
-static void extract_cb3 (GtkWidget *w, DialogData *data);
-static void extract_cb4 (GtkWidget *w, DialogData *data);
-static void create_destination_response_cb (GtkWidget *widget, int response, DialogData *data);
+static void extract_cb_possibly_try_to_create_destination_directory (DialogData *data);
+static void extract_cb_check_whether_preparing_destination_failed (DialogData *data);
+static void extract_cb_check_permissions (DialogData *data);
+static void extract_cb_start_extracting (DialogData *data);
+static void create_destination_response_cb (GtkDialog *dialog, int response, DialogData *data);
 
 static void
-extract_cb (GtkWidget   *w,
+extract_cb (GtkWidget   *dialog,
 	    DialogData  *data)
 {
 	data->extract_clicked = TRUE;
@@ -102,32 +102,31 @@ extract_cb (GtkWidget   *w,
 			g_signal_connect (d, "response", G_CALLBACK (create_destination_response_cb), data);
 			gtk_widget_show (d);
 		} else {
-			extract_cb1 (w, data);
+			extract_cb_possibly_try_to_create_destination_directory (data);
 		}
 	} else {
-		extract_cb2 (w, data);
+		extract_cb_check_whether_preparing_destination_failed (data);
 	}
 }
 
 
 static void
-create_destination_response_cb (GtkWidget    *widget,
+create_destination_response_cb (GtkDialog    *dialog,
 		      int           response,
 		      DialogData   *data)
 {
-	gtk_widget_destroy (GTK_WIDGET (widget));
+	gtk_widget_destroy (GTK_WIDGET (dialog));
 
 	if (response != GTK_RESPONSE_YES) {
 		data->do_not_extract = TRUE;
 	}
 
-	extract_cb1 (widget, data);
+	extract_cb_possibly_try_to_create_destination_directory (data);
 }
 
 
 static void
-extract_cb1 (GtkWidget   *w,
-	    DialogData  *data)
+extract_cb_possibly_try_to_create_destination_directory (DialogData  *data)
 {
 	g_autofree GError *error = NULL;
 	if (! data->do_not_extract && ! _g_file_make_directory_tree (data->destination, 0755, &error)) {
@@ -142,17 +141,17 @@ extract_cb1 (GtkWidget   *w,
 		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
 		gtk_widget_show (d);
 	} else {
-		extract_cb2 (w, data);
+		extract_cb_check_whether_preparing_destination_failed (data);
 	}
 }
 
 
 static void
-extraction_not_performed_cb (GtkWidget    *widget,
+extraction_not_performed_cb (GtkDialog    *dialog,
 		      int           response,
 		      DialogData   *data)
 {
-	gtk_widget_destroy (widget);
+	gtk_widget_destroy (GTK_WIDGET (dialog));
 
 	if (fr_window_is_batch_mode (data->window)) {
 		gtk_widget_destroy (data->dialog);
@@ -161,8 +160,7 @@ extraction_not_performed_cb (GtkWidget    *widget,
 
 
 static void
-extract_cb2 (GtkWidget   *w,
-	    DialogData  *data)
+extract_cb_check_whether_preparing_destination_failed (DialogData  *data)
 {
 	if (data->do_not_extract) {
 		GtkWidget *d;
@@ -177,14 +175,13 @@ extract_cb2 (GtkWidget   *w,
 		g_signal_connect (d, "response", G_CALLBACK (extraction_not_performed_cb), data);
 		gtk_widget_show (d);
 	} else {
-		extract_cb3 (w, data);
+		extract_cb_check_permissions (data);
 	}
 }
 
 
 static void
-extract_cb3 (GtkWidget   *w,
-	    DialogData  *data)
+extract_cb_check_permissions (DialogData  *data)
 {
 	/* check extraction directory permissions. */
 
@@ -205,14 +202,13 @@ extract_cb3 (GtkWidget   *w,
 		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
 		gtk_widget_show (d);
 	} else {
-		extract_cb4 (w, data);
+		extract_cb_start_extracting (data);
 	}
 }
 
 
 static void
-extract_cb4 (GtkWidget   *w,
-	    DialogData  *data)
+extract_cb_start_extracting (DialogData *data)
 {
 	FrWindow   *window = data->window;
 	GFile      *destination = data->destination;
