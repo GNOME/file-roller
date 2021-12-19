@@ -99,7 +99,7 @@ extract_cb (GtkWidget   *dialog,
 						     NULL);
 
 			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
-			g_signal_connect (d, "response", G_CALLBACK (create_destination_response_cb), data);
+			g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (create_destination_response_cb), data);
 			gtk_widget_show (d);
 		} else {
 			extract_cb_possibly_try_to_create_destination_directory (data);
@@ -138,7 +138,7 @@ extract_cb_possibly_try_to_create_destination_directory (DialogData  *data)
 					   _("Extraction not performed"),
 					   _("Could not create the destination folder: %s."),
 					   error->message);
-		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_widget_destroy), NULL);
 		gtk_widget_show (d);
 	} else {
 		extract_cb_check_whether_preparing_destination_failed (data);
@@ -172,7 +172,7 @@ extract_cb_check_whether_preparing_destination_failed (DialogData  *data)
 					     _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
-		g_signal_connect (d, "response", G_CALLBACK (extraction_not_performed_cb), data);
+		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (extraction_not_performed_cb), data);
 		gtk_widget_show (d);
 	} else {
 		extract_cb_check_permissions (data);
@@ -199,7 +199,7 @@ extract_cb_check_permissions (DialogData  *data)
 					   _("Extraction not performed"),
 					   _("You don’t have the right permissions to extract archives in the folder “%s”"),
 					   utf8_path);
-		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_widget_destroy), NULL);
 		gtk_widget_show (d);
 	} else {
 		extract_cb_start_extracting (data);
@@ -348,15 +348,15 @@ dlg_extract__common (FrWindow *window,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "destroy",
 			  G_CALLBACK (file_selector_destroy_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "response",
 			  G_CALLBACK (file_selector_response_cb),
 			  data);
-	g_signal_connect (G_OBJECT (GET_WIDGET ("file_pattern_entry")),
+	g_signal_connect (GTK_ENTRY (GET_WIDGET("file_pattern_entry")),
 			  "changed",
 			  G_CALLBACK (files_entry_changed_cb),
 			  data);

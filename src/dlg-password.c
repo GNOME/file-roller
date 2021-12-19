@@ -125,11 +125,11 @@ dlg_password (GtkWidget *widget,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect ((data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-	g_signal_connect ((data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "response",
 			  G_CALLBACK (response_cb),
 			  data);

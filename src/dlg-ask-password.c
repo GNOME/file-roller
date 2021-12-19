@@ -166,11 +166,11 @@ dlg_ask_password__common (FrWindow       *window,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "response",
 			  G_CALLBACK (ask_password__response_cb),
 			  data);

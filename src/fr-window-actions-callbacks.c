@@ -266,7 +266,7 @@ open_file_response_cb (GtkWidget *w,
 
 	if (fr_window_archive_is_present (window))
 		window = (FrWindow *) fr_window_new ();
-	g_signal_connect (G_OBJECT (window),
+	g_signal_connect (FR_WINDOW (window),
 			  "archive_loaded",
 			  G_CALLBACK (window_archive_loaded_cb),
 			  file_sel);
@@ -314,7 +314,7 @@ fr_window_activate_open (GSimpleAction *action,
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
 
-	g_signal_connect (G_OBJECT (file_sel),
+	g_signal_connect (GTK_FILE_CHOOSER_DIALOG (file_sel),
 			  "response",
 			  G_CALLBACK (open_file_response_cb),
 			  file_sel);

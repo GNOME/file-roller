@@ -160,23 +160,23 @@ dlg_delete__common (FrWindow *window,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "response",
 			  G_CALLBACK (response_cb),
 			  data);
-//	g_signal_connect_swapped (G_OBJECT (cancel_button),
+//	g_signal_connect_swapped (GTK_BUTTON (cancel_button),
 //				  "clicked",
 //				  G_CALLBACK (gtk_widget_destroy),
 //				  G_OBJECT (data->dialog));
-//	g_signal_connect (G_OBJECT (ok_button),
+//	g_signal_connect (GTK_BUTTON (ok_button),
 //			  "clicked",
 //			  G_CALLBACK (ok_clicked_cb),
 //			  data);
-	g_signal_connect (G_OBJECT (data->d_files_entry),
+	g_signal_connect (GTK_ENTRY (data->d_files_entry),
 			  "changed",
 			  G_CALLBACK (entry_changed_cb),
 			  data);

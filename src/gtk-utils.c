@@ -296,7 +296,7 @@ _gtk_error_dialog_run (GtkWindow  *parent,
 				      NULL);
 	g_free (message);
 
-	g_signal_connect (G_OBJECT (d), "response",
+	g_signal_connect (GTK_MESSAGE_DIALOG (d), "response",
 			  G_CALLBACK (gtk_widget_destroy),
 			  NULL);
 
@@ -513,7 +513,7 @@ _gtk_show_help_dialog (GtkWindow  *parent,
 						  NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
-		g_signal_connect (G_OBJECT (dialog), "response",
+		g_signal_connect (GTK_MESSAGE_DIALOG (dialog), "response",
 				  G_CALLBACK (gtk_widget_destroy),
 				  NULL);
 
@@ -604,7 +604,7 @@ _gtk_entry_use_as_password_entry (GtkEntry *entry)
 	gtk_entry_set_icon_activatable (entry, GTK_ENTRY_ICON_SECONDARY, TRUE);
 	gtk_entry_set_icon_tooltip_text (entry, GTK_ENTRY_ICON_SECONDARY, _("Change password visibility"));
 
-	g_signal_connect (entry,
+	g_signal_connect (GTK_ENTRY (entry),
 			  "icon-press",
 			  G_CALLBACK (password_entry_icon_press_cb),
 			  NULL);

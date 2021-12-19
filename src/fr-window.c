@@ -627,7 +627,7 @@ fr_window_set_dialog (FrWindow   *window,
 {
 	g_object_set_data (G_OBJECT (dialog), DIALOG_NAME_KEY, (gpointer) _g_str_get_static (dialog_name));
 	g_hash_table_insert (window->priv->named_dialogs, (gpointer) dialog_name, dialog);
-	g_signal_connect (dialog,
+	g_signal_connect (GTK_DIALOG (dialog),
 			  "destroy",
 			  G_CALLBACK (unset_dialog),
 			  window);
@@ -2590,11 +2590,11 @@ create_the_progress_dialog (FrWindow *window)
 
 	/* signals */
 
-	g_signal_connect (G_OBJECT (window->priv->progress_dialog),
+	g_signal_connect (GTK_DIALOG (window->priv->progress_dialog),
 			  "response",
 			  G_CALLBACK (progress_dialog_response),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->progress_dialog),
+	g_signal_connect (GTK_DIALOG (window->priv->progress_dialog),
 			  "delete_event",
 			  G_CALLBACK (progress_dialog_delete_event),
 			  window);
@@ -2779,11 +2779,11 @@ fr_window_show_confirmation_dialog (FrWindow  *window,
 {
 	close_progress_dialog (window, TRUE);
 
-	g_signal_connect (G_OBJECT (dialog),
+	g_signal_connect (GTK_DIALOG (dialog),
 			  "response",
 			  G_CALLBACK (confirmation_dialog_response),
 			  window);
-	g_signal_connect (G_OBJECT (dialog),
+	g_signal_connect (GTK_DIALOG (dialog),
 			  "delete_event",
 			  G_CALLBACK (confirmation_dialog_delete_event),
 			  window);
@@ -2930,7 +2930,7 @@ fr_window_show_error_dialog (FrWindow   *window,
 	if (window->priv->batch_mode)
 		fr_window_destroy_with_error_dialog (window);
 
-	g_signal_connect (dialog,
+	g_signal_connect (GTK_DIALOG (dialog),
 			  "response",
 			  G_CALLBACK (error_dialog_response_cb),
 			  window);
@@ -4295,7 +4295,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 								    archive_name,
 								    NULL);
 				gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-				g_signal_connect (G_OBJECT (dialog),
+				g_signal_connect (GTK_DIALOG (dialog),
 						  "response",
 						  G_CALLBACK (new_archive_dialog_response_cb),
 						  window);
@@ -5521,12 +5521,12 @@ fr_window_construct (FrWindow *window)
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
 
-	g_signal_connect (G_OBJECT (window),
+	g_signal_connect (window,
 			  "delete_event",
 			  G_CALLBACK (fr_window_delete_event_cb),
 			  window);
 
-	g_signal_connect (G_OBJECT (window),
+	g_signal_connect (window,
 			  "show",
 			  G_CALLBACK (fr_window_show_cb),
 			  window);
@@ -5541,7 +5541,7 @@ fr_window_construct (FrWindow *window)
 				     g_settings_get_int (window->priv->settings_ui, PREF_UI_WINDOW_WIDTH),
 				     g_settings_get_int (window->priv->settings_ui, PREF_UI_WINDOW_HEIGHT));
 
-	g_signal_connect (G_OBJECT (window),
+	g_signal_connect (window,
 			  "key_press_event",
 			  G_CALLBACK (key_press_cb),
 			  window);
@@ -5645,31 +5645,31 @@ fr_window_construct (FrWindow *window)
 			  "changed",
 			  G_CALLBACK (selection_changed_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->list_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->list_view),
 			  "row_activated",
 			  G_CALLBACK (row_activated_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->list_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->list_view),
 			  "button_press_event",
 			  G_CALLBACK (file_button_press_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->list_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->list_view),
 			  "button_release_event",
 			  G_CALLBACK (file_button_release_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->list_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->list_view),
 			  "motion_notify_event",
 			  G_CALLBACK (file_motion_notify_callback),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->list_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->list_view),
 			  "leave_notify_event",
 			  G_CALLBACK (file_leave_notify_callback),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->list_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->list_view),
 			  "drag_begin",
 			  G_CALLBACK (file_list_drag_begin),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->list_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->list_view),
 			  "drag_end",
 			  G_CALLBACK (file_list_drag_end),
 			  window);
@@ -5687,7 +5687,7 @@ fr_window_construct (FrWindow *window)
 	filter_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	window->priv->filter_entry = gtk_search_entry_new ();
 	gtk_entry_set_width_chars (GTK_ENTRY (window->priv->filter_entry), 40);
-	g_signal_connect (G_OBJECT (window->priv->filter_entry),
+	g_signal_connect (GTK_SEARCH_ENTRY (window->priv->filter_entry),
 			  "search-changed",
 			  G_CALLBACK (filter_entry_search_changed_cb),
 			  window);
@@ -5712,7 +5712,7 @@ fr_window_construct (FrWindow *window)
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (window->priv->tree_view), FALSE);
 	add_dir_tree_columns (window, GTK_TREE_VIEW (window->priv->tree_view));
 
-	g_signal_connect (G_OBJECT (window->priv->tree_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->tree_view),
 			  "button_press_event",
 			  G_CALLBACK (dir_tree_button_press_cb),
 			  window);
@@ -5723,15 +5723,15 @@ fr_window_construct (FrWindow *window)
 			  G_CALLBACK (dir_tree_selection_changed_cb),
 			  window);
 
-	g_signal_connect (G_OBJECT (window->priv->tree_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->tree_view),
 			  "drag_begin",
 			  G_CALLBACK (folde_tree_drag_begin),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->tree_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->tree_view),
 			  "drag_end",
 			  G_CALLBACK (file_list_drag_end),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->tree_view),
+	g_signal_connect (GTK_TREE_VIEW (window->priv->tree_view),
 			  "drag_data_get",
 			  G_CALLBACK (fr_window_folder_tree_drag_data_get),
 			  window);
@@ -5762,11 +5762,11 @@ fr_window_construct (FrWindow *window)
 			   target_table, G_N_ELEMENTS (target_table),
 			   GDK_ACTION_COPY);
 
-	g_signal_connect (G_OBJECT (window->priv->paned),
+	g_signal_connect (GTK_PANED (window->priv->paned),
 			  "drag_data_received",
 			  G_CALLBACK (fr_window_drag_data_received),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->paned),
+	g_signal_connect (GTK_PANED (window->priv->paned),
 			  "drag_motion",
 			  G_CALLBACK (fr_window_drag_motion),
 			  window);
@@ -5870,7 +5870,7 @@ fr_window_construct (FrWindow *window)
 	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (window->priv->location_entry),
 					   GTK_ENTRY_ICON_PRIMARY,
 					   "folder-symbolic");
-	g_signal_connect (G_OBJECT (window->priv->location_entry),
+	g_signal_connect (GTK_ENTRY (window->priv->location_entry),
 			  "key_press_event",
 			  G_CALLBACK (location_entry_key_press_event_cb),
 			  window);
@@ -5969,23 +5969,23 @@ _fr_window_set_archive (FrWindow  *window,
 	if (window->archive == NULL)
 		return;
 
-	g_signal_connect (G_OBJECT (window->archive),
+	g_signal_connect (window->archive,
 			  "progress",
 			  G_CALLBACK (fr_archive_progress_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->archive),
+	g_signal_connect (window->archive,
 			  "message",
 			  G_CALLBACK (fr_archive_message_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->archive),
+	g_signal_connect (window->archive,
 			  "start",
 			  G_CALLBACK (fr_archive_start_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->archive),
+	g_signal_connect (window->archive,
 			  "stoppable",
 			  G_CALLBACK (fr_archive_stoppable_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->archive),
+	g_signal_connect (window->archive,
 			  "working-archive",
 			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);
@@ -6742,7 +6742,7 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 					     _("_Replace"), _FR_RESPONSE_OVERWRITE_YES,
 					     NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), _FR_RESPONSE_OVERWRITE_YES);
-		g_signal_connect (d,
+		g_signal_connect (GTK_MESSAGE_DIALOG (d),
 				  "response",
 				  G_CALLBACK (overwrite_dialog_response_cb),
 				  odata);
@@ -7442,7 +7442,7 @@ fr_window_action_new_archive (FrWindow *window)
 					    NULL);
 	if ((fr_window_archive_is_present (window) && ! fr_window_is_batch_mode (window) ? NULL : GTK_WINDOW (window)))
 		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-	g_signal_connect (G_OBJECT (dialog),
+	g_signal_connect (FR_NEW_ARCHIVE_DIALOG (dialog),
 			  "response",
 			  G_CALLBACK (new_archive_dialog_response_cb),
 			  window);
@@ -7752,7 +7752,7 @@ fr_window_action_save_as (FrWindow *window)
 					    archive_name,
 					    window->priv->archive_file);
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-	g_signal_connect (G_OBJECT (dialog),
+	g_signal_connect (FR_NEW_ARCHIVE_DIALOG (dialog),
 			  "response",
 			  G_CALLBACK (save_as_archive_dialog_response_cb),
 			  window);
@@ -8115,12 +8115,12 @@ fr_window_view_last_output (FrWindow   *window,
 
 	/* signals */
 
-	g_signal_connect (G_OBJECT (dialog),
+	g_signal_connect (GTK_DIALOG (dialog),
 			  "response",
 			  G_CALLBACK (gtk_widget_destroy),
 			  NULL);
 
-	g_signal_connect (G_OBJECT (dialog),
+	g_signal_connect (GTK_DIALOG (dialog),
 			  "unrealize",
 			  G_CALLBACK (last_output_window__unrealize_cb),
 			  NULL);
@@ -8784,23 +8784,23 @@ paste_from_archive_open_cb (GObject      *source_object,
 		return;
 	}
 
-	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+	g_signal_connect (window->priv->copy_from_archive,
 			  "progress",
 			  G_CALLBACK (fr_archive_progress_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+	g_signal_connect (window->priv->copy_from_archive,
 			  "message",
 			  G_CALLBACK (fr_archive_message_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+	g_signal_connect (window->priv->copy_from_archive,
 			  "start",
 			  G_CALLBACK (fr_archive_start_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+	g_signal_connect (window->priv->copy_from_archive,
 			  "stoppable",
 			  G_CALLBACK (fr_archive_stoppable_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+	g_signal_connect (window->priv->copy_from_archive,
 			  "working-archive",
 			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);

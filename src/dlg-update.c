@@ -337,19 +337,19 @@ dlg_update (FrWindow *window)
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->update_file_dialog),
+	g_signal_connect (GTK_DIALOG (data->update_file_dialog),
 			  "destroy",
 			  G_CALLBACK (update_dialog_destroy),
 			  data);
-	g_signal_connect (G_OBJECT (data->update_file_dialog),
+	g_signal_connect (GTK_DIALOG (data->update_file_dialog),
 			  "response",
 			  G_CALLBACK (update_dialog_response),
 			  data);
-	g_signal_connect (G_OBJECT (data->update_files_dialog),
+	g_signal_connect (GTK_DIALOG (data->update_files_dialog),
 			  "destroy",
 			  G_CALLBACK (update_dialog_destroy),
 			  data);
-	g_signal_connect (G_OBJECT (data->update_files_dialog),
+	g_signal_connect (GTK_DIALOG (data->update_files_dialog),
 			  "response",
 			  G_CALLBACK (update_dialog_response),
 			  data);
@@ -370,7 +370,7 @@ dlg_update (FrWindow *window)
 	column = gtk_tree_view_column_new ();
 
 	renderer = gtk_cell_renderer_toggle_new ();
-        g_signal_connect (G_OBJECT (renderer),
+        g_signal_connect (GTK_CELL_RENDERER_TOGGLE (renderer),
                           "toggled",
                           G_CALLBACK (is_selected_toggled),
                           data);

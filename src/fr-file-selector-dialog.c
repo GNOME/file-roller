@@ -697,23 +697,23 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_MODIFIED, files_modified_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, GTK_SORT_ASCENDING);
 
-	g_signal_connect (GET_WIDGET ("is_selected_cellrenderertoggle"),
+	g_signal_connect (GTK_CELL_RENDERER_TOGGLE (GET_WIDGET ("is_selected_cellrenderertoggle")),
 			  "toggled",
 			  G_CALLBACK (is_selected_cellrenderertoggle_toggled_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("files_treeview"),
+	g_signal_connect (GTK_TREE_VIEW (GET_WIDGET ("files_treeview")),
 			  "row-activated",
 			  G_CALLBACK (files_treeview_row_activated_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("go_up_button"),
+	g_signal_connect (GTK_BUTTON (GET_WIDGET ("go_up_button")),
 			  "clicked",
 			  G_CALLBACK (go_up_button_clicked_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("places_sidebar"),
+	g_signal_connect (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")),
 			  "open-location",
 			  G_CALLBACK (places_sidebar_open_location_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("files_treeview"),
+	g_signal_connect (GTK_TREE_VIEW (GET_WIDGET ("files_treeview")),
 			  "button-press-event",
 			  G_CALLBACK (files_treeview_button_press_event_cb),
 			  self);

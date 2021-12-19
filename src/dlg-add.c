@@ -229,11 +229,11 @@ dlg_add (FrWindow *window)
 
 	/* signals */
 
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "destroy",
 			  G_CALLBACK (file_selector_destroy_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GTK_DIALOG (data->dialog),
 			  "response",
 			  G_CALLBACK (file_selector_response_cb),
 			  data);
@@ -768,23 +768,23 @@ load_options_activate_cb (GSimpleAction *action,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (aod_data->dialog),
+	g_signal_connect (GTK_DIALOG (aod_data->dialog),
 			  "destroy",
 			  G_CALLBACK (aod_destroy_cb),
 			  aod_data);
-	g_signal_connect (G_OBJECT (aod_data->aod_treeview),
+	g_signal_connect (GTK_TREE_VIEW (aod_data->aod_treeview),
 			  "row_activated",
 			  G_CALLBACK (aod_activated_cb),
 			  aod_data);
-	g_signal_connect_swapped (G_OBJECT (cancel_button),
+	g_signal_connect_swapped (GTK_BUTTON (cancel_button),
 				  "clicked",
 				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (aod_data->dialog));
-	g_signal_connect (G_OBJECT (ok_button),
+				  aod_data->dialog);
+	g_signal_connect (GTK_BUTTON (ok_button),
 			  "clicked",
 			  G_CALLBACK (aod_apply_cb),
 			  aod_data);
-	g_signal_connect (G_OBJECT (remove_button),
+	g_signal_connect (GTK_BUTTON (remove_button),
 			  "clicked",
 			  G_CALLBACK (aod_remove_cb),
 			  aod_data);

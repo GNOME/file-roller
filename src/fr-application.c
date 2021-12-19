@@ -221,8 +221,8 @@ handle_method_call (GDBusConnection       *connection,
 		window = fr_window_new ();
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
 
-		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
-		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
+		g_signal_connect (FR_WINDOW (window), "progress", G_CALLBACK (window_progress_cb), connection);
+		g_signal_connect (FR_WINDOW (window), "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), _("Compress"));
 		fr_window_batch__add_files (FR_WINDOW (window), file, file_list);
@@ -257,8 +257,8 @@ handle_method_call (GDBusConnection       *connection,
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
 		fr_window_set_default_dir (FR_WINDOW (window), destination, TRUE);
 
-		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
-		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
+		g_signal_connect (FR_WINDOW (window), "progress", G_CALLBACK (window_progress_cb), connection);
+		g_signal_connect (FR_WINDOW (window), "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), _("Compress"));
 		fr_window_batch__add_files (FR_WINDOW (window), NULL, file_list);
@@ -293,8 +293,8 @@ handle_method_call (GDBusConnection       *connection,
 			g_object_unref (file);
 		}
 
-		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
-		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
+		g_signal_connect (FR_WINDOW (window), "progress", G_CALLBACK (window_progress_cb), connection);
+		g_signal_connect (FR_WINDOW (window), "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), C_("Window title", "Extract archive"));
 		fr_window_batch__extract (FR_WINDOW (window), archive, destination, use_progress_dialog);
@@ -319,8 +319,8 @@ handle_method_call (GDBusConnection       *connection,
 		window = fr_window_new ();
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
 
-		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
-		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
+		g_signal_connect (FR_WINDOW (window), "progress", G_CALLBACK (window_progress_cb), connection);
+		g_signal_connect (FR_WINDOW (window), "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), C_("Window title", "Extract archive"));
 		fr_window_batch__extract_here (FR_WINDOW (window), archive, use_progress_dialog);

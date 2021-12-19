@@ -168,7 +168,7 @@ dlg_prop (FrWindow *window)
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (data->dialog,
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);

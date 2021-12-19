@@ -81,7 +81,7 @@ dlg_open_with (FrWindow *window,
 	app_chooser = gtk_app_chooser_dialog_new (GTK_WINDOW (window),
 						  GTK_DIALOG_MODAL,
 						  G_FILE (file_list->data));
-	g_signal_connect (app_chooser,
+	g_signal_connect (GTK_APP_CHOOSER_DIALOG (app_chooser),
 			  "response",
 			  G_CALLBACK (app_chooser_response_cb),
 			  o_data);

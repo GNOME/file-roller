@@ -93,7 +93,7 @@ dlg_batch_add_files (FrWindow *window,
 					    NULL);
 	fr_new_archive_dialog_set_files_to_add (FR_NEW_ARCHIVE_DIALOG (dialog), file_list);
 
-	g_signal_connect (dialog,
+	g_signal_connect (GTK_DIALOG (dialog),
 			  "response",
 			  G_CALLBACK (dialog_response_cb),
 			  window);

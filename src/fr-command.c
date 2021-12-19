@@ -415,7 +415,7 @@ _fr_command_set_process (FrCommand *self,
 		return;
 
 	self->process = g_object_ref (process);
-	g_signal_connect (G_OBJECT (self->process),
+	g_signal_connect (FR_PROCESS (self->process),
 			  "sticky_only",
 			  G_CALLBACK (process_sticky_only_cb),
 			  self);

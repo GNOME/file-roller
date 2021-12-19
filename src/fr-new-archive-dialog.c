@@ -280,19 +280,19 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (GET_WIDGET ("filename_entry"),
+	g_signal_connect (GTK_ENTRY (GET_WIDGET ("filename_entry")),
 			  "changed",
 			  G_CALLBACK (entry_changed_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("password_entry"),
+	g_signal_connect (GTK_ENTRY (GET_WIDGET ("password_entry")),
 			  "changed",
 			  G_CALLBACK (entry_changed_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("volume_checkbutton"),
+	g_signal_connect (GTK_CHECK_BUTTON (GET_WIDGET ("volume_checkbutton")),
 			  "toggled",
 			  G_CALLBACK (volume_toggled_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("extension_comboboxtext"),
+	g_signal_connect (GTK_COMBO_BOX_TEXT (GET_WIDGET ("extension_comboboxtext")),
 			  "changed",
 			  G_CALLBACK (extension_comboboxtext_changed_cb),
 			  self);
