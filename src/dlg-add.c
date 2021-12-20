@@ -60,7 +60,7 @@ file_selector_destroy_cb (GtkWidget  *widget,
 static void dlg_add_folder_save_last_options (DialogData *data);
 
 
-static int
+static void
 file_selector_response_cb (GtkWidget    *widget,
 			   int           response,
 			   DialogData   *data)
@@ -74,13 +74,13 @@ file_selector_response_cb (GtkWidget    *widget,
 	GList       *files;
 
 	if (response == GTK_RESPONSE_NONE)
-		return TRUE;
+		return;
 
 	dlg_add_folder_save_last_options (data);
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
-		return TRUE;
+		return;
 	}
 
 	current_folder = fr_file_selector_dialog_get_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog));
@@ -89,9 +89,10 @@ file_selector_response_cb (GtkWidget    *widget,
 
 	if (! _g_file_check_permissions (current_folder, R_OK)) {
 		GtkWidget *d;
-		char      *utf8_path;
+		g_autofree char *utf8_path;
 
 		utf8_path = g_file_get_parse_name (current_folder);
+		g_object_unref (current_folder);
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
 					   GTK_DIALOG_MODAL,
@@ -99,13 +100,9 @@ file_selector_response_cb (GtkWidget    *widget,
 					   _("Could not add the files to the archive"),
 					   _("You don’t have the right permissions to read files from folder “%s”"),
 					   utf8_path);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
-
-		g_free (utf8_path);
-		g_object_unref (current_folder);
-
-		return FALSE;
+		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		gtk_widget_show (d);
+		return;
 	}
 
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")));
@@ -140,7 +137,7 @@ file_selector_response_cb (GtkWidget    *widget,
 
 	gtk_widget_destroy (data->dialog);
 
-	return TRUE;
+	return;
 }
 
 
