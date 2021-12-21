@@ -56,11 +56,50 @@ source_files = files(
   'preferences.c',
   'rar-utils.c'
 )
+
+fr_headers = files(
+  'fr-application-menu.h',
+  'fr-application.h',
+  'fr-archive.h',
+  'fr-command-7z.h',
+  'fr-command-ace.h',
+  'fr-command-alz.h',
+  'fr-command-ar.h',
+  'fr-command-arj.h',
+  'fr-command-cfile.h',
+  'fr-command-cpio.h',
+  'fr-command-dpkg.h',
+  'fr-command-iso.h',
+  'fr-command-jar.h',
+  'fr-command-lha.h',
+  'fr-command-lrzip.h',
+  'fr-command-rar.h',
+  'fr-command-rpm.h',
+  'fr-command-tar.h',
+  'fr-command-unsquashfs.h',
+  'fr-command-unstuff.h',
+  'fr-command-zip.h',
+  'fr-command-zoo.h',
+  'fr-command.h',
+  'fr-error.h',
+  'fr-file-selector-dialog.h',
+  'fr-init.h',
+  'fr-list-model.h',
+  'fr-location-bar.h',
+  'fr-new-archive-dialog.h',
+  'fr-process.h',
+  'fr-window-actions-callbacks.h',
+  'fr-window-actions-entries.h',
+  'fr-window.h',
+)
+
 if libjson_glib_dep.found()
   source_files += [ 'fr-command-unarchiver.c' ]
+  fr_headers += [ 'fr-command-unarchiver.h' ]
 endif
 if use_libarchive
   source_files += [ 'fr-archive-libarchive.c' ]
+  fr_headers += [ 'fr-archive-libarchive.h' ]
 endif 
 if not have_mkdtemp
   source_files += [ 'mkdtemp.c' ]
@@ -76,7 +115,7 @@ enum_files = gnome.mkenums_simple('fr-enum-types',
 
 # Build targets
 
-executable('file-roller', 
+fr_exe = executable('file-roller',
   sources : [ 
     config_file, 
     source_files, 
@@ -91,14 +130,37 @@ executable('file-roller',
     gthread_dep, 
     gtk_dep, 
     hdy_dep,
+    use_gobject_introspection ? gobject_introspection_dep : [],
     use_json_glib ? libjson_glib_dep : [],
     use_libnotify ? libnotify_dep : [],
     use_libarchive ? libarchive_dep : []
+  ],
+  link_args: [
+    # Required for GIRepository to be able to dump symbols.
+    use_gobject_introspection ? '-Wl,--export-dynamic' : [],
   ],
   include_directories : config_inc,
   c_args : c_args,
   install : true
 )
+
+if use_gobject_introspection
+  fr_gir = gnome.generate_gir(
+    fr_exe,
+    sources: [
+      source_files,
+      fr_headers,
+    ],
+    namespace: 'FileRoller',
+    nsversion: '1.0',
+    identifier_prefix: 'Fr',
+    includes : [
+      'Gio-2.0',
+      'GObject-2.0',
+      'Gtk-3.0',
+    ],
+  )
+endif
 
 executable('test-server', 'test-server.c',
   dependencies : [ 

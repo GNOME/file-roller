@@ -31,6 +31,10 @@ gtk_dep = dependency('gtk+-3.0', version : gtk_version)
 hdy_dep = dependency('libhandy-1', version: hdy_version)
 
 # Optional dependencies
+use_gobject_introspection = get_option('introspection')
+if use_gobject_introspection
+  gobject_introspection_dep = dependency('gobject-introspection-1.0')
+endif
 
 libnautilus_extension_dep = dependency('libnautilus-extension', version : nautilus_version, required : get_option('nautilus-actions'))
 build_nautilus_actions = libnautilus_extension_dep.found()
@@ -72,6 +76,9 @@ else
   config_data.set_quoted('PRIVEXECDIR', privexecdir)  
   config_data.set_quoted('UIDIR', join_paths(datadir, meson.project_name(), 'ui'))
   config_data.set_quoted('SHDIR', join_paths(prefix, get_option('libexecdir'), meson.project_name()))  
+endif
+if use_gobject_introspection
+  config_data.set('ENABLE_INTROSPECTION', 1)
 endif
 if use_json_glib
   config_data.set('HAVE_JSON_GLIB', 1)
