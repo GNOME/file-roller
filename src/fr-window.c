@@ -2552,7 +2552,7 @@ create_the_progress_dialog (FrWindow *window)
 		title = NULL;
 	}
 
-	builder = _gtk_builder_new_from_resource ("progress-dialog.ui");
+	builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "progress-dialog.ui");
 	use_header_bar = _gtk_settings_get_dialogs_use_header ();
 	dialog = g_object_new (GTK_TYPE_DIALOG, "use-header-bar", use_header_bar, NULL);
 	gtk_box_pack_end (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
@@ -5809,7 +5809,7 @@ fr_window_construct (FrWindow *window)
                 GtkBuilder *builder;
                 GMenuModel *menu;
 
-                builder = _gtk_builder_new_from_resource ("gears-menu.ui");
+                builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "gears-menu.ui");
                 menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
                 button = _gtk_menu_button_new_for_header_bar ();
                 gtk_size_group_add_widget (header_bar_size_group, button);
@@ -5888,7 +5888,7 @@ fr_window_construct (FrWindow *window)
 	{
 		GtkBuilder *builder;
 
-		builder = _gtk_builder_new_from_resource ("menus.ui");
+		builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "menus.ui");
 
 		window->priv->file_popup_menu = gtk_popover_new_from_model (window->priv->list_view, G_MENU_MODEL (gtk_builder_get_object (builder, "file-popup")));
 		window->priv->folder_popup_menu = gtk_popover_new_from_model (window->priv->list_view, G_MENU_MODEL (gtk_builder_get_object (builder, "folder-popup")));

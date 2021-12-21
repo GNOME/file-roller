@@ -206,9 +206,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	gtk_window_set_resizable (GTK_WINDOW (self), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
 
-	self->builder = _gtk_builder_new_from_resource ("new-archive-dialog.ui");
-	if (self->builder == NULL)
-		return;
+	self->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "new-archive-dialog.ui");
 
 	_g_object_unref (self->original_file);
 	self->original_file = _g_object_ref (original_file);

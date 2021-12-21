@@ -63,11 +63,7 @@ dlg_prop (FrWindow *window)
 
 	data = g_new (DialogData, 1);
 
-	data->builder = _gtk_builder_new_from_resource ("properties.ui");
-	if (data->builder == NULL) {
-		g_free (data);
-		return;
-	}
+	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "properties.ui");
 
 	/* Get the widgets. */
 	table = _gtk_builder_get_widget (data->builder, "content");

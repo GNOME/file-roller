@@ -177,9 +177,7 @@ dlg_add (FrWindow *window)
 
 	g_object_get (data->dialog, "use-header-bar", &use_header, NULL);
 
-	data->builder = _gtk_builder_new_from_resource ("add-dialog-options.ui");
-	if (data->builder == NULL)
-		return;
+	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "add-dialog-options.ui");
 	fr_file_selector_dialog_set_extra_widget (FR_FILE_SELECTOR_DIALOG (data->dialog), GET_WIDGET ("extra_widget"));
 
 	/* options menu button */
@@ -733,11 +731,7 @@ load_options_activate_cb (GSimpleAction *action,
 	aod_data = g_new0 (LoadOptionsDialogData, 1);
 
 	aod_data->data = data;
-	aod_data->builder = _gtk_builder_new_from_resource ("add-options.ui");
-	if (aod_data->builder == NULL) {
-		g_free (aod_data);
-		return;
-	}
+	aod_data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "add-options.ui");
 
 	/* Get the widgets. */
 

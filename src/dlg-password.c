@@ -81,11 +81,7 @@ dlg_password (GtkWidget *widget,
 
 	data = g_new0 (DialogData, 1);
 	data->window = window;
-	data->builder = _gtk_builder_new_from_resource ("password.ui");
-	if (data->builder == NULL) {
-		g_free (data);
-		return;
-	}
+	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "password.ui");
 
 	/* Set widgets data. */
 

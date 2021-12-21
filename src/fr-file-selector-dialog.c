@@ -682,7 +682,7 @@ static void
 fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 {
 	self->current_folder = NULL;
-	self->builder = _gtk_builder_new_from_resource ("file-selector.ui");
+	self->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "file-selector.ui");
 	self->icon_cache = NULL;
 	self->settings = g_settings_new ("org.gnome.FileRoller.FileSelector");
 	self->show_hidden = g_settings_get_boolean (self->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN);

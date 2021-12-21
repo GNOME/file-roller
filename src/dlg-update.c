@@ -300,11 +300,7 @@ dlg_update (FrWindow *window)
 
 	data = g_new0 (DialogData, 1);
 
-	data->builder = _gtk_builder_new_from_resource ("update.ui");
-	if (data->builder == NULL) {
-		g_free (data);
-		return NULL;
-	}
+	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "update.ui");
 
 	data->file_list = NULL;
 	data->window = g_object_ref (window);

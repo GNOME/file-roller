@@ -239,7 +239,7 @@ initialize_app_menubar (GApplication *application)
 					 G_N_ELEMENTS (app_menu_entries),
 					 application);
 
-	builder = _gtk_builder_new_from_resource ("app-menubar.ui");
+	builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "app-menubar.ui");
 	gtk_application_set_menubar (GTK_APPLICATION (application),
 				     G_MENU_MODEL (gtk_builder_get_object (builder, "app-menubar")));
 	g_object_unref (builder);

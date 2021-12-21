@@ -327,9 +327,7 @@ dlg_extract__common (FrWindow *window,
 	gtk_file_chooser_set_create_folders (GTK_FILE_CHOOSER (data->dialog), TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
-	data->builder = _gtk_builder_new_from_resource ("extract-dialog-options.ui");
-	if (data->builder == NULL)
-		return;
+	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "extract-dialog-options.ui");
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (data->dialog), GET_WIDGET ("extra_widget"));
 
 	/* Set widgets data. */
