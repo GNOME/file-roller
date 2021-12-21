@@ -229,7 +229,7 @@ get_context_data (GdkDragContext *context)
 }
 
 
-static gboolean
+static void
 egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
 				   GdkDragContext   *context,
 				   GtkSelectionData *selection_data,
@@ -243,11 +243,11 @@ egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
   tree_view = GTK_TREE_VIEW (widget);
   model = gtk_tree_view_get_model (tree_view);
   if (model == NULL)
-    return FALSE;
+    return;
 
   path_list = get_context_data (context);
   if (path_list == NULL)
-    return FALSE;
+    return;
 
   /* We can implement the GTK_TREE_MODEL_ROW target generically for
    * any model; for DragSource models there are some other targets
@@ -255,12 +255,11 @@ egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
    */
 
   if (! EGG_IS_TREE_MULTI_DRAG_SOURCE (model))
-    return FALSE;
+    return;
 
-  return egg_tree_multi_drag_source_drag_data_get (EGG_TREE_MULTI_DRAG_SOURCE (model),
-      						   context,
-						   selection_data,
-						   path_list);
+  egg_tree_multi_drag_source_drag_data_get(EGG_TREE_MULTI_DRAG_SOURCE(model),
+                                           context, selection_data,
+                                           path_list);
 }
 
 

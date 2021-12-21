@@ -385,14 +385,14 @@ fr_command_handle_process_error (FrCommand     *self,
 /* -- _fr_command_set_process -- */
 
 
-static gboolean
+static void
 process_sticky_only_cb (FrProcess *process,
                         gpointer   user_data)
 {
 	FrArchive *archive = user_data;
 
 	fr_archive_set_stoppable (archive, FALSE);
-        return TRUE;
+        return;
 }
 
 

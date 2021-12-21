@@ -2441,7 +2441,7 @@ progress_dialog_update_action_description (FrWindow *window)
 }
 
 
-static gboolean
+static void
 fr_window_working_archive_cb (FrArchive  *archive,
 			      const char *archive_uri,
 			      FrWindow   *window)
@@ -2451,11 +2451,11 @@ fr_window_working_archive_cb (FrArchive  *archive,
 		window->priv->working_archive = g_file_new_for_uri (archive_uri);
 	progress_dialog_update_action_description (window);
 
-	return TRUE;
+	return;
 }
 
 
-static gboolean
+static void
 fr_archive_message_cb (FrArchive  *archive,
 		       const char *msg,
 		       FrWindow   *window)
@@ -2466,7 +2466,7 @@ fr_archive_message_cb (FrArchive  *archive,
 	}
 
 	if (window->priv->progress_dialog == NULL)
-		return TRUE;
+		return;
 
 	if (msg != NULL) {
 		while (*msg == ' ')
@@ -2483,7 +2483,7 @@ fr_archive_message_cb (FrArchive  *archive,
 		else
 			utf8_msg = g_strdup (msg);
 		if (utf8_msg == NULL)
-			return TRUE;
+			return;
 
 		if (g_utf8_validate (utf8_msg, -1, NULL)) {
 			gtk_label_set_text (GTK_LABEL (window->priv->pd_message), utf8_msg);
@@ -2510,7 +2510,7 @@ fr_archive_message_cb (FrArchive  *archive,
 
 	progress_dialog_update_action_description (window);
 
-	return TRUE;
+	return;
 }
 
 
@@ -2654,7 +2654,7 @@ open_progress_dialog (FrWindow *window,
 }
 
 
-static gboolean
+static void
 fr_archive_progress_cb (FrArchive *archive,
 		        double     fraction,
 		        FrWindow  *window)
@@ -2710,7 +2710,7 @@ fr_archive_progress_cb (FrArchive *archive,
 		g_print ("progress > %2.2f\n", fraction);
 #endif
 	}
-	return TRUE;
+	return;
 }
 
 
@@ -3717,7 +3717,7 @@ fr_window_current_folder_activated (FrWindow *window,
 }
 
 
-static gboolean
+static void
 row_activated_cb (GtkTreeView       *tree_view,
 		  GtkTreePath       *path,
 		  GtkTreeViewColumn *column,
@@ -3730,7 +3730,7 @@ row_activated_cb (GtkTreeView       *tree_view,
 	if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->list_store),
 				       &iter,
 				       path))
-		return FALSE;
+		return;
 
 	gtk_tree_model_get (GTK_TREE_MODEL (window->priv->list_store), &iter,
 			    COLUMN_FILE_DATA, &fdata,
@@ -3751,7 +3751,7 @@ row_activated_cb (GtkTreeView       *tree_view,
 		g_free (new_dir);
 	}
 
-	return FALSE;
+	return;
 }
 
 
@@ -4367,31 +4367,29 @@ tree_view_drag_begin (GtkWidget          *widget,
 }
 
 
-static gboolean
+static void
 file_list_drag_begin (GtkWidget          *widget,
 		      GdkDragContext     *context,
 		      gpointer            data)
 {
 	FrWindow *window = data;
-	return tree_view_drag_begin (widget,
-				     context,
-				     GTK_TREE_MODEL (window->priv->list_store),
-				     COLUMN_NAME,
-				     data);
+	tree_view_drag_begin(widget, context,
+			     GTK_TREE_MODEL(window->priv->list_store),
+			     COLUMN_NAME, data);
+	return;
 }
 
 
-static gboolean
+static void
 folde_tree_drag_begin (GtkWidget          *widget,
 		       GdkDragContext     *context,
 		       gpointer            data)
 {
 	FrWindow *window = data;
-	return tree_view_drag_begin (widget,
-				     context,
-				     GTK_TREE_MODEL (window->priv->tree_store),
-				     TREE_COLUMN_NAME,
-				     data);
+	tree_view_drag_begin(widget, context,
+			     GTK_TREE_MODEL(window->priv->tree_store),
+			     TREE_COLUMN_NAME, data);
+	return;
 }
 
 
@@ -4572,7 +4570,7 @@ wait_dnd_extraction (FrWindow *window)
 }
 
 
-static gboolean
+static void
 fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 				     GdkDragContext   *context,
 				     GtkSelectionData *selection_data,
@@ -4590,11 +4588,11 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	debug (DEBUG_INFO, "::DragDataGet -->\n");
 
 	if (window->priv->activity_ref > 0)
-		return FALSE;
+		return;
 
 	file_list = fr_window_get_folder_tree_selection (window, TRUE, NULL);
 	if (file_list == NULL)
-		return FALSE;
+		return;
 
 	if (gtk_selection_data_get_target (selection_data) == XFR_ATOM) {
 		FrClipboardData *tmp;
@@ -4611,14 +4609,14 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 		fr_clipboard_data_unref (tmp);
 		g_free (data);
 
-		return TRUE;
+		return;
 	}
 
 	if (! nautilus_xds_dnd_is_valid_xds_context (context))
-		return FALSE;
+		return;
 
 	uri  = get_xds_atom_value (context);
-	g_return_val_if_fail (uri != NULL, FALSE);
+	g_return_if_fail(uri != NULL);
 
 	destination = g_file_new_for_uri (uri);
 	destination_folder = g_file_get_parent (destination);
@@ -4667,7 +4665,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 
 	debug (DEBUG_INFO, "::DragDataGet <--\n");
 
-	return TRUE;
+	return;
 }
 
 
@@ -4887,7 +4885,7 @@ key_press_cb (GtkWidget   *widget,
 }
 
 
-static gboolean
+static void
 dir_tree_selection_changed_cb (GtkTreeSelection *selection,
 			       gpointer          user_data)
 {
@@ -4905,11 +4903,11 @@ dir_tree_selection_changed_cb (GtkTreeSelection *selection,
 		g_free (path);
 	}
 
-	return FALSE;
+	return;
 }
 
 
-static gboolean
+static void
 selection_changed_cb (GtkTreeSelection *selection,
 		      gpointer          user_data)
 {
@@ -4917,7 +4915,7 @@ selection_changed_cb (GtkTreeSelection *selection,
 
 	fr_window_update_sensitivity (window);
 
-	return FALSE;
+	return;
 }
 
 
@@ -5289,7 +5287,7 @@ path_column_sort_func (GtkTreeModel *model,
 }
 
 
-static gboolean
+static void
 fr_window_show_cb (GtkWidget *widget,
 		   FrWindow  *window)
 {
@@ -5300,7 +5298,7 @@ fr_window_show_cb (GtkWidget *widget,
 
 	gtk_widget_hide (window->priv->filter_bar);
 
-	return TRUE;
+	return;
 }
 
 
@@ -5373,7 +5371,7 @@ theme_changed_cb (GtkIconTheme *theme,
 }
 
 
-static gboolean
+static void
 fr_archive_stoppable_cb (FrArchive *archive,
 			 gboolean   stoppable,
 			 FrWindow  *window)
@@ -5383,7 +5381,7 @@ fr_archive_stoppable_cb (FrArchive *archive,
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->priv->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   stoppable);
-	return TRUE;
+	return;
 }
 
 
@@ -8045,12 +8043,12 @@ fr_window_archive_encrypt (FrWindow   *window,
 /* -- fr_window_view_last_output  -- */
 
 
-static gboolean
+static void
 last_output_window__unrealize_cb (GtkWidget  *widget,
 				  gpointer    data)
 {
 	pref_util_save_window_geometry (GTK_WINDOW (widget), LAST_OUTPUT_SCHEMA_NAME);
-	return FALSE;
+	return;
 }
 
 

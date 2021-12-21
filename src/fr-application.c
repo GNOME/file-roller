@@ -134,7 +134,7 @@ window_ready_cb (FrWindow *window,
 }
 
 
-static gboolean
+static void
 window_progress_cb (FrWindow *window,
 		    double    fraction,
 		    const char *details,
@@ -152,7 +152,7 @@ window_progress_cb (FrWindow *window,
 						      details),
 				       NULL);
 
-	return TRUE;
+	return;
 }
 
 
