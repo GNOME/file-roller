@@ -16,5 +16,5 @@ shared_module('nautilus-fileroller',
   include_directories : config_inc,
   c_args : c_args,
   install : true,
-  install_dir : libnautilus_extension_dep.get_variable('extensiondir')
+  install_dir : libnautilus_extension_dep.get_variable('extensiondir', pkgconfig_define: ['libdir', libdir])
 )
