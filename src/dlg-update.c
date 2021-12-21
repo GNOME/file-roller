@@ -250,7 +250,7 @@ n_selected (DialogData *data)
 
 static void
 is_selected_toggled (GtkCellRendererToggle *cell,
-		     char                  *path_string,
+		     const char            *path_string,
 		     gpointer               callback_data)
 {
 	DialogData   *data  = callback_data;

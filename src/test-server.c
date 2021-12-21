@@ -118,8 +118,8 @@ fileroller_addtoarchive_ready_cb (GObject      *source_object,
 
 static void
 on_signal (GDBusProxy *proxy,
-	   char       *sender_name,
-	   char       *signal_name,
+	   const char *sender_name,
+	   const char *signal_name,
 	   GVariant   *parameters,
 	   gpointer    user_data)
 {

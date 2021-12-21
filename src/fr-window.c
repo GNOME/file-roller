@@ -770,7 +770,7 @@ fr_window_update_paste_command_sensitivity (FrWindow     *window,
 
 static void
 clipboard_owner_change_cb (GtkClipboard *clipboard,
-			   GdkEvent     *event,
+			   GdkEventOwnerChange *event,
 			   gpointer      user_data)
 {
 	fr_window_update_paste_command_sensitivity ((FrWindow *) user_data, clipboard);
@@ -2719,16 +2719,16 @@ fr_archive_progress_cb (FrArchive *archive,
 
 static void
 fr_window_close_confirmation_dialog (FrWindow  *window,
-				     GtkWidget *dialog)
+				     GtkDialog *dialog)
 {
-	gtk_widget_destroy (dialog);
+	gtk_widget_destroy (GTK_WIDGET (dialog));
 	if (window->priv->batch_mode && window->priv->destroy_with_confirmation_dialog)
 		_fr_window_close_after_notification (window);
 }
 
 
 static void
-confirmation_dialog_response (GtkWidget *dialog,
+confirmation_dialog_response (GtkDialog *dialog,
 			      int        response_id,
 			      FrWindow  *window)
 {
@@ -2768,44 +2768,42 @@ confirmation_dialog_delete_event (GtkWidget *dialog,
 				  GdkEvent  *event,
 				  FrWindow  *window)
 {
-	fr_window_close_confirmation_dialog (window, dialog);
+	fr_window_close_confirmation_dialog (window, GTK_DIALOG (dialog));
 	return TRUE;
 }
 
 
 static void
 fr_window_show_confirmation_dialog (FrWindow  *window,
-				    GtkWidget *dialog)
+				    GtkDialog *dialog)
 {
 	close_progress_dialog (window, TRUE);
 
-	g_signal_connect (GTK_DIALOG (dialog),
+	g_signal_connect (dialog,
 			  "response",
 			  G_CALLBACK (confirmation_dialog_response),
 			  window);
-	g_signal_connect (GTK_DIALOG (dialog),
+	g_signal_connect (dialog,
 			  "delete_event",
 			  G_CALLBACK (confirmation_dialog_delete_event),
 			  window);
 
-	gtk_widget_show (dialog);
+	gtk_widget_show (GTK_WIDGET (dialog));
 }
 
 
 static void
 fr_window_show_confirmation_dialog_with_open_destination (FrWindow *window)
 {
-	GtkWidget *dialog;
-
-	dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
+	GtkDialog *dialog = GTK_DIALOG (_gtk_message_dialog_new (GTK_WINDOW (window),
 					  GTK_DIALOG_MODAL,
 					  _("Extraction completed successfully"),
 					  NULL,
 					  _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
 					  _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER,
-					  NULL);
+					  NULL));
 
-	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
+	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_CLOSE);
 	fr_window_show_confirmation_dialog (window, dialog);
 }
 
@@ -2830,7 +2828,7 @@ fr_window_show_confirmation_dialog_with_open_archive (FrWindow *window)
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
-	fr_window_show_confirmation_dialog (window, dialog);
+	fr_window_show_confirmation_dialog (window, GTK_DIALOG (dialog));
 
 	g_free (message);
 	g_free (basename);
@@ -5410,7 +5408,7 @@ fr_window_activate_filter (FrWindow *window)
 
 
 static void
-filter_entry_search_changed_cb (GtkEntry *entry,
+filter_entry_search_changed_cb (GtkSearchEntry *entry,
 				FrWindow *window)
 {
 	fr_window_activate_filter (window);

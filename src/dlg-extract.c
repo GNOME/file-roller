@@ -70,7 +70,7 @@ static void extract_cb_start_extracting (DialogData *data);
 static void create_destination_response_cb (GtkDialog *dialog, int response, DialogData *data);
 
 static void
-extract_cb (GtkWidget   *dialog,
+extract_cb (GtkDialog   *dialog,
 	    DialogData  *data)
 {
 	data->extract_clicked = TRUE;
@@ -277,20 +277,20 @@ extract_cb_start_extracting (DialogData *data)
 
 
 static void
-file_selector_response_cb (GtkWidget    *widget,
+file_selector_response_cb (GtkDialog    *dialog,
 		      int           response,
 		      DialogData   *data)
 {
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
 	} else if (response == GTK_RESPONSE_OK) {
-		extract_cb (widget, data);
+		extract_cb (dialog, data);
 	}
 }
 
 
 static void
-files_entry_changed_cb (GtkWidget  *widget,
+files_entry_changed_cb (GtkEditable  *widget,
 			DialogData *data)
 {
 	if (! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("file_pattern_radiobutton"))))

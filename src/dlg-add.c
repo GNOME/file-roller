@@ -47,7 +47,7 @@ typedef struct {
 
 
 static void
-file_selector_destroy_cb (GtkWidget  *widget,
+file_selector_destroy_cb (GtkDialog *dialog,
 			  DialogData *data)
 {
 	g_object_unref (data->builder);
@@ -61,7 +61,7 @@ static void dlg_add_folder_save_last_options (DialogData *data);
 
 
 static void
-file_selector_response_cb (GtkWidget    *widget,
+file_selector_response_cb (GtkDialog *dialog,
 			   int           response,
 			   DialogData   *data)
 {
@@ -100,7 +100,7 @@ file_selector_response_cb (GtkWidget    *widget,
 					   _("Could not add the files to the archive"),
 					   _("You don’t have the right permissions to read files from folder “%s”"),
 					   utf8_path);
-		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_widget_destroy), NULL);
 		gtk_widget_show (d);
 		return;
 	}
@@ -224,11 +224,11 @@ dlg_add (FrWindow *window)
 
 	/* signals */
 
-	g_signal_connect (GTK_DIALOG (data->dialog),
+	g_signal_connect (FR_FILE_SELECTOR_DIALOG (data->dialog),
 			  "destroy",
 			  G_CALLBACK (file_selector_destroy_cb),
 			  data);
-	g_signal_connect (GTK_DIALOG (data->dialog),
+	g_signal_connect (FR_FILE_SELECTOR_DIALOG (data->dialog),
 			  "response",
 			  G_CALLBACK (file_selector_response_cb),
 			  data);
@@ -594,7 +594,7 @@ aod_destroy_cb (GtkWidget             *widget,
 
 
 static void
-aod_apply_cb (GtkWidget *widget,
+aod_apply_cb (GtkButton *button,
 	      gpointer   callback_data)
 {
 	LoadOptionsDialogData *aod_data = callback_data;
@@ -682,7 +682,7 @@ aod_update_option_list (LoadOptionsDialogData *aod_data)
 
 
 static void
-aod_remove_cb (GtkWidget             *widget,
+aod_remove_cb (GtkButton *button,
 	       LoadOptionsDialogData *aod_data)
 {
 	GtkTreeSelection *selection;

@@ -51,7 +51,7 @@ destroy_cb (GtkWidget  *widget,
 
 /* called when the dialog is dismissed. */
 static void
-response_cb (GtkWidget  *widget,
+response_cb (GtkDialog  *widget,
 			int         response_id,
 			DialogData *data)
 {
@@ -96,7 +96,7 @@ response_cb (GtkWidget  *widget,
 
 
 static void
-entry_changed_cb (GtkWidget  *widget,
+entry_changed_cb (GtkEditable *widget,
 		  DialogData *data)
 {
 	if (! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_files_radio)))

@@ -246,7 +246,7 @@ window_archive_loaded_cb (FrWindow  *window,
 
 
 static void
-open_file_response_cb (GtkWidget *w,
+open_file_response_cb (GtkDialog *dialog,
 		       int        response,
 		       GtkWidget *file_sel)
 {

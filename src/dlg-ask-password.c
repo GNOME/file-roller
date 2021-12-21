@@ -58,7 +58,7 @@ destroy_cb (GtkWidget  *widget,
 
 
 static void
-ask_password__response_cb (GtkWidget  *dialog,
+ask_password__response_cb (GtkDialog  *dialog,
 			   int         response_id,
 			   DialogData *data)
 {

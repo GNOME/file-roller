@@ -107,7 +107,7 @@ static const GOptionEntry options[] = {
 
 
 static void
-window_ready_cb (GtkWidget *widget,
+window_ready_cb (FrWindow *window,
 		 GError    *error,
 		 gpointer   user_data)
 {
@@ -125,7 +125,7 @@ window_ready_cb (GtkWidget *widget,
 static gboolean
 window_progress_cb (FrWindow *window,
 		    double    fraction,
-		    char     *details,
+		    const char *details,
 		    gpointer  user_data)
 {
 	GDBusConnection *connection = user_data;

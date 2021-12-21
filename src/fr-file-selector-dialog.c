@@ -482,7 +482,7 @@ _update_sensitivity (FrFileSelectorDialog *self)
 
 static void
 is_selected_cellrenderertoggle_toggled_cb (GtkCellRendererToggle *cell_renderer,
-					   gchar                 *path,
+					   const gchar           *path,
 					   gpointer               user_data)
 {
 	FrFileSelectorDialog *self = user_data;
@@ -561,13 +561,13 @@ go_up_button_clicked_cb (GtkButton *button,
 
 static void
 places_sidebar_open_location_cb (GtkPlacesSidebar  *sidebar,
-				 GObject           *location,
+				 GFile             *location,
 				 GtkPlacesOpenFlags open_flags,
 				 gpointer           user_data)
 {
 	FrFileSelectorDialog *self = user_data;
 
-	fr_file_selector_dialog_set_current_folder (self, G_FILE (location));
+	fr_file_selector_dialog_set_current_folder (self, location);
 }
 
 

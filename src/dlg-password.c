@@ -50,7 +50,7 @@ destroy_cb (GtkWidget  *widget,
 
 
 static void
-response_cb (GtkWidget  *dialog,
+response_cb (GtkDialog  *dialog,
 	     int         response_id,
 	     DialogData *data)
 {
