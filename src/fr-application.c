@@ -449,7 +449,6 @@ static void
 fr_application_startup (GApplication *application)
 {
 	GtkSettings	*gtk_settings;
-	HdyStyleManager *style_manager;
 	gboolean	 shell_shows_menubar;
 
     g_application_set_resource_base_path (application, "/org/gnome/FileRoller");
