@@ -9,7 +9,6 @@ gtk_version = '>=3.22.0'
 hdy_version = '>=1.5.0'
 nautilus_version = '>=3.28.0'
 json_glib_version = '>=0.14.0'
-libnotify_version = '>=0.4.3'
 libarchive_version = '>=3.1.900a'
 
 gnome = import('gnome')
@@ -41,9 +40,6 @@ build_nautilus_actions = libnautilus_extension_dep.found()
 
 libjson_glib_dep = dependency('json-glib-1.0', version : json_glib_version, required : false)
 use_json_glib = libjson_glib_dep.found()
- 
-libnotify_dep = dependency('libnotify', version : libnotify_version, required : get_option('notification'))
-use_libnotify = libnotify_dep.found()
 
 libarchive_dep = dependency('libarchive', version : libarchive_version, required : get_option('libarchive'))
 use_libarchive = libarchive_dep.found()
@@ -82,9 +78,6 @@ if use_gobject_introspection
 endif
 if use_json_glib
   config_data.set('HAVE_JSON_GLIB', 1)
-endif
-if use_libnotify
-  config_data.set('ENABLE_NOTIFICATION', 1)
 endif
 if use_libarchive
   config_data.set('ENABLE_LIBARCHIVE', 1)
@@ -149,7 +142,6 @@ summary = [
   '           project: @0@ @1@'.format(meson.project_name(), meson.project_version()),
   '            prefix: @0@'.format(prefix),
   '  nautilus actions: @0@'.format(build_nautilus_actions),
-  '     notifications: @0@'.format(use_libnotify),
   '        packagekit: @0@'.format(get_option('packagekit')),
   '        libarchive: @0@'.format(use_libarchive),
   '      have mkdtemp: @0@'.format(have_mkdtemp),

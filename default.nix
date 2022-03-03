@@ -112,7 +112,6 @@ makeDerivation rec {
     json-glib
     libarchive
     libhandy
-    libnotify
   ];
 
   inherit doCheck;

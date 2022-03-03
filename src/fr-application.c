@@ -29,9 +29,6 @@
 #include <gtk/gtk.h>
 #include <glib/gprintf.h>
 #include <handy.h>
-#ifdef ENABLE_NOTIFICATION
-#  include <libnotify/notify.h>
-#endif
 #ifdef ENABLE_INTROSPECTION
 #  include <girepository.h>
 #endif
@@ -112,6 +109,28 @@ static const GOptionEntry options[] = {
 	  NULL },
 
 	{ NULL }
+};
+
+
+static void
+action_open_archive (GSimpleAction      *action,
+		     GVariant           *value,
+		     gpointer            user_data)
+{
+	g_autoptr(GFile)  saved_file;
+	GtkWidget        *new_window;
+
+	saved_file = g_file_new_for_path (g_variant_get_string (value, NULL));
+	new_window = fr_window_new ();
+	gtk_widget_show (new_window);
+	fr_window_archive_open (FR_WINDOW (new_window),
+				saved_file,
+				GTK_WINDOW (new_window));
+}
+
+
+static GActionEntry entries[] = {
+	{ "open-archive", action_open_archive, "s", NULL, NULL },
 };
 
 
@@ -469,11 +488,6 @@ fr_application_startup (GApplication *application)
 	g_set_application_name (_("Archive Manager"));
 	gtk_window_set_default_icon_name ("org.gnome.ArchiveManager");
 
-#ifdef ENABLE_NOTIFICATION
-	if (! notify_init (g_get_application_name ()))
-                g_warning ("Cannot initialize notification system.");
-#endif /* ENABLE_NOTIFICATION */
-
 	fr_application_register_archive_manager_service (FR_APPLICATION (application));
 	initialize_data ();
 
@@ -492,6 +506,10 @@ fr_application_startup (GApplication *application)
 		initialize_app_menubar (application);
 	else
 		initialize_app_menu (application);
+
+	/* Setup actions */
+	g_action_map_add_action_entries (G_ACTION_MAP (application), entries,
+					 G_N_ELEMENTS (entries), NULL);
 }
 
 

@@ -132,7 +132,6 @@ fr_exe = executable('file-roller',
     hdy_dep,
     use_gobject_introspection ? gobject_introspection_dep : [],
     use_json_glib ? libjson_glib_dep : [],
-    use_libnotify ? libnotify_dep : [],
     use_libarchive ? libarchive_dep : []
   ],
   link_args: [

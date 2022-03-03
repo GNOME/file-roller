@@ -31,9 +31,6 @@
 #endif
 #include <gdk/gdkkeysyms.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#ifdef ENABLE_NOTIFICATION
-#  include <libnotify/notify.h>
-#endif
 #include "dlg-batch-add.h"
 #include "dlg-delete.h"
 #include "dlg-extract.h"
@@ -6187,79 +6184,30 @@ fr_window_archive_reload (FrWindow *window)
 }
 
 
-/**/
-
-
-#ifdef ENABLE_NOTIFICATION
-
-
-static void
-notify_action_open_archive_cb (NotifyNotification *notification,
-			       char               *action,
-			       gpointer            user_data)
-{
-	GFile     *saved_file = user_data;
-	GtkWidget *new_window;
-
-	new_window = fr_window_new ();
-	gtk_widget_show (new_window);
-	fr_window_archive_open (FR_WINDOW (new_window),
-				saved_file,
-				GTK_WINDOW (new_window));
-}
-
-
 static void
 _fr_window_notify_creation_complete (FrWindow *window)
 {
-	char               *basename;
-	char               *message;
-	NotifyNotification *notification;
-	gboolean            notification_supports_actions;
-	GList              *caps;
+	char                     *basename;
+	char                     *message;
+	g_autoptr(GNotification)  notification;
 
 	basename = _g_file_get_display_basename (window->priv->saving_file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("“%s” created successfully"), basename);
-	notification = notify_notification_new (window->priv->batch_title, message, "file-roller");
-	notify_notification_set_hint_string (notification, "desktop-entry", "file-roller");
+	notification = g_notification_new (window->priv->batch_title);
+	g_notification_set_body (notification, message);
+	g_notification_set_icon (notification, g_themed_icon_new ("document-open-symbolic"));
+	g_notification_add_button_with_target (notification,
+					       C_("Action", "Open"),
+					       "app.open-archive",
+					       "s", g_file_get_path (window->priv->saving_file));
 
-	notification_supports_actions = FALSE;
-	caps = notify_get_server_caps ();
-	if (caps != NULL) {
-		notification_supports_actions = g_list_find_custom (caps, "actions", (GCompareFunc) strcmp) != NULL;
-		_g_string_list_free (caps);
-	}
+	g_application_send_notification (g_application_get_default (), NULL,
+					 notification);
 
-	if (notification_supports_actions) {
-		notify_notification_add_action (notification,
-						"document-open-symbolic",
-						C_("Action", "Open"),
-						notify_action_open_archive_cb,
-						g_object_ref (window->priv->saving_file),
-						g_object_unref);
-		/*notify_notification_set_hint (notification,
-					      "action-icons",
-					      g_variant_new_boolean (TRUE));*/
-	}
-
-	notify_notification_show (notification, NULL);
 	g_free (message);
 	g_free (basename);
 }
-
-
-#else
-
-
-static void
-_fr_window_notify_creation_complete (FrWindow *window)
-{
-	gtk_window_present (GTK_WINDOW (window->priv->progress_dialog));
-}
-
-
-#endif
 
 
 static void
