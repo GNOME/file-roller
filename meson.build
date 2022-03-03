@@ -20,8 +20,6 @@ datadir = join_paths(prefix, get_option('datadir'))
 privexecdir = join_paths(prefix, get_option('libexecdir'), meson.project_name())
 c_comp = meson.get_compiler('c')
 
-meson.add_install_script('postinstall.py')
-
 # Dependencies
 
 libm_dep = c_comp.find_library('m')
@@ -127,6 +125,12 @@ if build_nautilus_actions
 endif
 subdir('po')
 subdir('src')
+
+gnome.post_install(
+  gtk_update_icon_cache: true,
+  glib_compile_schemas: true,
+  update_desktop_database: true,
+)
 
 # Summary
 
