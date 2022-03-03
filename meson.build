@@ -1,7 +1,7 @@
 project('file-roller', 'c',
   license : 'GPL2+',
   version : '3.42.0',
-  meson_version : '>=0.50'
+  meson_version : '>=0.59'
 )
 
 glib_version = '>=2.38'
@@ -51,7 +51,7 @@ cpio_path = 'cpio'
 if get_option('cpio') == 'auto'
   cpio = find_program('gcpio', 'cpio', required : false)
   if cpio.found()
-    cpio_path = cpio.path()
+    cpio_path = cpio.full_path()
   endif
 endif
 
@@ -63,10 +63,10 @@ config_data.set_quoted('LOCALEDIR', join_paths(prefix, get_option('localedir')))
 config_data.set_quoted('PACKAGE_NAME', meson.project_name())
 config_data.set_quoted('PACKAGE_VERSION', meson.project_version())
 if get_option('run-in-place')
-  config_data.set_quoted('PRIVDATADIR', join_paths(meson.source_root(), 'data'))
-  config_data.set_quoted('PRIVEXECDIR', join_paths(meson.source_root(), 'src', 'commands'))
-  config_data.set_quoted('UIDIR', join_paths(meson.source_root(), 'data', 'ui'))
-  config_data.set_quoted('SHDIR', join_paths(meson.source_root(), 'src', 'sh'))  
+  config_data.set_quoted('PRIVDATADIR', join_paths(meson.project_source_root(), 'data'))
+  config_data.set_quoted('PRIVEXECDIR', join_paths(meson.project_source_root(), 'src', 'commands'))
+  config_data.set_quoted('UIDIR', join_paths(meson.project_source_root(), 'data', 'ui'))
+  config_data.set_quoted('SHDIR', join_paths(meson.project_source_root(), 'src', 'sh'))
 else
   config_data.set_quoted('PRIVDATADIR', join_paths(datadir, meson.project_name()))
   config_data.set_quoted('PRIVEXECDIR', privexecdir)  

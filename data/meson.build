@@ -1,4 +1,4 @@
-po_dir = join_paths(meson.source_root(), 'po')
+po_dir = join_paths(meson.project_source_root(), 'po')
 
 install_data('org.gnome.FileRoller.gschema.xml',
   install_dir : join_paths(datadir, 'glib-2.0', 'schemas')
