@@ -4834,8 +4834,7 @@ key_press_cb (GtkWidget   *widget,
 			win = gtk_tree_view_get_bin_window (tree_view);
 
 			selection = gtk_tree_view_get_selection (tree_view);
-			selected_rows = gtk_tree_selection_get_selected_rows (selection,
-									      &window->priv->list_store);
+			selected_rows = gtk_tree_selection_get_selected_rows (selection, NULL);
 			if (selection == NULL)
 				return GDK_EVENT_PROPAGATE;
 
