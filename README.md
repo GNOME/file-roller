@@ -78,6 +78,8 @@ Also you need the following libraries:
 * libnautilus-extension >= 3.28.0 (optional)
 * libarchive >= 3.1.900a (optional)
 
+Alternately, with [Nix package manager](https://nixos.org/nix/), you can just run `nix-shell` in the project directory, and it will drop you into a shell with all the required dependencies.
+
 ## Install
 
 ```bash
