@@ -8,13 +8,14 @@
 # Sérgio Cardeira <cardeira.sergio@gmail.com>, 2016.
 # José Vieira <jvieira33@sapo.pt>, 2020.
 # Juliano de Souza Camargo <julianosc@pm.me>, 2020.
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2020, 2021, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 3.14\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2020-09-26 12:47+0000\n"
-"PO-Revision-Date: 2021-02-11 16:03+0000\n"
+"POT-Creation-Date: 2022-04-01 12:18+0000\n"
+"PO-Revision-Date: 2022-04-01 14:01+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <>\n"
 "Language: pt\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -209,27 +210,36 @@ msgid "Recreate the folders stored in the archive"
 msgstr "Recriar as pastas armazenadas no arquivo"
 
 #: data/org.gnome.FileRoller.gschema.xml:177
+msgid "Show/hide the extra options"
+msgstr "Mostrar/ocultar as opções extras"
+
+#: data/org.gnome.FileRoller.gschema.xml:178
+msgid "Whether to show other options. If set the extra options will be shown."
+msgstr ""
+"Se deve mostrar outras opções. Se definido, as opções extras serão mostradas."
+
+#: data/org.gnome.FileRoller.gschema.xml:182
 msgid "Default volume size"
 msgstr "Tamanho predefinido do volume"
 
-#: data/org.gnome.FileRoller.gschema.xml:178
+#: data/org.gnome.FileRoller.gschema.xml:183
 msgid "The default size for volumes."
 msgstr "O tamanho predefinido dos volumes."
 
-#: nautilus/nautilus-fileroller.c:264
+#: nautilus/nautilus-fileroller.c:262
 msgid "Extract Here"
 msgstr "Extrair aqui"
 
 #. Translators: the current position is the current folder
-#: nautilus/nautilus-fileroller.c:266
+#: nautilus/nautilus-fileroller.c:264
 msgid "Extract the selected archive to the current position"
 msgstr "Extrair o arquivo selecionado para a posição atual"
 
-#: nautilus/nautilus-fileroller.c:283
+#: nautilus/nautilus-fileroller.c:281
 msgid "Extract To…"
 msgstr "Extrair para…"
 
-#: nautilus/nautilus-fileroller.c:284
+#: nautilus/nautilus-fileroller.c:282
 msgid "Extract the selected archive"
 msgstr "Extrair o arquivo selecionado"
 
@@ -352,7 +362,7 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "Ocorreu um erro interno ao tentar procurar aplicações:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
-#: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
+#: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4077
 #: src/fr-window.c:7652 src/fr-window.c:8009 src/fr-window.c:9524
 msgid "Archive type not supported."
 msgstr "Tipo de arquivo não suportado."
@@ -494,15 +504,15 @@ msgstr "Extrair arquivo"
 msgid "— Create and modify an archive"
 msgstr "— Criar e alterar um arquivo"
 
-#: src/fr-archive.c:1848
+#: src/fr-archive.c:1851
 msgid "You don’t have the right permissions."
 msgstr "Não possui as permissões apropriadas."
 
-#: src/fr-archive.c:1848
+#: src/fr-archive.c:1851
 msgid "This archive type cannot be modified"
 msgstr "Este tipo de arquivo não pode ser alterado"
 
-#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:478
+#: src/fr-archive.c:1865 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "Não pode adicionar um arquivo a ele próprio."
 
@@ -550,43 +560,43 @@ msgstr "Arquivo não encontrado"
 msgid "Could not load the location"
 msgstr "Impossível ler a localização"
 
-#: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
-#: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
-#: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:389 src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:456 src/fr-new-archive-dialog.c:478
 #: src/fr-window.c:3034
 msgid "Could not create the archive"
 msgstr "Impossível criar o arquivo"
 
-#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:356 src/fr-new-archive-dialog.c:375
 msgid "You have to specify an archive name."
 msgstr "Tem de especificar um nome de arquivo."
 
-#: src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:440
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Não possui permissões para criar um arquivo nesta pasta"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8323
+#: src/fr-new-archive-dialog.c:458 src/fr-window.c:8323
 msgid "New name is the same as old one, please type other name."
 msgstr "O novo nome é igual ao antigo; insira outro nome."
 
-#: src/fr-new-archive-dialog.c:499
+#: src/fr-new-archive-dialog.c:501
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Já existe um ficheiro designado “%s”.  Deseja substituí-lo?"
 
-#: src/fr-new-archive-dialog.c:500
+#: src/fr-new-archive-dialog.c:502
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
 msgstr ""
 "O ficheiro já existe em “%s”.  Substituí-lo irá sobrescrever o seu conteúdo."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6765
+#: src/fr-new-archive-dialog.c:508 src/fr-window.c:6765
 msgid "_Replace"
 msgstr "Substitui_r"
 
-#: src/fr-new-archive-dialog.c:521
+#: src/fr-new-archive-dialog.c:523
 msgid "Could not delete the old archive."
 msgstr "Impossível eliminar o arquivo antigo."
 
@@ -1383,25 +1393,25 @@ msgstr "Nome de _ficheiro:"
 msgid "Location"
 msgstr "Localização"
 
-#: src/ui/new-archive-dialog.ui:193
+#: src/ui/new-archive-dialog.ui:194
 msgid "_Encrypt the file list too"
 msgstr "_Encriptar também a lista de ficheiros"
 
 #. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: src/ui/new-archive-dialog.ui:215
+#: src/ui/new-archive-dialog.ui:216
 msgid "Split into _volumes of"
 msgstr "Dividir em _volumes de"
 
-#: src/ui/new-archive-dialog.ui:236
+#: src/ui/new-archive-dialog.ui:237
 msgid "10,0"
 msgstr "10,0"
 
 #. MB means megabytes
-#: src/ui/new-archive-dialog.ui:253
+#: src/ui/new-archive-dialog.ui:254
 msgid "MB"
 msgstr "MB"
 
-#: src/ui/new-archive-dialog.ui:276
+#: src/ui/new-archive-dialog.ui:277
 msgid "_Other Options"
 msgstr "_Outras opções"
 
