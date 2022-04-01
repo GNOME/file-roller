@@ -1,5 +1,14 @@
 include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml'
 
+build:
+    stage: test
+    image: nixpkgs/nix:latest
+    script:
+        # Sandboxing would require privileged docker.
+        - mkdir -p /etc/nix
+        - echo 'sandbox = false' > /etc/nix/nix.conf
+        - nix-build
+
 flatpak:
     image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master'
     extends: '.flatpak'
