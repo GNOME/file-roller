@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2020-08-21 11:19+0000\n"
-"PO-Revision-Date: 2020-08-21 20:49+0200\n"
-"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
+"POT-Creation-Date: 2022-04-04 10:58+0000\n"
+"PO-Revision-Date: 2022-04-04 18:27+0200\n"
+"Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -214,27 +214,37 @@ msgid "Recreate the folders stored in the archive"
 msgstr "Ponovno ustvari mape shranjene v arhivu"
 
 #: data/org.gnome.FileRoller.gschema.xml:177
+msgid "Show/hide the extra options"
+msgstr "Pokaži/skrij dodatne možnosti"
+
+#: data/org.gnome.FileRoller.gschema.xml:178
+msgid "Whether to show other options. If set the extra options will be shown."
+msgstr ""
+"Ali želite prikazati druge možnosti. Če je potrjeno, bodo dodatne možnosti "
+"prikazane."
+
+#: data/org.gnome.FileRoller.gschema.xml:182
 msgid "Default volume size"
 msgstr "Privzeta velikost nosilcev"
 
-#: data/org.gnome.FileRoller.gschema.xml:178
+#: data/org.gnome.FileRoller.gschema.xml:183
 msgid "The default size for volumes."
 msgstr "Privzeta velikost nosilcev"
 
-#: nautilus/nautilus-fileroller.c:264
+#: nautilus/nautilus-fileroller.c:262
 msgid "Extract Here"
 msgstr "Odpakiraj v to mapo"
 
 #. Translators: the current position is the current folder
-#: nautilus/nautilus-fileroller.c:266
+#: nautilus/nautilus-fileroller.c:264
 msgid "Extract the selected archive to the current position"
 msgstr "Odpakiraj vsebino izbranega arhiva na trenutno mesto"
 
-#: nautilus/nautilus-fileroller.c:283
+#: nautilus/nautilus-fileroller.c:281
 msgid "Extract To…"
 msgstr "Odpakiraj v ..."
 
-#: nautilus/nautilus-fileroller.c:284
+#: nautilus/nautilus-fileroller.c:282
 msgid "Extract the selected archive"
 msgstr "Odpakiraj vsebino izbranega arhiva"
 
@@ -360,7 +370,7 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "Prišlo je do napake med iskanjem programa:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
-#: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
+#: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4077
 #: src/fr-window.c:7652 src/fr-window.c:8009 src/fr-window.c:9524
 msgid "Archive type not supported."
 msgstr "Vrsta arhiva ni podprta."
@@ -516,15 +526,15 @@ msgstr "Odpakiraj arhiv"
 msgid "— Create and modify an archive"
 msgstr "– Ustvari in spremeni arhiv"
 
-#: src/fr-archive.c:1848
+#: src/fr-archive.c:1851
 msgid "You don’t have the right permissions."
 msgstr "Ni ustreznih dovoljenj."
 
-#: src/fr-archive.c:1848
+#: src/fr-archive.c:1851
 msgid "This archive type cannot be modified"
 msgstr "Te vrste arhiva ni mogoče spreminjati."
 
-#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:478
+#: src/fr-archive.c:1865 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "Arhiva ni mogoče dodati samemu sebi."
 
@@ -573,32 +583,32 @@ msgid "Could not load the location"
 msgstr "Ni mogoče naložiti mesta"
 
 # G:1 K:0 O:0
-#: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
-#: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
-#: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:389 src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:456 src/fr-new-archive-dialog.c:478
 #: src/fr-window.c:3034
 msgid "Could not create the archive"
 msgstr "Ni mogoče ustvariti arhiva"
 
-#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:356 src/fr-new-archive-dialog.c:375
 msgid "You have to specify an archive name."
 msgstr "Določiti je treba ime arhiva."
 
-#: src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:440
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Ni ustreznih dovoljenj za ustvarjanje arhiva v tej mapi"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8323
+#: src/fr-new-archive-dialog.c:458 src/fr-window.c:8323
 msgid "New name is the same as old one, please type other name."
 msgstr "Novo ime je enako staremu. Vtipkajte drugo ime."
 
-#: src/fr-new-archive-dialog.c:499
+#: src/fr-new-archive-dialog.c:501
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Datoteka z imenom »%s« že obstaja. Ali jo želite zamenjati?"
 
-#: src/fr-new-archive-dialog.c:500
+#: src/fr-new-archive-dialog.c:502
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
@@ -606,12 +616,12 @@ msgstr ""
 "Datoteka že obstaja v mapi »%s«. S prepisom bo izgubljena vsebina ciljne "
 "datoteke."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6765
+#: src/fr-new-archive-dialog.c:508 src/fr-window.c:6765
 msgid "_Replace"
 msgstr "_Zamenjaj"
 
 # G:1 K:0 O:0
-#: src/fr-new-archive-dialog.c:521
+#: src/fr-new-archive-dialog.c:523
 msgid "Could not delete the old archive."
 msgstr "Ni mogoče izbrisati starega arhiva."
 
@@ -1452,25 +1462,25 @@ msgstr "_Ime datoteke:"
 msgid "Location"
 msgstr "Mesto"
 
-#: src/ui/new-archive-dialog.ui:193
+#: src/ui/new-archive-dialog.ui:194
 msgid "_Encrypt the file list too"
 msgstr "_Šifriraj tudi seznam datotek"
 
 #. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: src/ui/new-archive-dialog.ui:215
+#: src/ui/new-archive-dialog.ui:216
 msgid "Split into _volumes of"
 msgstr "Razdeli na _enote po"
 
-#: src/ui/new-archive-dialog.ui:236
+#: src/ui/new-archive-dialog.ui:237
 msgid "10,0"
 msgstr "10,0"
 
 #. MB means megabytes
-#: src/ui/new-archive-dialog.ui:253
+#: src/ui/new-archive-dialog.ui:254
 msgid "MB"
 msgstr "MB"
 
-#: src/ui/new-archive-dialog.ui:276
+#: src/ui/new-archive-dialog.ui:277
 msgid "_Other Options"
 msgstr "_Ostale možnosti"
 
@@ -1522,88 +1532,3 @@ msgstr "Število datotek:"
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "_Izberite datoteke za posodobitev:"
-
-#~ msgid "org.gnome.ArchiveManager"
-#~ msgstr "org.gnome.ArchiveManager"
-
-#~| msgid "File Roller"
-#~ msgid "file-roller"
-#~ msgstr "file-roller"
-
-#~ msgid "Extract To..."
-#~ msgstr "Odpakiraj vsebino v ..."
-
-#~ msgid "Compress..."
-#~ msgstr "Zapakiraj ..."
-
-#~ msgid "Create a compressed archive with the selected objects"
-#~ msgstr "Ustvari zapakiran arhiv z izbranimi predmeti"
-
-# G:0 K:1 O:0
-#~ msgid "Add Files"
-#~ msgstr "Dodaj datoteke"
-
-# G:1 K:0 O:0
-#~ msgid "Load Options"
-#~ msgstr "Naloži možnosti"
-
-#~ msgid "Save Options"
-#~ msgstr "Shrani možnosti"
-
-#~ msgid "Extract"
-#~ msgstr "Odpakiraj"
-
-# G:10 K:6 O:0
-#~ msgid "Open"
-#~ msgstr "Odpri"
-
-#~ msgid "Password"
-#~ msgstr "Geslo"
-
-#~ msgid "File is not a valid .desktop file"
-#~ msgstr "Datoteka ni veljavna .desktop datoteka"
-
-#~ msgid "Unrecognized desktop file Version '%s'"
-#~ msgstr "Neznana različica datoteke namizja '%s'"
-
-#~ msgid "Starting %s"
-#~ msgstr "Začenjanje %s"
-
-#~ msgid "Application does not accept documents on command line"
-#~ msgstr "Program ne sprejme dokumentov preko ukazne vrstice"
-
-#~ msgid "Unrecognized launch option: %d"
-#~ msgstr "Nepoznana možnost zagona: %d"
-
-#~ msgid "Can't pass documents to this desktop element"
-#~ msgstr "Ni mogoče poslati dokumenta na ta predmet namizja"
-
-#~ msgid "Not a launchable item"
-#~ msgstr "Predmet ni izvedljiv"
-
-#~ msgid "Disable connection to session manager"
-#~ msgstr "Onemogoči povezavo z upravljalnikom seje"
-
-#~ msgid "Specify file containing saved configuration"
-#~ msgstr "Določitev datoteke s shranjenimi nastavitvami"
-
-#~ msgid "FILE"
-#~ msgstr "DATOTEKA"
-
-#~ msgid "Specify session management ID"
-#~ msgstr "Določi ID upravljanja seje"
-
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#~ msgid "Session management options:"
-#~ msgstr "Možnosti upravljanja seje:"
-
-#~ msgid "Show session management options"
-#~ msgstr "Pokaži možnosti upravljanja seje"
-
-#~ msgid "_New Archive"
-#~ msgstr "_Nov arhiv"
-
-#~ msgid "Close"
-#~ msgstr "Zapri"
