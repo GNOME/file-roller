@@ -127,6 +127,7 @@ if build_nautilus_actions
 endif
 subdir('po')
 subdir('src')
+subdir('tests')
 
 gnome.post_install(
   gtk_update_icon_cache: true,
@@ -141,6 +142,7 @@ summary = [
   '',
   '           project: @0@ @1@'.format(meson.project_name(), meson.project_version()),
   '            prefix: @0@'.format(prefix),
+  '     dogtail tests: @0@'.format(enable_dogtail_tests),
   '  nautilus actions: @0@'.format(build_nautilus_actions),
   '        packagekit: @0@'.format(get_option('packagekit')),
   '        libarchive: @0@'.format(use_libarchive),

@@ -96,6 +96,12 @@ makeDerivation rec {
     meson
     ninja
     pkg-config
+
+    # For tests
+    python3.pkgs.dogtail
+    python3.pkgs.pygobject3
+    gobject-introspection # for finding typelibs
+
     wrapGAppsHook
   ] ++ lib.optionals shell [
     niv

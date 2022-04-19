@@ -1,7 +1,16 @@
 po_dir = join_paths(meson.project_source_root(), 'po')
 
-install_data('org.gnome.FileRoller.gschema.xml',
+settings_schema = 'org.gnome.FileRoller.gschema.xml'
+install_data(
+  settings_schema,
   install_dir : join_paths(datadir, 'glib-2.0', 'schemas')
+)
+
+# Required by tests.
+compiled_schemas = gnome.compile_schemas(
+  depend_files: [
+    settings_schema,
+  ],
 )
 
 install_data('packages.match',
