@@ -98,6 +98,7 @@ makeDerivation rec {
     pkg-config
 
     # For tests
+    dbus
     python3.pkgs.dogtail
     python3.pkgs.pygobject3
     gobject-introspection # for finding typelibs

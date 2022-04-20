@@ -3,10 +3,11 @@ pymod = import('python')
 python3_for_dogtail_tests = pymod.find_installation(
   'python3',
   modules: [
+    'dbus',
+    'dbusmock',
     'dogtail',
-    'pyatspi',
     'gi',
-    'gi.repository.Gtk',
+    'pyatspi',
   ],
   required: get_option('dogtail'),
 )
@@ -30,6 +31,7 @@ if enable_dogtail_tests
     ],
     env: test_env,
     depends: [
+      fr_exe,
       compiled_schemas,
     ],
   )
