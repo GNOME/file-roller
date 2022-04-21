@@ -27,7 +27,7 @@ if enable_dogtail_tests
   ]
 
   test(
-    'basic',
+    'dogtail-basic',
     python3_for_dogtail_tests,
     args: [
       meson.current_source_dir() / 'basic.py',

@@ -24,6 +24,13 @@ import dbus
 import dbusmock
 from dbus.mainloop.glib import DBusGMainLoop
 
+"""
+This part is using dbusmock to mock the portal D-Bus API.
+Unfortunately, it does not seem to work.
+Also, dbus mock depends on the legacy dbus-python library,
+rather than using Gio via pygobject, making the DBus connection
+not usable.
+"""
 
 @contextmanager
 def bus_for_testing(system_bus: bool = False) -> dbus.Bus:
@@ -69,6 +76,11 @@ def mocked_portal_open_uri(mock_case: dbusmock.DBusTestCase, bus: dbus.Bus):
         self.assertRegex(self.p_mock.stdout.readline(), b"^[0-9.]+ Suspend$")
 
 
+"""
+This part is starting custom D-Bus bus using a code taken from dbusmock.
+Unfortunately, it does not seem to work either.
+"""
+
 def start_dbus_session() -> Tuple[int, str]:
     """Start a D-Bus daemon
     Return (pid, address) pair.
@@ -82,6 +94,7 @@ def start_dbus_session() -> Tuple[int, str]:
         "--print-pid=1",
     ]
 
+    # TODO: Remove this, only used to override the config for debugging during development.
     if "DBUS_SESSION_CONFIG" in os.environ:
         argv.append("--config-file=" + os.environ["DBUS_SESSION_CONFIG"])
     else:
@@ -117,66 +130,68 @@ def stop_dbus(pid: int) -> None:
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
 
 
-# @contextmanager
-# def session_bus_for_testing() -> AbstractContextManager[Gio.DBusConnection]:
-#     original_bus_address = os.environ.get("DBUS_SESSION_BUS_ADDRESS", None)
+@contextmanager
+def session_bus_for_testing() -> AbstractContextManager[Gio.DBusConnection]:
+    original_bus_address = os.environ.get("DBUS_SESSION_BUS_ADDRESS", None)
 
-#     pid, bus_address = start_dbus_session()
-#     print(pid, bus_address, original_bus_address)
-#     os.environ["DBUS_SESSION_BUS_ADDRESS"] = bus_address
+    pid, bus_address = start_dbus_session()
+    print(pid, bus_address, original_bus_address)
+    os.environ["DBUS_SESSION_BUS_ADDRESS"] = bus_address
 
-#     try:
-#         # bus = Gio.bus_get_sync(Gio.BusType.SESSION)
-#         bus = Gio.DBusConnection.new_for_address_sync(bus_address, Gio.DBusConnectionFlags.AUTHENTICATION_CLIENT | Gio.DBusConnectionFlags.MESSAGE_BUS_CONNECTION)
+    try:
+        # bus = Gio.bus_get_sync(Gio.BusType.SESSION)
+        bus = Gio.DBusConnection.new_for_address_sync(bus_address, Gio.DBusConnectionFlags.AUTHENTICATION_CLIENT | Gio.DBusConnectionFlags.MESSAGE_BUS_CONNECTION)
 
-#         yield bus
-#     finally:
-#         stop_dbus(pid)
+        yield bus
+    finally:
+        stop_dbus(pid)
 
-#         if original_bus_address is not None:
-#             os.environ["DBUS_SESSION_BUS_ADDRESS"] = original_bus_address
-#         else:
-#             os.environ.pop("DBUS_SESSION_BUS_ADDRESS")
+        if original_bus_address is not None:
+            os.environ["DBUS_SESSION_BUS_ADDRESS"] = original_bus_address
+        else:
+            os.environ.pop("DBUS_SESSION_BUS_ADDRESS")
 
 
-# @contextmanager
-# def mocked_portal_open_uri(bus: Gio.DBusConnection) -> AbstractContextManager[Gio.DBusConnection]:
-#     with open(Path(__file__).parent / "org.freedesktop.portal.OpenURI.xml") as introspection_xml:
-#         introspection_data = Gio.DBusNodeInfo.new_for_xml(introspection_xml.read())
-#         assert introspection_data is not None
+@contextmanager
+def mocked_portal_open_uri_2(bus: Gio.DBusConnection) -> AbstractContextManager[Gio.DBusConnection]:
+    with open(Path(__file__).parent / "org.freedesktop.portal.OpenURI.xml") as introspection_xml:
+        introspection_data = Gio.DBusNodeInfo.new_for_xml(introspection_xml.read())
+        assert introspection_data is not None
 
-#         def on_bus_lost():
-#             print("on_bus_lost")
+        def on_bus_lost():
+            print("on_bus_lost")
 
-#         def on_bus_acquired():
-#             print("on_bus_acquired")
-#             registration_id = bus.register_object(
-#                 object_path="/org/freedesktop/portal/desktop",
-#                 interface_info=introspection_data.interfaces[0],
-#                 method_call_closure=on_method_called,
-#             )
-#             assert registration_id > 0
+        def on_bus_acquired():
+            print("on_bus_acquired")
+            registration_id = bus.register_object(
+                object_path="/org/freedesktop/portal/desktop",
+                interface_info=introspection_data.interfaces[0],
+                method_call_closure=on_method_called,
+            )
+            assert registration_id > 0
 
-#         def on_method_called():
-#             print("on_method_called")
-#             pass
+        def on_method_called():
+            print("on_method_called")
+            pass
 
-#         try:
-#             owner_id = Gio.bus_own_name_on_connection(
-#                 connection=bus,
-#                 name="org.freedesktop.portal.Desktop",
-#                 flags=Gio.BusNameOwnerFlags.REPLACE | Gio.BusNameOwnerFlags.DO_NOT_QUEUE,
-#                 name_acquired_closure=on_bus_acquired,
-#                 name_lost_closure=on_bus_lost,
-#             )
-#             print(2)
 
-#             print(3)
-#             yield owner_id
+        # TODO: This does not seem to do anything
+        try:
+            owner_id = Gio.bus_own_name_on_connection(
+                connection=bus,
+                name="org.freedesktop.portal.Desktop",
+                flags=Gio.BusNameOwnerFlags.REPLACE | Gio.BusNameOwnerFlags.DO_NOT_QUEUE,
+                name_acquired_closure=on_bus_acquired,
+                name_lost_closure=on_bus_lost,
+            )
+            print(2)
 
-#         finally:
-#             print('unownd')
-#             Gio.bus_unown_name(owner_id)
+            print(3)
+            yield owner_id
+
+        finally:
+            print('unownd')
+            Gio.bus_unown_name(owner_id)
 
 
 class WaitState(Enum):
@@ -285,7 +300,7 @@ class FileRollerDogtail:
     def get_application(self):
         return self.tree.root.application(self.app_name)
 
-    def get_window(self, name: str) -> self.tree.Window:
+    def get_window(self, name: str):
         # Cannot use default window finder because the window name has extra space after the file name.
         return self.get_application().findChild(IsAWindowApproximatelyNamed(name), False)
 
@@ -307,7 +322,11 @@ def new_user_data_dir() -> AbstractContextManager[Path]:
 @contextmanager
 def test_file_roller():
     # Use custom user config and data directories to avoid changing user’s MIME associations.
-    with bus_for_testing() as (mock_case, legacy_bus), \
+    # with bus_for_testing() as (mock_case, legacy_bus), \
+    #     new_user_config_dir() as confdir, \
+    #     new_user_data_dir() as datadir:
+
+    with session_bus_for_testing() as bus, \
         new_user_config_dir() as confdir, \
         new_user_data_dir() as datadir:
 
@@ -339,6 +358,7 @@ def test_file_roller():
             dogtail_app = FileRollerDogtail("file-roller")
             print(1)
 
-            yield bus, (mock_case, legacy_bus), dbus_app, dogtail_app
+            # yield bus, (mock_case, legacy_bus), dbus_app, dogtail_app
+            yield bus, dbus_app, dogtail_app
         finally:
             dbus_app.quit()
