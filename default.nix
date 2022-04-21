@@ -98,8 +98,19 @@ makeDerivation rec {
     pkg-config
 
     # For tests
-    dbus
+    (dbus.overrideAttrs (attrs: {
+      patches = attrs.patches ++ [
+        # Fix dbus-daemon crashing when running tests due to long XDG_DATA_DIRS.
+        # https://gitlab.freedesktop.org/dbus/dbus/-/merge_requests/302
+        (fetchpatch {
+          url = "https://gitlab.freedesktop.org/dbus/dbus/-/commit/b551b3e9737958216a1a9d359150a4110a9d0549.patch";
+          sha256 = "kOVjlklZzKvBZXmmrE1UiO4XWRoBLViGwdn6/eDH+DY=";
+        })
+      ];
+    }))
     python3.pkgs.dogtail
+    python3.pkgs.dbus-python
+    python3.pkgs.python-dbusmock
     python3.pkgs.pygobject3
     gobject-introspection # for finding typelibs
 

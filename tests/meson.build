@@ -7,12 +7,15 @@ python3_for_dogtail_tests = pymod.find_installation(
     'dbusmock',
     'dogtail',
     'gi',
-    'pyatspi',
   ],
   required: get_option('dogtail'),
 )
+dbus_daemon = find_program(
+  'dbus-daemon',
+  required: get_option('dogtail'),
+)
 
-enable_dogtail_tests = python3_for_dogtail_tests.found()
+enable_dogtail_tests = python3_for_dogtail_tests.found() and dbus_daemon.found()
 
 if enable_dogtail_tests
   test_env = [

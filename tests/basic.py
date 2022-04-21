@@ -6,12 +6,18 @@ from testutil import test_file_roller, mocked_portal_open_uri
 from time import sleep
 
 
-with test_file_roller() as (app, app_tree), \
-    mocked_portal_open_uri(Gio.bus_get_sync(Gio.BusType.SESSION)) as open_uri_portal:
+with test_file_roller() as (bus, (mock_case, legacy_bus), app, app_tree), \
+    mocked_portal_open_uri(mock_case, legacy_bus) as open_uri_portal:
 
-    app.open_file(Path(__file__).parent / "data" / "texts.tar.gz")
+    open_uri_portal.AddMethod(
+        interface = "",
+        name = "OpenFile",
+        in_sig = "sha{sv}",
+        out_sig = "o",
+        code = "print(args)",
+    )
 
-    open_uri_portal.AddMethod("", "OpenFile", "", "", "")
+    # app.open_file(Path(__file__).parent / "data" / "texts.tar.gz")
 
     win = app_tree.get_window("texts.tar.gz")
 
@@ -30,4 +36,4 @@ with test_file_roller() as (app, app_tree), \
     hello_txt = file_listing.child("hello.txt")
     hello_txt.doubleClick()
 
-    sleep(5)
+    sleep(500)
