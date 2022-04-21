@@ -39,4 +39,12 @@ with test_file_roller() as (bus, app, app_tree), \
     hello_txt = file_listing.child("hello.txt")
     hello_txt.doubleClick()
 
+    # TODO: wait for the mocked portal to give us extracted file path
+
+    # TODO: Edit the file
+
+    # TODO: Check that File-Roller asks us to persist the changes.
+
+    # TODO: Check that the archive contents get updated.
+
     sleep(500)
