@@ -176,14 +176,14 @@ def mocked_portal_open_uri_2(bus: Gio.DBusConnection) -> AbstractContextManager[
 
 
         # TODO: This does not seem to do anything
+        owner_id = Gio.bus_own_name_on_connection(
+            connection=bus,
+            name="org.freedesktop.portal.Desktop",
+            flags=Gio.BusNameOwnerFlags.REPLACE | Gio.BusNameOwnerFlags.DO_NOT_QUEUE,
+            name_acquired_closure=on_bus_acquired,
+            name_lost_closure=on_bus_lost,
+        )
         try:
-            owner_id = Gio.bus_own_name_on_connection(
-                connection=bus,
-                name="org.freedesktop.portal.Desktop",
-                flags=Gio.BusNameOwnerFlags.REPLACE | Gio.BusNameOwnerFlags.DO_NOT_QUEUE,
-                name_acquired_closure=on_bus_acquired,
-                name_lost_closure=on_bus_lost,
-            )
             print(2)
 
             print(3)
