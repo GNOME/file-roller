@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2021-04-25 17:51+0000\n"
+"POT-Creation-Date: 2022-04-01 12:14+0000\n"
 "PO-Revision-Date: 2021-05-02 17:15+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
@@ -64,7 +64,7 @@ msgstr "zip arşivleri (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "xz arşivleri (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:456
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:457
 #: src/fr-window.c:2022 src/fr-window.c:5532
 msgid "Archive Manager"
 msgstr "Arşiv Yöneticisi"
@@ -314,8 +314,8 @@ msgstr "“%s” için parola gerekli"
 msgid "Wrong password."
 msgstr "Yanlış parola."
 
-#: src/dlg-batch-add.c:88 src/fr-application.c:226 src/fr-application.c:262
-#: src/fr-application.c:584
+#: src/dlg-batch-add.c:88 src/fr-application.c:227 src/fr-application.c:263
+#: src/fr-application.c:589
 msgid "Compress"
 msgstr "Sıkıştır"
 
@@ -361,7 +361,7 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "Uygulamalarda arama yapılırken iç hata oluştu:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
-#: src/dlg-package-installer.c:328 src/fr-archive.c:747 src/fr-window.c:4077
+#: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4077
 #: src/fr-window.c:7652 src/fr-window.c:8009 src/fr-window.c:9524
 msgid "Archive type not supported."
 msgstr "Arşiv türü desteklenmiyor."
@@ -440,74 +440,74 @@ msgstr ""
 "Muhammet Kara <muhammetk@gmail.com>\n"
 "Emin Tufan Çetin <etcetin@gmail.com>"
 
-#: src/fr-application.c:61
+#: src/fr-application.c:62
 msgid "Add files to the specified archive and quit the program"
 msgstr "Dosyaları belirtilen arşive ekle ve programdan çık"
 
-#: src/fr-application.c:62
+#: src/fr-application.c:63
 msgid "ARCHIVE"
 msgstr "ARŞİV"
 
-#: src/fr-application.c:65
+#: src/fr-application.c:66
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Dosyaları, adını sorduğun arşive ekle ve programdan çık"
 
-#: src/fr-application.c:69
+#: src/fr-application.c:70
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Dosyaları belirtilen klasöre çıkar ve programdan çık"
 
-#: src/fr-application.c:70 src/fr-application.c:82
+#: src/fr-application.c:71 src/fr-application.c:83
 msgid "FOLDER"
 msgstr "KLASÖR"
 
-#: src/fr-application.c:73
+#: src/fr-application.c:74
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Dosyaları, adını sorduğun hedef klasörüne çıkar ve programdan çık"
 
-#: src/fr-application.c:77
+#: src/fr-application.c:78
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "Arşivlerin içeriklerini arşiv klasöründe çıkar ve programdan çık"
 
-#: src/fr-application.c:81
+#: src/fr-application.c:82
 msgid "Default folder to use for the “--add” and “--extract” commands"
 msgstr "“--add” ve “--extract” komutları için kullanılacak öntanımlı klasör"
 
-#: src/fr-application.c:85
+#: src/fr-application.c:86
 msgid "Create destination folder without asking confirmation"
 msgstr "Onay almadan hedef klasörü oluştur"
 
-#: src/fr-application.c:89
+#: src/fr-application.c:90
 msgid "Use the notification system to notify the operation completion"
 msgstr "İşlemin tamamlandığını bildirmek için bildirim sistemini kullan"
 
-#: src/fr-application.c:92
+#: src/fr-application.c:93
 msgid "Start as a service"
 msgstr "Hizmet olarak başlat"
 
-#: src/fr-application.c:95
+#: src/fr-application.c:96
 msgid "Show version"
 msgstr "Sürümü göster"
 
-#: src/fr-application.c:298 src/fr-application.c:324 src/fr-application.c:607
+#: src/fr-application.c:299 src/fr-application.c:325 src/fr-application.c:612
 msgctxt "Window title"
 msgid "Extract archive"
 msgstr "Arşivi çıkar"
 
-#: src/fr-application.c:487
+#: src/fr-application.c:492
 msgid "— Create and modify an archive"
 msgstr "— Arşiv oluştur ve değiştir"
 
-#: src/fr-archive.c:1848
+#: src/fr-archive.c:1851
 msgid "You don’t have the right permissions."
 msgstr "Doğru izinleriniz yok."
 
-#: src/fr-archive.c:1848
+#: src/fr-archive.c:1851
 msgid "This archive type cannot be modified"
 msgstr "Bu arşiv türü değiştirilemiyor"
 
-#: src/fr-archive.c:1862 src/fr-new-archive-dialog.c:480
+#: src/fr-archive.c:1865 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "Bir arşivi kendisine ekleyemezsiniz."
 
@@ -551,7 +551,7 @@ msgstr "Arşiv açılıyor"
 msgid "Archive not found"
 msgstr "Arşiv bulunamadı"
 
-#: src/fr-file-selector-dialog.c:765 src/fr-file-selector-dialog.c:810
+#: src/fr-file-selector-dialog.c:767 src/fr-file-selector-dialog.c:812
 msgid "Could not load the location"
 msgstr "Konum yüklenemedi"
 
@@ -1057,7 +1057,7 @@ msgstr "D_ışlanan dosyalar:"
 
 #: src/ui/add-dialog-options.ui:74
 msgid "_Exclude folders:"
-msgstr "_Dışlanan klasörler::"
+msgstr "_Dışlanan klasörler:"
 
 #: src/ui/add-dialog-options.ui:89 src/ui/add-dialog-options.ui:104
 #: src/ui/add-dialog-options.ui:118 src/ui/extract-dialog-options.ui:104
