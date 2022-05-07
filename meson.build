@@ -34,10 +34,7 @@ libportal_dep = dependency('libportal', version: '>= 0.5', required: use_native_
 libportal_gtk3_dep = dependency('libportal-gtk3', version: '>= 0.5', required: use_native_appchooser)
 
 # Optional dependencies
-use_gobject_introspection = get_option('introspection')
-if use_gobject_introspection
-  gobject_introspection_dep = dependency('gobject-introspection-1.0')
-endif
+gobject_introspection_dep = dependency('gobject-introspection-1.0', required: get_option('introspection'))
 
 libnautilus_extension_dep = dependency('libnautilus-extension', version : nautilus_version, required : get_option('nautilus-actions'))
 build_nautilus_actions = libnautilus_extension_dep.found()
@@ -58,6 +55,8 @@ if get_option('cpio') == 'auto'
   endif
 endif
 
+build_introspection = gobject_introspection_dep.found()
+
 # config.h
 
 config_data = configuration_data()
@@ -77,7 +76,7 @@ else
   config_data.set_quoted('UIDIR', join_paths(datadir, meson.project_name(), 'ui'))
   config_data.set_quoted('SHDIR', join_paths(prefix, get_option('libexecdir'), meson.project_name()))  
 endif
-if use_gobject_introspection
+if build_introspection
   config_data.set('ENABLE_INTROSPECTION', 1)
 endif
 if use_json_glib

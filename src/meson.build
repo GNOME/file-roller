@@ -132,20 +132,20 @@ fr_exe = executable('file-roller',
     hdy_dep,
     use_native_appchooser ? libportal_dep : [],
     use_native_appchooser ? libportal_gtk3_dep : [],
-    use_gobject_introspection ? gobject_introspection_dep : [],
+    build_introspection ? gobject_introspection_dep : [],
     use_json_glib ? libjson_glib_dep : [],
     use_libarchive ? libarchive_dep : []
   ],
   link_args: [
     # Required for GIRepository to be able to dump symbols.
-    use_gobject_introspection ? '-Wl,--export-dynamic' : [],
+    build_introspection ? '-Wl,--export-dynamic' : [],
   ],
   include_directories : config_inc,
   c_args : c_args,
   install : true
 )
 
-if use_gobject_introspection
+if build_introspection
   fr_gir = gnome.generate_gir(
     fr_exe,
     sources: [
