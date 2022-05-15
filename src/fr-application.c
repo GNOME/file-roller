@@ -29,9 +29,6 @@
 #include <gtk/gtk.h>
 #include <glib/gprintf.h>
 #include <handy.h>
-#ifdef ENABLE_INTROSPECTION
-#  include <girepository.h>
-#endif
 #include "file-utils.h"
 #include "fr-application.h"
 #include "fr-application-menu.h"
@@ -55,9 +52,6 @@ static gboolean     arg_version = FALSE;
 static gboolean     arg_service = FALSE;
 static gboolean     arg_notify = FALSE;
 static const char  *program_argv0 = NULL; /* argv[0] from main(); used as the command to restart the program */
-#ifdef ENABLE_INTROSPECTION
-static char        *introspection_dump = NULL;
-#endif
 
 
 static const GOptionEntry options[] = {
@@ -97,12 +91,6 @@ static const GOptionEntry options[] = {
 
 	{ "version", 'v', 0, G_OPTION_ARG_NONE, &arg_version,
 	  N_("Show version"), NULL },
-
-#ifdef ENABLE_INTROSPECTION
-	{ "introspect-dump", '\0', 0, G_OPTION_ARG_STRING, &introspection_dump,
-	  N_("Dump gobject introspection file"),
-	  N_("input.txt,output.xml") },
-#endif
 
 	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining_args,
 	  NULL,
@@ -582,18 +570,6 @@ fr_application_command_line (GApplication            *application,
 	}
 	g_strfreev (argv);
 	g_option_context_free (context);
-
-#ifdef ENABLE_INTROSPECTION
-	if (introspection_dump) {
-		if (!g_irepository_dump (introspection_dump, &error)) {
-			g_critical ("Failed to dump introspection data: %s", error->message);
-			g_error_free (error);
-			return fr_application_command_line_finished (application, EXIT_FAILURE);
-		}
-
-		return fr_application_command_line_finished (application, EXIT_SUCCESS);
-	}
-#endif
 
 	if (remaining_args == NULL) { /* No archive specified. */
 		if (! arg_service)

@@ -22,6 +22,9 @@
 #include <config.h>
 #include <glib.h>
 #include <glib/gi18n.h>
+#ifdef ENABLE_INTROSPECTION
+#  include <girepository.h>
+#endif
 #include "fr-application.h"
 
 int
@@ -29,6 +32,19 @@ main (int argc, char **argv)
 {
 	GtkApplication *app;
 	int             status;
+#ifdef ENABLE_INTROSPECTION
+	const char *introspect_dump_prefix = "--introspect-dump=";
+
+	if (argc == 2 && g_str_has_prefix (argv[1], introspect_dump_prefix)) {
+		g_autoptr (GError) error = NULL;
+		if (!g_irepository_dump (argv[1] + strlen(introspect_dump_prefix), &error)) {
+			g_critical ("Failed to dump introspection data: %s", error->message);
+			return EXIT_FAILURE;
+		}
+
+		return EXIT_SUCCESS;
+	}
+#endif
 
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
