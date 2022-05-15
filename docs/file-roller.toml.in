@@ -1,0 +1,26 @@
+[library]
+version = "@VERSION@"
+description = "An archive manager utility for GNOME"
+license = "GPL-2.0-or-later"
+browse_url = "https://gitlab.gnome.org/GNOME/file-roller/"
+repository_url = "https://gitlab.gnome.org/GNOME/file-roller.git"
+logo_url = "org.gnome.FileRoller.svg"
+devhelp = true
+search_index = true
+
+[theme]
+name = "basic"
+show_index_summary = true
+show_class_hierarchy = true
+
+[source-location]
+# The base URL for the web UI
+base_url = "https://gitlab.gnome.org/GNOME/file-roller/-/blob/master/"
+# The format for links, using "filename" and "line" for the format
+file_format = "{filename}#L{line}"
+
+[extra]
+urlmap_file = "urlmap.js"
+content_images = [
+  "../data/icons/hicolor/scalable/apps/org.gnome.FileRoller.svg",
+]

@@ -17,6 +17,7 @@ gettext_package = meson.project_name()
 prefix = get_option('prefix')
 libdir = join_paths(prefix, get_option('libdir'))
 datadir = join_paths(prefix, get_option('datadir'))
+docdir = join_paths(datadir, 'doc')
 privexecdir = join_paths(prefix, get_option('libexecdir'), meson.project_name())
 c_comp = meson.get_compiler('c')
 
@@ -55,7 +56,18 @@ if get_option('cpio') == 'auto'
   endif
 endif
 
+gi_docgen = find_program(
+  'gi-docgen',
+  version: '>= 2021.1',
+  required: get_option('api_docs'),
+)
+
 build_introspection = gobject_introspection_dep.found()
+build_api_docs = gi_docgen.found()
+
+if build_api_docs and not build_introspection
+  error('Building “api_docs” requires the “introspection” feature to be enabled as well, make sure you have libgirepository installed.')
+endif
 
 # config.h
 
@@ -131,6 +143,7 @@ if build_nautilus_actions
 endif
 subdir('po')
 subdir('src')
+subdir('docs')
 
 gnome.post_install(
   gtk_update_icon_cache: true,

@@ -90,7 +90,9 @@ makeDerivation rec {
   nativeBuildInputs = with pkgs; [
     desktop-file-utils
     gettext
+    gi-docgen
     glibcLocales
+    gobject-introspection
     itstool
     libxml2
     meson
@@ -113,6 +115,11 @@ makeDerivation rec {
     libarchive
     libhandy
     libportal-gtk3
+  ];
+
+  mesonFlags = [
+    "-Dintrospection=enabled"
+    "-Dapi_docs=enabled"
   ];
 
   inherit doCheck;
