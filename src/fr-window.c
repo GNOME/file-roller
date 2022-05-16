@@ -1141,6 +1141,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	fr_window_enable_action (window, "edit-password", ! running && (! no_archive && window->archive->propPassword));
 	fr_window_enable_action (window, "extract-files", file_op);
 	fr_window_enable_action (window, "find", ! no_archive);
+	fr_window_enable_action (window, "navigate-to", ! no_archive && private->filter_mode && one_file_selected);
 	fr_window_enable_action (window, "open-folder", file_op && one_file_selected && dir_selected);
 	fr_window_enable_action (window, "open-with", file_op && sel_not_null && ! dir_selected);
 	fr_window_enable_action (window, "rename", ! no_archive && ! ro && ! running && can_store_many_files && one_file_selected);
@@ -3387,6 +3388,7 @@ get_dir_list_from_file_data (FrWindow *window,
 GList *
 fr_window_get_file_list_selection (FrWindow *window,
 				   gboolean  recursive,
+				   gboolean  include_dirs,
 				   gboolean *has_dirs)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
@@ -3413,6 +3415,10 @@ fr_window_get_file_list_selection (FrWindow *window,
 		if (file_data_is_dir (fd)) {
 			if (has_dirs != NULL)
 				*has_dirs = TRUE;
+
+			if (include_dirs) {
+				list = g_list_append (list, g_strdup (fd->original_path));
+			}
 
 			if (recursive)
 				list = g_list_concat (list, get_dir_list_from_file_data (window, fd));
@@ -4723,7 +4729,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 		char            *data;
 
 		tmp = fr_clipboard_data_new ();
-		tmp->files = fr_window_get_file_list_selection (window, TRUE, NULL);
+		tmp->files = fr_window_get_file_list_selection (window, TRUE, FALSE, NULL);
 		tmp->op = FR_CLIPBOARD_OP_COPY;
 		tmp->base_dir = g_strdup (fr_window_get_current_location (window));
 
@@ -8580,7 +8586,7 @@ fr_window_get_selection (FrWindow   *window,
 		g_free (parent_folder);
 	}
 	else {
-		files = fr_window_get_file_list_selection (window, TRUE, NULL);
+		files = fr_window_get_file_list_selection (window, TRUE, FALSE, NULL);
 		base_dir = g_strdup (fr_window_get_current_location (window));
 	}
 

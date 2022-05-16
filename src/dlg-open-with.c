@@ -157,7 +157,7 @@ open_with_cb (GtkWidget *widget,
 	FrWindow *window = callback_data;
 	GList    *file_list;
 
-	file_list = fr_window_get_file_list_selection (window, FALSE, NULL);
+	file_list = fr_window_get_file_list_selection (window, FALSE, FALSE, NULL);
 	if (file_list == NULL)
 		return;
 

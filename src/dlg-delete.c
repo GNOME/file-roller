@@ -188,7 +188,7 @@ dlg_delete (GtkWidget *widget,
 {
 	FrWindow *window = callback_data;
 	dlg_delete__common (window,
-			    fr_window_get_file_list_selection (window, TRUE, NULL));
+			    fr_window_get_file_list_selection (window, TRUE, FALSE, NULL));
 }
 
 

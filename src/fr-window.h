@@ -173,6 +173,7 @@ void            fr_window_set_list_mode                (FrWindow      *window,
 
 GList *         fr_window_get_file_list_selection      (FrWindow    *window,
 						        gboolean     recursive,
+						        gboolean     include_dirs,
 						        gboolean    *has_dirs);
 GList *         fr_window_get_file_list_from_path_list (FrWindow    *window,
 						        GList       *path_list,

@@ -83,6 +83,10 @@ static const GActionEntry fr_window_actions[] = {
 		.activate = fr_window_activate_go_home,
 	},
 	{
+		.name = "navigate-to",
+		.activate = fr_window_activate_navigate_to,
+	},
+	{
 		.name = "open-folder",
 		.activate = fr_window_activate_open_folder,
 	},

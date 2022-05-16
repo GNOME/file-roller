@@ -217,6 +217,31 @@ fr_window_activate_rename (GSimpleAction *action,
 
 
 void
+fr_window_activate_navigate_to (GSimpleAction *action,
+			GVariant      *parameter,
+			gpointer       user_data)
+{
+	FrWindow *window = FR_WINDOW (user_data);
+	GList *file_list = fr_window_get_file_list_selection (window, FALSE, TRUE, NULL);
+
+	if (file_list == NULL) {
+		return;
+	}
+
+	// g_path_get_dirname will return the directory itself if the path ends with /
+	// so we need to trim it first to be able to get the parent.
+	g_autofree char *selected_path = g_str_has_suffix (file_list->data, G_DIR_SEPARATOR_S) ? g_path_get_dirname (file_list->data) : g_strdup (file_list->data);
+	g_autofree char *selected_location = g_path_get_dirname (selected_path);
+	g_autofree char *selected_location_abs = g_strdup_printf ("/%s", selected_location);
+
+	fr_window_go_to_location (window, selected_location_abs, TRUE);
+	fr_window_find (window, FALSE);
+
+	_g_string_list_free (file_list);
+}
+
+
+void
 fr_window_activate_new (GSimpleAction *action,
 			GVariant      *parameter,
 			gpointer       user_data)
@@ -439,7 +464,7 @@ fr_window_activate_view_selection (GSimpleAction *action,
 	FrWindow *window = FR_WINDOW (user_data);
 	GList    *file_list;
 
-	file_list = fr_window_get_file_list_selection (window, FALSE, NULL);
+	file_list = fr_window_get_file_list_selection (window, FALSE, FALSE, NULL);
 	if (file_list != NULL)
 		fr_window_open_files (window, file_list, FALSE);
 
