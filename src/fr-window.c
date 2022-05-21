@@ -9209,7 +9209,7 @@ open_extracted_files_with_native_appchooser (OpenFilesData *odata)
 	}
 }
 #else
-static gboolean
+static void
 open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 {
 	GList               *file_list = odata->cdata->file_list;
@@ -9218,21 +9218,20 @@ open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 	GAppInfo            *app;
 	GList               *files_to_open = NULL;
 	GdkAppLaunchContext *context;
-	gboolean             result;
 	GError              *error = NULL;
 
-	g_return_val_if_fail (file_list != NULL, FALSE);
+	g_return_if_fail (file_list != NULL);
 
 	first_file = G_FILE (file_list->data);
 	if (first_file == NULL)
-		return FALSE;
+		return;
 
 	if (! odata->window->archive->read_only)
 		monitor_extracted_files (odata);
 
 	if (odata->ask_application) {
 		dlg_open_with (odata->window, file_list);
-		return FALSE;
+		return;
 	}
 
 	first_mime_type = _g_file_get_mime_type (first_file, FALSE);
@@ -9240,7 +9239,7 @@ open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 
 	if (app == NULL) {
 		dlg_open_with (odata->window, file_list);
-		return FALSE;
+		return;
 	}
 
 	files_to_open = g_list_append (files_to_open, g_file_get_uri (first_file));
@@ -9273,8 +9272,7 @@ open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 	context = gdk_display_get_app_launch_context (gtk_widget_get_display (GTK_WIDGET (odata->window)));
 	gdk_app_launch_context_set_screen (context, gtk_widget_get_screen (GTK_WIDGET (odata->window)));
 	gdk_app_launch_context_set_timestamp (context, 0);
-	result = g_app_info_launch_uris (app, files_to_open, G_APP_LAUNCH_CONTEXT (context), &error);
-	if (! result) {
+	if (! g_app_info_launch_uris (app, files_to_open, G_APP_LAUNCH_CONTEXT (context), &error)) {
 		_gtk_error_dialog_run (GTK_WINDOW (odata->window),
 				       _("Could not perform the operation"),
 				       "%s",
@@ -9285,8 +9283,6 @@ open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 	g_object_unref (context);
 	g_object_unref (app);
 	_g_string_list_free (files_to_open);
-
-	return result;
 }
 #endif
 
