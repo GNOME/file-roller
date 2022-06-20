@@ -962,7 +962,7 @@ get_temp_name (FrCommandTar *c_tar,
 	char *temp_name = NULL;
 
 	template = g_strconcat (dirname, "/.fr-XXXXXX", NULL);
-	result = mkdtemp (template);
+	result = g_mkdtemp (template);
 	temp_name = g_build_filename (result, _g_path_get_basename (filepath), NULL);
 	g_free (template);
 

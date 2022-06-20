@@ -101,9 +101,6 @@ if use_libarchive
   source_files += [ 'fr-archive-libarchive.c' ]
   fr_headers += [ 'fr-archive-libarchive.h' ]
 endif 
-if not have_mkdtemp
-  source_files += [ 'mkdtemp.c' ]
-endif
 
 gresource_files = gnome.compile_resources('fr-resources', 'file-roller.gresource.xml', c_name : 'fr')
 

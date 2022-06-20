@@ -46,8 +46,6 @@ use_json_glib = libjson_glib_dep.found()
 libarchive_dep = dependency('libarchive', version : libarchive_version, required : get_option('libarchive'))
 use_libarchive = libarchive_dep.found()
 
-have_mkdtemp = c_comp.has_function('mkdtemp')
-
 cpio_path = 'cpio'
 if get_option('cpio') == 'auto'
   cpio = find_program('gcpio', 'cpio', required : false)
@@ -102,9 +100,6 @@ if get_option('packagekit')
 endif
 if get_option('buildtype').contains('debug')
   config_data.set('DEBUG', 1)
-endif
-if have_mkdtemp
-  config_data.set('HAVE_MKDTEMP', 1)
 endif
 config_data.set_quoted('CPIO_PATH', cpio_path)
 config_data.set('USE_NATIVE_APPCHOOSER', use_native_appchooser)
@@ -161,7 +156,6 @@ summary = [
   '  nautilus actions: @0@'.format(build_nautilus_actions),
   '        packagekit: @0@'.format(get_option('packagekit')),
   '        libarchive: @0@'.format(use_libarchive),
-  '      have mkdtemp: @0@'.format(have_mkdtemp),
   '              cpio: @0@'.format(cpio_path),
   ''
 ]

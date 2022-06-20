@@ -39,10 +39,6 @@
 #include "fr-init.h"
 
 
-#ifndef HAVE_MKDTEMP
-#include "mkdtemp.h"
-#endif
-
 #define BUF_SIZE 4096
 #define FILE_PREFIX    "file://"
 #define FILE_PREFIX_L  7
@@ -108,7 +104,7 @@ _g_path_get_temp_work_dir (const char *parent_folder)
                 return NULL;
 
         template = g_strconcat (best_folder, "/.fr-XXXXXX", NULL);
-        result = mkdtemp (template);
+        result = g_mkdtemp (template);
         g_free (best_folder);
 
         if ((result == NULL) || (*result == '\0')) {
