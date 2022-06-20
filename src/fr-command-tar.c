@@ -1241,7 +1241,7 @@ fr_command_tar_get_capabilities (FrArchive  *archive,
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
-		char *try_command[3] = { "7za", "7zr", "7z" };
+		char *try_command[5] = { "7zzs", "7zz", "7za", "7zr", "7z" };
 		int   i;
 
 		for (i = 0; i < G_N_ELEMENTS (try_command); i++) {
@@ -1273,7 +1273,7 @@ fr_command_tar_set_mime_type (FrArchive  *archive,
 	FR_ARCHIVE_CLASS (fr_command_tar_parent_class)->set_mime_type (archive, mime_type);
 
 	if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
-		char *try_command[3] = { "7za", "7zr", "7z" };
+		char *try_command[5] = { "7zzs", "7zz", "7za", "7zr", "7z" };
 		int   i;
 
 		for (i = 0; i < G_N_ELEMENTS (try_command); i++) {
@@ -1313,7 +1313,7 @@ fr_command_tar_get_packages (FrArchive  *archive,
 	else if (_g_mime_type_matches (mime_type, "application/x-tzo"))
 		return PACKAGES ("tar,lzop");
 	else if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar"))
-		return PACKAGES ("tar,p7zip");
+		return PACKAGES ("tar,7zip");
 	else if (_g_mime_type_matches (mime_type, "application/x-rzip-compressed-tar"))
 		return PACKAGES ("tar,rzip");
 	else if (_g_mime_type_matches (mime_type, "application/x-zstd-compressed-tar"))

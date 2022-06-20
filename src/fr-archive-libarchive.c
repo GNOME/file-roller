@@ -116,7 +116,9 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 
 	/* give priority to 7z* for 7z archives. */
 	if (strcmp (mime_type, "application/x-7z-compressed") == 0) {
-		if (_g_program_is_available ("7za", TRUE)
+		if (_g_program_is_available ("7zz", TRUE)
+		    || _g_program_is_available ("7zzs", TRUE)
+		    || _g_program_is_available ("7za", TRUE)
 		    || _g_program_is_available ("7zr", TRUE)
 		    || _g_program_is_available ("7z", TRUE))
 		{
@@ -135,7 +137,9 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 	if ((strcmp (mime_type, "application/zip") == 0)
 	    || (strcmp (mime_type, "application/x-cbz") == 0))
 	{
-		if (_g_program_is_available ("7z", TRUE)) {
+		if (_g_program_is_available ("7zz", TRUE)
+		    || _g_program_is_available ("7zzs", TRUE)
+		    || _g_program_is_available ("7z", TRUE)) {
 			return capabilities;
 		}
 		if (!_g_program_is_available ("unzip", TRUE)) {

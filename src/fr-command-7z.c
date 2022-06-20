@@ -179,7 +179,15 @@ list__process_line (char     *line,
 static void
 fr_command_7z_begin_command (FrCommand *comm)
 {
-	if (_g_program_is_in_path ("7z"))
+	// Modern 7-Zip by the original author.
+	// Statically linked from a binary distribution, almost guaranteed to work.
+	if (_g_program_is_in_path ("7zzs"))
+		fr_process_begin_command (comm->process, "7zzs");
+	// Dynamically linked from either binary or source distribution.
+	else if (_g_program_is_in_path ("7zz"))
+		fr_process_begin_command (comm->process, "7zz");
+	// Legacy p7zip project.
+	else if (_g_program_is_in_path ("7z"))
 		fr_process_begin_command (comm->process, "7z");
 	else if (_g_program_is_in_path ("7za"))
 		fr_process_begin_command (comm->process, "7za");
@@ -589,6 +597,60 @@ fr_command_7z_get_mime_types (FrArchive *archive)
 }
 
 
+static gboolean
+check_info_subcommand_for_codec_support (char *program_name, char *codec_name) {
+	if (! _g_program_is_in_path (program_name)) {
+		return FALSE;
+	}
+
+	g_autofree gchar *standard_output = NULL;
+
+	gchar* argv[] = {
+		program_name,
+		"i",
+		NULL
+	};
+	if (!g_spawn_sync (
+		/* working_directory = */ NULL,
+		argv,
+		/* envp = */ NULL,
+		G_SPAWN_SEARCH_PATH | G_SPAWN_STDERR_TO_DEV_NULL,
+		/* child_setup = */ NULL,
+		/* user_data = */ NULL,
+		&standard_output,
+		/* standard_error = */ NULL,
+		/* wait_status = */ NULL,
+		/* error = */ NULL
+	)) {
+		return FALSE;
+	}
+
+	gchar *codecs = g_strrstr (standard_output, "Codecs:");
+
+	if (codecs == NULL) {
+		return FALSE;
+	}
+
+	gchar *codec_found = g_strrstr (codecs, codec_name);
+
+	return codec_found != NULL;
+}
+
+
+static gboolean
+has_rar_support (gboolean check_command)
+{
+	/*
+	 * Some 7-Zip distributions store RAR codec as a separate shared library and we can detect that.
+	 * Most commonly, however, the programs link the codec statically so the only way to find out is to query them.
+	 */
+	return !check_command
+	       || g_file_test ("/usr/lib/p7zip/Codecs/Rar.so", G_FILE_TEST_EXISTS)
+	       || check_info_subcommand_for_codec_support ("7zzs", "Rar3")
+	       || check_info_subcommand_for_codec_support ("7zz", "Rar3");
+}
+
+
 static FrArchiveCap
 fr_command_7z_get_capabilities (FrArchive  *archive,
 				const char *mime_type,
@@ -597,27 +659,46 @@ fr_command_7z_get_capabilities (FrArchive  *archive,
 	FrArchiveCap capabilities;
 
 	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
-	if (! _g_program_is_available ("7za", check_command) && ! _g_program_is_available ("7zr", check_command) && ! _g_program_is_available ("7z", check_command))
+	/*
+	 * We support two sets of program names:
+	 * - 7z/7za/7zr from the no longer maintained p7zip project
+	 * - 7zz/7zzs from the 7-Zip project by the original author
+	 * Their CLI is mostly compatible.
+	 */
+
+	// Support full range of formats (except possibly rar).
+	gboolean available_7zip = _g_program_is_available ("7zzs", check_command) || _g_program_is_available ("7zz", check_command);
+	gboolean available_p7zip_full = _g_program_is_available ("7z", check_command);
+	gboolean available_formats_full = available_7zip || available_p7zip_full;
+	// Supports 7z, xz, lzma, zip, bzip2, gzip, tar, cab, ppmd and split.
+	gboolean available_p7zip_partial = _g_program_is_available ("7za", check_command);
+	// Supports 7z, xz, lzma and split.
+	gboolean available_p7zip_reduced = _g_program_is_available ("7zr", check_command);
+
+	if (! available_7zip
+	    && ! available_p7zip_full
+	    && ! available_p7zip_partial
+	    && ! available_p7zip_reduced)
 		return capabilities;
 
 	if (_g_mime_type_matches (mime_type, "application/x-7z-compressed")) {
 		capabilities |= FR_ARCHIVE_CAN_READ_WRITE | FR_ARCHIVE_CAN_CREATE_VOLUMES;
-		if (_g_program_is_available ("7z", check_command))
+		if (available_formats_full)
 			capabilities |= FR_ARCHIVE_CAN_ENCRYPT | FR_ARCHIVE_CAN_ENCRYPT_HEADER;
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
 		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
-		if (_g_program_is_available ("7z", check_command))
+		if (available_formats_full)
 			capabilities |= FR_ARCHIVE_CAN_ENCRYPT | FR_ARCHIVE_CAN_ENCRYPT_HEADER;
 	}
-	else if (_g_program_is_available ("7z", check_command)) {
+	else if (available_formats_full) {
 		if (_g_mime_type_matches (mime_type, "application/x-rar")
 		    || _g_mime_type_matches (mime_type, "application/x-cbr"))
 		{
 			/* give priority to rar and unrar that supports RAR files better. */
 			if (!_g_program_is_available ("rar", TRUE)
 			    && !_g_program_is_available ("unrar", TRUE)
-			    && (! check_command || g_file_test ("/usr/lib/p7zip/Codecs/Rar.so", G_FILE_TEST_EXISTS)))
+			    && has_rar_support (check_command))
 				capabilities |= FR_ARCHIVE_CAN_READ;
 		}
 		else
@@ -630,7 +711,7 @@ fr_command_7z_get_capabilities (FrArchive  *archive,
 			capabilities |= FR_ARCHIVE_CAN_WRITE | FR_ARCHIVE_CAN_ENCRYPT;
 		}
 	}
-	else if (_g_program_is_available ("7za", check_command)) {
+	else if (available_p7zip_partial) {
 		if (_g_mime_type_matches (mime_type, "application/vnd.ms-cab-compressed")
 		    || _g_mime_type_matches (mime_type, "application/zip"))
 		{
@@ -654,11 +735,11 @@ fr_command_7z_get_packages (FrArchive  *archive,
 			    const char *mime_type)
 {
 	if (_g_mime_type_matches (mime_type, "application/x-rar"))
-		return PACKAGES ("p7zip,p7zip-rar");
+		return PACKAGES ("7zip,7zip-rar");
 	else if (_g_mime_type_matches (mime_type, "application/zip") || _g_mime_type_matches (mime_type, "application/vnd.ms-cab-compressed"))
-		return PACKAGES ("p7zip,p7zip-full");
+		return PACKAGES ("7zip,7zip-full");
 	else
-		return PACKAGES ("p7zip");
+		return PACKAGES ("7zip");
 }
 
 
