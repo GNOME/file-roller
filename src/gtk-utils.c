@@ -637,7 +637,7 @@ _gtk_header_bar_create_text_button (const char       *label,
 	g_return_val_if_fail (label != NULL, NULL);
 	g_return_val_if_fail (action_name != NULL, NULL);
 
-	button = gtk_button_new_with_label (label);
+	button = gtk_button_new_with_mnemonic (label);
 	gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
 	gtk_style_context_add_class (gtk_widget_get_style_context (button), "text-button");
 	gtk_style_context_remove_class (gtk_widget_get_style_context (button), "image-button");

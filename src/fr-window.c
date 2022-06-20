@@ -5788,7 +5788,7 @@ fr_window_construct (FrWindow *window)
 
 	header_bar_size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
 
-	button = _gtk_header_bar_create_text_button (C_("Action", "Extract"), NULL, "win.extract-files");
+	button = _gtk_header_bar_create_text_button (C_("Action", "_Extract"), NULL, "win.extract-files");
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar), button);
 
