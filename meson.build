@@ -148,15 +148,13 @@ gnome.post_install(
 
 # Summary
 
-summary = [
-  'configuration summary:',
-  '',
-  '           project: @0@ @1@'.format(meson.project_name(), meson.project_version()),
-  '            prefix: @0@'.format(prefix),
-  '  nautilus actions: @0@'.format(build_nautilus_actions),
-  '        packagekit: @0@'.format(get_option('packagekit')),
-  '        libarchive: @0@'.format(use_libarchive),
-  '              cpio: @0@'.format(cpio_path),
-  ''
-]
-message('\n'.join(summary))
+summary(
+  {
+    'prefix': prefix,
+    'nautilus actions': build_nautilus_actions,
+    'packagekit': get_option('packagekit'),
+    'libarchive': use_libarchive,
+    'cpio': cpio_path,
+  },
+  section: 'Configuration summary:',
+)
