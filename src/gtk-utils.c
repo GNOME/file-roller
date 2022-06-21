@@ -572,7 +572,13 @@ password_entry_icon_press_cb (GtkEntry            *entry,
 			      GdkEvent            *event,
 			      gpointer             user_data)
 {
-	gtk_entry_set_visibility (entry, ! gtk_entry_get_visibility (entry));
+	gboolean visibility = gtk_entry_get_visibility (entry);
+	gtk_entry_set_visibility (entry, ! visibility);
+	if (visibility) {
+		gtk_entry_set_icon_from_icon_name (entry, GTK_ENTRY_ICON_SECONDARY, "view-reveal-symbolic");
+	} else {
+		gtk_entry_set_icon_from_icon_name (entry, GTK_ENTRY_ICON_SECONDARY, "view-conceal-symbolic");
+	}
 }
 
 
@@ -580,7 +586,7 @@ void
 _gtk_entry_use_as_password_entry (GtkEntry *entry)
 {
 	gtk_entry_set_visibility (entry, FALSE);
-	gtk_entry_set_icon_from_icon_name (entry, GTK_ENTRY_ICON_SECONDARY, "security-medium-symbolic");
+	gtk_entry_set_icon_from_icon_name (entry, GTK_ENTRY_ICON_SECONDARY, "view-reveal-symbolic");
 	gtk_entry_set_icon_activatable (entry, GTK_ENTRY_ICON_SECONDARY, TRUE);
 	gtk_entry_set_icon_tooltip_text (entry, GTK_ENTRY_ICON_SECONDARY, _("Change password visibility"));
 
