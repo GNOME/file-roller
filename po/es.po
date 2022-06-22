@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2022-05-16 07:50+0000\n"
-"PO-Revision-Date: 2022-05-19 10:32+0200\n"
+"POT-Creation-Date: 2022-06-20 21:27+0000\n"
+"PO-Revision-Date: 2022-06-22 11:20+0200\n"
 "Last-Translator: Daniel Mustieles García <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -63,7 +63,7 @@ msgstr "archivadores zip (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "archivadores xz (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:488
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:476
 #: src/fr-window.c:2015 src/fr-window.c:5515
 msgid "Archive Manager"
 msgstr "Gestor de archivadores"
@@ -299,8 +299,8 @@ msgstr "Se requiere una contraseña para «%s»"
 msgid "Wrong password."
 msgstr "Contraseña incorrecta."
 
-#: src/dlg-batch-add.c:88 src/fr-application.c:258 src/fr-application.c:294
-#: src/fr-application.c:631
+#: src/dlg-batch-add.c:88 src/fr-application.c:246 src/fr-application.c:282
+#: src/fr-application.c:607
 msgid "Compress"
 msgstr "Comprimir"
 
@@ -341,13 +341,18 @@ msgctxt "Window title"
 msgid "Extract"
 msgstr "Extraer"
 
+#: src/dlg-open-with.c:57 src/fr-window.c:4200 src/fr-window.c:8928
+#: src/fr-window.c:8962 src/fr-window.c:9204 src/fr-window.c:9277
+msgid "Could not perform the operation"
+msgstr "No se pudo efectuar la operación"
+
 #: src/dlg-package-installer.c:111 src/dlg-package-installer.c:223
 msgid "There was an internal error trying to search for applications:"
 msgstr "Hubo un error interno al intentar buscar aplicaciones:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
 #: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4075
-#: src/fr-window.c:7573 src/fr-window.c:7930 src/fr-window.c:9445
+#: src/fr-window.c:7573 src/fr-window.c:7930 src/fr-window.c:9490
 msgid "Archive type not supported."
 msgstr "Tipo de archivador no soportado."
 
@@ -429,33 +434,33 @@ msgstr ""
 "Francisco Javier F. <serrador@cvs.gnome.org>\n"
 "Rodrigo Marcos Fombellida <rodrifom@gmail.com>"
 
-#: src/fr-application.c:65
+#: src/fr-application.c:59
 msgid "Add files to the specified archive and quit the program"
 msgstr "Añade archivos al archivador especificado y sale del programa"
 
-#: src/fr-application.c:66
+#: src/fr-application.c:60
 msgid "ARCHIVE"
 msgstr "ARCHIVADOR"
 
-#: src/fr-application.c:69
+#: src/fr-application.c:63
 msgid "Add files asking the name of the archive and quit the program"
 msgstr ""
 "Añade archivos preguntando el nombre del archivador y luego sale del programa"
 
-#: src/fr-application.c:73
+#: src/fr-application.c:67
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Extrae archivadores a la carpeta especificada y sale del programa"
 
-#: src/fr-application.c:74 src/fr-application.c:86
+#: src/fr-application.c:68 src/fr-application.c:80
 msgid "FOLDER"
 msgstr "CARPETA"
 
-#: src/fr-application.c:77
+#: src/fr-application.c:71
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr ""
 "Extrae archivadores preguntando la carpeta de destino y sale del programa"
 
-#: src/fr-application.c:81
+#: src/fr-application.c:75
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
@@ -463,41 +468,33 @@ msgstr ""
 "Extrae el contenido de los archivadores en la carpeta del archivador y sale "
 "del programa"
 
-#: src/fr-application.c:85
+#: src/fr-application.c:79
 msgid "Default folder to use for the “--add” and “--extract” commands"
 msgstr "Carpeta predeterminada para los comandos «--add» y «--extract»"
 
-#: src/fr-application.c:89
+#: src/fr-application.c:83
 msgid "Create destination folder without asking confirmation"
 msgstr "Crea una carpeta de destino si pedir confirmación"
 
-#: src/fr-application.c:93
+#: src/fr-application.c:87
 msgid "Use the notification system to notify the operation completion"
 msgstr ""
 "Usar una notificación del sistema para indicar que la operación ha terminado"
 
-#: src/fr-application.c:96
+#: src/fr-application.c:90
 msgid "Start as a service"
 msgstr "Iniciar como un servicio"
 
-#: src/fr-application.c:99
+#: src/fr-application.c:93
 msgid "Show version"
 msgstr "Mostrar versión"
 
-#: src/fr-application.c:103
-msgid "Dump gobject introspection file"
-msgstr "Archivo de volcado de introspección de gobject"
-
-#: src/fr-application.c:104
-msgid "input.txt,output.xml"
-msgstr "input.txt,output.xml"
-
-#: src/fr-application.c:330 src/fr-application.c:356 src/fr-application.c:654
+#: src/fr-application.c:318 src/fr-application.c:344 src/fr-application.c:630
 msgctxt "Window title"
 msgid "Extract archive"
 msgstr "Extraer archivador"
 
-#: src/fr-application.c:522
+#: src/fr-application.c:510
 msgid "— Create and modify an archive"
 msgstr " - Crear y modificar un archivador"
 
@@ -783,11 +780,6 @@ msgstr "Comando no encontrado."
 msgid "Test Result"
 msgstr "Resultado de la comprobación"
 
-#: src/fr-window.c:4200 src/fr-window.c:8928 src/fr-window.c:8962
-#: src/fr-window.c:9242
-msgid "Could not perform the operation"
-msgstr "No se pudo efectuar la operación"
-
 #: src/fr-window.c:4225
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
@@ -837,10 +829,10 @@ msgctxt "File"
 msgid "Name"
 msgstr "Nombre"
 
-#: src/fr-window.c:5791 src/ui/extract-dialog-options.ui:20
+#: src/fr-window.c:5791
 msgctxt "Action"
-msgid "Extract"
-msgstr "Extraer"
+msgid "_Extract"
+msgstr "_Extraer"
 
 #: src/fr-window.c:5795
 msgctxt "Action"
@@ -1211,6 +1203,11 @@ msgstr "A_rchivos:"
 msgid "example: *.txt; *.doc"
 msgstr "ejemplo: *.txt; *.doc"
 
+#: src/ui/extract-dialog-options.ui:20
+msgctxt "Action"
+msgid "Extract"
+msgstr "Extraer"
+
 #: src/ui/extract-dialog-options.ui:165
 msgid "_Keep directory structure"
 msgstr "_Mantener la estructura de carpetas"
@@ -1466,6 +1463,12 @@ msgstr "Número de archivos:"
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "S_eleccione los archivos que quiere actualizar:"
+
+#~ msgid "Dump gobject introspection file"
+#~ msgstr "Archivo de volcado de introspección de gobject"
+
+#~ msgid "input.txt,output.xml"
+#~ msgstr "input.txt,output.xml"
 
 #~| msgid "Archive Manager"
 #~ msgid "org.gnome.ArchiveManager"
