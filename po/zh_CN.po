@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2022-05-21 13:33+0000\n"
-"PO-Revision-Date: 2022-05-22 09:14+0800\n"
+"POT-Creation-Date: 2022-06-20 21:27+0000\n"
+"PO-Revision-Date: 2022-06-21 19:23+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -69,7 +69,7 @@ msgstr "zip 档案 (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "xz 档案 (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:488
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:476
 #: src/fr-window.c:2015 src/fr-window.c:5515
 msgid "Archive Manager"
 msgstr "归档管理器"
@@ -290,8 +290,8 @@ msgstr "“%s”需要密码"
 msgid "Wrong password."
 msgstr "密码错误。"
 
-#: src/dlg-batch-add.c:88 src/fr-application.c:258 src/fr-application.c:294
-#: src/fr-application.c:631
+#: src/dlg-batch-add.c:88 src/fr-application.c:246 src/fr-application.c:282
+#: src/fr-application.c:607
 msgid "Compress"
 msgstr "压缩"
 
@@ -425,70 +425,62 @@ msgstr ""
 "Mingcong Bai <jeffbai@aosc.xyz>, 2015, 2017\n"
 "Dingzhong Chen <wsxy162@gmail.com>, 2018, 2019"
 
-#: src/fr-application.c:65
+#: src/fr-application.c:59
 msgid "Add files to the specified archive and quit the program"
 msgstr "将文件添加到指定归档文件，然后退出程序"
 
-#: src/fr-application.c:66
+#: src/fr-application.c:60
 msgid "ARCHIVE"
 msgstr "归档文件"
 
-#: src/fr-application.c:69
+#: src/fr-application.c:63
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "添加文件，询问归档文件的名称，然后退出程序"
 
-#: src/fr-application.c:73
+#: src/fr-application.c:67
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "将归档文件提取到指定文件夹，然后退出程序"
 
-#: src/fr-application.c:74 src/fr-application.c:86
+#: src/fr-application.c:68 src/fr-application.c:80
 msgid "FOLDER"
 msgstr "文件夹"
 
-#: src/fr-application.c:77
+#: src/fr-application.c:71
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "提取文件，询问目标文件夹的名称，然后退出程序"
 
-#: src/fr-application.c:81
+#: src/fr-application.c:75
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "提取归档文件夹中的归档文件内容，然后退出程序"
 
-#: src/fr-application.c:85
+#: src/fr-application.c:79
 msgid "Default folder to use for the “--add” and “--extract” commands"
 msgstr "“--add”和“--extract”命令所使用的默认文件夹"
 
-#: src/fr-application.c:89
+#: src/fr-application.c:83
 msgid "Create destination folder without asking confirmation"
 msgstr "不请求确认就创建目标文件夹"
 
-#: src/fr-application.c:93
+#: src/fr-application.c:87
 msgid "Use the notification system to notify the operation completion"
 msgstr "使用通知系统来提示操作完成"
 
-#: src/fr-application.c:96
+#: src/fr-application.c:90
 msgid "Start as a service"
 msgstr "以服务启动"
 
-#: src/fr-application.c:99
+#: src/fr-application.c:93
 msgid "Show version"
 msgstr "显示版本"
 
-#: src/fr-application.c:103
-msgid "Dump gobject introspection file"
-msgstr "转储 gobject 检查器文件"
-
-#: src/fr-application.c:104
-msgid "input.txt,output.xml"
-msgstr "输入.txt,输出.xml"
-
-#: src/fr-application.c:330 src/fr-application.c:356 src/fr-application.c:654
+#: src/fr-application.c:318 src/fr-application.c:344 src/fr-application.c:630
 msgctxt "Window title"
 msgid "Extract archive"
 msgstr "提取文件"
 
-#: src/fr-application.c:522
+#: src/fr-application.c:510
 msgid "— Create and modify an archive"
 msgstr "— 创建并修改归档文件"
 
@@ -819,10 +811,10 @@ msgctxt "File"
 msgid "Name"
 msgstr "名称"
 
-#: src/fr-window.c:5791 src/ui/extract-dialog-options.ui:20
+#: src/fr-window.c:5791
 msgctxt "Action"
-msgid "Extract"
-msgstr "提取"
+msgid "_Extract"
+msgstr "提取(_E)"
 
 #: src/fr-window.c:5795
 msgctxt "Action"
@@ -1191,6 +1183,11 @@ msgstr "文件(_F)："
 msgid "example: *.txt; *.doc"
 msgstr "例：*.txt; *.doc"
 
+#: src/ui/extract-dialog-options.ui:20
+msgctxt "Action"
+msgid "Extract"
+msgstr "提取"
+
 #: src/ui/extract-dialog-options.ui:165
 msgid "_Keep directory structure"
 msgstr "保持目录结构(_K)"
@@ -1446,6 +1443,12 @@ msgstr "文件数："
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "选择您要更新的文件(_E)："
+
+#~ msgid "Dump gobject introspection file"
+#~ msgstr "转储 gobject 检查器文件"
+
+#~ msgid "input.txt,output.xml"
+#~ msgstr "输入.txt,输出.xml"
 
 #~ msgid "file-roller"
 #~ msgstr "file-roller"
