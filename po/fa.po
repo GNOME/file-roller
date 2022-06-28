@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2022-04-26 18:00+0000\n"
-"PO-Revision-Date: 2022-05-16 12:19+0430\n"
+"POT-Creation-Date: 2022-06-20 21:27+0000\n"
+"PO-Revision-Date: 2022-06-28 15:03+0430\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <>\n"
 "Language: fa\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -64,7 +64,7 @@ msgstr "بایگانی‌های zip (مانند ‪.zip‬)"
 msgid "xz archives (.tar.xz)"
 msgstr "بایگانی‌های xz (مانند ‪.tar.xz‬)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:488
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:476
 #: src/fr-window.c:2015 src/fr-window.c:5515
 msgid "Archive Manager"
 msgstr "مدیر بایگانی"
@@ -295,8 +295,8 @@ msgstr "گذرواژه برای «%s» لازم است"
 msgid "Wrong password."
 msgstr "گذرواژهٔ نادرست."
 
-#: src/dlg-batch-add.c:88 src/fr-application.c:258 src/fr-application.c:294
-#: src/fr-application.c:631
+#: src/dlg-batch-add.c:88 src/fr-application.c:246 src/fr-application.c:282
+#: src/fr-application.c:607
 msgid "Compress"
 msgstr "فشرده‌سازی"
 
@@ -337,13 +337,18 @@ msgctxt "Window title"
 msgid "Extract"
 msgstr "استخراج"
 
+#: src/dlg-open-with.c:57 src/fr-window.c:4200 src/fr-window.c:8928
+#: src/fr-window.c:8962 src/fr-window.c:9204 src/fr-window.c:9277
+msgid "Could not perform the operation"
+msgstr "نمی‌توان عملیات را انجام داد"
+
 #: src/dlg-package-installer.c:111 src/dlg-package-installer.c:223
 msgid "There was an internal error trying to search for applications:"
 msgstr "یک خطای درونی رخ داد هنگام جست‌وجو برای برنامه‌های:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
 #: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4075
-#: src/fr-window.c:7573 src/fr-window.c:7930 src/fr-window.c:9445
+#: src/fr-window.c:7573 src/fr-window.c:7930 src/fr-window.c:9490
 msgid "Archive type not supported."
 msgstr "نوع بایگانی پشتیبانی نمی‌شود."
 
@@ -427,69 +432,61 @@ msgstr ""
 "میلاد زکریا <meelad@farsiweb.info>\n"
 "الناز سربر <elnaz@farsiweb.info>"
 
-#: src/fr-application.c:65
+#: src/fr-application.c:59
 msgid "Add files to the specified archive and quit the program"
 msgstr "افزودن پرونده‌ها به بایگانی و ترک برنامه"
 
-#: src/fr-application.c:66
+#: src/fr-application.c:60
 msgid "ARCHIVE"
 msgstr "ARCHIVE"
 
-#: src/fr-application.c:69
+#: src/fr-application.c:63
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "افزودن پرونده‌ها با پرسیدن نام بایگانی و ترک برنامه"
 
-#: src/fr-application.c:73
+#: src/fr-application.c:67
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "استخراج بایگانی‌ها به شاخهٔ مشخّص شده و ترک برنامه"
 
-#: src/fr-application.c:74 src/fr-application.c:86
+#: src/fr-application.c:68 src/fr-application.c:80
 msgid "FOLDER"
 msgstr "شاخه"
 
-#: src/fr-application.c:77
+#: src/fr-application.c:71
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "استخراج بایگانی‌ها با پرسیدن شاخهٔ مقصد و ترک برنامه"
 
-#: src/fr-application.c:81
+#: src/fr-application.c:75
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the program"
 msgstr "استخراج محتویات بایگانی‌ها در شاخهٔ بایگانی و خروج از برنامه"
 
-#: src/fr-application.c:85
+#: src/fr-application.c:79
 msgid "Default folder to use for the “--add” and “--extract” commands"
 msgstr "شاخهٔ پیش‌گزیده برای فرمان‌های «‪--add‬» و «‪--extract‬»"
 
-#: src/fr-application.c:89
+#: src/fr-application.c:83
 msgid "Create destination folder without asking confirmation"
 msgstr "ایجاد شاخهٔ مقصد بدون تصدیق"
 
-#: src/fr-application.c:93
+#: src/fr-application.c:87
 msgid "Use the notification system to notify the operation completion"
 msgstr "استفاده از سیستم اعلان برای اطلاع دادن از پایان عملیات"
 
-#: src/fr-application.c:96
+#: src/fr-application.c:90
 msgid "Start as a service"
 msgstr "شروع به عنوان یک سرویس"
 
-#: src/fr-application.c:99
+#: src/fr-application.c:93
 msgid "Show version"
 msgstr "نمایش نسخه"
 
-#: src/fr-application.c:103
-msgid "Dump gobject introspection file"
-msgstr "تخلیهٔ پروندهٔ درون‌نگری gobject"
-
-#: src/fr-application.c:104
-msgid "input.txt,output.xml"
-msgstr "ورودی.txt,خروجی.xml"
-
-#: src/fr-application.c:330 src/fr-application.c:356 src/fr-application.c:654
+#: src/fr-application.c:318 src/fr-application.c:344 src/fr-application.c:630
 msgctxt "Window title"
 msgid "Extract archive"
 msgstr "استخراج بایگانی"
 
-#: src/fr-application.c:522
+#: src/fr-application.c:510
 msgid "— Create and modify an archive"
 msgstr "— ایجاد و تغییر یک بایگانی"
 
@@ -774,11 +771,6 @@ msgstr "فرمان یافت نشد."
 msgid "Test Result"
 msgstr "نتیجهٔ آزمایش"
 
-#: src/fr-window.c:4200 src/fr-window.c:8928 src/fr-window.c:8962
-#: src/fr-window.c:9242
-msgid "Could not perform the operation"
-msgstr "نمی‌توان عملیات را انجام داد"
-
 #: src/fr-window.c:4225
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
@@ -828,10 +820,10 @@ msgctxt "File"
 msgid "Name"
 msgstr "نام"
 
-#: src/fr-window.c:5791 src/ui/extract-dialog-options.ui:20
+#: src/fr-window.c:5791
 msgctxt "Action"
-msgid "Extract"
-msgstr "استخراج"
+msgid "_Extract"
+msgstr "ا_ستخراج"
 
 #: src/fr-window.c:5795
 msgctxt "Action"
@@ -1202,6 +1194,11 @@ msgstr "_پرونده‌ها:"
 msgid "example: *.txt; *.doc"
 msgstr "مثال: *.txt؛ *.doc"
 
+#: src/ui/extract-dialog-options.ui:20
+msgctxt "Action"
+msgid "Extract"
+msgstr "استخراج"
+
 #: src/ui/extract-dialog-options.ui:165
 msgid "_Keep directory structure"
 msgstr "_نگاه داشتن ساختار شاخه"
@@ -1457,6 +1454,12 @@ msgstr "تعداد پرونده‌ها:"
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "پرونده‌هایی را که مي‌خواهید _به‌روز کنید برگزینید:"
+
+#~ msgid "Dump gobject introspection file"
+#~ msgstr "تخلیهٔ پروندهٔ درون‌نگری gobject"
+
+#~ msgid "input.txt,output.xml"
+#~ msgstr "ورودی.txt,خروجی.xml"
 
 #~ msgid "Extract To..."
 #~ msgstr "استخراج در..."
