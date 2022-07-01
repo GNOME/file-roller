@@ -259,6 +259,7 @@ extract_cb_start_extracting (DialogData *data)
 
 	/* close the dialog. */
 
+	data->destination = NULL; /* do not free when destroying the dialog. */
 	gtk_widget_destroy (data->dialog);
 
 	/* extract ! */
@@ -273,6 +274,7 @@ extract_cb_start_extracting (DialogData *data)
 
 	_g_string_list_free (file_list);
 	g_free (base_dir);
+	g_object_unref (destination);
 }
 
 
