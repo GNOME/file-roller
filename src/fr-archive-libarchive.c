@@ -116,9 +116,9 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 
 	/* give priority to 7z* for 7z archives. */
 	if (strcmp (mime_type, "application/x-7z-compressed") == 0) {
-		if (_g_program_is_available ("7za", check_command)
-		    || _g_program_is_available ("7zr", check_command)
-		    || _g_program_is_available ("7z", check_command))
+		if (_g_program_is_available ("7za", TRUE)
+		    || _g_program_is_available ("7zr", TRUE)
+		    || _g_program_is_available ("7z", TRUE))
 		{
 			return capabilities;
 		}
@@ -126,7 +126,7 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 
 	/* give priority to 7za that supports CAB files better. */
 	if ((strcmp (mime_type, "application/vnd.ms-cab-compressed") == 0)
-	    && _g_program_is_available ("7za", check_command))
+	    && _g_program_is_available ("7za", TRUE))
 	{
 		return capabilities;
 	}
@@ -135,13 +135,13 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 	if ((strcmp (mime_type, "application/zip") == 0)
 	    || (strcmp (mime_type, "application/x-cbz") == 0))
 	{
-		if (_g_program_is_available ("7z", check_command)) {
+		if (_g_program_is_available ("7z", TRUE)) {
 			return capabilities;
 		}
-		if (!_g_program_is_available ("unzip", check_command)) {
+		if (!_g_program_is_available ("unzip", TRUE)) {
 			capabilities |= FR_ARCHIVE_CAN_READ;
 		}
-		if (!_g_program_is_available ("zip", check_command)) {
+		if (!_g_program_is_available ("zip", TRUE)) {
 			capabilities |= FR_ARCHIVE_CAN_WRITE;
 		}
 		return capabilities;
@@ -151,9 +151,9 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 	if ((strcmp (mime_type, "application/x-rar") == 0)
 	    || (strcmp (mime_type, "application/x-cbr") == 0))
 	{
-		if (_g_program_is_available ("rar", check_command)
-		    || _g_program_is_available ("unrar", check_command)
-		    || _g_program_is_available ("unar", check_command)) {
+		if (_g_program_is_available ("rar", TRUE)
+		    || _g_program_is_available ("unrar", TRUE)
+		    || _g_program_is_available ("unar", TRUE)) {
 			return capabilities;
 		}
 	}

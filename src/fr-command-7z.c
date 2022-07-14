@@ -615,8 +615,8 @@ fr_command_7z_get_capabilities (FrArchive  *archive,
 		    || _g_mime_type_matches (mime_type, "application/x-cbr"))
 		{
 			/* give priority to rar and unrar that supports RAR files better. */
-			if (!_g_program_is_available ("rar", check_command)
-			    && !_g_program_is_available ("unrar", check_command)
+			if (!_g_program_is_available ("rar", TRUE)
+			    && !_g_program_is_available ("unrar", TRUE)
 			    && (! check_command || g_file_test ("/usr/lib/p7zip/Codecs/Rar.so", G_FILE_TEST_EXISTS)))
 				capabilities |= FR_ARCHIVE_CAN_READ;
 		}
