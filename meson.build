@@ -38,6 +38,7 @@ libportal_gtk3_dep = dependency('libportal-gtk3', version: '>= 0.5', required: u
 gobject_introspection_dep = dependency('gobject-introspection-1.0', required: get_option('introspection'))
 
 libnautilus_extension_dep = dependency('libnautilus-extension', version : nautilus_version, required : get_option('nautilus-actions'))
+gtk4_dep = dependency('gtk4', required: libnautilus_extension_dep.found() and libnautilus_extension_dep.version().version_compare('>=43'))
 build_nautilus_actions = libnautilus_extension_dep.found()
 
 libjson_glib_dep = dependency('json-glib-1.0', version : json_glib_version, required : false)
