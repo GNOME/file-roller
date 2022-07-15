@@ -299,9 +299,9 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 
 static void
-nautilus_fr_menu_provider_iface_init (NautilusMenuProviderIface *iface)
+nautilus_fr_menu_provider_interface_init (NautilusMenuProviderInterface *interface)
 {
-	iface->get_file_items = nautilus_fr_get_file_items;
+	interface->get_file_items = nautilus_fr_get_file_items;
 }
 
 
@@ -343,8 +343,8 @@ nautilus_fr_register_type (GTypeModule *module)
 		(GInstanceInitFunc) nautilus_fr_instance_init,
 	};
 
-	static const GInterfaceInfo menu_provider_iface_info = {
-		(GInterfaceInitFunc) nautilus_fr_menu_provider_iface_init,
+	static const GInterfaceInfo menu_provider_interface_info = {
+		(GInterfaceInitFunc) nautilus_fr_menu_provider_interface_init,
 		NULL,
 		NULL
 	};
@@ -357,5 +357,5 @@ nautilus_fr_register_type (GTypeModule *module)
 	g_type_module_add_interface (module,
 				     fr_type,
 				     NAUTILUS_TYPE_MENU_PROVIDER,
-				     &menu_provider_iface_info);
+				     &menu_provider_interface_info);
 }
