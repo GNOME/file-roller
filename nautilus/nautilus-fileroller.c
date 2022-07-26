@@ -41,6 +41,8 @@ extract_to_callback (NautilusMenuItem *item,
 	NautilusFileInfo *file;
 	char             *uri, *default_dir;
 	GString          *cmd;
+	g_autofree char *quoted_uri = NULL;
+	g_autofree char *quoted_default_dir = NULL;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = files->data;
@@ -48,11 +50,14 @@ extract_to_callback (NautilusMenuItem *item,
 	uri = nautilus_file_info_get_uri (file);
 	default_dir = nautilus_file_info_get_parent_uri (file);
 
+	quoted_uri = g_shell_quote (uri);
+	quoted_default_dir = g_shell_quote (default_dir);
+
 	cmd = g_string_new ("file-roller");
 	g_string_append_printf (cmd,
 				" --default-dir=%s --extract %s",
-				g_shell_quote (default_dir),
-				g_shell_quote (uri));
+				quoted_default_dir,
+				quoted_uri);
 
 #ifdef DEBUG
 	g_print ("EXEC: %s\n", cmd->str);
@@ -71,27 +76,17 @@ extract_here_callback (NautilusMenuItem *item,
 		       gpointer          user_data)
 {
 	GList            *files, *scan;
-	NautilusFileInfo *file;
-	char             *dir;
 	GString          *cmd;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
-	file = files->data;
 
-	dir = nautilus_file_info_get_parent_uri (file);
-
-	cmd = g_string_new ("file-roller");
-	g_string_append_printf (cmd," --extract-here --notify");
-
-	g_free (dir);
+	cmd = g_string_new ("file-roller --extract-here --notify");
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
-		char             *uri;
-
-		uri = nautilus_file_info_get_uri (file);
-		g_string_append_printf (cmd, " %s", g_shell_quote (uri));
-		g_free (uri);
+		g_autofree char *uri = nautilus_file_info_get_uri (file);
+		g_autofree char *quoted_uri = g_shell_quote (uri);
+		g_string_append_printf (cmd, " %s", quoted_uri);
 	}
 
 	g_spawn_command_line_async (cmd->str, NULL);
