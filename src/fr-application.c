@@ -303,7 +303,7 @@ handle_method_call (GDBusConnection       *connection,
 
 		window = fr_window_new ();
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
-		if ((destination_uri != NULL) & (strcmp (destination_uri, "") != 0)) {
+		if ((destination_uri != NULL) && (strcmp (destination_uri, "") != 0)) {
 			GFile *file;
 
 			file = g_file_new_for_uri (destination_uri);
