@@ -23,8 +23,6 @@
 #include <string.h>
 #include "gtk-utils.h"
 
-#define LOAD_BUFFER_SIZE 65536
-
 
 GtkWidget *
 _gtk_message_dialog_new (GtkWindow      *parent,
@@ -326,98 +324,6 @@ _gtk_entry_get_locale_text (GtkEntry *entry)
 }
 
 
-void
-_gtk_label_set_locale_text (GtkLabel   *label,
-			    const char *text)
-{
-	char *utf8_text;
-
-	utf8_text = g_locale_to_utf8 (text, -1, NULL, NULL, NULL);
-	if (utf8_text != NULL) {
-		gtk_label_set_text (label, utf8_text);
-		g_free (utf8_text);
-	}
-	else
-		gtk_label_set_text (label, "");
-}
-
-
-char *
-_gtk_label_get_locale_text (GtkLabel *label)
-{
-	const char *utf8_text;
-	char       *text;
-
-	utf8_text = gtk_label_get_text (label);
-	if (utf8_text == NULL)
-		return NULL;
-
-	text = g_locale_from_utf8 (utf8_text, -1, NULL, NULL, NULL);
-
-	return text;
-}
-
-
-void
-_gtk_entry_set_filename_text (GtkEntry   *entry,
-			      const char *text)
-{
-	char *utf8_text;
-
-	utf8_text = g_filename_to_utf8 (text, -1, NULL, NULL, NULL);
-	if (utf8_text != NULL) {
-		gtk_entry_set_text (entry, utf8_text);
-		g_free (utf8_text);
-	}
-	else
-		gtk_entry_set_text (entry, "");
-}
-
-
-char *
-_gtk_entry_get_filename_text (GtkEntry   *entry)
-{
-	const char *utf8_text;
-	char       *text;
-
-	utf8_text = gtk_entry_get_text (entry);
-	if (utf8_text == NULL)
-		return NULL;
-
-	text = g_filename_from_utf8 (utf8_text, -1, NULL, NULL, NULL);
-
-	return text;
-}
-
-
-void
-_gtk_label_set_filename_text (GtkLabel   *label,
-			      const char *text)
-{
-	char *utf8_text;
-
-	utf8_text = g_filename_display_name (text);
-	gtk_label_set_text (label, utf8_text);
-	g_free (utf8_text);
-}
-
-
-char *
-_gtk_label_get_filename_text (GtkLabel   *label)
-{
-	const char *utf8_text;
-	char       *text;
-
-	utf8_text = gtk_label_get_text (label);
-	if (utf8_text == NULL)
-		return NULL;
-
-	text = g_filename_from_utf8 (utf8_text, -1, NULL, NULL, NULL);
-
-	return text;
-}
-
-
 GdkPixbuf *
 _g_icon_get_pixbuf (GIcon        *icon,
 		    int           icon_size,
@@ -442,28 +348,6 @@ _g_icon_get_pixbuf (GIcon        *icon,
 
 		g_object_unref (icon_info);
 	}
-
-	return pixbuf;
-}
-
-
-GdkPixbuf *
-_g_mime_type_get_icon (const char   *mime_type,
-		       int           icon_size,
-		       GtkIconTheme *icon_theme)
-{
-	GdkPixbuf *pixbuf = NULL;
-	GIcon     *icon;
-
-	if (icon_theme == NULL)
-		icon_theme = gtk_icon_theme_get_default ();
-
-	icon = g_content_type_get_icon (mime_type);
-	if (icon == NULL)
-		icon = g_themed_icon_new ("text-x-generic");
-	pixbuf = _g_icon_get_pixbuf (icon, icon_size, icon_theme);
-
-	g_object_unref (icon);
 
 	return pixbuf;
 }

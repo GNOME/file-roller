@@ -68,20 +68,8 @@ void          _gtk_dialog_add_to_window_group      (GtkDialog        *dialog);
 void          _gtk_entry_set_locale_text           (GtkEntry         *entry,
 					     	    const char       *text);
 char *        _gtk_entry_get_locale_text           (GtkEntry         *entry);
-void          _gtk_label_set_locale_text           (GtkLabel         *label,
-						    const char       *text);
-char *        _gtk_label_get_locale_text           (GtkLabel         *label);
-void          _gtk_entry_set_filename_text         (GtkEntry         *entry,
-						    const char       *text);
-char *        _gtk_entry_get_filename_text         (GtkEntry         *entry);
-void          _gtk_label_set_filename_text         (GtkLabel         *label,
-						    const char       *text);
-char *        _gtk_label_get_filename_text         (GtkLabel         *label);
 GdkPixbuf *   _g_icon_get_pixbuf                   (GIcon            *icon,
 						    int               size,
-						    GtkIconTheme     *icon_theme);
-GdkPixbuf *   _g_mime_type_get_icon                (const char       *mime_type,
-						    int               icon_size,
 						    GtkIconTheme     *icon_theme);
 void          _gtk_show_help_dialog                (GtkWindow        *parent,
 						    const char       *section);
