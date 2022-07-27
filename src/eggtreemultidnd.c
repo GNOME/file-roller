@@ -370,7 +370,7 @@ egg_tree_multi_drag_motion_event (GtkWidget      *widget,
 			  /* create a multi row drag icon */
 
 			  const int        icon_offset = DRAG_ICON_OFFSET;
-			  GdkRectangle     icon_extents;
+			  GdkRectangle     icon_extents = { };
 			  cairo_surface_t *multi_drag_icon;
 			  cairo_t         *cr;
 			  int              n_icons, i, offset;

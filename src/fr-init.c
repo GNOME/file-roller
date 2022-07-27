@@ -247,8 +247,8 @@ fr_registered_archive_new (GType command_type)
 	reg_com = g_new0 (FrRegisteredArchive, 1);
 	reg_com->ref = 1;
 	reg_com->type = command_type;
-	reg_com->caps = g_ptr_array_new ();
-	reg_com->packages = g_ptr_array_new ();
+	reg_com->caps = g_ptr_array_new_with_free_func (g_free);
+	reg_com->packages = g_ptr_array_new_with_free_func (g_free);
 
 	archive = (FrArchive*) g_object_new (reg_com->type, NULL);
 	mime_types = fr_archive_get_supported_types (archive);
@@ -290,7 +290,6 @@ fr_registered_archive_unref (FrRegisteredArchive *reg_com)
 	if (--(reg_com->ref) != 0)
 		return;
 
-	g_ptr_array_foreach (reg_com->caps, (GFunc) g_free, NULL);
 	g_ptr_array_free (reg_com->caps, TRUE);
 	g_free (reg_com);
 }

@@ -293,22 +293,22 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 
 static void
-nautilus_fr_menu_provider_interface_init (NautilusMenuProviderInterface *interface)
+nautilus_fr_menu_provider_interface_init (NautilusMenuProviderInterface *g_iface, gpointer iface_data)
 {
-	interface->get_file_items = nautilus_fr_get_file_items;
+	g_iface->get_file_items = nautilus_fr_get_file_items;
 }
 
 
 static void
-nautilus_fr_instance_init (NautilusFr *fr)
+nautilus_fr_instance_init (NautilusFr *fr, NautilusFrClass* g_class)
 {
 }
 
 
 static void
-nautilus_fr_class_init (NautilusFrClass *class)
+nautilus_fr_class_init (NautilusFrClass *g_class, gpointer class_data)
 {
-	parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (g_class);
 }
 
 

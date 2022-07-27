@@ -112,17 +112,13 @@ c_args = [ '-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38' ]
 if get_option('buildtype').contains('debug')
   test_args = [ 
     '-Wall', 
+    '-Wextra',
     '-Wcast-align', 
-    '-Wtype-limits', 
-    '-Wclobbered', 
-    '-Wempty-body', 
-    '-Wignored-qualifiers', 
     '-Wmissing-prototypes',
     '-Wnested-externs', 
     '-Wpointer-arith', 
-    '-Wsign-compare',
     '-Wformat-security',
-    '-Wmissing-field-initializers',
+    '-Wno-unused-parameter',
   ]
 else
   c_args += [ '-Wno-deprecated-declarations' ]
