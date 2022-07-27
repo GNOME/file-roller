@@ -10,7 +10,6 @@ build:
         - nix-build
 
 flatpak:
-    image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master'
     extends: '.flatpak'
     variables:
         MANIFEST_PATH: "flatpak/org.gnome.FileRoller.json"
