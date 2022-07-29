@@ -1,16 +1,9 @@
-# Copyright (C) 2022 The Abkhazian language development fund named after Bagrat Shinkuba
-# This file is distributed under the same license as the file-roller package.
-# Нанба Наала <naala-nanba@rambler.ru>, 2022.
-#
-
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
 "POT-Creation-Date: 2022-07-18 16:01+0000\n"
-"PO-Revision-Date: 2022-07-22 16:00+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
-"Language-Team: Abkhazian <LL@li.org>\n"
+"Language-Team: Abkhazian <ab@li.org>\n"
 "Language: ab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,7 +252,7 @@ msgstr ""
 
 #: src/dlg-ask-password.c:121
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #. Translators: %s is a filename
 #: src/dlg-ask-password.c:144
@@ -499,6 +492,7 @@ msgid "Decompressing archive"
 msgstr ""
 
 #: src/fr-command.c:597
+#, c-format
 msgid "Archive not found"
 msgstr "Архив ԥшааӡам"
 
@@ -668,7 +662,9 @@ msgstr ""
 msgid "_Show the Files"
 msgstr ""
 
-#: src/fr-window.c:2770+src/fr-window.c:6149
+#. Translators: %s is a filename
+#: src/fr-window.c:2770 src/fr-window.c:6149
+#, c-format
 msgid "“%s” created successfully"
 msgstr " Архив  «%s» лԥхала иаԥҵоуп"
 
@@ -929,6 +925,9 @@ msgstr ""
 msgid "_Paste"
 msgstr ""
 
+#. This is the time format used in the "Date Modified" column and
+#. * in the Properties dialog.  See the man page of strftime for an
+#. * explanation of the values.
 #: src/glib-utils.c:787
 msgid "%d %B %Y, %H:%M"
 msgstr "%-d %B %Y, %H∶%M"
@@ -1325,7 +1324,7 @@ msgstr ""
 
 #: src/ui/menus.ui:39 src/ui/menus.ui:75 src/ui/menus.ui:111
 msgid "Delete"
-msgstr ""
+msgstr "Delete"
 
 #: src/ui/new-archive-dialog.ui:27
 msgid "_Filename:"
@@ -1333,7 +1332,7 @@ msgstr ""
 
 #: src/ui/new-archive-dialog.ui:110
 msgid "Location"
-msgstr ""
+msgstr "Аҭыӡҭыԥ"
 
 #: src/ui/new-archive-dialog.ui:190
 msgid "_Encrypt the file list too"
@@ -1369,7 +1368,7 @@ msgstr ""
 #. after the colon there is a folder name.
 #: src/ui/properties.ui:45
 msgid "Location:"
-msgstr ""
+msgstr "Аҭыӡҭыԥ:"
 
 #. after the colon there is a file type.
 #: src/ui/properties.ui:74
@@ -1399,7 +1398,3 @@ msgstr ""
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr ""
-
-#: src/ui/help-overlay.ui:47
-msgid "Archive"
-msgstr "Архивтәра"
