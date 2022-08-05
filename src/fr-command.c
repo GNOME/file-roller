@@ -97,13 +97,13 @@ enum {
 };
 
 
-struct _FrCommandPrivate {
+typedef struct {
 	GFile     *local_copy;
 	gboolean   is_remote;
 	GFile     *temp_dir;
 	GFile     *temp_extraction_dir;
 	gboolean   remote_extraction;
-};
+} FrCommandPrivate;
 
 
 G_DEFINE_TYPE_WITH_PRIVATE (FrCommand, fr_command, FR_TYPE_ARCHIVE)
@@ -112,19 +112,21 @@ G_DEFINE_TYPE_WITH_PRIVATE (FrCommand, fr_command, FR_TYPE_ARCHIVE)
 static void
 _fr_command_remove_temp_work_dir (FrCommand *self)
 {
-	if (self->priv->temp_dir == NULL)
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
+	if (private->temp_dir == NULL)
 		return;
-	_g_file_remove_directory (self->priv->temp_dir, NULL, NULL);
-	_g_clear_object (&self->priv->temp_dir);
+	_g_file_remove_directory (private->temp_dir, NULL, NULL);
+	_g_clear_object (&private->temp_dir);
 }
 
 
 static GFile *
 _fr_command_get_temp_work_dir (FrCommand *self)
 {
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	_fr_command_remove_temp_work_dir (self);
-	self->priv->temp_dir = _g_file_get_temp_work_dir (NULL);
-	return self->priv->temp_dir;
+	private->temp_dir = _g_file_get_temp_work_dir (NULL);
+	return private->temp_dir;
 }
 
 
@@ -173,8 +175,9 @@ copy_archive_to_remote_location (FrArchive          *archive,
 	xfer_data->cancellable = _g_object_ref (cancellable);
 
 	fr_archive_action_started (archive, FR_ACTION_SAVING_REMOTE_ARCHIVE);
+	FrCommandPrivate *private = fr_command_get_instance_private (FR_COMMAND (xfer_data->archive));
 
-	g_copy_file_async (FR_COMMAND (xfer_data->archive)->priv->local_copy,
+	g_copy_file_async (private->local_copy,
 			   fr_archive_get_file (xfer_data->archive),
 			   G_FILE_COPY_OVERWRITE,
 			   G_PRIORITY_DEFAULT,
@@ -195,12 +198,13 @@ copy_extracted_files_done (GError   *error,
 {
 	XferData  *xfer_data = user_data;
 	FrCommand *self = FR_COMMAND (xfer_data->archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 
 	if (error != NULL)
 		g_simple_async_result_set_from_error (xfer_data->result, error);
 
-	_g_file_remove_directory (self->priv->temp_extraction_dir, NULL, NULL);
-	_g_clear_object (&self->priv->temp_extraction_dir);
+	_g_file_remove_directory (private->temp_extraction_dir, NULL, NULL);
+	_g_clear_object (&private->temp_extraction_dir);
 
 	g_simple_async_result_complete_in_idle (xfer_data->result);
 
@@ -229,6 +233,7 @@ copy_extracted_files_to_destination (FrArchive          *archive,
 				     GCancellable       *cancellable)
 {
 	FrCommand *self = FR_COMMAND (archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	XferData  *xfer_data;
 
 	xfer_data = g_new0 (XferData, 1);
@@ -238,7 +243,7 @@ copy_extracted_files_to_destination (FrArchive          *archive,
 
 	fr_archive_action_started (archive, FR_ACTION_COPYING_FILES_TO_REMOTE);
 
-	g_directory_copy_async (self->priv->temp_extraction_dir,
+	g_directory_copy_async (private->temp_extraction_dir,
 				fr_archive_get_last_extraction_destination (archive),
 				G_FILE_COPY_OVERWRITE,
 				G_PRIORITY_DEFAULT,
@@ -531,10 +536,11 @@ fr_command_finalize (GObject *object)
 	g_return_if_fail (FR_IS_COMMAND (object));
 
 	self = FR_COMMAND (object);
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 
 	_g_object_unref (self->process);
 	_fr_command_remove_temp_work_dir (self);
-	_g_clear_object (&self->priv->temp_extraction_dir);
+	_g_clear_object (&private->temp_extraction_dir);
 
 	if (G_OBJECT_CLASS (fr_command_parent_class)->finalize)
 		G_OBJECT_CLASS (fr_command_parent_class)->finalize (object);
@@ -580,6 +586,7 @@ fr_command_open (FrArchive           *archive,
 		 gpointer             user_data)
 {
 	FrCommand *command = FR_COMMAND (archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (command);
 	XferData  *xfer_data;
 
 	xfer_data = g_new0 (XferData, 1);
@@ -590,7 +597,7 @@ fr_command_open (FrArchive           *archive,
 						       user_data,
 						       fr_archive_open);
 
-	if (! command->priv->is_remote) {
+	if (! private->is_remote) {
 		GError *error = NULL;
 
 		if (! g_file_query_exists (fr_archive_get_file (archive), cancellable)) {
@@ -607,7 +614,7 @@ fr_command_open (FrArchive           *archive,
 
 	fr_archive_action_started (archive, FR_ACTION_LOADING_ARCHIVE);
 	g_copy_file_async (fr_archive_get_file (archive),
-			   command->priv->local_copy,
+			   private->local_copy,
 			   G_FILE_COPY_OVERWRITE,
 			   G_PRIORITY_DEFAULT,
 			   xfer_data->cancellable,
@@ -672,6 +679,7 @@ fr_command_list (FrArchive           *archive,
 		 gpointer             user_data)
 {
 	FrCommand *command = FR_COMMAND (archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (command);
 	XferData  *xfer_data;
 
 	xfer_data = g_new0 (XferData, 1);
@@ -688,7 +696,7 @@ fr_command_list (FrArchive           *archive,
 	fr_process_use_standard_locale (command->process, TRUE);
 	archive->multi_volume = FALSE;
         g_object_set (archive,
-                      "filename", command->priv->local_copy,
+                      "filename", private->local_copy,
                       "password", password,
                       NULL);
 
@@ -908,6 +916,7 @@ _fr_command_add (FrCommand      *self,
 		 GCancellable   *cancellable,
 		 GError        **error)
 {
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	FrArchive *archive = FR_ARCHIVE (self);
 	GList     *new_file_list = NULL;
 	gboolean   base_dir_created = FALSE;
@@ -924,7 +933,7 @@ _fr_command_add (FrCommand      *self,
 		return FALSE;
 
 	g_object_set (self,
-		      "filename", self->priv->local_copy,
+		      "filename", private->local_copy,
 		      "password", password,
 		      "encrypt-header", encrypt_header,
 		      "compression", compression,
@@ -981,7 +990,7 @@ _fr_command_add (FrCommand      *self,
 		return FALSE;
 	}
 
-	self->creating_archive = ! g_file_query_exists (self->priv->local_copy, cancellable);
+	self->creating_archive = ! g_file_query_exists (private->local_copy, cancellable);
 
 	/* create the new archive in a temporary sub-directory, this allows
 	 * to cancel the operation without losing the original archive and
@@ -997,10 +1006,10 @@ _fr_command_add (FrCommand      *self,
 		/* create the new archive in a sub-folder of the original
 		 * archive this way the 'mv' command is fast. */
 
-		local_copy_parent = g_file_get_parent (self->priv->local_copy);
+		local_copy_parent = g_file_get_parent (private->local_copy);
 		archive_dir = g_file_get_path (local_copy_parent);
 		tmp_archive_dir = _g_path_get_temp_work_dir (archive_dir);
-		archive_filename = g_file_get_path (self->priv->local_copy);
+		archive_filename = g_file_get_path (private->local_copy);
 		tmp_archive_filename = g_build_filename (tmp_archive_dir,
 							 _g_path_get_basename (archive_filename),
 							 NULL);
@@ -1236,13 +1245,14 @@ _fr_command_add_local_files (FrCommand           *self,
 			     GCancellable        *cancellable,
 			     GSimpleAsyncResult  *command_result)
 {
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	GList    *relative_file_list;
 	XferData *xfer_data;
 	GError   *error = NULL;
 
 	relative_file_list = get_relative_path_list (file_list, base_dir);
 
-	g_object_set (self, "filename", self->priv->local_copy, NULL);
+	g_object_set (self, "filename", private->local_copy, NULL);
 	fr_process_clear (self->process);
 	if (! _fr_command_add (self,
 			       relative_file_list,
@@ -1628,14 +1638,15 @@ _fr_command_remove (FrCommand     *self,
 		GFile *local_copy_parent;
 		char  *archive_dir;
 		GFile *tmp_file;
+		FrCommandPrivate *private = fr_command_get_instance_private (self);
 
 		/* create the new archive in a sub-folder of the original
 		 * archive this way the 'mv' command is fast. */
 
-		local_copy_parent = g_file_get_parent (self->priv->local_copy);
+		local_copy_parent = g_file_get_parent (private->local_copy);
 		archive_dir = g_file_get_path (local_copy_parent);
 		tmp_archive_dir = _g_path_get_temp_work_dir (archive_dir);
-		archive_filename = g_file_get_path (self->priv->local_copy);
+		archive_filename = g_file_get_path (private->local_copy);
 		tmp_archive_filename = g_build_filename (tmp_archive_dir, _g_path_get_basename (archive_filename), NULL);
 		tmp_file = g_file_new_for_path (tmp_archive_filename);
 		g_object_set (self, "filename", tmp_file, NULL);
@@ -1679,9 +1690,10 @@ _fr_command_remove (FrCommand     *self,
 	fr_process_add_arg (self->process, tmp_archive_dir);
 	fr_process_end_command (self->process);
 
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	/* _fr_command_remove can change the filename, reset its value */
 	g_object_set (archive,
-		      "filename", self->priv->local_copy,
+	              "filename", private->local_copy,
 		      NULL);
 
 	g_free (tmp_archive_filename);
@@ -1699,6 +1711,7 @@ fr_command_remove_files (FrArchive           *archive,
 		  	 gpointer             user_data)
 {
 	FrCommand *self = FR_COMMAND (archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	XferData  *xfer_data;
 
 	xfer_data = g_new0 (XferData, 1);
@@ -1709,7 +1722,7 @@ fr_command_remove_files (FrArchive           *archive,
 						       user_data,
 						       fr_archive_remove);
 
-	g_object_set (self, "filename", self->priv->local_copy, NULL);
+	g_object_set (self, "filename", private->local_copy, NULL);
 	fr_process_clear (self->process);
 	_fr_command_remove (self, file_list, compression);
 
@@ -2069,6 +2082,7 @@ _fr_command_extract (FrCommand  *self,
 		     gboolean    junk_paths,
 		     const char *password)
 {
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	FrArchive *archive = FR_ARCHIVE (self);
 	GList     *filtered;
 	GList     *scan;
@@ -2081,7 +2095,7 @@ _fr_command_extract (FrCommand  *self,
 	g_return_if_fail (archive != NULL);
 
 	fr_archive_set_stoppable (archive, TRUE);
-	g_object_set (self, "filename", self->priv->local_copy, NULL);
+	g_object_set (self, "filename", private->local_copy, NULL);
 
 	/* if a command supports all the requested options use
 	 * fr_command_extract_files directly. */
@@ -2276,13 +2290,14 @@ process_ready_for_extract_to_local_cb (GObject      *source_object,
 	XferData  *xfer_data = user_data;
 	GError    *error = NULL;
 	FrCommand *self = FR_COMMAND (xfer_data->archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 
 	if (! fr_command_handle_process_error (FR_COMMAND (xfer_data->archive), result, &error))
 		/* command restarted */
 		return;
 
 	if (error == NULL) {
-		if (self->priv->remote_extraction) {
+		if (private->remote_extraction) {
 			copy_extracted_files_to_destination (xfer_data->archive,
 							     xfer_data->result,
 							     xfer_data->cancellable);
@@ -2296,9 +2311,9 @@ process_ready_for_extract_to_local_cb (GObject      *source_object,
 		/* if an error occurred during extraction remove the
 		 * temp extraction dir, if used. */
 
-		if ((self->priv->remote_extraction) && (self->priv->temp_extraction_dir != NULL)) {
-			_g_file_remove_directory (self->priv->temp_extraction_dir, NULL, NULL);
-			_g_clear_object (&self->priv->temp_extraction_dir);
+		if ((private->remote_extraction) && (private->temp_extraction_dir != NULL)) {
+			_g_file_remove_directory (private->temp_extraction_dir, NULL, NULL);
+			_g_clear_object (&private->temp_extraction_dir);
 		}
 	}
 
@@ -2362,15 +2377,16 @@ fr_command_extract_files (FrArchive           *base,
 			  gpointer             user_data)
 {
 	FrCommand *self = FR_COMMAND (base);
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 
-	_g_clear_object (&self->priv->temp_extraction_dir);
+	_g_clear_object (&private->temp_extraction_dir);
 
-	self->priv->remote_extraction = ! _g_file_is_local (destination);
-	if (self->priv->remote_extraction) {
-		self->priv->temp_extraction_dir = _g_file_get_temp_work_dir (NULL);
+	private->remote_extraction = ! _g_file_is_local (destination);
+	if (private->remote_extraction) {
+		private->temp_extraction_dir = _g_file_get_temp_work_dir (NULL);
 		_fr_command_extract_to_local (self,
 					     file_list,
-					     self->priv->temp_extraction_dir,
+		                             private->temp_extraction_dir,
 					     base_dir,
 					     skip_older,
 					     overwrite,
@@ -2424,11 +2440,12 @@ fr_command_test_integrity (FrArchive           *archive,
 			   gpointer             user_data)
 {
 	FrCommand *self = FR_COMMAND (archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	XferData  *xfer_data;
 
 	fr_archive_set_stoppable (archive, TRUE);
 	g_object_set (archive,
-		      "filename", self->priv->local_copy,
+	              "filename", private->local_copy,
 		      "password", password,
 		      NULL);
 	fr_archive_progress_set_total_files (archive, 0);
@@ -2500,6 +2517,7 @@ fr_command_rename (FrArchive           *archive,
 		   gpointer             user_data)
 {
 	FrCommand *self = FR_COMMAND (archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	GFile     *tmp_dir;
 	char      *new_dirname;
 	GList     *new_file_list;
@@ -2509,7 +2527,7 @@ fr_command_rename (FrArchive           *archive,
 
 	fr_archive_set_stoppable (archive, TRUE);
 	g_object_set (archive,
-		      "filename", self->priv->local_copy,
+	              "filename", private->local_copy,
 		      NULL);
 
 	tmp_dir = _g_file_get_temp_work_dir (NULL);
@@ -2796,15 +2814,16 @@ fr_command_add_dropped_files (FrArchive           *archive,
 		   	      gpointer             user_data)
 {
 	FrCommand *command = FR_COMMAND (archive);
+	FrCommandPrivate *private = fr_command_get_instance_private (command);
 	GList     *scan;
 	XferData  *xfer_data;
 
 	/* FIXME: doesn't work with remote files */
 
 	fr_archive_set_stoppable (FR_ARCHIVE (command), TRUE);
-	command->creating_archive = ! g_file_query_exists (command->priv->local_copy, cancellable);
+	command->creating_archive = ! g_file_query_exists (private->local_copy, cancellable);
 	g_object_set (command,
-		      "filename", command->priv->local_copy,
+	              "filename", private->local_copy,
 		      "password", password,
 		      "encrypt-header", encrypt_header,
 		      "compression", compression,
@@ -3017,25 +3036,26 @@ archive_file_changed_cb (GObject    *object,
 			 gpointer    user_data)
 {
 	FrCommand *self = user_data;
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	GFile     *file;
 
 	/* we cannot change the local copy if the archive is a multi-volume and
 	 * stored on a remote location, to do that we should copy all the
 	 * remote parts to a local temporary directory. */
-	if (FR_ARCHIVE (self)->multi_volume && self->priv->is_remote)
+	if (FR_ARCHIVE (self)->multi_volume && private->is_remote)
 		return;
 
-	if ((self->priv->local_copy != NULL) && self->priv->is_remote) {
+	if ((private->local_copy != NULL) && private->is_remote) {
 		GFile  *temp_folder;
 		GError *err = NULL;
 
-		g_file_delete (self->priv->local_copy, NULL, &err);
+		g_file_delete (private->local_copy, NULL, &err);
 		if (err != NULL) {
 			g_warning ("Failed to delete the local copy: %s", err->message);
 			g_clear_error (&err);
 		}
 
-		temp_folder = g_file_get_parent (self->priv->local_copy);
+		temp_folder = g_file_get_parent (private->local_copy);
 		g_file_delete (temp_folder, NULL, &err);
 		if (err != NULL) {
 			g_warning ("Failed to delete temp folder: %s", err->message);
@@ -3045,34 +3065,33 @@ archive_file_changed_cb (GObject    *object,
 		g_object_unref (temp_folder);
 	}
 
-	if (self->priv->local_copy != NULL) {
-		g_object_unref (self->priv->local_copy);
-		self->priv->local_copy = NULL;
+	if (private->local_copy != NULL) {
+		g_object_unref (private->local_copy);
+		private->local_copy = NULL;
 	}
 
 	file = fr_archive_get_file (FR_ARCHIVE (object));
-	self->priv->is_remote = ! g_file_has_uri_scheme (file, "file");
-	if (self->priv->is_remote)
-		self->priv->local_copy = get_local_copy_for_file (file);
+	private->is_remote = ! g_file_has_uri_scheme (file, "file");
+	if (private->is_remote)
+		private->local_copy = get_local_copy_for_file (file);
 	else
-		self->priv->local_copy = g_file_dup (file);
+		private->local_copy = g_file_dup (file);
 
-	_fr_command_set_filename_from_file (self, self->priv->local_copy);
+	_fr_command_set_filename_from_file (self, private->local_copy);
 }
 
 
 static void
 fr_command_init (FrCommand *self)
 {
+	FrCommandPrivate *private = fr_command_get_instance_private (self);
 	FrProcess *process;
 
-	self->priv = fr_command_get_instance_private (self);
-
-	self->priv->local_copy = NULL;
-	self->priv->is_remote = FALSE;
-	self->priv->temp_dir = NULL;
-	self->priv->temp_extraction_dir = NULL;
-	self->priv->remote_extraction = FALSE;
+	private->local_copy = NULL;
+	private->is_remote = FALSE;
+	private->temp_dir = NULL;
+	private->temp_extraction_dir = NULL;
+	private->remote_extraction = FALSE;
 
 	self->filename = NULL;
 	self->e_filename = NULL;
