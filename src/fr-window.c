@@ -211,10 +211,6 @@ fr_clipboard_data_set_password (FrClipboardData *clipboard_data,
 
 /**/
 
-
-G_DEFINE_TYPE (FrWindow, fr_window, GTK_TYPE_APPLICATION_WINDOW)
-
-
 enum {
 	ARCHIVE_LOADED,
 	PROGRESS,
@@ -376,6 +372,9 @@ struct _FrWindowPrivate {
 	GFile            *last_extraction_destination;
 	GList            *last_extraction_files_first_level; /* GFile list */
 };
+
+
+G_DEFINE_TYPE_WITH_PRIVATE (FrWindow, fr_window, GTK_TYPE_APPLICATION_WINDOW)
 
 
 /* -- fr_window_free_private_data -- */
@@ -658,7 +657,6 @@ fr_window_finalize (GObject *object)
 
 	if (window->priv != NULL) {
 		fr_window_free_private_data (window);
-		g_free (window->priv);
 		window->priv = NULL;
 	}
 
@@ -885,7 +883,7 @@ fr_window_class_init (FrWindowClass *klass)
 static void
 fr_window_init (FrWindow *window)
 {
-	window->priv = g_new0 (FrWindowPrivate, 1);
+	window->priv = fr_window_get_instance_private (window);
 	window->priv->update_dropped_files = FALSE;
 	window->priv->dnd_extract_is_running = FALSE;
 	window->priv->dnd_extract_finished_with_error = FALSE;
