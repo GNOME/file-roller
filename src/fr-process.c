@@ -261,7 +261,7 @@ struct _FrProcessPrivate {
 	ExecuteData *exec_data;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (FrProcess, fr_process, G_TYPE_OBJECT)
+G_DEFINE_FINAL_TYPE_WITH_PRIVATE (FrProcess, fr_process, G_TYPE_OBJECT)
 
 
 static void
@@ -293,13 +293,14 @@ fr_process_class_init (FrProcessClass *klass)
 	fr_process_parent_class = g_type_class_peek_parent (klass);
 
 	fr_process_signals[STICKY_ONLY] =
-		g_signal_new ("sticky_only",
-			      G_TYPE_FROM_CLASS (klass),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrProcessClass, sticky_only),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);
+		g_signal_newv ("sticky_only",
+		               G_TYPE_FROM_CLASS (klass),
+		               G_SIGNAL_RUN_LAST,
+		               /* class_closure = */ NULL,
+		               NULL, NULL,
+		               g_cclosure_marshal_VOID__VOID,
+		               G_TYPE_NONE, 0,
+		               NULL);
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_process_finalize;

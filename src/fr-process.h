@@ -28,16 +28,9 @@
 #include "fr-error.h"
 #include "typedefs.h"
 
-#define FR_TYPE_PROCESS            (fr_process_get_type ())
-#define FR_PROCESS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_PROCESS, FrProcess))
-#define FR_PROCESS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_PROCESS, FrProcessClass))
-#define FR_IS_PROCESS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_PROCESS))
-#define FR_IS_PROCESS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_PROCESS))
-#define FR_PROCESS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_PROCESS, FrProcessClass))
-
-typedef struct _FrProcess        FrProcess;
-typedef struct _FrProcessClass   FrProcessClass;
 typedef struct _FrProcessPrivate FrProcessPrivate;
+#define FR_TYPE_PROCESS (fr_process_get_type ())
+G_DECLARE_FINAL_TYPE (FrProcess, fr_process, FR, PROCESS, GObject)
 
 typedef void     (*ProcFunc)     (gpointer data);
 typedef gboolean (*ContinueFunc) (FrError **error, gpointer data);
@@ -62,15 +55,6 @@ struct _FrProcess {
 	FrProcessPrivate *priv;
 };
 
-struct _FrProcessClass {
-	GObjectClass __parent_class;
-
-	/* -- Signals -- */
-
-	void (* sticky_only) (FrProcess *fr_proc);
-};
-
-GType       fr_process_get_type             (void);
 FrProcess * fr_process_new                  (void);
 void        fr_process_clear                (FrProcess            *fr_proc);
 void        fr_process_begin_command        (FrProcess            *fr_proc,
