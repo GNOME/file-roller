@@ -65,6 +65,8 @@ typedef struct _FrArchive         FrArchive;
 typedef struct _FrArchiveClass    FrArchiveClass;
 typedef struct _FrArchivePrivate  FrArchivePrivate;
 
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (FrArchive, g_object_unref)
+
 typedef gboolean (*FakeLoadFunc) (FrArchive *archive, gpointer data);
 
 struct _FrArchive {
