@@ -48,7 +48,7 @@ struct _FrArchiveLibarchivePrivate {
 };
 
 
-G_DEFINE_TYPE_WITH_PRIVATE (FrArchiveLibarchive, fr_archive_libarchive, FR_TYPE_ARCHIVE)
+G_DEFINE_FINAL_TYPE_WITH_PRIVATE (FrArchiveLibarchive, fr_archive_libarchive, FR_TYPE_ARCHIVE)
 
 
 static void
