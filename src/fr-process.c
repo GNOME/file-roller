@@ -241,7 +241,7 @@ static const char *try_charsets[] = { "UTF-8", "ISO-8859-1", "WINDOWS-1252" };
 static int         n_charsets = G_N_ELEMENTS (try_charsets);
 
 
-struct _FrProcessPrivate {
+typedef struct {
 	GPtrArray   *comm;                /* FrCommandInfo elements. */
 	gint         n_comm;              /* total number of commands */
 	gint         current_comm;        /* currently editing command. */
@@ -259,7 +259,7 @@ struct _FrProcessPrivate {
 	int          current_charset;
 
 	ExecuteData *exec_data;
-};
+} FrProcessPrivate;
 
 G_DEFINE_FINAL_TYPE_WITH_PRIVATE (FrProcess, fr_process, G_TYPE_OBJECT)
 
@@ -274,9 +274,11 @@ fr_process_finalize (GObject *object)
 
 	process = FR_PROCESS (object);
 
-	execute_data_free (process->priv->exec_data);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+
+	execute_data_free (private->exec_data);
 	fr_process_clear (process);
-	g_ptr_array_free (process->priv->comm, FALSE);
+	g_ptr_array_free (private->comm, FALSE);
 	fr_channel_data_free (&process->out);
 	fr_channel_data_free (&process->err);
 
@@ -310,24 +312,24 @@ fr_process_class_init (FrProcessClass *klass)
 static void
 fr_process_init (FrProcess *process)
 {
-	process->priv = fr_process_get_instance_private (process);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
-	process->priv->comm = g_ptr_array_new ();
-	process->priv->n_comm = -1;
-	process->priv->current_comm = -1;
+	private->comm = g_ptr_array_new ();
+	private->n_comm = -1;
+	private->current_comm = -1;
 
-	process->priv->command_pid = 0;
+	private->command_pid = 0;
 	fr_channel_data_init (&process->out);
 	fr_channel_data_init (&process->err);
 
-	process->priv->check_timeout = 0;
-	process->priv->running = FALSE;
-	process->priv->stopping = FALSE;
+	private->check_timeout = 0;
+	private->running = FALSE;
+	private->stopping = FALSE;
 	process->restart = FALSE;
 
-	process->priv->current_charset = -1;
-	process->priv->use_standard_locale = FALSE;
-	process->priv->exec_data = NULL;
+	private->current_charset = -1;
+	private->use_standard_locale = FALSE;
+	private->exec_data = NULL;
 }
 
 
@@ -341,23 +343,25 @@ fr_process_new (void)
 void
 fr_process_clear (FrProcess *process)
 {
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+
 	gint i;
 
 	g_return_if_fail (process != NULL);
 
-	for (i = 0; i <= process->priv->n_comm; i++) {
+	for (i = 0; i <= private->n_comm; i++) {
 		FrCommandInfo *info;
 
-		info = g_ptr_array_index (process->priv->comm, i);
+		info = g_ptr_array_index (private->comm, i);
 		fr_command_info_free (info);
-		g_ptr_array_index (process->priv->comm, i) = NULL;
+		g_ptr_array_index (private->comm, i) = NULL;
 	}
 
-	for (i = 0; i <= process->priv->n_comm; i++)
-		g_ptr_array_remove_index_fast (process->priv->comm, 0);
+	for (i = 0; i <= private->n_comm; i++)
+		g_ptr_array_remove_index_fast (private->comm, 0);
 
-	process->priv->n_comm = -1;
-	process->priv->current_comm = -1;
+	private->n_comm = -1;
+	private->current_comm = -1;
 }
 
 
@@ -369,13 +373,15 @@ fr_process_begin_command (FrProcess  *process,
 
 	g_return_if_fail (process != NULL);
 
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+
 	info = fr_command_info_new ();
 	info->args = g_list_prepend (NULL, g_strdup (arg));
 
-	g_ptr_array_add (process->priv->comm, info);
+	g_ptr_array_add (private->comm, info);
 
-	process->priv->n_comm++;
-	process->priv->current_comm = process->priv->n_comm;
+	private->n_comm++;
+	private->current_comm = private->n_comm;
 }
 
 
@@ -387,11 +393,12 @@ fr_process_begin_command_at (FrProcess  *process,
 	FrCommandInfo *info, *old_c_info;
 
 	g_return_if_fail (process != NULL);
-	g_return_if_fail (index >= 0 && index <= process->priv->n_comm);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	g_return_if_fail (index >= 0 && index <= private->n_comm);
 
-	process->priv->current_comm = index;
+	private->current_comm = index;
 
-	old_c_info = g_ptr_array_index (process->priv->comm, index);
+	old_c_info = g_ptr_array_index (private->comm, index);
 
 	if (old_c_info != NULL)
 		fr_command_info_free (old_c_info);
@@ -399,7 +406,7 @@ fr_process_begin_command_at (FrProcess  *process,
 	info = fr_command_info_new ();
 	info->args = g_list_prepend (NULL, g_strdup (arg));
 
-	g_ptr_array_index (process->priv->comm, index) = info;
+	g_ptr_array_index (private->comm, index) = info;
 }
 
 
@@ -410,9 +417,10 @@ fr_process_set_working_dir (FrProcess  *process,
 	FrCommandInfo *info;
 
 	g_return_if_fail (process != NULL);
-	g_return_if_fail (process->priv->current_comm >= 0);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	g_return_if_fail (private->current_comm >= 0);
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info = g_ptr_array_index (private->comm, private->current_comm);
 	if (info->dir != NULL)
 		g_free (info->dir);
 	info->dir = g_strdup (dir);
@@ -438,9 +446,10 @@ fr_process_set_sticky (FrProcess *process,
 	FrCommandInfo *info;
 
 	g_return_if_fail (process != NULL);
-	g_return_if_fail (process->priv->current_comm >= 0);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	g_return_if_fail (private->current_comm >= 0);
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info = g_ptr_array_index (private->comm, private->current_comm);
 	info->sticky = sticky;
 }
 
@@ -452,9 +461,10 @@ fr_process_set_ignore_error (FrProcess *process,
 	FrCommandInfo *info;
 
 	g_return_if_fail (process != NULL);
-	g_return_if_fail (process->priv->current_comm >= 0);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	g_return_if_fail (private->current_comm >= 0);
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info = g_ptr_array_index (private->comm, private->current_comm);
 	info->ignore_error = ignore_error;
 }
 
@@ -466,9 +476,10 @@ fr_process_add_arg (FrProcess  *process,
 	FrCommandInfo *info;
 
 	g_return_if_fail (process != NULL);
-	g_return_if_fail (process->priv->current_comm >= 0);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	g_return_if_fail (private->current_comm >= 0);
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info = g_ptr_array_index (private->comm, private->current_comm);
 	info->args = g_list_prepend (info->args, g_strdup (arg));
 }
 
@@ -532,11 +543,12 @@ fr_process_set_arg_at (FrProcess  *process,
 		       const char *arg_value)
 {
 	FrCommandInfo *info;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 	GList         *arg;
 
 	g_return_if_fail (process != NULL);
 
-	info = g_ptr_array_index (process->priv->comm, n_comm);
+	info = g_ptr_array_index (private->comm, n_comm);
 	arg = g_list_nth (info->args, n_arg);
 	g_return_if_fail (arg != NULL);
 
@@ -553,8 +565,9 @@ fr_process_set_begin_func (FrProcess    *process,
 	FrCommandInfo *info;
 
 	g_return_if_fail (process != NULL);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info = g_ptr_array_index (private->comm, private->current_comm);
 	info->begin_func = func;
 	info->begin_data = func_data;
 }
@@ -569,7 +582,8 @@ fr_process_set_end_func (FrProcess    *process,
 
 	g_return_if_fail (process != NULL);
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	info = g_ptr_array_index (private->comm, private->current_comm);
 	info->end_func = func;
 	info->end_data = func_data;
 }
@@ -584,10 +598,11 @@ fr_process_set_continue_func (FrProcess    *process,
 
 	g_return_if_fail (process != NULL);
 
-	if (process->priv->current_comm < 0)
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	if (private->current_comm < 0)
 		return;
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info = g_ptr_array_index (private->comm, private->current_comm);
 	info->continue_func = func;
 	info->continue_data = func_data;
 }
@@ -600,7 +615,8 @@ fr_process_end_command (FrProcess *process)
 
 	g_return_if_fail (process != NULL);
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	info = g_ptr_array_index (private->comm, private->current_comm);
 	info->args = g_list_reverse (info->args);
 }
 
@@ -610,7 +626,8 @@ fr_process_use_standard_locale (FrProcess *process,
 				gboolean   use_stand_locale)
 {
 	g_return_if_fail (process != NULL);
-	process->priv->use_standard_locale = use_stand_locale;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	private->use_standard_locale = use_stand_locale;
 }
 
 
@@ -646,8 +663,9 @@ command_is_sticky (FrProcess *process,
 		   int        i)
 {
 	FrCommandInfo *info;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
-	info = g_ptr_array_index (process->priv->comm, i);
+	info = g_ptr_array_index (private->comm, i);
 	return info->sticky;
 }
 
@@ -656,19 +674,20 @@ static void
 allow_sticky_processes_only (ExecuteData *exec_data)
 {
 	FrProcess *process = exec_data->process;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
-	if (! process->priv->sticky_only) {
+	if (! private->sticky_only) {
 		/* Remember the first error. */
 
-		exec_data->error_command = process->priv->current_command;
+		exec_data->error_command = private->current_command;
 		exec_data->first_error = fr_error_copy (exec_data->error);
 		exec_data->first_error_stdout = g_list_reverse (_g_string_list_dup (process->out.raw));
 		exec_data->first_error_stderr = g_list_reverse (_g_string_list_dup (process->err.raw));
 	}
 
-	process->priv->sticky_only = TRUE;
+	private->sticky_only = TRUE;
 
-	if (! process->priv->stopping)
+	if (! private->stopping)
 		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[STICKY_ONLY],
 			       0);
@@ -681,33 +700,34 @@ execute_cancelled_cb (GCancellable *cancellable,
 {
 	ExecuteData *exec_data = user_data;
 	FrProcess   *process = exec_data->process;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
-	if (! process->priv->running)
+	if (! private->running)
 		return;
 
-	if (process->priv->stopping)
+	if (private->stopping)
 		return;
 
-	process->priv->stopping = TRUE;
+	private->stopping = TRUE;
 	exec_data->error = fr_error_new (FR_ERROR_STOPPED, 0, NULL);
 
-	if (command_is_sticky (process, process->priv->current_command))
+	if (command_is_sticky (process, private->current_command))
 		allow_sticky_processes_only (exec_data);
 
-	else if (process->priv->command_pid > 0)
-		killpg (process->priv->command_pid, SIGTERM);
+	else if (private->command_pid > 0)
+		killpg (private->command_pid, SIGTERM);
 
 	else {
-		if (process->priv->check_timeout != 0) {
-			g_source_remove (process->priv->check_timeout);
-			process->priv->check_timeout = 0;
+		if (private->check_timeout != 0) {
+			g_source_remove (private->check_timeout);
+			private->check_timeout = 0;
 		}
 
-		process->priv->command_pid = 0;
+		private->command_pid = 0;
 		fr_channel_data_close_source (&process->out);
 		fr_channel_data_close_source (&process->err);
 
-		process->priv->running = FALSE;
+		private->running = FALSE;
 
 		if (exec_data->cancel_id != 0) {
 			g_signal_handler_disconnect (exec_data->cancellable, exec_data->cancel_id);
@@ -736,8 +756,9 @@ static void
 child_setup (gpointer user_data)
 {
 	FrProcess *process = user_data;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
-	if (process->priv->use_standard_locale)
+	if (private->use_standard_locale)
 		putenv ("LC_MESSAGES=C");
 
 	/* detach from the tty */
@@ -755,9 +776,10 @@ static const char *
 _fr_process_get_charset (FrProcess *process)
 {
 	const char *charset = NULL;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
-	if (process->priv->current_charset >= 0)
-		charset = try_charsets[process->priv->current_charset];
+	if (private->current_charset >= 0)
+		charset = try_charsets[private->current_charset];
 	else if (g_get_charset (&charset))
 		charset = NULL;
 
@@ -781,17 +803,18 @@ check_child (gpointer data)
 {
 	ExecuteData   *exec_data = data;
 	FrProcess     *process = exec_data->process;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 	FrCommandInfo *info;
 	pid_t          pid;
 	int            status;
 	gboolean       continue_process;
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_command);
+	info = g_ptr_array_index (private->comm, private->current_command);
 
 	/* Remove check. */
 
-	g_source_remove (process->priv->check_timeout);
-	process->priv->check_timeout = 0;
+	g_source_remove (private->check_timeout);
+	private->check_timeout = 0;
 
 	if (fr_channel_data_read (&process->out) == G_IO_STATUS_ERROR) {
 		exec_data->error = fr_error_new (FR_ERROR_IO_CHANNEL, 0, process->out.error);
@@ -800,10 +823,10 @@ check_child (gpointer data)
 		exec_data->error = fr_error_new (FR_ERROR_IO_CHANNEL, 0, process->err.error);
 	}
 	else {
-		pid = waitpid (process->priv->command_pid, &status, WNOHANG);
-		if (pid != process->priv->command_pid) {
+		pid = waitpid (private->command_pid, &status, WNOHANG);
+		if (pid != private->command_pid) {
 			/* Add check again. */
-			process->priv->check_timeout = g_timeout_add (REFRESH_RATE,
+			private->check_timeout = g_timeout_add (REFRESH_RATE,
 							              check_child,
 							              exec_data);
 			return FALSE;
@@ -838,7 +861,7 @@ check_child (gpointer data)
 		}
 	}
 
-	process->priv->command_pid = 0;
+	private->command_pid = 0;
 
 	if (exec_data->error == NULL) {
 		if (fr_channel_data_flush (&process->out) == G_IO_STATUS_ERROR)
@@ -856,9 +879,9 @@ check_child (gpointer data)
 	    && (exec_data->error->type == FR_ERROR_IO_CHANNEL)
 	    && g_error_matches (exec_data->error->gerror, G_CONVERT_ERROR, G_CONVERT_ERROR_ILLEGAL_SEQUENCE))
 	{
-		if (process->priv->current_charset < n_charsets - 1) {
+		if (private->current_charset < n_charsets - 1) {
 			/* try with another charset */
-			process->priv->current_charset++;
+			private->current_charset++;
 			_fr_process_restart (exec_data);
 			return FALSE;
 		}
@@ -887,17 +910,17 @@ check_child (gpointer data)
 #endif
 		}
 
-		if (process->priv->sticky_only) {
+		if (private->sticky_only) {
 			do {
-				process->priv->current_command++;
+				private->current_command++;
 			}
-			while ((process->priv->current_command <= process->priv->n_comm)
-				&& ! command_is_sticky (process, process->priv->current_command));
+			while ((private->current_command <= private->n_comm)
+				&& ! command_is_sticky (process, private->current_command));
 		}
 		else
-			process->priv->current_command++;
+			private->current_command++;
 
-		if (process->priv->current_command <= process->priv->n_comm) {
+		if (private->current_command <= private->n_comm) {
 			execute_current_command (exec_data);
 			return FALSE;
 		}
@@ -905,18 +928,18 @@ check_child (gpointer data)
 
 	/* Done */
 
-	process->priv->current_command = -1;
-	process->priv->use_standard_locale = FALSE;
+	private->current_command = -1;
+	private->use_standard_locale = FALSE;
 
 	if (process->out.raw != NULL)
 		process->out.raw = g_list_reverse (process->out.raw);
 	if (process->err.raw != NULL)
 		process->err.raw = g_list_reverse (process->err.raw);
 
-	process->priv->running = FALSE;
-	process->priv->stopping = FALSE;
+	private->running = FALSE;
+	private->stopping = FALSE;
 
-	if (process->priv->sticky_only) {
+	if (private->sticky_only) {
 		/* Restore the first error. */
 
 		fr_error_free (exec_data->error);
@@ -943,6 +966,7 @@ static void
 execute_current_command (ExecuteData *exec_data)
 {
 	FrProcess      *process = exec_data->process;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 	FrCommandInfo  *info;
 	GList          *scan;
 	char          **argv;
@@ -950,9 +974,9 @@ execute_current_command (ExecuteData *exec_data)
 	int             i = 0;
 	GError         *error = NULL;
 
-	debug (DEBUG_INFO, "%d/%d) ", process->priv->current_command, process->priv->n_comm);
+	debug (DEBUG_INFO, "%d/%d) ", private->current_command, private->n_comm);
 
-	info = g_ptr_array_index (process->priv->comm, process->priv->current_command);
+	info = g_ptr_array_index (private->comm, private->current_command);
 
 	argv = g_new (char *, g_list_length (info->args) + 1);
 	for (scan = info->args; scan; scan = scan->next)
@@ -963,7 +987,7 @@ execute_current_command (ExecuteData *exec_data)
 	{
 		int j;
 
-		if (process->priv->use_standard_locale)
+		if (private->use_standard_locale)
 			g_print ("\tLC_MESSAGES=C\n");
 
 		if (info->dir != NULL)
@@ -990,7 +1014,7 @@ execute_current_command (ExecuteData *exec_data)
 					 | G_SPAWN_DO_NOT_REAP_CHILD),
 					child_setup,
 					process,
-					&process->priv->command_pid,
+					&private->command_pid,
 					NULL,
 					&out_fd,
 					&err_fd,
@@ -1009,7 +1033,7 @@ execute_current_command (ExecuteData *exec_data)
 	fr_channel_data_set_fd (&process->out, out_fd, _fr_process_get_charset (process));
 	fr_channel_data_set_fd (&process->err, err_fd, _fr_process_get_charset (process));
 
-	process->priv->check_timeout = g_timeout_add (REFRESH_RATE,
+	private->check_timeout = g_timeout_add (REFRESH_RATE,
 					              check_child,
 					              exec_data);
 }
@@ -1019,6 +1043,7 @@ static void
 _fr_process_start (ExecuteData *exec_data)
 {
 	FrProcess *process = exec_data->process;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
 	_g_string_list_free (exec_data->first_error_stdout);
 	exec_data->first_error_stdout = NULL;
@@ -1032,16 +1057,16 @@ _fr_process_start (ExecuteData *exec_data)
 	fr_channel_data_reset (&process->out);
 	fr_channel_data_reset (&process->err);
 
-	process->priv->sticky_only = FALSE;
-	process->priv->current_command = 0;
-	process->priv->stopping = FALSE;
+	private->sticky_only = FALSE;
+	private->current_command = 0;
+	private->stopping = FALSE;
 
-	if (process->priv->n_comm == -1) {
-		process->priv->running = FALSE;
+	if (private->n_comm == -1) {
+		private->running = FALSE;
 		_fr_process_execute_complete_in_idle (exec_data);
 	}
 	else {
-		process->priv->running = TRUE;
+		private->running = TRUE;
 		execute_current_command (exec_data);
 	}
 }
@@ -1054,12 +1079,13 @@ fr_process_execute (FrProcess           *process,
 		    gpointer             user_data)
 {
 	ExecuteData *exec_data;
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
-	g_return_if_fail (! process->priv->running);
+	g_return_if_fail (! private->running);
 
-	execute_data_free (process->priv->exec_data);
+	execute_data_free (private->exec_data);
 
-	process->priv->exec_data = exec_data = g_new0 (ExecuteData, 1);
+	private->exec_data = exec_data = g_new0 (ExecuteData, 1);
 	exec_data->process = g_object_ref (process);
 	exec_data->cancellable = _g_object_ref (cancellable);
 	exec_data->cancel_id = 0;
@@ -1071,7 +1097,7 @@ fr_process_execute (FrProcess           *process,
         g_simple_async_result_set_op_res_gpointer (exec_data->result, exec_data, NULL);
 
 	if (! process->restart)
-		process->priv->current_charset = -1;
+		private->current_charset = -1;
 
 	if (cancellable != NULL) {
 		GError *error = NULL;
@@ -1120,19 +1146,21 @@ fr_process_execute_finish (FrProcess     *process,
 void
 fr_process_restart (FrProcess *process)
 {
-	if (process->priv->exec_data != NULL)
-		_fr_process_start (process->priv->exec_data);
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	if (private->exec_data != NULL)
+		_fr_process_start (private->exec_data);
 }
 
 
 void
 fr_process_cancel (FrProcess *process)
 {
-	if (! process->priv->running)
+	FrProcessPrivate *private = fr_process_get_instance_private (process);
+	if (! private->running)
 		return;
-	if (process->priv->exec_data == NULL)
+	if (private->exec_data == NULL)
 		return;
-	if (process->priv->exec_data->cancellable == NULL)
+	if (private->exec_data->cancellable == NULL)
 		return;
-	g_cancellable_cancel (process->priv->exec_data->cancellable);
+	g_cancellable_cancel (private->exec_data->cancellable);
 }

@@ -28,7 +28,6 @@
 #include "fr-error.h"
 #include "typedefs.h"
 
-typedef struct _FrProcessPrivate FrProcessPrivate;
 #define FR_TYPE_PROCESS (fr_process_get_type ())
 G_DECLARE_FINAL_TYPE (FrProcess, fr_process, FR, PROCESS, GObject)
 
@@ -50,9 +49,8 @@ struct _FrProcess {
 
 	FrChannelData     out;
 	FrChannelData     err;
-	gboolean          restart;       /* whether to restart the process
-			  		  * after an error. */
-	FrProcessPrivate *priv;
+	/* whether to restart the process after an error. */
+	gboolean          restart;
 };
 
 FrProcess * fr_process_new                  (void);
