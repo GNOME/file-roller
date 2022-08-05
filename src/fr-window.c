@@ -841,34 +841,36 @@ fr_window_class_init (FrWindowClass *klass)
 
 	fr_window_parent_class = g_type_class_peek_parent (klass);
 
+	GType archive_loaded_types[] = { G_TYPE_BOOLEAN };
+	GType progress_types[] = { G_TYPE_DOUBLE, G_TYPE_STRING };
+	GType ready_types[] = { G_TYPE_POINTER };
 	fr_window_signals[ARCHIVE_LOADED] =
-		g_signal_new ("archive-loaded",
+		g_signal_newv ("archive-loaded",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, archive_loaded),
+		               /* class_closure = */ NULL,
 			      NULL, NULL,
 			      fr_marshal_VOID__BOOLEAN,
 			      G_TYPE_NONE, 1,
-			      G_TYPE_BOOLEAN);
+		              archive_loaded_types);
 	fr_window_signals[PROGRESS] =
-		g_signal_new ("progress",
+		g_signal_newv ("progress",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, progress),
+		              /* class_closure = */ NULL,
 			      NULL, NULL,
 			      fr_marshal_VOID__DOUBLE_STRING,
 			      G_TYPE_NONE, 2,
-			      G_TYPE_DOUBLE,
-			      G_TYPE_STRING);
+		              progress_types);
 	fr_window_signals[READY] =
-		g_signal_new ("ready",
+		g_signal_newv ("ready",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, ready),
+		              /* class_closure = */ NULL,
 			      NULL, NULL,
 			      fr_marshal_VOID__POINTER,
 			      G_TYPE_NONE, 1,
-			      G_TYPE_POINTER);
+		              ready_types);
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_window_finalize;

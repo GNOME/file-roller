@@ -70,15 +70,9 @@ typedef enum {
 
 /* -- FrWindow -- */
 
-#define FR_TYPE_WINDOW              (fr_window_get_type ())
-#define FR_WINDOW(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_WINDOW, FrWindow))
-#define FR_WINDOW_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), FR_WINDOW_TYPE, FrWindowClass))
-#define FR_IS_WINDOW(obj)           (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_WINDOW))
-#define FR_IS_WINDOW_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_WINDOW))
-#define FR_WINDOW_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_WINDOW, FrWindowClass))
+#define FR_TYPE_WINDOW (fr_window_get_type ())
+G_DECLARE_FINAL_TYPE (FrWindow, fr_window, FR, WINDOW, GtkApplicationWindow)
 
-typedef struct _FrWindow        FrWindow;
-typedef struct _FrWindowClass   FrWindowClass;
 typedef struct _FrWindowPrivate FrWindowPrivate;
 
 struct _FrWindow
@@ -87,23 +81,6 @@ struct _FrWindow
 	FrWindowPrivate *priv;
 	FrArchive *archive;
 };
-
-struct _FrWindowClass
-{
-	GtkApplicationWindowClass __parent_class;
-
-	/*<signals>*/
-
-	void (*archive_loaded) (FrWindow   *window,
-				gboolean    success);
-	void (*progress)       (FrWindow   *window,
-			        double      fraction,
-			        const char *msg);
-	void (*ready)          (FrWindow   *window,
-				GError     *error);
-};
-
-GType           fr_window_get_type                     (void);
 GtkWidget *     fr_window_new                          (void);
 void            fr_window_close                        (FrWindow      *window);
 void            fr_window_set_dialog		       (FrWindow      *window,
