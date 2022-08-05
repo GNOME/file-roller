@@ -73,12 +73,10 @@ typedef enum {
 #define FR_TYPE_WINDOW (fr_window_get_type ())
 G_DECLARE_FINAL_TYPE (FrWindow, fr_window, FR, WINDOW, GtkApplicationWindow)
 
-typedef struct _FrWindowPrivate FrWindowPrivate;
 
 struct _FrWindow
 {
 	GtkApplicationWindow __parent;
-	FrWindowPrivate *priv;
 	FrArchive *archive;
 };
 GtkWidget *     fr_window_new                          (void);
