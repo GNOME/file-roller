@@ -40,11 +40,10 @@
 #include "fr-process.h"
 #include "fr-init.h"
 
-
 #define FILE_ARRAY_INITIAL_SIZE	256
 #define PROGRESS_DELAY          50
-#define BYTES_FRACTION(self)    ((double) (self)->priv->completed_bytes / (self)->priv->total_bytes)
-#define FILES_FRACTION(self)    ((double) (self)->priv->completed_files + 0.5) / ((self)->priv->total_files + 1)
+#define BYTES_FRACTION(self)    ((double) ((FrArchivePrivate*) fr_archive_get_instance_private (self))->completed_bytes / ((FrArchivePrivate*) fr_archive_get_instance_private (self))->total_bytes)
+#define FILES_FRACTION(self)    ((double) ((FrArchivePrivate*) fr_archive_get_instance_private (self))->completed_files + 0.5) / (((FrArchivePrivate*) fr_archive_get_instance_private (self))->total_files + 1)
 
 
 char *action_names[] = { "NONE",
@@ -68,7 +67,7 @@ char *action_names[] = { "NONE",
 typedef struct _DroppedItemsData DroppedItemsData;
 
 
-struct _FrArchivePrivate {
+typedef struct {
 	/* propeties */
 
 	GFile         *file;
@@ -91,7 +90,7 @@ struct _FrArchivePrivate {
 						    * permissions to write the
 						    * file. */
 	DroppedItemsData *dropped_items_data;
-};
+} FrArchivePrivate;
 
 
 G_DEFINE_TYPE_WITH_PRIVATE (FrArchive, fr_archive, G_TYPE_OBJECT)
@@ -127,12 +126,13 @@ _fr_archive_set_file (FrArchive *self,
 		      GFile     *file,
 		      gboolean   reset_mime_type)
 {
-	if (self->priv->file != NULL) {
-		g_object_unref (self->priv->file);
-		self->priv->file = NULL;
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
+	if (private->file != NULL) {
+		g_object_unref (private->file);
+		private->file = NULL;
 	}
 	if (file != NULL)
-		self->priv->file = g_object_ref (file);
+		private->file = g_object_ref (file);
 
 	if (reset_mime_type)
 		self->mime_type = NULL;
@@ -199,10 +199,11 @@ fr_archive_get_property (GObject    *object,
         FrArchive *self;
 
         self = FR_ARCHIVE (object);
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 
         switch (property_id) {
         case PROP_FILE:
-                g_value_set_object (value, self->priv->file);
+		g_value_set_object (value, private->file);
                 break;
 	case PROP_MIME_TYPE:
 		g_value_set_static_string (value, self->mime_type);
@@ -238,18 +239,19 @@ fr_archive_finalize (GObject *object)
 	g_return_if_fail (FR_IS_ARCHIVE (object));
 
 	archive = FR_ARCHIVE (object);
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
 
 	_fr_archive_set_uri (archive, NULL);
-	if (archive->priv->progress_event != 0) {
-		g_source_remove (archive->priv->progress_event);
-		archive->priv->progress_event = 0;
+	if (private->progress_event != 0) {
+		g_source_remove (private->progress_event);
+		private->progress_event = 0;
 	}
-	g_mutex_clear (&archive->priv->progress_mutex);
+	g_mutex_clear (&private->progress_mutex);
 	g_hash_table_unref (archive->files_hash);
 	g_ptr_array_unref (archive->files);
-	if (archive->priv->dropped_items_data != NULL) {
-		dropped_items_data_free (archive->priv->dropped_items_data);
-		archive->priv->dropped_items_data = NULL;
+	if (private->dropped_items_data != NULL) {
+		dropped_items_data_free (private->dropped_items_data);
+		private->dropped_items_data = NULL;
 	}
 
 	/* Chain up */
@@ -429,7 +431,7 @@ fr_archive_class_init (FrArchiveClass *klass)
 static void
 fr_archive_init (FrArchive *self)
 {
-	self->priv = fr_archive_get_instance_private (self);
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 
 	self->mime_type = NULL;
 	self->files = g_ptr_array_new_full (FILE_ARRAY_INITIAL_SIZE, (GDestroyNotify) file_data_free);
@@ -458,23 +460,24 @@ fr_archive_init (FrArchive *self)
         self->propCanExtractNonEmptyFolders = TRUE;
         self->propListFromFile = FALSE;
 
-	self->priv->file = NULL;
-	self->priv->creating_archive = FALSE;
-	self->priv->extraction_destination = NULL;
-	self->priv->have_write_permissions = FALSE;
-        self->priv->completed_files = 0;
-        self->priv->total_files = 0;
-        self->priv->completed_bytes = 0;
-        self->priv->total_bytes = 0;
-        self->priv->dropped_items_data = NULL;
-	g_mutex_init (&self->priv->progress_mutex);
+	private->file = NULL;
+	private->creating_archive = FALSE;
+	private->extraction_destination = NULL;
+	private->have_write_permissions = FALSE;
+	private->completed_files = 0;
+	private->total_files = 0;
+	private->completed_bytes = 0;
+	private->total_bytes = 0;
+	private->dropped_items_data = NULL;
+	g_mutex_init (&private->progress_mutex);
 }
 
 
 GFile *
 fr_archive_get_file (FrArchive *self)
 {
-	return self->priv->file;
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
+	return private->file;
 }
 
 
@@ -482,7 +485,8 @@ gboolean
 fr_archive_is_capable_of (FrArchive     *self,
 			  FrArchiveCaps  requested_capabilities)
 {
-	return (((self->priv->capabilities ^ requested_capabilities) & requested_capabilities) == 0);
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
+	return (((private->capabilities ^ requested_capabilities) & requested_capabilities) == 0);
 }
 
 
@@ -496,7 +500,8 @@ fr_archive_get_supported_types (FrArchive *self)
 void
 fr_archive_update_capabilities (FrArchive *self)
 {
-	self->priv->capabilities = fr_archive_get_capabilities (self, self->mime_type, TRUE);
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
+	private->capabilities = fr_archive_get_capabilities (self, self->mime_type, TRUE);
 	self->read_only = ! fr_archive_is_capable_of (self, FR_ARCHIVE_CAN_WRITE);
 }
 
@@ -607,8 +612,9 @@ fr_archive_create (GFile      *file,
 		return NULL;
 
 	parent = g_file_get_parent (file);
-	archive->priv->have_write_permissions = _g_file_check_permissions (parent, W_OK);
-	archive->read_only = ! fr_archive_is_capable_of (archive, FR_ARCHIVE_CAN_WRITE) || ! archive->priv->have_write_permissions;
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
+	private->have_write_permissions = _g_file_check_permissions (parent, W_OK);
+	archive->read_only = ! fr_archive_is_capable_of (archive, FR_ARCHIVE_CAN_WRITE) || ! private->have_write_permissions;
 
 	g_object_unref (parent);
 
@@ -754,8 +760,9 @@ open_archive_buffer_ready_cb (GObject      *source_object,
 		}
 	}
 
-	archive->priv->have_write_permissions = _g_file_check_permissions (fr_archive_get_file (archive), W_OK);
-	archive->read_only = ! fr_archive_is_capable_of (archive, FR_ARCHIVE_CAN_WRITE) || ! archive->priv->have_write_permissions;
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
+	private->have_write_permissions = _g_file_check_permissions (fr_archive_get_file (archive), W_OK);
+	archive->read_only = ! fr_archive_is_capable_of (archive, FR_ARCHIVE_CAN_WRITE) || ! private->have_write_permissions;
 	open_data->archive = archive;
 
 	if (FR_ARCHIVE_GET_CLASS (archive)->open != NULL)
@@ -836,8 +843,9 @@ _fr_archive_update_progress_cb (gpointer user_data)
 static void
 _fr_archive_activate_progress_update (FrArchive *archive)
 {
-	if (archive->priv->progress_event == 0)
-		archive->priv->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, archive);
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
+	if (private->progress_event == 0)
+		private->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, archive);
 }
 
 
@@ -869,10 +877,11 @@ fr_archive_operation_finish (FrArchive     *archive,
 			     GError       **error)
 {
 	gboolean success;
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
 
-	if (archive->priv->progress_event != 0) {
-		g_source_remove (archive->priv->progress_event);
-		archive->priv->progress_event = 0;
+	if (private->progress_event != 0) {
+		g_source_remove (private->progress_event);
+		private->progress_event = 0;
 	}
 
 	success = ! g_simple_async_result_propagate_error (G_SIMPLE_ASYNC_RESULT (result), error);
@@ -1210,8 +1219,9 @@ fr_archive_extract (FrArchive           *archive,
 		    GAsyncReadyCallback  callback,
 		    gpointer             user_data)
 {
-	_g_object_unref (archive->priv->extraction_destination);
-	archive->priv->extraction_destination = g_object_ref (destination);
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
+	_g_object_unref (private->extraction_destination);
+	private->extraction_destination = g_object_ref (destination);
 
 	fr_archive_progress_set_total_bytes (archive, _fr_archive_get_file_list_size (archive, file_list));
 	_fr_archive_activate_progress_update (archive);
@@ -1425,13 +1435,14 @@ fr_archive_extract_here (FrArchive           *archive,
 	GFile              *destination;
 	GError             *error = NULL;
 	ExtractHereData    *e_data;
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
 
 	result = g_simple_async_result_new (G_OBJECT (archive),
 					    callback,
 					    user_data,
 					    fr_archive_extract_here);
 
-	destination = get_extract_here_destination (archive->priv->file, &error);
+	destination = get_extract_here_destination (private->file, &error);
 	if (error != NULL) {
 		g_simple_async_result_set_from_error (result, error);
 		g_simple_async_result_complete_in_idle (result);
@@ -1468,16 +1479,19 @@ void
 fr_archive_set_last_extraction_destination (FrArchive *archive,
 					    GFile     *folder)
 {
-	_g_clear_object (&archive->priv->extraction_destination);
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
+	_g_clear_object (&private->extraction_destination);
 	if (folder != NULL)
-		archive->priv->extraction_destination = g_object_ref (folder);
+		private->extraction_destination = g_object_ref (folder);
 }
 
 
 GFile *
 fr_archive_get_last_extraction_destination (FrArchive *archive)
 {
-	return archive->priv->extraction_destination;
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
+
+	return private->extraction_destination;
 }
 
 
@@ -1673,6 +1687,7 @@ add_dropped_items_ready_cb (GObject      *source_object,
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	if (error != NULL) {
+		FrArchivePrivate *private = fr_archive_get_instance_private (archive);
 		GSimpleAsyncResult *result;
 
 		result = g_simple_async_result_new (G_OBJECT (data->archive),
@@ -1683,8 +1698,8 @@ add_dropped_items_ready_cb (GObject      *source_object,
 		g_simple_async_result_complete_in_idle (result);
 
 		g_error_free (error);
-		dropped_items_data_free (archive->priv->dropped_items_data);
-		archive->priv->dropped_items_data = NULL;
+		dropped_items_data_free (private->dropped_items_data);
+		private->dropped_items_data = NULL;
 		return;
 	}
 
@@ -1701,6 +1716,7 @@ add_dropped_items (DroppedItemsData *data)
 	GList     *scan;
 
 	if (list == NULL) {
+		FrArchivePrivate *private = fr_archive_get_instance_private (archive);
 		GSimpleAsyncResult *result;
 
 		result = g_simple_async_result_new (G_OBJECT (data->archive),
@@ -1709,8 +1725,8 @@ add_dropped_items (DroppedItemsData *data)
 						    fr_archive_add_dropped_items);
 		g_simple_async_result_complete_in_idle (result);
 
-		dropped_items_data_free (archive->priv->dropped_items_data);
-		archive->priv->dropped_items_data = NULL;
+		dropped_items_data_free (private->dropped_items_data);
+		private->dropped_items_data = NULL;
 		return;
 	}
 
@@ -1835,6 +1851,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 			      GAsyncReadyCallback  callback,
 			      gpointer             user_data)
 {
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
 	GSimpleAsyncResult *result;
 	GList              *scan;
 
@@ -1846,7 +1863,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 	if (archive->read_only) {
 		GError *error;
 
-		error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, ! archive->priv->have_write_permissions ? _("You don’t have the right permissions.") : _("This archive type cannot be modified"));
+		error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, ! private->have_write_permissions ? _("You don’t have the right permissions.") : _("This archive type cannot be modified"));
 		g_simple_async_result_set_from_error (result, error);
 		g_simple_async_result_complete_in_idle (result);
 
@@ -1857,7 +1874,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 
 	/* FIXME: make this check for all the add actions */
 	for (scan = item_list; scan; scan = scan->next) {
-		if (_g_file_cmp_uris (G_FILE (scan->data), archive->priv->file) == 0) {
+		if (_g_file_cmp_uris (G_FILE (scan->data), private->file) == 0) {
 			GError *error;
 
 			error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("You can’t add an archive to itself."));
@@ -1870,9 +1887,9 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 		}
 	}
 
-	if (archive->priv->dropped_items_data != NULL)
-		dropped_items_data_free (archive->priv->dropped_items_data);
-	archive->priv->dropped_items_data = dropped_items_data_new (archive,
+	if (private->dropped_items_data != NULL)
+		dropped_items_data_free (private->dropped_items_data);
+	private->dropped_items_data = dropped_items_data_new (archive,
 								    item_list,
 								    dest_dir,
 								    password,
@@ -1882,7 +1899,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 								    cancellable,
 								    callback,
 								    user_data);
-	add_dropped_items (archive->priv->dropped_items_data);
+	add_dropped_items (private->dropped_items_data);
 
 	g_object_unref (result);
 }
@@ -1928,12 +1945,13 @@ fr_archive_change_name (FrArchive  *archive,
 		        const char *filename)
 {
 	const char *name;
+	FrArchivePrivate *private = fr_archive_get_instance_private (archive);
 	GFile      *parent;
 	GFile      *file;
 
 	name = _g_path_get_basename (filename);
 
-	parent = g_file_get_parent (archive->priv->file);
+	parent = g_file_get_parent (private->file);
 	file = g_file_get_child (parent, name);;
 	_fr_archive_set_file (archive, file, FALSE);
 
@@ -1996,21 +2014,23 @@ void
 fr_archive_progress_set_total_files (FrArchive *self,
 				     int        n_files)
 {
-	g_mutex_lock (&self->priv->progress_mutex);
-	self->priv->total_files = n_files;
-	self->priv->completed_files = 0;
-	g_mutex_unlock (&self->priv->progress_mutex);
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
+	g_mutex_lock (&private->progress_mutex);
+	private->total_files = n_files;
+	private->completed_files = 0;
+	g_mutex_unlock (&private->progress_mutex);
 }
 
 
 int
 fr_archive_progress_get_total_files (FrArchive *self)
 {
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 	int result;
 
-	g_mutex_lock (&self->priv->progress_mutex);
-	result = self->priv->total_files;
-	g_mutex_unlock (&self->priv->progress_mutex);
+	g_mutex_lock (&private->progress_mutex);
+	result = private->total_files;
+	g_mutex_unlock (&private->progress_mutex);
 
 	return result;
 }
@@ -2019,11 +2039,12 @@ fr_archive_progress_get_total_files (FrArchive *self)
 int
 fr_archive_progress_get_completed_files (FrArchive *self)
 {
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 	int result;
 
-	g_mutex_lock (&self->priv->progress_mutex);
-	result = self->priv->completed_files;
-	g_mutex_unlock (&self->priv->progress_mutex);
+	g_mutex_lock (&private->progress_mutex);
+	result = private->completed_files;
+	g_mutex_unlock (&private->progress_mutex);
 
 	return result;
 }
@@ -2033,16 +2054,17 @@ double
 fr_archive_progress_inc_completed_files (FrArchive *self,
 		 	 	 	 int        new_completed)
 {
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 	double fraction;
 
-	g_mutex_lock (&self->priv->progress_mutex);
-	self->priv->completed_files += new_completed;
-	if (self->priv->total_files > 0)
+	g_mutex_lock (&private->progress_mutex);
+	private->completed_files += new_completed;
+	if (private->total_files > 0)
 		fraction = FILES_FRACTION (self);
 	else
 		fraction = 0.0;
-	/*g_print ("%d / %d  : %f\n", self->priv->completed_files, self->priv->total_files + 1, fraction);*/
-	g_mutex_unlock (&self->priv->progress_mutex);
+	/*g_print ("%d / %d  : %f\n", private->completed_files, private->total_files + 1, fraction);*/
+	g_mutex_unlock (&private->progress_mutex);
 
 	return fraction;
 
@@ -2053,10 +2075,11 @@ void
 fr_archive_progress_set_total_bytes (FrArchive *self,
 				     gsize      total)
 {
-	g_mutex_lock (&self->priv->progress_mutex);
-	self->priv->total_bytes = total;
-	self->priv->completed_bytes = 0;
-	g_mutex_unlock (&self->priv->progress_mutex);
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
+	g_mutex_lock (&private->progress_mutex);
+	private->total_bytes = total;
+	private->completed_bytes = 0;
+	g_mutex_unlock (&private->progress_mutex);
 }
 
 
@@ -2064,14 +2087,15 @@ static double
 _set_completed_bytes (FrArchive *self,
 		      gsize      completed_bytes)
 {
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 	double fraction;
 
-	self->priv->completed_bytes = completed_bytes;
-	if (self->priv->total_bytes > 0)
+	private->completed_bytes = completed_bytes;
+	if (private->total_bytes > 0)
 		fraction = BYTES_FRACTION (self);
 	else
 		fraction = 0.0;
-	/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", self->priv->completed_bytes, self->priv->total_bytes + 1, fraction);*/
+	/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", private->completed_bytes, private->total_bytes + 1, fraction);*/
 
 	return fraction;
 }
@@ -2081,11 +2105,12 @@ double
 fr_archive_progress_set_completed_bytes (FrArchive *self,
 					 gsize      completed_bytes)
 {
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 	double fraction;
 
-	g_mutex_lock (&self->priv->progress_mutex);
+	g_mutex_lock (&private->progress_mutex);
 	fraction = _set_completed_bytes (self, completed_bytes);
-	g_mutex_unlock (&self->priv->progress_mutex);
+	g_mutex_unlock (&private->progress_mutex);
 
 	return fraction;
 }
@@ -2094,11 +2119,12 @@ double
 fr_archive_progress_inc_completed_bytes (FrArchive *self,
 					 gsize      new_completed)
 {
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 	double fraction;
 
-	g_mutex_lock (&self->priv->progress_mutex);
-	fraction = _set_completed_bytes (self, self->priv->completed_bytes + new_completed);
-	g_mutex_unlock (&self->priv->progress_mutex);
+	g_mutex_lock (&private->progress_mutex);
+	fraction = _set_completed_bytes (self, private->completed_bytes + new_completed);
+	g_mutex_unlock (&private->progress_mutex);
 
 	return fraction;
 }
@@ -2107,20 +2133,21 @@ fr_archive_progress_inc_completed_bytes (FrArchive *self,
 double
 fr_archive_progress_get_fraction (FrArchive *self)
 {
+	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 	double fraction;
 
-	g_mutex_lock (&self->priv->progress_mutex);
-	if ((self->priv->total_bytes > 0) && (self->priv->completed_bytes > 0)) {
+	g_mutex_lock (&private->progress_mutex);
+	if ((private->total_bytes > 0) && (private->completed_bytes > 0)) {
 		fraction = BYTES_FRACTION (self);
-		/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", self->priv->completed_bytes, self->priv->total_bytes + 1, fraction);*/
+		/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", private->completed_bytes, private->total_bytes + 1, fraction);*/
 	}
-	else if (self->priv->total_files > 0) {
+	else if (private->total_files > 0) {
 		fraction = FILES_FRACTION (self);
-		/*g_print ("%d / %d  : %f\n", self->priv->completed_files, self->priv->total_files + 1, fraction);*/
+		/*g_print ("%d / %d  : %f\n", private->completed_files, private->total_files + 1, fraction);*/
 	}
 	else
 		fraction = 0.0;
-	g_mutex_unlock (&self->priv->progress_mutex);
+	g_mutex_unlock (&private->progress_mutex);
 
 	return fraction;
 }
