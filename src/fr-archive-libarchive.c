@@ -42,10 +42,10 @@
 #define FILE_ATTRIBUTES_NEEDED_BY_ARCHIVE_ENTRY ("standard::*,time::*,access::*,unix::*")
 
 
-struct _FrArchiveLibarchivePrivate {
+typedef struct {
 	gssize compressed_size;
 	gssize uncompressed_size;
-};
+} FrArchiveLibarchivePrivate;
 
 
 G_DEFINE_FINAL_TYPE_WITH_PRIVATE (FrArchiveLibarchive, fr_archive_libarchive, FR_TYPE_ARCHIVE)
@@ -245,8 +245,9 @@ load_data_open (struct archive *a,
 		return ARCHIVE_FATAL;
 
 	if (g_simple_async_result_get_source_tag (load_data->result) == fr_archive_list) {
-		FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->compressed_size = 0;
-		FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size = 0;
+		FrArchiveLibarchivePrivate *private = fr_archive_libarchive_get_instance_private (FR_ARCHIVE_LIBARCHIVE (load_data->archive));
+		private->compressed_size = 0;
+		private->uncompressed_size = 0;
 	}
 
 	load_data->istream = (GInputStream *) g_file_read (fr_archive_get_file (load_data->archive),
@@ -276,9 +277,10 @@ load_data_read (struct archive  *a,
 
 	/* update the progress only if listing the content */
 	if (g_simple_async_result_get_source_tag (load_data->result) == fr_archive_list) {
+		FrArchiveLibarchivePrivate *private = fr_archive_libarchive_get_instance_private (FR_ARCHIVE_LIBARCHIVE (load_data->archive));
 		fr_archive_progress_set_completed_bytes (load_data->archive,
 							 g_seekable_tell (G_SEEKABLE (load_data->istream)));
-		FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->compressed_size += bytes;
+		private->compressed_size += bytes;
 	}
 
 	return bytes;
@@ -462,8 +464,9 @@ list_archive_thread (GSimpleAsyncResult *result,
 		file_data = file_data_new ();
 
 		if (archive_entry_size_is_set (entry)) {
+			FrArchiveLibarchivePrivate *private = fr_archive_libarchive_get_instance_private (FR_ARCHIVE_LIBARCHIVE (load_data->archive));
 			file_data->size = archive_entry_size (entry);
-			FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size += file_data->size;
+			private->uncompressed_size += file_data->size;
 		}
 
 		if (archive_entry_mtime_is_set (entry))
@@ -1825,8 +1828,8 @@ _add_files_begin (SaveData *save_data,
 		g_list_free (files_to_add);
 	}
 
-	fr_archive_progress_set_total_bytes (load_data->archive,
-			FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size + load_data->archive->files_to_add_size);
+	FrArchiveLibarchivePrivate *private = fr_archive_libarchive_get_instance_private (FR_ARCHIVE_LIBARCHIVE (load_data->archive));
+	fr_archive_progress_set_total_bytes (load_data->archive, private->uncompressed_size + load_data->archive->files_to_add_size);
 }
 
 
@@ -1988,10 +1991,10 @@ _remove_files_begin (SaveData *save_data,
 {
 	LoadData   *load_data = LOAD_DATA (save_data);
 	RemoveData *remove_data = user_data;
+	FrArchiveLibarchivePrivate *private = fr_archive_libarchive_get_instance_private (FR_ARCHIVE_LIBARCHIVE (load_data->archive));
 
 	fr_archive_progress_set_total_files (load_data->archive, remove_data->n_files_to_remove);
-	fr_archive_progress_set_total_bytes (load_data->archive,
-					     FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size);
+	fr_archive_progress_set_total_bytes (load_data->archive, private->uncompressed_size);
 }
 
 
@@ -2089,8 +2092,8 @@ _rename_files_begin (SaveData *save_data,
 	RenameData *rename_data = user_data;
 
 	fr_archive_progress_set_total_files (load_data->archive, rename_data->n_files_to_rename);
-	fr_archive_progress_set_total_bytes (load_data->archive,
-				FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size);
+	FrArchiveLibarchivePrivate *private = fr_archive_libarchive_get_instance_private (FR_ARCHIVE_LIBARCHIVE (load_data->archive));
+	fr_archive_progress_set_total_bytes (load_data->archive, private->uncompressed_size);
 }
 
 
@@ -2391,8 +2394,6 @@ static void
 fr_archive_libarchive_init (FrArchiveLibarchive *self)
 {
 	FrArchive *base = FR_ARCHIVE (self);
-
-	self->priv = fr_archive_libarchive_get_instance_private (self);
 
 	base->propAddCanReplace = TRUE;
 	base->propAddCanUpdate = TRUE;

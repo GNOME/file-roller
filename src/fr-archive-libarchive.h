@@ -28,10 +28,8 @@
 #define FR_TYPE_ARCHIVE_LIBARCHIVE (fr_archive_libarchive_get_type ())
 G_DECLARE_FINAL_TYPE (FrArchiveLibarchive, fr_archive_libarchive, FR, ARCHIVE_LIBARCHIVE, FrArchive)
 
-typedef struct _FrArchiveLibarchivePrivate  FrArchiveLibarchivePrivate;
 struct _FrArchiveLibarchive {
-	FrArchive  __parent;
-	FrArchiveLibarchivePrivate *priv;
+	FrArchive __parent;
 };
 
 #endif /* FR_ARCHIVE_LIBARCHIVE_H */
