@@ -207,7 +207,6 @@ unsupported_scheme (NautilusFileInfo *file)
 
 static GList *
 nautilus_fr_get_file_items (NautilusMenuProvider *provider,
-			    GtkWidget            *window,
 			    GList                *files)
 {
 	GList    *items = NULL;

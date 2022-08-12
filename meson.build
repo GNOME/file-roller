@@ -7,7 +7,7 @@ project('file-roller', 'c',
 glib_version = '>=2.38'
 gtk_version = '>=3.22.0'
 hdy_version = '>=1.5.0'
-nautilus_version = '>=3.28.0'
+nautilus_version = '>=43.beta'
 json_glib_version = '>=0.14.0'
 libarchive_version = '>=3.1.900a'
 
@@ -37,8 +37,7 @@ libportal_gtk3_dep = dependency('libportal-gtk3', version: '>= 0.5', required: u
 # Optional dependencies
 gobject_introspection_dep = dependency('gobject-introspection-1.0', required: get_option('introspection'))
 
-libnautilus_extension_dep = dependency('libnautilus-extension', version : nautilus_version, required : get_option('nautilus-actions'))
-gtk4_dep = dependency('gtk4', required: libnautilus_extension_dep.found() and libnautilus_extension_dep.version().version_compare('>=43'))
+libnautilus_extension_dep = dependency('libnautilus-extension-4', version : nautilus_version, required : get_option('nautilus-actions'))
 build_nautilus_actions = libnautilus_extension_dep.found()
 
 libjson_glib_dep = dependency('json-glib-1.0', version : json_glib_version, required : false)

@@ -109,7 +109,6 @@ makeDerivation rec {
     file
     glib
     gnome.adwaita-icon-theme
-    gnome.nautilus
     gtk3
     json-glib
     libarchive
@@ -120,6 +119,8 @@ makeDerivation rec {
   mesonFlags = [
     "-Dintrospection=enabled"
     "-Dapi_docs=enabled"
+    # TODO: Re-enable once we have Nautilus 43.
+    "-Dnautilus-actions=disabled"
   ];
 
   inherit doCheck;
