@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2022-03-30 21:44+0000\n"
-"PO-Revision-Date: 2022-03-31 12:29+0200\n"
+"POT-Creation-Date: 2022-07-10 09:24+0000\n"
+"PO-Revision-Date: 2022-08-13 01:25+0200\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2016-09-22 19:56+0000\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -57,8 +57,8 @@ msgstr "zip arhive (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "xz arhive (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:469
-#: src/fr-window.c:2018 src/fr-window.c:5518
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:476
+#: src/fr-window.c:1968 src/fr-window.c:5468
 msgid "Archive Manager"
 msgstr "Upravitelj arhivom"
 
@@ -290,12 +290,12 @@ msgstr "Potrebna je lozinka za \"%s\""
 msgid "Wrong password."
 msgstr "Pogrešna lozinka."
 
-#: src/dlg-batch-add.c:88 src/fr-application.c:239 src/fr-application.c:275
-#: src/fr-application.c:613
+#: src/dlg-batch-add.c:88 src/fr-application.c:246 src/fr-application.c:282
+#: src/fr-application.c:607
 msgid "Compress"
 msgstr "Zapakiraj"
 
-#: src/dlg-extract.c:91 src/fr-window.c:6894
+#: src/dlg-extract.c:91 src/fr-window.c:6795
 #, c-format
 msgid ""
 "Destination folder “%s” does not exist.\n"
@@ -306,39 +306,44 @@ msgstr ""
 "\n"
 "Želite li ju stvoriti?"
 
-#: src/dlg-extract.c:98 src/fr-window.c:6902
+#: src/dlg-extract.c:98 src/fr-window.c:6803
 msgid "Create _Folder"
 msgstr "Stvori _mapu"
 
 #: src/dlg-extract.c:138 src/dlg-extract.c:170 src/dlg-extract.c:199
-#: src/fr-window.c:4409 src/fr-window.c:6818 src/fr-window.c:6823
-#: src/fr-window.c:6923 src/fr-window.c:6942 src/fr-window.c:6947
+#: src/fr-window.c:4359 src/fr-window.c:6719 src/fr-window.c:6724
+#: src/fr-window.c:6824 src/fr-window.c:6843 src/fr-window.c:6848
 msgid "Extraction not performed"
 msgstr "Raspakiravanje nije izvedeno"
 
-#: src/dlg-extract.c:139 src/fr-window.c:6919
+#: src/dlg-extract.c:139 src/fr-window.c:6820
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Nemoguće stvaranje odredišne mape: %s."
 
-#: src/dlg-extract.c:200 src/fr-window.c:4636 src/fr-window.c:4738
+#: src/dlg-extract.c:200 src/fr-window.c:4586 src/fr-window.c:4688
 #, c-format
 msgid ""
 "You don’t have the right permissions to extract archives in the folder “%s”"
 msgstr "Nemate dozvole za raspakiravanje arhive u \"%s\" mapu"
 
-#: src/dlg-extract.c:317
+#: src/dlg-extract.c:319
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Raspakiraj"
+
+#: src/dlg-open-with.c:57 src/fr-window.c:4153 src/fr-window.c:8881
+#: src/fr-window.c:8915 src/fr-window.c:9157 src/fr-window.c:9230
+msgid "Could not perform the operation"
+msgstr "Nemoguće obavljanje radnje"
 
 #: src/dlg-package-installer.c:111 src/dlg-package-installer.c:223
 msgid "There was an internal error trying to search for applications:"
 msgstr "Došlo je do unutarnje greške prilikom potrage za aplikacijom:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
-#: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4078
-#: src/fr-window.c:7625 src/fr-window.c:7982 src/fr-window.c:9497
+#: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4028
+#: src/fr-window.c:7526 src/fr-window.c:7883 src/fr-window.c:9443
 msgid "Archive type not supported."
 msgstr "Vrsta arhive nije podržana."
 
@@ -431,70 +436,62 @@ msgstr ""
 "  antisa https://launchpad.net/~antisa\n"
 "  gogo https://launchpad.net/~trebelnik-stefina"
 
-#: src/fr-application.c:68
+#: src/fr-application.c:59
 msgid "Add files to the specified archive and quit the program"
 msgstr "Dodaj datoteke u navedenu arhivu i izađi iz programa"
 
-#: src/fr-application.c:69
+#: src/fr-application.c:60
 msgid "ARCHIVE"
 msgstr "ARHIVA"
 
-#: src/fr-application.c:72
+#: src/fr-application.c:63
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Dodaj datoteke pitajući za naziv arhive i izađi iz programa"
 
-#: src/fr-application.c:76
+#: src/fr-application.c:67
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Raspakiraj arhive u navedenu mapu i izađi iz programa"
 
-#: src/fr-application.c:77 src/fr-application.c:89
+#: src/fr-application.c:68 src/fr-application.c:80
 msgid "FOLDER"
 msgstr "MAPA"
 
-#: src/fr-application.c:80
+#: src/fr-application.c:71
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Raspakiraj arhive pitajući za odredišnu mapu i izađi iz programa"
 
-#: src/fr-application.c:84
+#: src/fr-application.c:75
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "Raspakiraj sadržaj arhiva u mapu arhive i izađi iz programa"
 
-#: src/fr-application.c:88
+#: src/fr-application.c:79
 msgid "Default folder to use for the “--add” and “--extract” commands"
 msgstr "Zadana mapa koja se koristi za “--add“ i “--extract“ naredbe"
 
-#: src/fr-application.c:92
+#: src/fr-application.c:83
 msgid "Create destination folder without asking confirmation"
 msgstr "Stvori odredišnu mapu bez potvrđivanja"
 
-#: src/fr-application.c:96
+#: src/fr-application.c:87
 msgid "Use the notification system to notify the operation completion"
 msgstr "Koristi sustav obavijesti za obavijest o završetku radnje"
 
-#: src/fr-application.c:99
+#: src/fr-application.c:90
 msgid "Start as a service"
 msgstr "Pokreni kao uslugu"
 
-#: src/fr-application.c:102
+#: src/fr-application.c:93
 msgid "Show version"
 msgstr "Prikaži inačicu"
 
-#: src/fr-application.c:106
-msgid "Dump gobject introspection file"
-msgstr "Stvori datoteku gobject samoispitivanja"
-
-#: src/fr-application.c:107
-msgid "input.txt,output.xml"
-msgstr "ulaz.txt,izlaz.xml"
-
-#: src/fr-application.c:311 src/fr-application.c:337 src/fr-application.c:636
+#: src/fr-application.c:318 src/fr-application.c:344 src/fr-application.c:630
 msgctxt "Window title"
 msgid "Extract archive"
 msgstr "Raspakiraj arhivu"
 
-#: src/fr-application.c:504
+#: src/fr-application.c:510
 msgid "— Create and modify an archive"
 msgstr "— Stvori i promjeni arhivu"
 
@@ -557,7 +554,7 @@ msgstr "Nemoguće učitavanje lokacije"
 #: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
 #: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
 #: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
-#: src/fr-window.c:3029
+#: src/fr-window.c:2979
 msgid "Could not create the archive"
 msgstr "Nemoguće stvaranje arhive"
 
@@ -570,7 +567,7 @@ msgid "You don’t have permission to create an archive in this folder"
 msgstr "Nemate dozvolu za stvaranje arhive u ovoj mapi"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8296
+#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8197
 msgid "New name is the same as old one, please type other name."
 msgstr "Novi naziv je isti kao stari, upišite novi naziv."
 
@@ -585,7 +582,7 @@ msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
 msgstr "Datoteka već postoji u \"%s\". Zamjena će prebrisati njen sadržaj."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6738
+#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6639
 msgid "_Replace"
 msgstr "_Zamijeni"
 
@@ -606,98 +603,98 @@ msgstr "Sve arhive"
 msgid "All files"
 msgstr "Sve datoteke"
 
-#: src/fr-window.c:1222
+#: src/fr-window.c:1172
 msgid "Operation completed"
 msgstr "Radnja završena"
 
-#: src/fr-window.c:1635
+#: src/fr-window.c:1585
 msgid "Folder"
 msgstr "Mapa"
 
-#: src/fr-window.c:2025
+#: src/fr-window.c:1975
 msgid "[read only]"
 msgstr "[samo za čitanje]"
 
-#: src/fr-window.c:2164
+#: src/fr-window.c:2114
 #, c-format
 msgid "Could not display the folder “%s”"
 msgstr "Nemoguće prikazivanje \"%s\" mape"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2337 src/fr-window.c:2375
+#: src/fr-window.c:2287 src/fr-window.c:2325
 #, c-format
 msgid "Creating “%s”"
 msgstr "Stvaram \"%s\""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2341
+#: src/fr-window.c:2291
 #, c-format
 msgid "Loading “%s”"
 msgstr "Učitavam \"%s\""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2345
+#: src/fr-window.c:2295
 #, c-format
 msgid "Reading “%s”"
 msgstr "Očitavam \"%s\""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2349
+#: src/fr-window.c:2299
 #, c-format
 msgid "Deleting the files from “%s”"
 msgstr "Brišem datoteke s \"%s\""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2353
+#: src/fr-window.c:2303
 #, c-format
 msgid "Testing “%s”"
 msgstr "Testiram \"%s\""
 
-#: src/fr-window.c:2356
+#: src/fr-window.c:2306
 msgid "Getting the file list"
 msgstr "Preuzimam popis datoteka"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2360
+#: src/fr-window.c:2310
 #, c-format
 msgid "Copying the files to add to “%s”"
 msgstr "Kopiranje datoteka za dodavanje u \"%s\""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2364
+#: src/fr-window.c:2314
 #, c-format
 msgid "Adding the files to “%s”"
 msgstr "Dodavanje datoteka u \"%s\""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2368
+#: src/fr-window.c:2318
 #, c-format
 msgid "Extracting the files from “%s”"
 msgstr "Raspakiravm datoteke s \"%s\""
 
-#: src/fr-window.c:2371
+#: src/fr-window.c:2321
 msgid "Copying the extracted files to the destination"
 msgstr "Kopiranje raspakiranih datoteka u odredište"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2380
+#: src/fr-window.c:2330
 #, c-format
 msgid "Saving “%s”"
 msgstr "Spremam \"%s\""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2387
+#: src/fr-window.c:2337
 #, c-format
 msgid "Renaming the files in “%s”"
 msgstr "Preimenovanje datoteka u \"%s\""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2391
+#: src/fr-window.c:2341
 #, c-format
 msgid "Updating the files in “%s”"
 msgstr "Nadopuna datoteka u \"%s\""
 
-#: src/fr-window.c:2680
+#: src/fr-window.c:2630
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
@@ -705,87 +702,82 @@ msgstr[0] "%d datoteka preostala"
 msgstr[1] "%'d datoteke preostale"
 msgstr[2] "%'d datoteka preostalo"
 
-#: src/fr-window.c:2684 src/fr-window.c:3306
+#: src/fr-window.c:2634 src/fr-window.c:3256
 msgid "Please wait…"
 msgstr "Molim pričekajte…"
 
-#: src/fr-window.c:2800
+#: src/fr-window.c:2750
 msgid "Extraction completed successfully"
 msgstr "Raspakiravanje uspješno završeno"
 
-#: src/fr-window.c:2803
+#: src/fr-window.c:2753
 msgid "_Show the Files"
 msgstr "_Prikaži datoteke"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2820 src/fr-window.c:6223
+#: src/fr-window.c:2770 src/fr-window.c:6149
 #, c-format
 msgid "“%s” created successfully"
 msgstr "\"%s\" je uspješno stvoren"
 
-#: src/fr-window.c:2827
+#: src/fr-window.c:2777
 msgid "_Open the Archive"
 msgstr "_Otvori arhivu"
 
-#: src/fr-window.c:2915 src/fr-window.c:3085
+#: src/fr-window.c:2865 src/fr-window.c:3035
 msgid "Command exited abnormally."
 msgstr "Naredba je neočekivano prekinuta."
 
-#: src/fr-window.c:3034
+#: src/fr-window.c:2984
 msgid "An error occurred while extracting files."
 msgstr "Dogodila se greška prilikom raspakiravanja datoteka."
 
-#: src/fr-window.c:3040
+#: src/fr-window.c:2990
 #, c-format
 msgid "Could not open “%s”"
 msgstr "Nemoguće otvaranje \"%s\""
 
-#: src/fr-window.c:3045
+#: src/fr-window.c:2995
 msgid "An error occurred while loading the archive."
 msgstr "Dogodila se greška prilikom učitavanja arhive."
 
-#: src/fr-window.c:3049
+#: src/fr-window.c:2999
 msgid "An error occurred while deleting files from the archive."
 msgstr "Dogodila se greška prilikom uklanjanja datoteka iz arhive."
 
-#: src/fr-window.c:3055
+#: src/fr-window.c:3005
 msgid "An error occurred while adding files to the archive."
 msgstr "Dogodila se greška prilikom dodavanja datoteka u arhivu."
 
-#: src/fr-window.c:3059
+#: src/fr-window.c:3009
 msgid "An error occurred while testing archive."
 msgstr "Dogodila se greška prilikom testiranja arhive."
 
-#: src/fr-window.c:3064
+#: src/fr-window.c:3014
 msgid "An error occurred while saving the archive."
 msgstr "Dogodila se greška prilikom spremanja arhive."
 
-#: src/fr-window.c:3068
+#: src/fr-window.c:3018
 msgid "An error occurred while renaming the files."
 msgstr "Dogodila se greška tijekom preimenovanja datoteka."
 
-#: src/fr-window.c:3072
+#: src/fr-window.c:3022
 msgid "An error occurred while updating the files."
 msgstr "Dogodila se greška tijekom nadopune datoteka."
 
-#: src/fr-window.c:3076
+#: src/fr-window.c:3026
 msgid "An error occurred."
 msgstr "Dogodila se greška."
 
-#: src/fr-window.c:3082
+#: src/fr-window.c:3032
 msgid "Command not found."
 msgstr "Naredba nije pronađena."
 
-#: src/fr-window.c:3238
+#: src/fr-window.c:3188
 msgid "Test Result"
 msgstr "Rezultat testa"
 
-#: src/fr-window.c:4203 src/fr-window.c:8980 src/fr-window.c:9014
-#: src/fr-window.c:9294
-msgid "Could not perform the operation"
-msgstr "Nemoguće obavljanje radnje"
-
-#: src/fr-window.c:4228
+#: src/fr-window.c:4178
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -793,126 +785,126 @@ msgstr ""
 "Želite li dodati ovu datoteku u trenutnu arhivu ili ju otvoriti u novoj "
 "arhivi?"
 
-#: src/fr-window.c:4257
+#: src/fr-window.c:4207
 msgid "Do you want to create a new archive with these files?"
 msgstr "Želite li stvoriti novu arhivu s ovim datotekama?"
 
-#: src/fr-window.c:4260
+#: src/fr-window.c:4210
 msgid "Create _Archive"
 msgstr "Stvori _arhivu"
 
-#: src/fr-window.c:4289 src/fr-window.c:7433
+#: src/fr-window.c:4239 src/fr-window.c:7334
 msgid "New Archive"
 msgstr "Nova arhiva"
 
-#: src/fr-window.c:4998
+#: src/fr-window.c:4948
 msgid "Folders"
 msgstr "Mape"
 
-#: src/fr-window.c:5036 src/ui/file-selector.ui:206
+#: src/fr-window.c:4986 src/ui/file-selector.ui:206
 msgctxt "File"
 msgid "Size"
 msgstr "Veličina"
 
-#: src/fr-window.c:5037
+#: src/fr-window.c:4987
 msgctxt "File"
 msgid "Type"
 msgstr "Vrsta"
 
-#: src/fr-window.c:5038 src/ui/file-selector.ui:222
+#: src/fr-window.c:4988 src/ui/file-selector.ui:222
 msgctxt "File"
 msgid "Modified"
 msgstr "Promijenjeno"
 
-#: src/fr-window.c:5039
+#: src/fr-window.c:4989
 msgctxt "File"
 msgid "Location"
 msgstr "Lokacija"
 
-#: src/fr-window.c:5048 src/ui/file-selector.ui:175
+#: src/fr-window.c:4998 src/ui/file-selector.ui:175
 msgctxt "File"
 msgid "Name"
 msgstr "Naziv"
 
-#: src/fr-window.c:5794 src/ui/extract-dialog-options.ui:20
+#: src/fr-window.c:5744
 msgctxt "Action"
-msgid "Extract"
-msgstr "Raspakiraj"
+msgid "_Extract"
+msgstr "_Raspakiraj"
 
-#: src/fr-window.c:5798
+#: src/fr-window.c:5748
 msgctxt "Action"
 msgid "Add Files"
 msgstr "Dodaj datoteke"
 
-#: src/fr-window.c:5822
+#: src/fr-window.c:5772
 msgid "Find files by name"
 msgstr "Pretraži datoteke prema nazivu"
 
-#: src/fr-window.c:5838
+#: src/fr-window.c:5788
 msgid "Go to the previous visited location"
 msgstr "Idi na prije posjećenu lokaciju"
 
-#: src/fr-window.c:5843
+#: src/fr-window.c:5793
 msgid "Go to the next visited location"
 msgstr "Idi na sljedeću posjećenu lokaciju"
 
-#: src/fr-window.c:5853
+#: src/fr-window.c:5803
 msgid "Go to the home location"
 msgstr "Idi na početnu lokaciju"
 
 #. Translators: after the colon there is a folder name.
-#: src/fr-window.c:5862 src/ui/file-selector.ui:83
+#: src/fr-window.c:5812 src/ui/file-selector.ui:83
 #: src/ui/new-archive-dialog.ui:93
 msgid "_Location:"
 msgstr "_Lokacija:"
 
-#: src/fr-window.c:6237 src/ui/menus.ui:7 src/ui/menus.ui:47 src/ui/menus.ui:83
+#: src/fr-window.c:6154 src/ui/menus.ui:7 src/ui/menus.ui:47 src/ui/menus.ui:83
 msgctxt "Action"
 msgid "Open"
 msgstr "Otvori"
 
-#: src/fr-window.c:6726
+#: src/fr-window.c:6627
 #, c-format
 msgid "Replace file “%s”?"
 msgstr "Zamijeni datoteku \"%s\"?"
 
-#: src/fr-window.c:6729
+#: src/fr-window.c:6630
 #, c-format
 msgid "Another file with the same name already exists in “%s”."
 msgstr "Druga datoteka s istim nazivom već postoji u \"%s\"."
 
-#: src/fr-window.c:6735
+#: src/fr-window.c:6636
 msgid "Replace _All"
 msgstr "_Zamijeni sve"
 
-#: src/fr-window.c:6736
+#: src/fr-window.c:6637
 msgid "Replace _Nothing"
 msgstr "_Zamijeni ništa"
 
-#: src/fr-window.c:6737
+#: src/fr-window.c:6638
 msgid "_Skip"
 msgstr "_Preskoči"
 
-#: src/fr-window.c:7617 src/fr-window.c:7974
+#: src/fr-window.c:7518 src/fr-window.c:7875
 #, c-format
 msgid "Could not save the archive “%s”"
 msgstr "Nemoguće spremanje arhive \"%s\""
 
-#: src/fr-window.c:7744
+#: src/fr-window.c:7645
 msgid "Save"
 msgstr "Spremi"
 
-#: src/fr-window.c:8068
+#: src/fr-window.c:7969
 msgid "Last Output"
 msgstr "Opširan ispis"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8291
+#: src/fr-window.c:8192
 msgid "New name is void, please type a name."
 msgstr "Novi naziv je prazan, upišite naziv."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8301
+#: src/fr-window.c:8202
 #, c-format
 msgid ""
 "Name “%s” is not valid because it contains at least one of the following "
@@ -921,7 +913,7 @@ msgstr ""
 "Naziv \"%s\" nije valjan jer sadrži najmanje jedan od sljedećih znakova: %s, "
 "upišite novi naziv."
 
-#: src/fr-window.c:8337
+#: src/fr-window.c:8238
 #, c-format
 msgid ""
 "A folder named “%s” already exists.\n"
@@ -932,11 +924,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8337 src/fr-window.c:8339
+#: src/fr-window.c:8238 src/fr-window.c:8240
 msgid "Please use a different name."
 msgstr "Upotrijebite drugačiji naziv."
 
-#: src/fr-window.c:8339
+#: src/fr-window.c:8240
 #, c-format
 msgid ""
 "A file named “%s” already exists.\n"
@@ -947,51 +939,51 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8409
+#: src/fr-window.c:8310
 msgid "Rename"
 msgstr "Preimenuj"
 
-#: src/fr-window.c:8410
+#: src/fr-window.c:8311
 msgid "_New folder name:"
 msgstr "_Novi naziv mape:"
 
-#: src/fr-window.c:8410
+#: src/fr-window.c:8311
 msgid "_New file name:"
 msgstr "_Novi naziv datoteke:"
 
-#: src/fr-window.c:8414
+#: src/fr-window.c:8315
 msgid "_Rename"
 msgstr "_Promijeni naziv"
 
-#: src/fr-window.c:8431 src/fr-window.c:8449
+#: src/fr-window.c:8332 src/fr-window.c:8350
 msgid "Could not rename the folder"
 msgstr "Nemoguća promjena naziva mape"
 
-#: src/fr-window.c:8431 src/fr-window.c:8449
+#: src/fr-window.c:8332 src/fr-window.c:8350
 msgid "Could not rename the file"
 msgstr "Nemoguća promjena naziva datoteke"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8887
+#: src/fr-window.c:8788
 #, c-format
 msgid "Moving the files from “%s” to “%s”"
 msgstr "Premještanje datoteka s \"%s\" u \"%s\""
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8890
+#: src/fr-window.c:8791
 #, c-format
 msgid "Copying the files from “%s” to “%s”"
 msgstr "Kopiranje datoteka s \"%s\" u \"%s\""
 
-#: src/fr-window.c:8941
+#: src/fr-window.c:8842
 msgid "Paste Selection"
 msgstr "Zalijepi odabrano"
 
-#: src/fr-window.c:8942
+#: src/fr-window.c:8843
 msgid "_Destination folder:"
 msgstr "_Odredišna mapa:"
 
-#: src/fr-window.c:8946 src/ui/app-menubar.ui:61
+#: src/fr-window.c:8847 src/ui/app-menubar.ui:61
 msgid "_Paste"
 msgstr "_Zalijepi"
 
@@ -1010,7 +1002,7 @@ msgstr "I_zlaz naredbenog redka:"
 msgid "Could not display help"
 msgstr "Nemoguć prikaz pomoći"
 
-#: src/gtk-utils.c:585
+#: src/gtk-utils.c:591
 msgid "Change password visibility"
 msgstr "Promjena vidljivosti lozinke"
 
@@ -1207,6 +1199,11 @@ msgstr "_Datoteke:"
 #: src/ui/delete.ui:74
 msgid "example: *.txt; *.doc"
 msgstr "primjer: *.txt; *.doc"
+
+#: src/ui/extract-dialog-options.ui:20
+msgctxt "Action"
+msgid "Extract"
+msgstr "Raspakiraj"
 
 #: src/ui/extract-dialog-options.ui:165
 msgid "_Keep directory structure"
@@ -1463,6 +1460,12 @@ msgstr "Broj datoteka:"
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "O_daberite datoteke koje želite nadopuniti:"
+
+#~ msgid "Dump gobject introspection file"
+#~ msgstr "Stvori datoteku gobject samoispitivanja"
+
+#~ msgid "input.txt,output.xml"
+#~ msgstr "ulaz.txt,izlaz.xml"
 
 #~ msgctxt "Action"
 #~ msgid "Load Options"
