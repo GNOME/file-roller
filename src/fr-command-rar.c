@@ -727,27 +727,18 @@ fr_command_rar_handle_error (FrCommand *comm,
 	if (error->type == FR_ERROR_NONE)
 		return;
 
-	/* ignore warnings */
-	if (error->status <= 1)
+	if (error->status <= 1) {
+		/* ignore warnings */
 		fr_error_clear_gerror (error);
+	}
+	else if (error->status == 11) {
+		/* handle wrong password */
+		fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
+		return;
+	}
 
 	for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
 		char *line = scan->data;
-
-		if (strstr (line, "password incorrect") != NULL) {
-			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
-			break;
-		}
-
-		if (strstr (line, "password is incorrect") != NULL) {
-			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
-			break;
-		}
-
-		if (strstr (line, "wrong password") != NULL) {
-			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
-			break;
-		}
 
 		if (strncmp (line, "Unexpected end of archive", 25) == 0) {
 			/* FIXME: handle this type of errors at a higher level when the freeze is over. */
