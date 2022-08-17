@@ -28,6 +28,11 @@
 G_DECLARE_FINAL_TYPE (FrApplication, fr_application, FR, APPLICATION, GtkApplication)
 
 GtkApplication * fr_application_new           (void);
+
+/**
+ * fr_application_get_settings:
+ * Returns: (transfer none)
+ */
 GSettings *      fr_application_get_settings  (FrApplication *app,
 		     	     	     	       const char    *schema);
 

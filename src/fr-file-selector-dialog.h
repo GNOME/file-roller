@@ -30,13 +30,38 @@ GtkWidget *     fr_file_selector_dialog_new                 (const char         
 							     GtkWindow              *parent);
 void            fr_file_selector_dialog_set_extra_widget    (FrFileSelectorDialog   *dialog,
 							     GtkWidget              *extra_widget);
+
+/**
+ * fr_file_selector_dialog_get_extra_widget:
+ * Returns: (transfer none)
+ */
 GtkWidget *     fr_file_selector_dialog_get_extra_widget    (FrFileSelectorDialog   *dialog);
 void            fr_file_selector_dialog_set_current_folder  (FrFileSelectorDialog   *dialog,
 							     GFile                  *folder);
+
+/**
+ * fr_file_selector_dialog_get_current_folder:
+ * Returns: (transfer full)
+ */
 GFile *         fr_file_selector_dialog_get_current_folder  (FrFileSelectorDialog   *dialog);
+
+/**
+ * fr_file_selector_dialog_set_selected_files:
+ * @files: (element-type GFile)
+ */
 void            fr_file_selector_dialog_set_selected_files  (FrFileSelectorDialog   *dialog,
-							     GList                  *files /* GFile list */);
+							     GList                  *files);
+
+/**
+ * fr_file_selector_dialog_get_selected_files:
+ * Returns: (element-type GFile) (transfer full)
+ */
 GList *         fr_file_selector_dialog_get_selected_files  (FrFileSelectorDialog   *dialog);
+
+/**
+ * fr_file_selector_dialog_get_action_map:
+ * Returns: (transfer none)
+ */
 GSimpleActionGroup *fr_file_selector_dialog_get_action_map (FrFileSelectorDialog   *dialog);
 
 #endif /* FR_FILE_SELECTOR_DIALOG_H */

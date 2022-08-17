@@ -345,9 +345,19 @@ struct _FrArchiveClass {
 };
 
 GType         fr_archive_get_type                (void);
+
+/**
+ * fr_archive_get_file:
+ * Returns: (transfer none)
+ */
 GFile *       fr_archive_get_file                (FrArchive           *archive);
 gboolean      fr_archive_is_capable_of           (FrArchive           *archive,
 						  FrArchiveCaps        capabilities);
+
+/**
+ * fr_archive_get_supported_types:
+ * Returns: (transfer none)
+ */
 const char ** fr_archive_get_supported_types     (FrArchive           *archive);
 void          fr_archive_update_capabilities     (FrArchive           *archive);
 FrArchiveCap  fr_archive_get_capabilities        (FrArchive           *archive,
@@ -360,12 +370,22 @@ const char *  fr_archive_get_packages            (FrArchive           *archive,
 						  const char          *mime_type);
 void          fr_archive_set_stoppable           (FrArchive           *archive,
 						  gboolean             stoppable);
+
+/**
+ * fr_archive_create:
+ * Returns: (transfer full)
+ */
 FrArchive *   fr_archive_create                  (GFile               *file,
 						  const char          *mime_type);
 void          fr_archive_open                    (GFile               *file,
 		       	       	       	          GCancellable        *cancellable,
 		       	       	       	          GAsyncReadyCallback  callback,
 		       	       	       	          gpointer             user_data);
+
+/**
+ * fr_archive_open_finish:
+ * Returns: (transfer full)
+ */
 FrArchive *   fr_archive_open_finish             (GFile               *file,
 						  GAsyncResult        *result,
 						  GError             **error);
@@ -377,8 +397,13 @@ void          fr_archive_list                    (FrArchive           *archive,
 gboolean      fr_archive_operation_finish        (FrArchive           *archive,
 						  GAsyncResult        *result,
 						  GError             **error);
+
+/**
+ * fr_archive_add_files:
+ * @file_list: (element-type GFile)
+ */
 void          fr_archive_add_files               (FrArchive           *archive,
-						  GList               *file_list, /* GFile list */
+						  GList               *file_list,
 						  GFile               *base_dir,
 						  const char          *dest_dir,
 						  gboolean             update,
@@ -390,8 +415,13 @@ void          fr_archive_add_files               (FrArchive           *archive,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
+
+/**
+ * fr_archive_add_files_with_filter:
+ * @file_list: (element-type GFile)
+ */
 void          fr_archive_add_files_with_filter   (FrArchive           *archive,
-						  GList               *file_list, /* GFile list */
+						  GList               *file_list,
 						  GFile               *base_dir,
 						  const char          *include_files,
 						  const char          *exclude_files,
@@ -406,12 +436,22 @@ void          fr_archive_add_files_with_filter   (FrArchive           *archive,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
+
+/**
+ * fr_archive_remove:
+ * @file_list: (element-type GFile)
+ */
 void          fr_archive_remove                  (FrArchive           *archive,
 						  GList               *file_list,
 						  FrCompression        compression,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
+
+/**
+ * fr_archive_extract:
+ * @file_list: (element-type GFile)
+ */
 void          fr_archive_extract                 (FrArchive           *archive,
 						  GList               *file_list,
 						  GFile               *destination,
@@ -434,6 +474,11 @@ gboolean      fr_archive_extract_here            (FrArchive           *archive,
 void          fr_archive_set_last_extraction_destination
 						 (FrArchive           *archive,
 						  GFile               *folder);
+
+/**
+ * fr_archive_get_last_extraction_destination:
+ * Returns: (transfer none)
+ */
 GFile *       fr_archive_get_last_extraction_destination
 						 (FrArchive           *archive);
 void          fr_archive_test                    (FrArchive           *archive,
@@ -441,6 +486,11 @@ void          fr_archive_test                    (FrArchive           *archive,
 		       	       	       	          GCancellable        *cancellable,
 		       	       	       	          GAsyncReadyCallback  callback,
 		       	       	       	          gpointer             user_data);
+
+/**
+ * fr_archive_rename:
+ * @file_list: (element-type GFile)
+ */
 void          fr_archive_rename                  (FrArchive           *archive,
 						  GList               *file_list,
 						  const char          *old_name,
@@ -452,6 +502,11 @@ void          fr_archive_rename                  (FrArchive           *archive,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
+
+/**
+ * fr_archive_paste_clipboard:
+ * @files: (element-type GFile)
+ */
 void          fr_archive_paste_clipboard         (FrArchive           *archive,
 						  GFile               *file,
 						  char                *password,
@@ -466,6 +521,11 @@ void          fr_archive_paste_clipboard         (FrArchive           *archive,
 		       	       	       	          GCancellable        *cancellable,
 		       	       	       	          GAsyncReadyCallback  callback,
 		       	       	       	          gpointer             user_data);
+
+/**
+ * fr_archive_add_dropped_items:
+ * @item_list: (element-type GFile)
+ */
 void          fr_archive_add_dropped_items       (FrArchive           *archive,
 						  GList               *item_list,
 						  const char          *dest_dir,
@@ -476,6 +536,12 @@ void          fr_archive_add_dropped_items       (FrArchive           *archive,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
+
+/**
+ * fr_archive_update_open_files:
+ * @file_list: (element-type GFile)
+ * @dir_list: (element-type GFile)
+ */
 void          fr_archive_update_open_files       (FrArchive           *archive,
 						  GList               *file_list,
 						  GList               *dir_list,

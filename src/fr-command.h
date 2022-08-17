@@ -82,6 +82,11 @@ struct _FrCommandClass {
 };
 
 GType    fr_command_get_type         (void);
+
+/**
+ * fr_command_get_last_output:
+ * Returns: (element-type guint8*) (transfer none): List of raw stderr (or stdout, if stderr is not present) lines of the last execution of the command, in their original encoding.
+ */
 GList *  fr_command_get_last_output  (FrCommand *command);
 
 #endif /* FR_COMMAND_H */

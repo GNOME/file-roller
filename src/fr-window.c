@@ -3320,7 +3320,10 @@ _archive_operation_started (FrWindow *window,
 
 #undef DEBUG_GET_DIR_LIST_FROM_PATH
 
-
+/**
+ * get_dir_list_from_path:
+ * Returns: (element-type filename) (transfer full)
+ */
 static GList *
 get_dir_list_from_path (FrWindow *window,
 	      		char     *path)

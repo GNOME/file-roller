@@ -63,6 +63,11 @@ void fr_file_data_update_content_type (FrFileData *fdata);
 gboolean fr_file_data_is_dir (FrFileData *fdata);
 void fr_file_data_set_list_name (FrFileData *fdata, const char *value);
 int fr_file_data_compare_by_path (gconstpointer a, gconstpointer b);
+
+/**
+ * fr_find_path_in_file_data_array:
+ * @array: (element-type FrFileData)
+ */
 int fr_find_path_in_file_data_array (GPtrArray *array, const char *path);
 
 #endif /* FR_FILE_DATA_H */
