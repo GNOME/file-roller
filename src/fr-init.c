@@ -208,32 +208,6 @@ int           open_type[G_N_ELEMENTS (mime_type_desc)];
 int           create_type[G_N_ELEMENTS (mime_type_desc)];
 
 
-static void
-migrate_options_directory (void)
-{
-	char *old_directory_path;
-	GFile *old_directory;
-	GFile *new_directory;
-
-	old_directory_path = get_home_relative_path (".gnome2/file-roller/options");
-	old_directory = g_file_new_for_path (old_directory_path);
-	new_directory = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, FALSE);
-	if (g_file_query_exists (old_directory, NULL) && ! g_file_query_exists (new_directory, NULL)) {
-		GFile *parent;
-
-		parent = g_file_get_parent (new_directory);
-		if (_g_file_make_directory_tree (parent, 0700, NULL))
-			g_file_move (old_directory, new_directory, 0, NULL, NULL, NULL, NULL);
-
-		g_object_unref (parent);
-	}
-
-	g_object_unref (new_directory);
-	g_object_unref (old_directory);
-	g_free (old_directory_path);
-}
-
-
 /* -- FrRegisteredArchive -- */
 
 
@@ -638,7 +612,6 @@ initialize_data (void)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PRIVDATADIR G_DIR_SEPARATOR_S "icons");
 
-	migrate_options_directory ();
 	register_archives ();
 	compute_supported_archive_types ();
 }

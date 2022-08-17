@@ -33,6 +33,7 @@
 #include "gtk-utils.h"
 #include "preferences.h"
 
+#define ADD_FOLDER_OPTIONS_DIR  "file-roller/options"
 
 #define GET_WIDGET(x) (_gtk_builder_get_widget (data->builder, (x)))
 

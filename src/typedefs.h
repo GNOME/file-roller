@@ -25,8 +25,6 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#define ADD_FOLDER_OPTIONS_DIR  "file-roller/options"
-
 typedef enum {
 	FR_CLIPBOARD_OP_CUT,
 	FR_CLIPBOARD_OP_COPY
