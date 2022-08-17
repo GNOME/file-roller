@@ -58,6 +58,7 @@ source_files = files(
 )
 
 fr_headers = files(
+  'file-data.h',
   'fr-application-menu.h',
   'fr-application.h',
   'fr-archive.h',
@@ -146,6 +147,8 @@ if build_introspection
     sources: [
       source_files,
       fr_headers,
+      enum_files,
+      'typedefs.h',
     ],
     namespace: 'FileRoller',
     nsversion: '1.0',
