@@ -68,7 +68,7 @@ package_installer_terminated (InstallerData *idata,
 						 error_message);
 	}
 	else {
-		update_registered_archives_capabilities ();
+		fr_update_registered_archives_capabilities ();
 		if (fr_window_is_batch_mode (idata->window))
 			fr_window_batch_resume (idata->window);
 		else
@@ -285,9 +285,9 @@ file_buffer_ready_cb (GObject      *source_object,
 	g_free (uri);
 	g_free (buffer);
 
-	archive_type = get_preferred_archive_for_mime_type (mime_type, FR_ARCHIVE_CAN_READ_WRITE);
+	archive_type = fr_get_preferred_archive_for_mime_type (mime_type, FR_ARCHIVE_CAN_READ_WRITE);
 	if (archive_type == 0)
-		archive_type = get_preferred_archive_for_mime_type (mime_type, FR_ARCHIVE_CAN_READ);
+		archive_type = fr_get_preferred_archive_for_mime_type (mime_type, FR_ARCHIVE_CAN_READ);
 	if (archive_type == 0) {
 		package_installer_terminated (idata, FR_ERROR_GENERIC, _("Archive type not supported."));
 		return;

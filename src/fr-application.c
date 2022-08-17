@@ -177,7 +177,7 @@ handle_method_call (GDBusConnection       *connection,
 		    GDBusMethodInvocation *invocation,
 		    gpointer               user_data)
 {
-	update_registered_archives_capabilities ();
+	fr_update_registered_archives_capabilities ();
 
 	if (g_strcmp0 (method_name, "GetSupportedTypes") == 0) {
 		char *action;
@@ -388,7 +388,7 @@ fr_application_finalize (GObject *object)
 	_g_object_unref (self->listing_settings);
 	_g_object_unref (self->ui_settings);
 
-	release_data ();
+	fr_release_data ();
 
         G_OBJECT_CLASS (fr_application_parent_class)->finalize (object);
 }
@@ -478,7 +478,7 @@ fr_application_startup (GApplication *application)
 	gtk_window_set_default_icon_name ("org.gnome.ArchiveManager");
 
 	fr_application_register_archive_manager_service (FR_APPLICATION (application));
-	initialize_data ();
+	fr_initialize_data ();
 
 	/* use the menubar only when the shell shows the menu bar */
 
@@ -492,9 +492,9 @@ fr_application_startup (GApplication *application)
 					    HDY_COLOR_SCHEME_PREFER_LIGHT);
 
 	if (shell_shows_menubar)
-		initialize_app_menubar (application);
+		fr_initialize_app_menubar (application);
 	else
-		initialize_app_menu (application);
+		fr_initialize_app_menu (application);
 
 	/* Setup actions */
 	g_action_map_add_action_entries (G_ACTION_MAP (application), entries,

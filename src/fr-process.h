@@ -31,14 +31,14 @@
 #define FR_TYPE_PROCESS (fr_process_get_type ())
 G_DECLARE_FINAL_TYPE (FrProcess, fr_process, FR, PROCESS, GObject)
 
-typedef void     (*ProcFunc)     (gpointer data);
-typedef gboolean (*ContinueFunc) (FrError **error, gpointer data);
-typedef void     (*LineFunc)     (char *line, gpointer data);
+typedef void     (*FrProcFunc)     (gpointer data);
+typedef gboolean (*FrContinueFunc) (FrError **error, gpointer data);
+typedef void     (*FrLineFunc)     (char *line, gpointer data);
 
 typedef struct {
 	GIOChannel *source;
 	GList      *raw;
-	LineFunc    line_func;
+	FrLineFunc    line_func;
 	gpointer    line_data;
 	GIOStatus   status;
 	GError     *error;
@@ -75,13 +75,13 @@ void        fr_process_set_arg_at           (FrProcess            *fr_proc,
 					     int                   n_arg,
 					     const char           *arg);
 void        fr_process_set_begin_func       (FrProcess            *fr_proc,
-					     ProcFunc              func,
+					     FrProcFunc              func,
 					     gpointer              func_data);
 void        fr_process_set_end_func         (FrProcess            *fr_proc,
-					     ProcFunc              func,
+					     FrProcFunc              func,
 					     gpointer              func_data);
 void        fr_process_set_continue_func    (FrProcess            *fr_proc,
-					     ContinueFunc          func,
+					     FrContinueFunc          func,
 					     gpointer              func_data);
 void        fr_process_end_command          (FrProcess            *fr_proc);
 void        fr_process_set_working_dir      (FrProcess            *fr_proc,
@@ -95,10 +95,10 @@ void        fr_process_set_ignore_error     (FrProcess            *fr_proc,
 void        fr_process_use_standard_locale  (FrProcess            *fr_proc,
 					     gboolean              use_stand_locale);
 void        fr_process_set_out_line_func    (FrProcess            *fr_proc,
-					     LineFunc              func,
+					     FrLineFunc              func,
 					     gpointer              func_data);
 void        fr_process_set_err_line_func    (FrProcess            *fr_proc,
-					     LineFunc              func,
+					     FrLineFunc              func,
 					     gpointer              func_data);
 void        fr_process_execute              (FrProcess            *process,
 					     GCancellable         *cancellable,

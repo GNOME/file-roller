@@ -7073,7 +7073,7 @@ _get_destination_to_avoid_tarbomb (GFile *file)
 
 	directory = g_file_get_parent (file);
 	name = g_file_get_basename (file);
-	ext = get_archive_filename_extension (name);
+	ext = fr_get_archive_filename_extension (name);
 	if (ext == NULL)
 		/* if no extension is present add a suffix to the name... */
 		new_name = g_strconcat (name, "_FILES", NULL);
@@ -9082,7 +9082,7 @@ typedef struct {
 	FrWindow    *window;
 	GList       *file_list;
 	gboolean     ask_application;
-	CommandData *cdata;
+	FrCommandData *cdata;
 } OpenFilesData;
 
 
@@ -9100,7 +9100,7 @@ open_files_data_new (FrWindow *window,
 	odata->window = g_object_ref (window);
 	odata->file_list = _g_string_list_dup (file_list);
 	odata->ask_application = ask_application;
-	odata->cdata = g_new0 (CommandData, 1);
+	odata->cdata = g_new0 (FrCommandData, 1);
 	odata->cdata->temp_dir = _g_file_get_temp_work_dir (NULL);
 	odata->cdata->file_list = NULL;
 	for (scan = file_list; scan; scan = scan->next) {

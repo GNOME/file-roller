@@ -230,7 +230,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	}
 	gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_OK);
 
-	sort_mime_types_by_extension (self->supported_types);
+	fr_sort_mime_types_by_extension (self->supported_types);
 
 	/* Set widgets data. */
 

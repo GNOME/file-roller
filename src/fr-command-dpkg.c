@@ -238,7 +238,7 @@ static const char *
 fr_command_dpkg_get_packages (FrArchive  *archive,
                               const char *mime_type)
 {
-        return PACKAGES ("dpkg");
+        return FR_PACKAGES ("dpkg");
 }
 
 

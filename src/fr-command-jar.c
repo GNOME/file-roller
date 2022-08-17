@@ -181,7 +181,7 @@ static const char *
 fr_command_jar_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
-	return PACKAGES ("zip,unzip");
+	return FR_PACKAGES ("zip,unzip");
 }
 
 

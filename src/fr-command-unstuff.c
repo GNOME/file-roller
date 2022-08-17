@@ -310,7 +310,7 @@ static const char *
 fr_command_unstuff_get_packages (FrArchive  *archive,
 			         const char *mime_type)
 {
-	return PACKAGES ("unstaff");
+	return FR_PACKAGES ("unstaff");
 }
 
 

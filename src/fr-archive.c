@@ -594,13 +594,13 @@ fr_archive_create (GFile      *file,
 	 * that can only create a specific file format. */
 
 	requested_capabilities = FR_ARCHIVE_CAN_READ_WRITE;
-	archive_type = get_archive_type_from_mime_type (mime_type, requested_capabilities);
+	archive_type = fr_get_archive_type_from_mime_type (mime_type, requested_capabilities);
 
 	/* if no command was found, remove the read capability and try again */
 
 	if (archive_type == 0) {
 		requested_capabilities ^= FR_ARCHIVE_CAN_READ;
-		archive_type = get_archive_type_from_mime_type (mime_type, requested_capabilities);
+		archive_type = fr_get_archive_type_from_mime_type (mime_type, requested_capabilities);
 	}
 
 	archive = create_archive_for_mime_type (archive_type,
@@ -679,13 +679,13 @@ create_archive_to_load_archive (GFile      *file,
 	 * that can only read a specific file format. */
 
 	requested_capabilities = FR_ARCHIVE_CAN_READ_WRITE;
-	archive_type = get_archive_type_from_mime_type (mime_type, requested_capabilities);
+	archive_type = fr_get_archive_type_from_mime_type (mime_type, requested_capabilities);
 
 	/* if no command was found, remove the write capability and try again */
 
 	if (archive_type == 0) {
 		requested_capabilities ^= FR_ARCHIVE_CAN_WRITE;
-		archive_type = get_archive_type_from_mime_type (mime_type, requested_capabilities);
+		archive_type = fr_get_archive_type_from_mime_type (mime_type, requested_capabilities);
 	}
 
 	return create_archive_for_mime_type (archive_type,
@@ -1362,7 +1362,7 @@ get_desired_destination_for_archive (GFile *file)
 	directory_uri = g_file_get_uri (directory);
 
 	name = g_file_get_basename (file);
-	ext = get_archive_filename_extension (name);
+	ext = fr_get_archive_filename_extension (name);
 	if (ext == NULL)
 		/* if no extension is present add a suffix to the name... */
 		new_name = g_strconcat (name, "_FILES", NULL);

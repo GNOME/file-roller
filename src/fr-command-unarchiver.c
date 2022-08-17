@@ -284,7 +284,7 @@ static const char *
 fr_command_unarchiver_get_packages (FrArchive  *archive,
 				    const char *mime_type)
 {
-	return PACKAGES ("unarchiver");
+	return FR_PACKAGES ("unarchiver");
 }
 
 

@@ -370,7 +370,7 @@ register_archives (void)
 
 
 GType
-get_archive_type_from_mime_type (const char    *mime_type,
+fr_get_archive_type_from_mime_type (const char    *mime_type,
 				 FrArchiveCaps  requested_capabilities)
 {
 	if (mime_type == NULL)
@@ -393,7 +393,7 @@ get_archive_type_from_mime_type (const char    *mime_type,
 
 
 GType
-get_preferred_archive_for_mime_type (const char    *mime_type,
+fr_get_preferred_archive_for_mime_type (const char    *mime_type,
 				     FrArchiveCaps  requested_capabilities)
 {
 	for (guint i = 0; i < Registered_Archives->len; i++) {
@@ -413,7 +413,7 @@ get_preferred_archive_for_mime_type (const char    *mime_type,
 
 
 void
-update_registered_archives_capabilities (void)
+fr_update_registered_archives_capabilities (void)
 {
 	g_hash_table_remove_all (ProgramsCache);
 
@@ -473,7 +473,7 @@ _g_mime_type_get_from_filename (GFile *file)
 
 
 const char *
-get_archive_filename_extension (const char *filename)
+fr_get_archive_filename_extension (const char *filename)
 {
 	const char *ext;
 	int         i;
@@ -497,7 +497,7 @@ get_archive_filename_extension (const char *filename)
 
 
 int
-get_mime_type_index (const char *mime_type)
+fr_get_mime_type_index (const char *mime_type)
 {
 	int i;
 
@@ -548,7 +548,7 @@ sort_mime_types (int *a,
 
 
 void
-sort_mime_types_by_extension (int *a)
+fr_sort_mime_types_by_extension (int *a)
 {
 	sort_mime_types (a, cmp_mime_type_by_extension);
 }
@@ -568,7 +568,7 @@ compute_supported_archive_types (void)
 			int            idx;
 
 			cap = g_ptr_array_index (reg_com->caps, j);
-			idx = get_mime_type_index (cap->mime_type);
+			idx = fr_get_mime_type_index (cap->mime_type);
 			if (idx < 0) {
 				g_warning ("mime type not recognized: %s", cap->mime_type);
 				continue;
@@ -598,7 +598,7 @@ static gboolean initialized = FALSE;
 
 
 void
-initialize_data (void)
+fr_initialize_data (void)
 {
 	if (initialized)
 		return;
@@ -618,7 +618,7 @@ initialize_data (void)
 
 
 static void
-command_done (CommandData *cdata)
+command_done (FrCommandData *cdata)
 {
 	if (cdata == NULL)
 		return;
@@ -637,13 +637,13 @@ command_done (CommandData *cdata)
 
 
 void
-release_data (void)
+fr_release_data (void)
 {
 	if (! initialized)
 		return;
 
 	while (CommandList != NULL) {
-		CommandData *cdata = CommandList->data;
+		FrCommandData *cdata = CommandList->data;
 		command_done (cdata);
 	}
 }

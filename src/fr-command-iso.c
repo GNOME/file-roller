@@ -231,7 +231,7 @@ static const char *
 fr_command_iso_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
-	return PACKAGES ("genisoimage");
+	return FR_PACKAGES ("genisoimage");
 }
 
 

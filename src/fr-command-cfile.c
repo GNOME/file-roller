@@ -612,27 +612,27 @@ fr_command_cfile_get_packages (FrArchive  *archive,
 			       const char *mime_type)
 {
 	if (_g_mime_type_matches (mime_type, "application/x-gzip"))
-		return PACKAGES ("gzip");
+		return FR_PACKAGES ("gzip");
 	else if (_g_mime_type_matches (mime_type, "application/x-brotli"))
-		return PACKAGES ("brotli");
+		return FR_PACKAGES ("brotli");
 	else if (_g_mime_type_matches (mime_type, "application/x-bzip"))
-		return PACKAGES ("bzip2");
+		return FR_PACKAGES ("bzip2");
 	else if (_g_mime_type_matches (mime_type, "application/x-compress"))
-		return PACKAGES ("ncompress");
+		return FR_PACKAGES ("ncompress");
 	else if (_g_mime_type_matches (mime_type, "application/x-lzip"))
-		return PACKAGES ("lzip");
+		return FR_PACKAGES ("lzip");
 	else if (_g_mime_type_matches (mime_type, "application/x-lzma"))
-		return PACKAGES ("lzma");
+		return FR_PACKAGES ("lzma");
 	else if (_g_mime_type_matches (mime_type, "application/x-xz"))
-		return PACKAGES ("xz");
+		return FR_PACKAGES ("xz");
 	else if (_g_mime_type_matches (mime_type, "application/x-lzop"))
-		return PACKAGES ("lzop");
+		return FR_PACKAGES ("lzop");
 	else if (_g_mime_type_matches (mime_type, "application/x-rzip"))
-		return PACKAGES ("rzip");
+		return FR_PACKAGES ("rzip");
 	else if (_g_mime_type_matches (mime_type, "application/x-lz4"))
-		return PACKAGES ("lz4");
+		return FR_PACKAGES ("lz4");
 	else if (_g_mime_type_matches (mime_type, "application/zstd"))
-		return PACKAGES ("zstd");
+		return FR_PACKAGES ("zstd");
 
 	return NULL;
 }

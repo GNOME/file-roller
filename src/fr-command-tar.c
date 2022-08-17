@@ -1289,33 +1289,33 @@ fr_command_tar_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	if (_g_mime_type_matches (mime_type, "application/x-tar"))
-		return PACKAGES ("tar");
+		return FR_PACKAGES ("tar");
 	else if (_g_mime_type_matches (mime_type, "application/x-compressed-tar"))
-		return PACKAGES ("tar,gzip");
+		return FR_PACKAGES ("tar,gzip");
 	else if (_g_mime_type_matches (mime_type, "application/x-brotli-compressed-tar"))
-		return PACKAGES ("tar,brotli");
+		return FR_PACKAGES ("tar,brotli");
 	else if (_g_mime_type_matches (mime_type, "application/x-bzip-compressed-tar"))
-		return PACKAGES ("tar,bzip2");
+		return FR_PACKAGES ("tar,bzip2");
 	else if (_g_mime_type_matches (mime_type, "application/x-tarz"))
-		return PACKAGES ("tar,gzip,ncompress");
+		return FR_PACKAGES ("tar,gzip,ncompress");
 	else if (_g_mime_type_matches (mime_type, "application/x-lrzip-compressed-tar"))
-		return PACKAGES ("tar,lrzip");
+		return FR_PACKAGES ("tar,lrzip");
 	else if (_g_mime_type_matches (mime_type, "application/x-lz4-compressed-tar"))
-		return PACKAGES ("tar,lz4");
+		return FR_PACKAGES ("tar,lz4");
 	else if (_g_mime_type_matches (mime_type, "application/x-lzip-compressed-tar"))
-		return PACKAGES ("tar,lzip");
+		return FR_PACKAGES ("tar,lzip");
 	else if (_g_mime_type_matches (mime_type, "application/x-lzma-compressed-tar"))
-		return PACKAGES ("tar,lzma");
+		return FR_PACKAGES ("tar,lzma");
 	else if (_g_mime_type_matches (mime_type, "application/x-xz-compressed-tar"))
-		return PACKAGES ("tar,xz");
+		return FR_PACKAGES ("tar,xz");
 	else if (_g_mime_type_matches (mime_type, "application/x-tzo"))
-		return PACKAGES ("tar,lzop");
+		return FR_PACKAGES ("tar,lzop");
 	else if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar"))
-		return PACKAGES ("tar,7zip");
+		return FR_PACKAGES ("tar,7zip");
 	else if (_g_mime_type_matches (mime_type, "application/x-rzip-compressed-tar"))
-		return PACKAGES ("tar,rzip");
+		return FR_PACKAGES ("tar,rzip");
 	else if (_g_mime_type_matches (mime_type, "application/x-zstd-compressed-tar"))
-		return PACKAGES ("tar,zstd");
+		return FR_PACKAGES ("tar,zstd");
 
 	return NULL;
 }

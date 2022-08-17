@@ -66,7 +66,7 @@ static const GActionEntry fr_window_actions[] = {
 	},
 	{
 		.name = "find",
-		.activate = toggle_action_activated,
+		.activate = fr_toggle_action_activated,
 		.state = "false",
 		.change_state = fr_window_activate_find,
 	},
@@ -156,7 +156,7 @@ static const GActionEntry fr_window_actions[] = {
 	},
 	{
 		.name = "view-sidebar",
-		.activate = toggle_action_activated,
+		.activate = fr_toggle_action_activated,
 		.parameter_type = NULL,
 		.state = "false",
 		.change_state = fr_window_activate_view_sidebar,

@@ -33,7 +33,7 @@ typedef struct {
 	GAppInfo  *app;
 	GList     *file_list;
 	GFile     *temp_dir;
-} CommandData;
+} FrCommandData;
 
 extern GList                 *CommandList;
 extern gint                   ForceDirectoryCreation;
@@ -49,17 +49,17 @@ extern int                    save_type[];             /* File types that can be
 extern int                    open_type[];             /* File types that can be opened. */
 extern int                    create_type[];           /* File types that can be created. */
 
-GType        get_archive_type_from_mime_type         (const char    *mime_type,
+GType        fr_get_archive_type_from_mime_type         (const char    *mime_type,
 						      FrArchiveCaps  requested_capabilities);
-GType        get_preferred_archive_for_mime_type     (const char    *mime_type,
+GType        fr_get_preferred_archive_for_mime_type     (const char    *mime_type,
 						      FrArchiveCaps  requested_capabilities);
-void         update_registered_archives_capabilities (void);
+void         fr_update_registered_archives_capabilities (void);
 const char * _g_mime_type_get_from_extension         (const char    *ext);
 const char * _g_mime_type_get_from_filename          (GFile         *file);
-const char * get_archive_filename_extension          (const char    *uri);
-int          get_mime_type_index                     (const char    *mime_type);
-void         sort_mime_types_by_extension            (int           *a);
-void         initialize_data                         (void);
-void         release_data                            (void);
+const char * fr_get_archive_filename_extension          (const char    *uri);
+int          fr_get_mime_type_index                     (const char    *mime_type);
+void         fr_sort_mime_types_by_extension            (int           *a);
+void         fr_initialize_data                         (void);
+void         fr_release_data                            (void);
 
 #endif /* FR_INIT_H */

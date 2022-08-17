@@ -736,11 +736,11 @@ fr_command_7z_get_packages (FrArchive  *archive,
 			    const char *mime_type)
 {
 	if (_g_mime_type_matches (mime_type, "application/x-rar"))
-		return PACKAGES ("7zip,7zip-rar");
+		return FR_PACKAGES ("7zip,7zip-rar");
 	else if (_g_mime_type_matches (mime_type, "application/zip") || _g_mime_type_matches (mime_type, "application/vnd.ms-cab-compressed"))
-		return PACKAGES ("7zip,7zip-full");
+		return FR_PACKAGES ("7zip,7zip-full");
 	else
-		return PACKAGES ("7zip");
+		return FR_PACKAGES ("7zip");
 }
 
 

@@ -317,7 +317,7 @@ static const char *
 fr_command_ar_get_packages (FrArchive  *archive,
 			    const char *mime_type)
 {
-	return PACKAGES ("binutils");
+	return FR_PACKAGES ("binutils");
 }
 
 

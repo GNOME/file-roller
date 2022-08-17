@@ -332,7 +332,7 @@ static const char *
 fr_command_alz_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
-	return PACKAGES ("unalz");
+	return FR_PACKAGES ("unalz");
 }
 
 

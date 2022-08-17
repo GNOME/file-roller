@@ -270,7 +270,7 @@ static const char *
 fr_command_ace_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
-	return PACKAGES ("unace");
+	return FR_PACKAGES ("unace");
 }
 
 

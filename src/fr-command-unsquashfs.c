@@ -198,7 +198,7 @@ static const char *
 fr_command_unsquashfs_get_packages (FrArchive  *archive,
                                     const char *mime_type)
 {
-        return PACKAGES ("unsquashfs");
+        return FR_PACKAGES ("unsquashfs");
 }
 
 

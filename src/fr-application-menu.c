@@ -160,7 +160,7 @@ static const GActionEntry app_menu_entries[] = {
 	},
 	{
 		.name = PREF_UI_VIEW_SIDEBAR,
-		.activate = toggle_action_activated,
+		.activate = fr_toggle_action_activated,
 		.state = "true",
 		.change_state = fr_application_activate_view_sidebar },
 	{
@@ -222,7 +222,7 @@ pref_list_mode_changed (GSettings  *settings,
 
 
 void
-initialize_app_menu (GApplication *application)
+fr_initialize_app_menu (GApplication *application)
 {
 	GSettings *settings;
 
@@ -253,7 +253,7 @@ initialize_app_menu (GApplication *application)
 
 
 void
-initialize_app_menubar (GApplication *application)
+fr_initialize_app_menubar (GApplication *application)
 {
 	GtkBuilder *builder;
 	GSettings  *settings;

@@ -350,7 +350,7 @@ static const char *
 fr_command_arj_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
-	return PACKAGES ("arj");
+	return FR_PACKAGES ("arj");
 }
 
 

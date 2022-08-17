@@ -251,7 +251,7 @@ static const char *
 fr_command_cpio_get_packages (FrArchive  *archive,
 			      const char *mime_type)
 {
-	return PACKAGES ("cpio");
+	return FR_PACKAGES ("cpio");
 }
 
 

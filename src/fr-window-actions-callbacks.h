@@ -27,7 +27,7 @@
 
 GtkWidget * _gtk_application_get_current_window (GApplication *application);
 
-DEF_ACTION_CALLBACK (toggle_action_activated)
+DEF_ACTION_CALLBACK (fr_toggle_action_activated)
 DEF_ACTION_CALLBACK (fr_window_activate_add_files)
 DEF_ACTION_CALLBACK (fr_window_activate_close)
 DEF_ACTION_CALLBACK (fr_window_activate_delete)

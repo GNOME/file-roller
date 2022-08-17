@@ -34,7 +34,7 @@
 
 
 void
-toggle_action_activated (GSimpleAction *action,
+fr_toggle_action_activated (GSimpleAction *action,
 			 GVariant      *parameter,
 			 gpointer       data)
 {

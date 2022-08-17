@@ -50,11 +50,11 @@ typedef struct {
 	guint         ignore_error : 1;  /* whether to continue to execute
 					  * other commands if this command
 					  * fails. */
-	ContinueFunc  continue_func;
+	FrContinueFunc  continue_func;
 	gpointer      continue_data;
-	ProcFunc      begin_func;
+	FrProcFunc      begin_func;
 	gpointer      begin_data;
-	ProcFunc      end_func;
+	FrProcFunc      end_func;
 	gpointer      end_data;
 } FrCommandInfo;
 
@@ -559,7 +559,7 @@ fr_process_set_arg_at (FrProcess  *process,
 
 void
 fr_process_set_begin_func (FrProcess    *process,
-			   ProcFunc      func,
+			   FrProcFunc      func,
 			   gpointer      func_data)
 {
 	FrCommandInfo *info;
@@ -575,7 +575,7 @@ fr_process_set_begin_func (FrProcess    *process,
 
 void
 fr_process_set_end_func (FrProcess    *process,
-			 ProcFunc      func,
+			 FrProcFunc      func,
 			 gpointer      func_data)
 {
 	FrCommandInfo *info;
@@ -591,7 +591,7 @@ fr_process_set_end_func (FrProcess    *process,
 
 void
 fr_process_set_continue_func (FrProcess    *process,
-			      ContinueFunc  func,
+			      FrContinueFunc  func,
 			      gpointer      func_data)
 {
 	FrCommandInfo *info;
@@ -633,7 +633,7 @@ fr_process_use_standard_locale (FrProcess *process,
 
 void
 fr_process_set_out_line_func (FrProcess *process,
-			      LineFunc   func,
+			      FrLineFunc   func,
 			      gpointer   data)
 {
 	g_return_if_fail (process != NULL);
@@ -645,7 +645,7 @@ fr_process_set_out_line_func (FrProcess *process,
 
 void
 fr_process_set_err_line_func (FrProcess *process,
-			      LineFunc   func,
+			      FrLineFunc   func,
 			      gpointer   data)
 {
 	g_return_if_fail (process != NULL);

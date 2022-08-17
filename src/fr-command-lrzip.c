@@ -196,7 +196,7 @@ static const char *
 fr_command_lrzip_get_packages (FrArchive  *archive,
 			       const char *mime_type)
 {
-	return PACKAGES ("lrzip");
+	return FR_PACKAGES ("lrzip");
 }
 
 
