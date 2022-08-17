@@ -133,13 +133,11 @@ fr_exe = executable('file-roller',
     use_json_glib ? libjson_glib_dep : [],
     use_libarchive ? libarchive_dep : []
   ],
-  link_args: [
-    # Required for GIRepository to be able to dump symbols.
-    build_introspection ? '-Wl,--export-dynamic' : [],
-  ],
   include_directories : config_inc,
   c_args : c_args,
-  install : true
+  install : true,
+  # Required for GIRepository to be able to dump symbols.
+  export_dynamic: build_introspection,
 )
 
 if build_introspection
