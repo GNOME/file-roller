@@ -29,14 +29,6 @@
 typedef struct {
 	FrWindow  *window;
 	FrProcess *process;
-	char      *filename;
-	char      *e_filename;
-	char      *temp_dir;
-} ViewerData;
-
-typedef struct {
-	FrWindow  *window;
-	FrProcess *process;
 	char      *command;
 	GAppInfo  *app;
 	GList     *file_list;

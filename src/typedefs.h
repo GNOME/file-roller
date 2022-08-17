@@ -25,8 +25,6 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#define MEGABYTE (1024 * 1024)
-
 #define ADD_FOLDER_OPTIONS_DIR  "file-roller/options"
 
 typedef enum {

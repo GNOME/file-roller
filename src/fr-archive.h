@@ -66,8 +66,6 @@ typedef struct _FrArchiveClass    FrArchiveClass;
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (FrArchive, g_object_unref)
 
-typedef gboolean (*FakeLoadFunc) (FrArchive *archive, gpointer data);
-
 struct _FrArchive {
 	GObject  __parent;
 
