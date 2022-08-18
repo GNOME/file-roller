@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -91,7 +91,7 @@ static void
 process_line (char     *line,
 	      gpointer  data)
 {
-	FileData      *fdata;
+	FrFileData *fdata;
 	FrCommandAce  *ace_comm = FR_COMMAND_ACE (data);
 	FrCommand     *comm = FR_COMMAND (data);
 	char         **fields;
@@ -121,7 +121,7 @@ process_line (char     *line,
 		return;
 	}
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 
 	if (ace_comm->command_type == FR_ACE_COMMAND_PUBLIC)
 		fields = g_strsplit (line, "|", 6);
@@ -160,7 +160,7 @@ process_line (char     *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }

@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -175,7 +175,7 @@ static void
 process_zoo_line (char     *line,
 		  gpointer  data)
 {
-	FileData    *fdata;
+	FrFileData *fdata;
 	FrCommand   *zoo_comm = FR_COMMAND (data);
 	char       **fields;
 	const char  *name_field;
@@ -188,7 +188,7 @@ process_zoo_line (char     *line,
 	if (fields == NULL)
 		return;
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 
 	fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
 	fdata->modified = mktime_from_string_zoo (fields[1],
@@ -212,7 +212,7 @@ process_zoo_line (char     *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (zoo_comm), fdata);
 }

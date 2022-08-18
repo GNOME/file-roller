@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -163,14 +163,14 @@ static void
 process_line (char     *line,
 	      gpointer  data)
 {
-	FileData    *fdata;
+	FrFileData *fdata;
 	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	const char  *name_field;
 
 	g_return_if_fail (line != NULL);
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 
 	fields = split_line_lha (line);
 	fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
@@ -202,7 +202,7 @@ process_line (char     *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }

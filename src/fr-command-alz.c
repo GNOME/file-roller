@@ -25,7 +25,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
 #include "fr-command-alz.h"
@@ -88,7 +88,7 @@ process_line (char     *line,
 {
 	FrCommand     *comm = FR_COMMAND (data);
 	FrCommandAlz  *alz_comm = FR_COMMAND_ALZ (comm);
-	FileData      *fdata;
+	FrFileData *fdata;
 	char         **fields;
 	char          *name_field;
 	char           name_last;
@@ -112,7 +112,7 @@ process_line (char     *line,
 	if (! alz_comm->list_started)
 		return;
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 	fields = _g_str_split_line (line, 5);
 	fdata->modified = mktime_from_string (fields[0], fields[1]);
 	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
@@ -151,7 +151,7 @@ process_line (char     *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 

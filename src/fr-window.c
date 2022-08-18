@@ -48,7 +48,7 @@
 #include "fr-new-archive-dialog.h"
 #include "fr-window.h"
 #include "fr-window-actions-entries.h"
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "gth-icon-cache.h"
@@ -954,7 +954,7 @@ fr_window_dir_exists_in_archive (FrWindow   *window,
 		return TRUE;
 
 	for (guint i = 0; i < window->archive->files->len; i++) {
-		FileData *fdata = g_ptr_array_index (window->archive->files, i);
+		FrFileData *fdata = g_ptr_array_index (window->archive->files, i);
 
 		if (strncmp (dir_name, fdata->full_path, dir_name_len) == 0) {
 			return TRUE;
@@ -1067,12 +1067,12 @@ check_whether_has_a_dir (GtkTreeModel *model,
 			 gpointer      data)
 {
 	gboolean *has_a_dir = data;
-	FileData *fdata;
+	FrFileData *fdata;
 
 	gtk_tree_model_get (model, iter,
 			    COLUMN_FILE_DATA, &fdata,
 			    -1);
-	if (file_data_is_dir (fdata))
+	if (fr_file_data_is_dir (fdata))
 		*has_a_dir = TRUE;
 }
 
@@ -1201,7 +1201,7 @@ fr_window_get_current_dir_list (FrWindow *window)
 	files = g_ptr_array_sized_new (128);
 
 	for (guint i = 0; i < window->archive->files->len; i++) {
-		FileData *fdata = g_ptr_array_index (window->archive->files, i);
+		FrFileData *fdata = g_ptr_array_index (window->archive->files, i);
 
 		if (fdata->list_name == NULL)
 			continue;
@@ -1255,7 +1255,7 @@ get_dir_size (FrWindow   *window,
 
 	size = 0;
 	for (guint i = 0; i < window->archive->files->len; i++) {
-		FileData *fd = g_ptr_array_index (window->archive->files, i);
+		FrFileData *fd = g_ptr_array_index (window->archive->files, i);
 
 		if (strncmp (dirname, fd->full_path, dirname_l) == 0)
 			size += fd->size;
@@ -1270,7 +1270,7 @@ get_dir_size (FrWindow   *window,
 static gboolean
 file_data_respects_filter (FrWindow *window,
 			   GRegex   *filter,
-			   FileData *fdata)
+			   FrFileData *fdata)
 {
 	if ((fdata == NULL) || (filter == NULL))
 		return TRUE;
@@ -1285,7 +1285,7 @@ file_data_respects_filter (FrWindow *window,
 static gboolean
 compute_file_list_name (FrWindow   *window,
 			GRegex     *filter,
-			FileData   *fdata,
+			FrFileData *fdata,
 			const char *current_dir,
 			size_t      current_dir_len,
 			GHashTable *names_hash,
@@ -1300,7 +1300,7 @@ compute_file_list_name (FrWindow   *window,
 		return FALSE;
 
 	if (private->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
-		file_data_set_list_name (fdata, fdata->name);
+		fr_file_data_set_list_name (fdata, fdata->name);
 		if (fdata->dir)
 			fdata->dir_size = 0;
 		return FALSE;
@@ -1317,7 +1317,7 @@ compute_file_list_name (FrWindow   *window,
 	scan = fdata->full_path + current_dir_len;
 	end = strchr (scan, '/');
 	if ((end == NULL) && ! fdata->dir) { /* file */
-		file_data_set_list_name (fdata, scan);
+		fr_file_data_set_list_name (fdata, scan);
 	}
 	else { /* folder */
 		char *dir_name;
@@ -1336,7 +1336,7 @@ compute_file_list_name (FrWindow   *window,
 
 		if ((end != NULL) && (*(end + 1) != '\0'))
 			fdata->list_dir = TRUE;
-		file_data_set_list_name (fdata, dir_name);
+		fr_file_data_set_list_name (fdata, dir_name);
 		fdata->dir_size = get_dir_size (window, current_dir, dir_name);
 	}
 
@@ -1387,9 +1387,9 @@ fr_window_compute_list_names (FrWindow  *window,
 
 	filter = _fr_window_create_filter (window);
 	for (guint i = 0; i < files->len; i++) {
-		FileData *fdata = g_ptr_array_index (files, i);
+		FrFileData *fdata = g_ptr_array_index (files, i);
 
-		file_data_set_list_name (fdata, NULL);
+		fr_file_data_set_list_name (fdata, NULL);
 		fdata->list_dir = FALSE;
 
 		/* the files array is sorted by path, when the visible list
@@ -1460,7 +1460,7 @@ get_mime_type_icon (FrWindow   *window,
 
 static GdkPixbuf *
 get_icon (FrWindow  *window,
-	  FileData  *fdata)
+	  FrFileData *fdata)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	GIcon     *icon = NULL;
@@ -1471,7 +1471,7 @@ get_icon (FrWindow  *window,
 	else {
 		const char *content_type;
 
-		if (file_data_is_dir (fdata))
+		if (fr_file_data_is_dir (fdata))
 			content_type = MIME_TYPE_DIRECTORY;
 		else
 			content_type = fdata->content_type;
@@ -1487,7 +1487,7 @@ get_icon (FrWindow  *window,
 
 static GdkPixbuf *
 get_emblem (FrWindow *window,
-	    FileData *fdata)
+	    FrFileData *fdata)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	const char *emblem_name;
@@ -1516,7 +1516,7 @@ add_selected_from_list_view (GtkTreeModel *model,
 			     gpointer      data)
 {
 	GList    **list = data;
-	FileData  *fdata;
+	FrFileData *fdata;
 
 	gtk_tree_model_get (model, iter,
 			    COLUMN_FILE_DATA, &fdata,
@@ -1565,7 +1565,7 @@ fr_window_populate_file_list (FrWindow  *window,
 	 				      0);
 
 	for (guint i = 0; i < files->len; i++) {
-		FileData    *fdata = g_ptr_array_index (files, i);
+		FrFileData *fdata = g_ptr_array_index (files, i);
 		GtkTreeIter  iter;
 		GdkPixbuf   *icon, *emblem;
 		char        *utf8_name;
@@ -1579,7 +1579,7 @@ fr_window_populate_file_list (FrWindow  *window,
 		emblem = get_emblem (window, fdata);
 		utf8_name = g_filename_display_name (fdata->list_name);
 
-		if (file_data_is_dir (fdata)) {
+		if (fr_file_data_is_dir (fdata)) {
 			char *utf8_path;
 			char *tmp;
 			char *s_size;
@@ -1802,7 +1802,7 @@ fr_window_update_dir_tree (FrWindow *window)
 	filter = _fr_window_create_filter (window);
 	dir_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, NULL);
 	for (guint i = 0; i < window->archive->files->len; i++) {
-		FileData *fdata = g_ptr_array_index (window->archive->files, i);
+		FrFileData *fdata = g_ptr_array_index (window->archive->files, i);
 		char     *dir;
 
 		if (! file_data_respects_filter (window, filter, fdata))
@@ -3335,7 +3335,7 @@ get_dir_list_from_path (FrWindow *window,
 		dirname = g_strdup (path);
 	dirname_l = strlen (dirname);
 	for (guint i = 0; i < window->archive->files->len; i++) {
-		FileData *fd = g_ptr_array_index (window->archive->files, i);
+		FrFileData *fd = g_ptr_array_index (window->archive->files, i);
 		gboolean  matches = FALSE;
 
 #ifdef DEBUG_GET_DIR_LIST_FROM_PATH
@@ -3370,7 +3370,7 @@ get_dir_list_from_path (FrWindow *window,
 
 static GList *
 get_dir_list_from_file_data (FrWindow *window,
-			     FileData *fdata)
+			     FrFileData *fdata)
 {
 	char  *dirname;
 	GList *list;
@@ -3407,12 +3407,12 @@ fr_window_get_file_list_selection (FrWindow *window,
 
 	list = NULL;
 	for (scan = selections; scan; scan = scan->next) {
-		FileData *fd = scan->data;
+		FrFileData *fd = scan->data;
 
 		if (!fd)
 			continue;
 
-		if (file_data_is_dir (fd)) {
+		if (fr_file_data_is_dir (fd)) {
 			if (has_dirs != NULL)
 				*has_dirs = TRUE;
 
@@ -3493,7 +3493,7 @@ fr_window_get_file_list_from_path_list (FrWindow *window,
 		GtkTreeRowReference *reference = scan->data;
 		GtkTreePath         *path;
 		GtkTreeIter          iter;
-		FileData            *fdata;
+		FrFileData *fdata;
 
 		path = gtk_tree_row_reference_get_path (reference);
 		if (path == NULL)
@@ -3511,12 +3511,12 @@ fr_window_get_file_list_from_path_list (FrWindow *window,
 
 	list = NULL;
 	for (scan = selections; scan; scan = scan->next) {
-		FileData *fd = scan->data;
+		FrFileData *fd = scan->data;
 
 		if (!fd)
 			continue;
 
-		if (file_data_is_dir (fd)) {
+		if (fr_file_data_is_dir (fd)) {
 			if (has_dirs != NULL)
 				*has_dirs = TRUE;
 			list = g_list_concat (list, get_dir_list_from_file_data (window, fd));
@@ -3544,7 +3544,7 @@ fr_window_get_file_list_pattern (FrWindow    *window,
 	regexps = _g_regexp_split_from_patterns (pattern, G_REGEX_CASELESS);
 	list = NULL;
 	for (guint i = 0; i < window->archive->files->len; i++) {
-		FileData *fd = g_ptr_array_index (window->archive->files, i);
+		FrFileData *fd = g_ptr_array_index (window->archive->files, i);
 		char     *utf8_name;
 
 		if (fd == NULL)
@@ -3570,7 +3570,7 @@ fr_window_get_file_list (FrWindow *window)
 
 	list = NULL;
 	for (guint i = 0; i < window->archive->files->len; i++) {
-		FileData *fd = g_ptr_array_index (window->archive->files, i);
+		FrFileData *fd = g_ptr_array_index (window->archive->files, i);
 		list = g_list_prepend (list, g_strdup (fd->original_path));
 	}
 
@@ -3647,13 +3647,13 @@ dir_tree_button_press_cb (GtkWidget      *widget,
 }
 
 
-static FileData *
+static FrFileData *
 fr_window_get_selected_item_from_file_list (FrWindow *window)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	GtkTreeSelection *tree_selection;
 	GList            *selection;
-	FileData         *fdata = NULL;
+	FrFileData *fdata = NULL;
 
 	g_return_val_if_fail (window != NULL, NULL);
 
@@ -3669,7 +3669,7 @@ fr_window_get_selected_item_from_file_list (FrWindow *window)
 		return NULL;
 	}
 
-	fdata = file_data_copy (selection->data);
+	fdata = fr_file_data_copy (selection->data);
 	g_list_free (selection);
 
 	return fdata;
@@ -3709,12 +3709,12 @@ fr_window_current_folder_activated (FrWindow *window,
 	char *dir_path;
 
 	if (! from_sidebar) {
-		FileData *fdata;
+		FrFileData *fdata;
 		char     *dir_name;
 
 		fdata = fr_window_get_selected_item_from_file_list (window);
-		if ((fdata == NULL) || ! file_data_is_dir (fdata)) {
-			file_data_free (fdata);
+		if ((fdata == NULL) || ! fr_file_data_is_dir (fdata)) {
+			fr_file_data_free (fdata);
 			return;
 		}
 		dir_name = g_strdup (fdata->list_name);
@@ -3723,7 +3723,7 @@ fr_window_current_folder_activated (FrWindow *window,
 					"/",
 					NULL);
 		g_free (dir_name);
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	}
 	else
 		dir_path = fr_window_get_selected_folder_in_tree_view (window);
@@ -3742,7 +3742,7 @@ row_activated_cb (GtkTreeView       *tree_view,
 {
 	FrWindow    *window = data;
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	FileData    *fdata;
+	FrFileData *fdata;
 	GtkTreeIter  iter;
 
 	if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (private->list_store),
@@ -3754,7 +3754,7 @@ row_activated_cb (GtkTreeView       *tree_view,
 			    COLUMN_FILE_DATA, &fdata,
 			    -1);
 
-	if (! file_data_is_dir (fdata)) {
+	if (! fr_file_data_is_dir (fdata)) {
 		GList *list = g_list_prepend (NULL, fdata->original_path);
 		fr_window_open_files (window, list, FALSE);
 		g_list_free (list);
@@ -5167,8 +5167,8 @@ name_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData    *fdata1;
-	FileData    *fdata2;
+	FrFileData *fdata1;
+	FrFileData *fdata2;
 	GtkSortType  sort_order;
 	int          result;
 
@@ -5177,11 +5177,11 @@ name_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+	if (fr_file_data_is_dir (fdata1) == fr_file_data_is_dir (fdata2)) {
 		result = strcmp (fdata1->sort_key, fdata2->sort_key);
 	}
 	else {
-        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	result = fr_file_data_is_dir (fdata1) ? -1 : 1;
         	if (sort_order == GTK_SORT_DESCENDING)
         		result = -1 * result;
 	}
@@ -5196,8 +5196,8 @@ size_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData    *fdata1;
-	FileData    *fdata2;
+	FrFileData *fdata1;
+	FrFileData *fdata2;
 	GtkSortType  sort_order;
 	int          result;
 	goffset      size_difference;
@@ -5207,15 +5207,15 @@ size_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
-        	if (file_data_is_dir (fdata1))
+	if (fr_file_data_is_dir (fdata1) == fr_file_data_is_dir (fdata2)) {
+        	if (fr_file_data_is_dir (fdata1))
 			size_difference = fdata1->dir_size - fdata2->dir_size;
         	else
 			size_difference = fdata1->size - fdata2->size;
 		result = (size_difference > 0) - (size_difference < 0);
         }
         else {
-        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	result = fr_file_data_is_dir (fdata1) ? -1 : 1;
         	if (sort_order == GTK_SORT_DESCENDING)
         		result = -1 * result;
         }
@@ -5230,8 +5230,8 @@ type_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData    *fdata1;
-	FileData    *fdata2;
+	FrFileData *fdata1;
+	FrFileData *fdata2;
 	GtkSortType  sort_order;
 	int          result;
 
@@ -5240,8 +5240,8 @@ type_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
-        	if (file_data_is_dir (fdata1)) {
+	if (fr_file_data_is_dir (fdata1) == fr_file_data_is_dir (fdata2)) {
+        	if (fr_file_data_is_dir (fdata1)) {
                 	result = strcmp (fdata1->sort_key, fdata2->sort_key);
                 	if (sort_order == GTK_SORT_DESCENDING)
                 		result = -1 * result;
@@ -5257,7 +5257,7 @@ type_column_sort_func (GtkTreeModel *model,
         	}
         }
         else {
-        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	result = fr_file_data_is_dir (fdata1) ? -1 : 1;
         	if (sort_order == GTK_SORT_DESCENDING)
         		result = -1 * result;
         }
@@ -5272,8 +5272,8 @@ time_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData    *fdata1;
-	FileData    *fdata2;
+	FrFileData *fdata1;
+	FrFileData *fdata2;
 	GtkSortType  sort_order;
 	int          result;
 
@@ -5282,8 +5282,8 @@ time_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
-        	if (file_data_is_dir (fdata1)) {
+	if (fr_file_data_is_dir (fdata1) == fr_file_data_is_dir (fdata2)) {
+        	if (fr_file_data_is_dir (fdata1)) {
                 	result = strcmp (fdata1->sort_key, fdata2->sort_key);
                 	if (sort_order == GTK_SORT_DESCENDING)
                 		result = -1 * result;
@@ -5292,7 +5292,7 @@ time_column_sort_func (GtkTreeModel *model,
         		result = fdata1->modified - fdata2->modified;
         }
         else {
-        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	result = fr_file_data_is_dir (fdata1) ? -1 : 1;
         	if (sort_order == GTK_SORT_DESCENDING)
         		result = -1 * result;
         }
@@ -5307,8 +5307,8 @@ path_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1;
-	FileData *fdata2;
+	FrFileData *fdata1;
+	FrFileData *fdata2;
 	char     *path1;
 	char     *path2;
 	int       result;
@@ -6517,7 +6517,7 @@ archive_extraction_ready_cb (GObject      *source_object,
 
 		names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 		for (guint i = 0; ! stop && (i < window->archive->files->len); i++) {
-			FileData *fdata = g_ptr_array_index (window->archive->files, i);
+			FrFileData *fdata = g_ptr_array_index (window->archive->files, i);
 			char     *first_level;
 			char     *second_slash;
 
@@ -6583,7 +6583,7 @@ _fr_window_archive_extract_from_edata (FrWindow    *window,
 	total_size = 0;
 	for (scan = edata->file_list; scan; scan = scan->next) {
 		char     *filename = scan->data;
-		FileData *file_data;
+		FrFileData *file_data;
 
 		file_data = g_hash_table_lookup (window->archive->files_hash, filename);
 		if (file_data == NULL)
@@ -6853,7 +6853,7 @@ archive_is_encrypted (FrWindow *window,
 
 	if (file_list == NULL) {
 		for (guint i = 0; ! encrypted && i < window->archive->files->len; i++) {
-			FileData *fdata = g_ptr_array_index (window->archive->files, i);
+			FrFileData *fdata = g_ptr_array_index (window->archive->files, i);
 
 			if (fdata->encrypted)
 				encrypted = TRUE;
@@ -6864,7 +6864,7 @@ archive_is_encrypted (FrWindow *window,
 
 		for (scan = file_list; ! encrypted && scan; scan = scan->next) {
 			char     *filename = scan->data;
-			FileData *fdata;
+			FrFileData *fdata;
 
 			fdata = g_hash_table_lookup (window->archive->files_hash, filename);
 			g_return_val_if_fail (fdata != NULL, FALSE);
@@ -7029,7 +7029,7 @@ _archive_extraction_generates_a_tarbomb (FrArchive *archive)
 	names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	n_toplevel_items = 0;
 	for (guint i = 0; ! tarbomb && (i < archive->files->len); i++) {
-		FileData *fdata = g_ptr_array_index (archive->files, i);
+		FrFileData *fdata = g_ptr_array_index (archive->files, i);
 		char     *second_separator;
 		char     *name = NULL;
 		gboolean  name_created;
@@ -8368,7 +8368,7 @@ name_is_present (FrWindow    *window,
 	new_filename_l = strlen (new_filename);
 
 	for (guint i = 0; i < window->archive->files->len; i++) {
-		FileData   *fdata = g_ptr_array_index (window->archive->files, i);
+		FrFileData *fdata = g_ptr_array_index (window->archive->files, i);
 		const char *filename = fdata->full_path;
 
 		if ((strncmp (filename, new_filename, new_filename_l) == 0)
@@ -8414,13 +8414,13 @@ fr_window_rename_selection (FrWindow *window,
 		renaming_dir = TRUE;
 	}
 	else {
-		FileData *selected_item;
+		FrFileData *selected_item;
 
 		selected_item = fr_window_get_selected_item_from_file_list (window);
 		if (selected_item == NULL)
 			return;
 
-		renaming_dir = file_data_is_dir (selected_item);
+		renaming_dir = fr_file_data_is_dir (selected_item);
 		dir_in_archive = selected_item->dir && ! selected_item->list_dir;
 		original_path = g_strdup (selected_item->original_path);
 
@@ -8441,7 +8441,7 @@ fr_window_rename_selection (FrWindow *window,
 			old_name = g_strdup (selected_item->name);
 		}
 
-		file_data_free (selected_item);
+		fr_file_data_free (selected_item);
 	}
 
  retry__rename_selection:

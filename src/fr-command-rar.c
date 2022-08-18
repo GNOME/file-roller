@@ -26,7 +26,7 @@
 #include <time.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
@@ -44,7 +44,7 @@ struct _FrCommandRar
 	gboolean   rar4_odd_line;
 	gboolean   rar5;
 	gboolean   rar5_30;
-	FileData  *fdata;
+	FrFileData *fdata;
 };
 
 
@@ -199,9 +199,9 @@ parse_name_field (char         *line,
 		  FrCommandRar *rar_comm)
 {
 	char     *name_field;
-	FileData *fdata;
+	FrFileData *fdata;
 
-	rar_comm->fdata = fdata = file_data_new ();
+	rar_comm->fdata = fdata = fr_file_data_new ();
 
 	/* read file name. */
 
@@ -285,7 +285,7 @@ process_line (char     *line,
 		parse_name_field (line, rar_comm);
 
 	if (! rar_comm->rar4_odd_line) {
-		FileData   *fdata;
+		FrFileData *fdata;
 		const char *size_field, *ratio_field, *date_field, *time_field, *attr_field;
 
 		fdata = rar_comm->fdata;
@@ -312,7 +312,7 @@ process_line (char     *line,
 		if (g_strv_length (fields) < 6) {
 			/* wrong line format, treat this line as a filename line */
 			g_strfreev (fields);
-			file_data_free (rar_comm->fdata);
+			fr_file_data_free (rar_comm->fdata);
 			rar_comm->fdata = NULL;
 			rar_comm->rar4_odd_line = TRUE;
 			parse_name_field (line, rar_comm);
@@ -323,7 +323,7 @@ process_line (char     *line,
 			{
 				/* ignore files that span more volumes */
 
-				file_data_free (rar_comm->fdata);
+				fr_file_data_free (rar_comm->fdata);
 				rar_comm->fdata = NULL;
 			}
 			else {

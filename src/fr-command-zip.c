@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -96,7 +96,7 @@ list__process_line (char     *line,
 {
 	FrCommandZip        *comm = data;
 	FrCommandZipPrivate *priv = fr_command_zip_get_instance_private (comm);
-	FileData            *fdata;
+	FrFileData *fdata;
 	char               **fields;
 	const char          *name_field;
 	size_t               line_l;
@@ -125,7 +125,7 @@ list__process_line (char     *line,
 
 	/**/
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 
 	fields = _g_str_split_line (line, 7);
 	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
@@ -155,7 +155,7 @@ list__process_line (char     *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }

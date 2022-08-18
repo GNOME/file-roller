@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -45,7 +45,7 @@ static void
 process_metadata_line (char      *line,
                        FrCommand *comm)
 {
-        FileData    *fdata;
+        FrFileData *fdata;
         char       **fields;
         char        *name;
 
@@ -57,7 +57,7 @@ process_metadata_line (char      *line,
                 return;
         }
 
-        fdata = file_data_new ();
+        fdata = fr_file_data_new ();
         fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
 
         if (fields[5] && g_str_equal (fields[4],"*")) {
@@ -82,7 +82,7 @@ static void
 process_data_line (char     *line,
                    gpointer  data)
 {
-        FileData    *fdata;
+        FrFileData *fdata;
         FrCommand   *comm = FR_COMMAND (data);
         char       **fields;
         char       **tmfields;
@@ -97,7 +97,7 @@ process_data_line (char     *line,
                 return;
         }
 
-        fdata = file_data_new ();
+        fdata = fr_file_data_new ();
 
         fields = _g_str_split_line (line, 5);
         fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
@@ -151,7 +151,7 @@ process_data_line (char     *line,
         fdata->path = _g_path_remove_level (fdata->full_path);
 
         if (*fdata->name == 0)
-                file_data_free (fdata);
+                fr_file_data_free (fdata);
         else
                 fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }

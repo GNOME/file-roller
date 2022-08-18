@@ -29,7 +29,7 @@
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
 #include "fr-error.h"
@@ -756,7 +756,7 @@ create_tmp_base_dir (GFile      *base_dir,
 }
 
 
-static FileData *
+static FrFileData *
 find_file_in_archive (FrArchive *archive,
 		      char      *path)
 {
@@ -764,9 +764,9 @@ find_file_in_archive (FrArchive *archive,
 
 	g_return_val_if_fail (path != NULL, NULL);
 
-	i = find_path_in_file_data_array (archive->files, path);
+	i = fr_find_path_in_file_data_array (archive->files, path);
 	if (i >= 0)
-		return (FileData *) g_ptr_array_index (archive->files, i);
+		return (FrFileData *) g_ptr_array_index (archive->files, i);
 	else
 		return NULL;
 }
@@ -787,7 +787,7 @@ newer_files_only (FrArchive  *archive,
 	for (scan = file_list; scan; scan = scan->next) {
 		char     *filename = scan->data;
 		GFile    *file;
-		FileData *fdata;
+		FrFileData *fdata;
 
 		fdata = find_file_in_archive (archive, filename);
 
@@ -1522,7 +1522,7 @@ delete_from_archive (FrCommand *self,
 
 	if (file_list == NULL) {
 		for (guint i = 0; i < archive->files->len; i++) {
-			FileData *fdata = g_ptr_array_index (archive->files, i);
+			FrFileData *fdata = g_ptr_array_index (archive->files, i);
 			file_list = g_list_prepend (file_list, fdata->original_path);
 		}
 
@@ -2113,7 +2113,7 @@ _fr_command_extract (FrCommand  *self,
 	if (extract_all && (! all_options_supported || ! archive->propCanExtractAll)) {
 		file_list = NULL;
 		for (guint i = 0; i < archive->files->len; i++) {
-			FileData *fdata = g_ptr_array_index (archive->files, i);
+			FrFileData *fdata = g_ptr_array_index (archive->files, i);
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}
 		file_list_created = TRUE;
@@ -2164,7 +2164,7 @@ _fr_command_extract (FrCommand  *self,
 	if (extract_all && ! file_list_created) {
 		file_list = NULL;
 		for (guint i = 0; i < archive->files->len; i++) {
-			FileData *fdata = g_ptr_array_index (archive->files, i);
+			FrFileData *fdata = g_ptr_array_index (archive->files, i);
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}
 
@@ -2173,7 +2173,7 @@ _fr_command_extract (FrCommand  *self,
 
 	filtered = NULL;
 	for (scan = file_list; scan; scan = scan->next) {
-		FileData   *fdata;
+		FrFileData *fdata;
 		char       *archive_list_filename = scan->data;
 		const char *filename;
 		GFile      *destination_file;

@@ -19,8 +19,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FILE_DATA_H
-#define FILE_DATA_H
+#ifndef FR_FILE_DATA_H
+#define FR_FILE_DATA_H
 
 #include <glib.h>
 #include <glib-object.h>
@@ -51,21 +51,18 @@ typedef struct {
 	/* Private data */
 
 	gboolean    free_original_path;
-} FileData;
+} FrFileData;
 
-#define FR_TYPE_FILE_DATA (file_data_get_type ())
+#define FR_TYPE_FILE_DATA (fr_file_data_get_type ())
 
-GType           file_data_get_type            (void);
-FileData *      file_data_new                 (void);
-FileData *      file_data_copy                (FileData      *src);
-void            file_data_free                (FileData      *fdata);
-void            file_data_update_content_type (FileData      *fdata);
-gboolean        file_data_is_dir              (FileData      *fdata);
-void            file_data_set_list_name       (FileData      *fdata,
-					       const char    *value);
-int  file_data_compare_by_path                (gconstpointer  a,
-				               gconstpointer  b);
-int  find_path_in_file_data_array             (GPtrArray     *array,
-				               const char    *path);
+GType fr_file_data_get_type (void);
+FrFileData *fr_file_data_new (void);
+FrFileData *fr_file_data_copy (FrFileData *src);
+void fr_file_data_free (FrFileData *fdata);
+void fr_file_data_update_content_type (FrFileData *fdata);
+gboolean fr_file_data_is_dir (FrFileData *fdata);
+void fr_file_data_set_list_name (FrFileData *fdata, const char *value);
+int fr_file_data_compare_by_path (gconstpointer a, gconstpointer b);
+int fr_find_path_in_file_data_array (GPtrArray *array, const char *path);
 
-#endif /* FILE_DATA_H */
+#endif /* FR_FILE_DATA_H */

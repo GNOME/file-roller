@@ -29,7 +29,7 @@
 #include <gio/gio.h>
 #include <archive.h>
 #include <archive_entry.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "fr-error.h"
 #include "fr-archive-libarchive.h"
@@ -455,13 +455,13 @@ list_archive_thread (GSimpleAsyncResult *result,
 	}
 
 	while ((r = archive_read_next_header (a, &entry)) == ARCHIVE_OK) {
-		FileData   *file_data;
+		FrFileData *file_data;
 		const char *pathname;
 
 		if (g_cancellable_is_cancelled (cancellable))
 			break;
 
-		file_data = file_data_new ();
+		file_data = fr_file_data_new ();
 
 		if (archive_entry_size_is_set (entry)) {
 			FrArchiveLibarchivePrivate *private = fr_archive_libarchive_get_instance_private (FR_ARCHIVE_LIBARCHIVE (load_data->archive));

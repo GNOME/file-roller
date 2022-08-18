@@ -57,7 +57,7 @@ fr_list_model_multi_row_draggable (EggTreeMultiDragSource *drag_source,
 		GtkTreeRowReference *reference = scan->data;
 		GtkTreePath         *path;
 		GtkTreeIter          iter;
-		FileData            *fdata;
+		FrFileData *fdata;
 
 		path = gtk_tree_row_reference_get_path (reference);
 		if (path == NULL)

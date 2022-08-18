@@ -12,7 +12,6 @@ source_files = files(
   'dlg-prop.c',
   'dlg-update.c',
   'eggtreemultidnd.c',
-  'file-data.c',
   'file-utils.c',
   'fr-application.c',
   'fr-application-menu.c',
@@ -38,6 +37,7 @@ source_files = files(
   'fr-command-zip.c',
   'fr-command-zoo.c',
   'fr-error.c',
+  'fr-file-data.c',
   'fr-file-selector-dialog.c',
   'fr-init.c',
   'fr-list-model.c',
@@ -58,7 +58,6 @@ source_files = files(
 )
 
 fr_headers = files(
-  'file-data.h',
   'fr-application-menu.h',
   'fr-application.h',
   'fr-archive.h',
@@ -83,6 +82,7 @@ fr_headers = files(
   'fr-command-zoo.h',
   'fr-command.h',
   'fr-error.h',
+  'fr-file-data.h',
   'fr-file-selector-dialog.h',
   'fr-init.h',
   'fr-list-model.h',

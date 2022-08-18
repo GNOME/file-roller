@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
 #include "fr-command-ar.h"
@@ -119,7 +119,7 @@ static void
 process_line (char     *line,
 	      gpointer  data)
 {
-	FileData    *fdata;
+	FrFileData *fdata;
 	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	int          date_idx;
@@ -128,7 +128,7 @@ process_line (char     *line,
 
 	g_return_if_fail (line != NULL);
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 
 	date_idx = _g_line_get_index_from_pattern (line, "%c%c%c %a%n %n%n:%n%n %n%n%n%n");
 
@@ -155,7 +155,7 @@ process_line (char     *line,
 	if (fields[0] == NULL) {
 		g_strfreev (fields);
 		g_free (field_name);
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 		return;
 	}
 
@@ -181,7 +181,7 @@ process_line (char     *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }

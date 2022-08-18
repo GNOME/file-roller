@@ -22,7 +22,7 @@
 #include <config.h>
 #include <stdlib.h>
 #include <glib/gi18n.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #if ENABLE_LIBARCHIVE

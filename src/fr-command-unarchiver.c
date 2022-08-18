@@ -29,7 +29,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <json-glib/json-glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
@@ -93,11 +93,11 @@ list_command_completed (gpointer data)
 			content = json_object_get_array_member (root, "lsarContents");
 			for (guint i = 0; i < json_array_get_length (content); i++) {
 				JsonObject *entry;
-				FileData   *fdata;
+				FrFileData *fdata;
 				const char *filename;
 
 				entry = json_array_get_object_element (content, i);
-				fdata = file_data_new ();
+				fdata = fr_file_data_new ();
 				if (json_object_has_member (entry, "XADFileSize"))
 					fdata->size = json_object_get_int_member (entry, "XADFileSize");
 				fdata->modified = mktime_from_string (json_object_get_string_member (entry, "XADLastModificationDate"));

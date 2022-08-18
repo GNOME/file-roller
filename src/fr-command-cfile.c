@@ -27,7 +27,7 @@
 #include <time.h>
 #include <fcntl.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -102,12 +102,12 @@ list__process_line (char     *line,
 		    gpointer  data)
 {
 	FrCommand  *comm = FR_COMMAND (data);
-	FileData   *fdata;
+	FrFileData *fdata;
 	char      **fields;
 	GFile      *file;
 	char       *filename;
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 
 	fields = _g_str_split_line (line, 2);
 	if (strcmp (fields[1], "-1") != 0)
@@ -134,7 +134,7 @@ list__process_line (char     *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 
@@ -163,11 +163,11 @@ fr_command_cfile_list (FrCommand *comm)
 		 * simply use the archive size, suboptimal but there is no
 		 * alternative. */
 
-		FileData *fdata;
+		FrFileData *fdata;
 		char     *filename;
 		GFile    *file;
 
-		fdata = file_data_new ();
+		fdata = fr_file_data_new ();
 
 		filename = _g_path_remove_first_extension (comm->filename);
 		fdata->full_path = g_strconcat ("/",
@@ -185,7 +185,7 @@ fr_command_cfile_list (FrCommand *comm)
 		fdata->path = _g_path_remove_level (fdata->full_path);
 
 		if (*fdata->name == 0)
-			file_data_free (fdata);
+			fr_file_data_free (fdata);
 		else
 			fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 

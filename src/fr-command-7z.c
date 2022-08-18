@@ -26,7 +26,7 @@
 #include <time.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -38,7 +38,7 @@ struct _FrCommand7z
 {
 	FrCommand  parent_instance;
 	gboolean   list_started;
-	FileData  *fdata;
+	FrFileData *fdata;
 };
 
 
@@ -91,7 +91,7 @@ list__process_line (char     *line,
 	FrCommand7z  *self = FR_COMMAND_7Z (data);
 	FrArchive    *archive = FR_ARCHIVE (data);
 	char        **fields;
-	FileData     *fdata;
+	FrFileData *fdata;
 
 	g_return_if_fail (line != NULL);
 
@@ -109,7 +109,7 @@ list__process_line (char     *line,
 	if (strcmp (line, "") == 0) {
 		if (self->fdata != NULL) {
 			if (self->fdata->original_path == NULL) {
-				file_data_free (self->fdata);
+				fr_file_data_free (self->fdata);
 				self->fdata = NULL;
 			}
 			else {
@@ -127,7 +127,7 @@ list__process_line (char     *line,
 	}
 
 	if (self->fdata == NULL)
-		self->fdata = file_data_new ();
+		self->fdata = fr_file_data_new ();
 
 	fields = g_strsplit (line, " = ", 2);
 
@@ -217,7 +217,7 @@ list__begin (gpointer data)
 	FrCommand7z *p7z_comm = data;
 
 	if (p7z_comm->fdata != NULL) {
-		file_data_free (p7z_comm->fdata);
+		fr_file_data_free (p7z_comm->fdata);
 		p7z_comm->fdata = NULL;
 	}
 	p7z_comm->list_started = FALSE;
@@ -527,7 +527,7 @@ fr_command_7z_handle_error (FrCommand *command,
 	FrArchive *archive = FR_ARCHIVE (command);
 
 	if (error->type == FR_ERROR_NONE) {
-		FileData *first;
+		FrFileData *first;
 		char     *basename;
 		char     *testname;
 

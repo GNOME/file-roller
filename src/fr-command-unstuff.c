@@ -25,7 +25,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
 #include "fr-command-unstuff.h"
@@ -37,7 +37,7 @@ struct _FrCommandUnstuff
 	FrCommand  parent_instance;
 
 	char      *target_dir;
-	FileData  *fdata;
+	FrFileData *fdata;
 };
 
 
@@ -116,7 +116,7 @@ process_line (char     *line,
 	const char       *str_start;
 	char             *filename, *real_filename;
 	int               i;
-	FileData         *fdata;
+	FrFileData *fdata;
 
 	g_return_if_fail (line != NULL);
 
@@ -165,7 +165,7 @@ process_line (char     *line,
 	}
 	real_filename = g_strndup (str_start, i);
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 	fdata->full_path = filename;
 	fdata->original_path = filename;
 	fdata->link = NULL;

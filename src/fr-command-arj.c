@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -37,7 +37,7 @@ struct _FrCommandArj
 
 	gboolean  list_started;
 	int       line_no;
-	FileData *fdata;
+	FrFileData *fdata;
 	GRegex   *filename_line_regex;
 };
 
@@ -112,12 +112,12 @@ list__process_line (char     *line,
 	}
 
 	if (g_regex_match (arj_comm->filename_line_regex, line, 0, NULL)) { /* Read the filename. */
-		FileData   *fdata;
+		FrFileData *fdata;
 		const char *name_field;
 
 		arj_comm->line_no = 1;
 
-		arj_comm->fdata = fdata = file_data_new ();
+		arj_comm->fdata = fdata = fr_file_data_new ();
 
 		name_field = _g_str_get_last_field (line, 2);
 
@@ -136,7 +136,7 @@ list__process_line (char     *line,
 		fdata->path = _g_path_remove_level (fdata->full_path);
 	}
 	else if (arj_comm->line_no == 2) { /* Read file size and date. */
-		FileData  *fdata;
+		FrFileData *fdata;
 		char     **fields;
 
 		fdata = arj_comm->fdata;
@@ -153,7 +153,7 @@ list__process_line (char     *line,
 		g_strfreev (fields);
 
 		if (*fdata->name == 0)
-			file_data_free (fdata);
+			fr_file_data_free (fdata);
 		else
 			fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 		arj_comm->fdata = NULL;

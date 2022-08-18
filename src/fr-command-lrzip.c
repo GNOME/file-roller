@@ -12,7 +12,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -35,7 +35,7 @@ static void
 list__process_line (char     *line,
 		    gpointer  data)
 {
-	FileData  *fdata;
+	FrFileData *fdata;
 	FrCommand *comm = FR_COMMAND (data);
 
 	g_return_if_fail (line != NULL);
@@ -46,7 +46,7 @@ list__process_line (char     *line,
 	if (! g_str_has_prefix (line, "Decompressed file size:"))
 		return;
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 	fdata->size = g_ascii_strtoull (_g_str_get_last_field (line, 4), NULL, 10);
 
 	struct stat st;
@@ -79,7 +79,7 @@ list__process_line (char     *line,
 	fdata->link = NULL;
 
 	if (*fdata->name == '\0')
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }

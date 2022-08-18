@@ -23,7 +23,7 @@
 #define FR_ARCHIVE_H
 
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "typedefs.h"
 
 typedef enum {
@@ -72,8 +72,8 @@ struct _FrArchive {
 	/*<public, read only>*/
 
 	const char    *mime_type;
-	GPtrArray     *files;                      /* Array of FileData */
-	GHashTable    *files_hash;                 /* Hash of FileData with original_path as key */
+	GPtrArray     *files;                      /* Array of FrFileData */
+	GHashTable    *files_hash;                 /* Hash of FrFileData with original_path as key */
 	int            n_regular_files;
 
 	/*<public>*/
@@ -519,7 +519,7 @@ double        fr_archive_progress_inc_completed_bytes
 						  gsize                new_completed);
 double        fr_archive_progress_get_fraction   (FrArchive           *archive);
 void          fr_archive_add_file                (FrArchive           *archive,
-						  FileData            *file_data);
+						  FrFileData *file_data);
 
 /* utilities */
 

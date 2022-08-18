@@ -31,7 +31,7 @@
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gio-utils.h"
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "fr-archive.h"
 #include "fr-command.h"
 #include "fr-enum-types.h"
@@ -434,7 +434,7 @@ fr_archive_init (FrArchive *self)
 	FrArchivePrivate *private = fr_archive_get_instance_private (self);
 
 	self->mime_type = NULL;
-	self->files = g_ptr_array_new_full (FILE_ARRAY_INITIAL_SIZE, (GDestroyNotify) file_data_free);
+	self->files = g_ptr_array_new_full (FILE_ARRAY_INITIAL_SIZE, (GDestroyNotify) fr_file_data_free);
 	self->files_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	self->n_regular_files = 0;
         self->password = NULL;
@@ -863,7 +863,7 @@ fr_archive_list (FrArchive           *archive,
 	if (archive->files != NULL) {
 		g_hash_table_remove_all (archive->files_hash);
 		g_ptr_array_unref (archive->files);
-		archive->files = g_ptr_array_new_full (FILE_ARRAY_INITIAL_SIZE, (GDestroyNotify) file_data_free);
+		archive->files = g_ptr_array_new_full (FILE_ARRAY_INITIAL_SIZE, (GDestroyNotify) fr_file_data_free);
 		archive->n_regular_files = 0;
 	}
 
@@ -888,12 +888,12 @@ fr_archive_operation_finish (FrArchive     *archive,
 
 	if (success && (g_simple_async_result_get_source_tag (G_SIMPLE_ASYNC_RESULT (result)) == fr_archive_list)) {
 		/* order the list by name to speed up search */
-		g_ptr_array_sort (archive->files, file_data_compare_by_path);
+		g_ptr_array_sort (archive->files, fr_file_data_compare_by_path);
 
 		/* update the file_data hash */
 		g_hash_table_remove_all (archive->files_hash);
 		for (guint i = 0; i < archive->files->len; i++) {
-			FileData *file_data = g_ptr_array_index (archive->files, i);
+			FrFileData *file_data = g_ptr_array_index (archive->files, i);
 			g_hash_table_insert (archive->files_hash, file_data->original_path, file_data);
 		}
 	}
@@ -1192,7 +1192,7 @@ _fr_archive_get_file_list_size (FrArchive *archive,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		const char *original_path = scan->data;
-		FileData   *file_data;
+		FrFileData *file_data;
 
 		file_data = g_hash_table_lookup (archive->files_hash, original_path);
 		if (file_data != NULL)
@@ -2155,9 +2155,9 @@ fr_archive_progress_get_fraction (FrArchive *self)
 
 void
 fr_archive_add_file (FrArchive *self,
-		     FileData  *file_data)
+		     FrFileData *file_data)
 {
-	file_data_update_content_type (file_data);
+	fr_file_data_update_content_type (file_data);
 	g_ptr_array_add (self->files, file_data);
 	if (! file_data->dir)
 		self->n_regular_files++;

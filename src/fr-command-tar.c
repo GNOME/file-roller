@@ -28,7 +28,7 @@
 #include <time.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -127,7 +127,7 @@ static void
 process_line (char     *line,
 	      gpointer  data)
 {
-	FileData    *fdata;
+	FrFileData *fdata;
 	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	int          date_idx;
@@ -140,7 +140,7 @@ process_line (char     *line,
 	if (date_idx < 0)
 		return;
 
-	fdata = file_data_new ();
+	fdata = fr_file_data_new ();
 
 	field_size = _g_line_get_prev_field (line, date_idx, 1);
 	fdata->size = g_ascii_strtoull (field_size, NULL, 10);
@@ -188,7 +188,7 @@ process_line (char     *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
-		file_data_free (fdata);
+		fr_file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }

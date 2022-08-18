@@ -24,18 +24,18 @@
 #include <gio/gio.h>
 #include "glib-utils.h"
 #include "file-utils.h"
-#include "file-data.h"
+#include "fr-file-data.h"
 
 
-G_DEFINE_BOXED_TYPE(FileData, file_data, file_data_copy, file_data_free)
+G_DEFINE_BOXED_TYPE(FrFileData, fr_file_data, fr_file_data_copy, fr_file_data_free)
 
 
-FileData *
-file_data_new (void)
+FrFileData *
+fr_file_data_new (void)
 {
-	FileData *fdata;
+	FrFileData *fdata;
 
-	fdata = g_new0 (FileData, 1);
+	fdata = g_new0 (FrFileData, 1);
 	fdata->content_type = NULL;
 	fdata->free_original_path = FALSE;
 	fdata->dir_size = 0;
@@ -45,7 +45,7 @@ file_data_new (void)
 
 
 void
-file_data_free (FileData *fdata)
+fr_file_data_free (FrFileData *fdata)
 {
 	if (fdata == NULL)
 		return;
@@ -62,12 +62,12 @@ file_data_free (FileData *fdata)
 }
 
 
-FileData *
-file_data_copy (FileData *src)
+FrFileData *
+fr_file_data_copy (FrFileData *src)
 {
-	FileData *fdata;
+	FrFileData *fdata;
 
-	fdata = g_new0 (FileData, 1);
+	fdata = g_new0 (FrFileData, 1);
 
 	fdata->original_path = g_strdup (src->original_path);
 	fdata->free_original_path = TRUE;
@@ -92,7 +92,7 @@ file_data_copy (FileData *src)
 
 
 void
-file_data_update_content_type (FileData *fdata)
+fr_file_data_update_content_type (FrFileData *fdata)
 {
 	g_free (fdata->content_type);
 
@@ -104,14 +104,14 @@ file_data_update_content_type (FileData *fdata)
 
 
 gboolean
-file_data_is_dir (FileData *fdata)
+fr_file_data_is_dir (FrFileData *fdata)
 {
 	return fdata->dir || fdata->list_dir;
 }
 
 
 void
-file_data_set_list_name (FileData   *fdata,
+fr_file_data_set_list_name (FrFileData *fdata,
 			 const char *value)
 {
 	g_free (fdata->list_name);
@@ -126,23 +126,23 @@ file_data_set_list_name (FileData   *fdata,
 
 
 int
-file_data_compare_by_path (gconstpointer a,
+fr_file_data_compare_by_path (gconstpointer a,
 			   gconstpointer b)
 {
-	FileData *data_a = *((FileData **) a);
-	FileData *data_b = *((FileData **) b);
+	FrFileData *data_a = *((FrFileData **) a);
+	FrFileData *data_b = *((FrFileData **) b);
 
 	return strcmp (data_a->full_path, data_b->full_path);
 }
 
 
 int
-find_path_in_file_data_array (GPtrArray  *array,
+fr_find_path_in_file_data_array (GPtrArray  *array,
 			      const char *path)
 {
 	size_t    path_l;
 	int       left, right, p, cmp = -1;
-	FileData *fd;
+	FrFileData *fd;
 
 	if (path == NULL)
 		return -1;
@@ -152,7 +152,7 @@ find_path_in_file_data_array (GPtrArray  *array,
 	right = array->len;
 	while (left < right) {
 		p = left + ((right - left) / 2);
-		fd = (FileData *) g_ptr_array_index (array, p);
+		fd = (FrFileData *) g_ptr_array_index (array, p);
 
 		cmp = strcmp (path, fd->original_path);
 		if (cmp != 0) {

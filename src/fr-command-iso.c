@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 #include <glib.h>
-#include "file-data.h"
+#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -72,7 +72,7 @@ static void
 list__process_line (char     *line,
 		    gpointer  data)
 {
-	FileData      *fdata;
+	FrFileData *fdata;
 	FrCommand     *comm = FR_COMMAND (data);
 	FrCommandIso  *comm_iso = FR_COMMAND_ISO (comm);
 	char         **fields;
@@ -90,7 +90,7 @@ list__process_line (char     *line,
 	} else if (line[0] == '-') { /* Is file */
 		const char *last_field, *first_bracket;
 
-		fdata = file_data_new ();
+		fdata = fr_file_data_new ();
 
 		fields = _g_str_split_line (line, 8);
 		fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
@@ -102,7 +102,7 @@ list__process_line (char     *line,
 		last_field = _g_str_get_last_field (line, 9);
 		first_bracket = strchr (last_field, ']');
 		if (first_bracket == NULL) {
-			file_data_free (fdata);
+			fr_file_data_free (fdata);
 			return;
 		}
 
@@ -110,7 +110,7 @@ list__process_line (char     *line,
 		if ((name_field == NULL)
 		    || (strcmp (name_field, ".") == 0)
 		    || (strcmp (name_field, "..") == 0)) {
-			file_data_free (fdata);
+			fr_file_data_free (fdata);
 			return;
 		}
 
