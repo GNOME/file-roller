@@ -75,9 +75,10 @@ Also you need the following libraries:
 
 * glib >= 2.38
 * gtk+ >= 3.22.0
+* libhandy >=1.5.0
 * libportal >= 0.5
 * libportal-gtk3 >= 0.5
-* libnautilus-extension >= 3.28.0 (optional)
+* libnautilus-extension-4 >= 43.beta (optional)
 * libarchive >= 3.1.900a (optional)
 
 Alternately, with [Nix package manager](https://nixos.org/nix/), you can just run `nix-shell` in the project directory, and it will drop you into a shell with all the required dependencies.

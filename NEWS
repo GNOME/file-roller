@@ -1,27 +1,60 @@
 Version 43.alpha
 ----------------
-Unreleased
+Released: 2022-08-18
 
 New features and user visible changes:
 
 - Support `7zz` and `7zzs` programs from the official 7-Zip project (!75)
+  - Distros will want to adjust the `data/packages.match` file.
 - Add a mnemonic to Extract button (!73)
 - Make password field reveal icon consistent with other GNOME apps
 - Nautilus extension now supports extracting multiple archives simultaneously with “Archive to…” (!78)
+- Add context menu item to navigate to a file from search (!71)
 
 Bugs fixed:
 
 - Fix RAR decompression support in 7-Zip backend (!75)
+- Fix opening RAR archives with encrypted headers (Jake Dane; !82)
 
 Other changes:
 
 - Port Nautilus extension to Nautilus 43 (!81)
 - Various code clean-ups (!74, #69, !59, !15, !80, !78, …)
 - Slightly modernized Meson code (!60)
-- Use portal-based APIs for opening files, adding dependency on libportal and libportal-gtk3 (!55)
+- Use portal-based APIs for opening files, adding dependency on libportal and libportal-gtk3 (Maximiliano; !55)
 - Add support for building internal API docs using gi-docgen (!72)
 - Do not hide File-Roller icon in the KDE app laucher (!70)
-- Remove dependency on libnotify (!61)
+- Remove dependency on libnotify (Maximiliano; !61)
+
+Translation updates:
+
+- Abkhazian (Nart Tlisha)
+- Basque (Asier Sarasua Garmendia)
+- Catalan (Jordi Mas)
+- Chinese (China) (Luming Zh)
+- Croatian (Goran Vidović)
+- Dutch (Nathan Follens)
+- Finnish (Jiri Grönroos)
+- French (Irénée THIRION)
+- Friulian (Fabio Tomat)
+- Galician (Fran Dieguez)
+- Georgian (Zurab Kargareteli)
+- Hebrew (Yosef Or Boczko)
+- Indonesian (Andika Triwidada, Kukuh Syafaat)
+- Nepali (Pawan Chitrakar)
+- Occitan (Quentin PAGÈS)
+- Persian (Danial Behzadi)
+- Polish (Piotr Drąg)
+- Portuguese (Hugo Carvalho)
+- Russian (Aleksandr Melman)
+- Serbian (Марко Костић)
+- Slovak (Dušan Kazik)
+- Slovenian (Matej Urbančič)
+- Spanish (Daniel Mustieles)
+- Swedish (Anders Jonsson)
+- Turkish (Emin Tufan Çetin)
+- Ukrainian (Yuri Chornoivan)
+
 
 Version 3.42.0
 ~~~~~~~~~~~~~~
