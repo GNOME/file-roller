@@ -767,12 +767,12 @@ fr_command_rar_get_mime_types (FrArchive *archive)
 }
 
 
-static FrArchiveCap
+static FrArchiveCaps
 fr_command_rar_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrArchiveCap capabilities;
+	FrArchiveCaps capabilities;
 
 	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES | FR_ARCHIVE_CAN_ENCRYPT | FR_ARCHIVE_CAN_ENCRYPT_HEADER;
 	if (_g_program_is_available ("rar", check_command))

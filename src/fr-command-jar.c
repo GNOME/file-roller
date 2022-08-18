@@ -162,12 +162,12 @@ fr_command_jar_get_mime_types (FrArchive *archive)
 }
 
 
-static FrArchiveCap
+static FrArchiveCaps
 fr_command_jar_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrArchiveCap capabilities;
+	FrArchiveCaps capabilities;
 
 	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("zip", check_command))

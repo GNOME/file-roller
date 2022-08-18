@@ -64,11 +64,9 @@ typedef enum { /*< skip >*/
 	FR_ARCHIVE_CAN_ENCRYPT = 1 << 3,
 	FR_ARCHIVE_CAN_ENCRYPT_HEADER = 1 << 4,
 	FR_ARCHIVE_CAN_CREATE_VOLUMES = 1 << 5
-} FrArchiveCap;
+} FrArchiveCaps;
 
 #define FR_ARCHIVE_CAN_READ_WRITE (FR_ARCHIVE_CAN_READ | FR_ARCHIVE_CAN_WRITE)
-
-typedef guint8 FrArchiveCaps;
 
 typedef struct {
 	const char    *mime_type;

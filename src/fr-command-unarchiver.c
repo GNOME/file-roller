@@ -265,12 +265,12 @@ fr_command_unarchiver_get_mime_types (FrArchive *archive)
 }
 
 
-static FrArchiveCap
+static FrArchiveCaps
 fr_command_unarchiver_get_capabilities (FrArchive  *archive,
 					const char *mime_type,
 					gboolean    check_command)
 {
-	FrArchiveCap capabilities;
+	FrArchiveCaps capabilities;
 
 	capabilities = FR_ARCHIVE_CAN_DO_NOTHING;
 	if (_g_program_is_available ("lsar", check_command) && _g_program_is_available ("unar", check_command))

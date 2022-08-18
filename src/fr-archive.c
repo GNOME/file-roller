@@ -271,7 +271,7 @@ fr_archive_base_get_mime_types (FrArchive *self)
 }
 
 
-static FrArchiveCap
+static FrArchiveCaps
 fr_archive_base_get_capabilities (FrArchive  *self,
 			          const char *mime_type,
 			          gboolean    check_command)
@@ -506,7 +506,7 @@ fr_archive_update_capabilities (FrArchive *self)
 }
 
 
-FrArchiveCap
+FrArchiveCaps
 fr_archive_get_capabilities (FrArchive  *self,
 			     const char *mime_type,
 			     gboolean    check_command)

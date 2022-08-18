@@ -651,12 +651,12 @@ has_rar_support (gboolean check_command)
 }
 
 
-static FrArchiveCap
+static FrArchiveCaps
 fr_command_7z_get_capabilities (FrArchive  *archive,
 				const char *mime_type,
 				gboolean    check_command)
 {
-	FrArchiveCap capabilities;
+	FrArchiveCaps capabilities;
 
 	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	/*

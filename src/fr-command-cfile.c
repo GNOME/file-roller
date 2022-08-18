@@ -548,12 +548,12 @@ fr_command_cfile_get_mime_types (FrArchive *archive)
 }
 
 
-static FrArchiveCap
+static FrArchiveCaps
 fr_command_cfile_get_capabilities (FrArchive  *archive,
 			           const char *mime_type,
 				   gboolean    check_command)
 {
-	FrArchiveCap capabilities;
+	FrArchiveCaps capabilities;
 
 	capabilities = FR_ARCHIVE_CAN_DO_NOTHING;
 	if (_g_mime_type_matches (mime_type, "application/x-gzip")) {

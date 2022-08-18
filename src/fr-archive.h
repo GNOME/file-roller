@@ -246,7 +246,7 @@ struct _FrArchiveClass {
 	/*< virtual functions >*/
 
 	const char ** (*get_mime_types)    (FrArchive           *archive);
-	FrArchiveCap  (*get_capabilities)  (FrArchive           *archive,
+	FrArchiveCaps  (*get_capabilities)  (FrArchive           *archive,
 					    const char          *mime_type,
 					    gboolean             check_command);
 	void          (*set_mime_type)     (FrArchive           *archive,
@@ -360,7 +360,7 @@ gboolean      fr_archive_is_capable_of           (FrArchive           *archive,
  */
 const char ** fr_archive_get_supported_types     (FrArchive           *archive);
 void          fr_archive_update_capabilities     (FrArchive           *archive);
-FrArchiveCap  fr_archive_get_capabilities        (FrArchive           *archive,
+FrArchiveCaps  fr_archive_get_capabilities        (FrArchive           *archive,
 						  const char          *mime_type,
 						  gboolean             check_command);
 void          fr_archive_set_mime_type           (FrArchive           *archive,
