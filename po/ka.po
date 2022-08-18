@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2022-07-25 13:34+0000\n"
-"PO-Revision-Date: 2022-07-26 09:07+0200\n"
+"POT-Creation-Date: 2022-08-17 23:34+0000\n"
+"PO-Revision-Date: 2022-08-18 06:07+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: \n"
 "Language: ka\n"
@@ -53,8 +53,8 @@ msgstr "zip არქივები (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "xz არქივები (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:476
-#: src/fr-window.c:1968 src/fr-window.c:5468
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:477
+#: src/fr-window.c:2001 src/fr-window.c:5565
 msgid "Archive Manager"
 msgstr "არქივის მმართველი"
 
@@ -143,7 +143,7 @@ msgstr "გვერდითი პანელის ხედი"
 
 #: data/org.gnome.FileRoller.gschema.xml:111
 msgid "Whether to display the sidebar."
-msgstr "იქნება თუ არა გვერდით პანელი ნაჩვენები"
+msgstr "იქნება თუ არა გვერდით პანელი ნაჩვენები."
 
 #: data/org.gnome.FileRoller.gschema.xml:130
 msgid "Editors"
@@ -201,20 +201,20 @@ msgstr "ტომის ნაგულისხმები ზომა"
 msgid "The default size for volumes."
 msgstr ""
 
-#: nautilus/nautilus-fileroller.c:262
+#: nautilus/nautilus-fileroller.c:255
 msgid "Extract Here"
 msgstr "აქ გაშლა"
 
 #. Translators: the current position is the current folder
-#: nautilus/nautilus-fileroller.c:264
+#: nautilus/nautilus-fileroller.c:257
 msgid "Extract the selected archive to the current position"
 msgstr ""
 
-#: nautilus/nautilus-fileroller.c:281
+#: nautilus/nautilus-fileroller.c:274
 msgid "Extract To…"
 msgstr ""
 
-#: nautilus/nautilus-fileroller.c:282
+#: nautilus/nautilus-fileroller.c:275
 msgid "Extract the selected archive"
 msgstr ""
 
@@ -227,34 +227,34 @@ msgstr ""
 msgid "You don’t have the right permissions to read files from folder “%s”"
 msgstr ""
 
-#: src/dlg-add.c:175
+#: src/dlg-add.c:184
 msgctxt "Window title"
 msgid "Add Files"
 msgstr "ფაილების დამატება"
 
-#: src/dlg-add.c:186
+#: src/dlg-add.c:195
 msgid "_Options"
 msgstr "_პარამეტრები"
 
-#: src/dlg-add.c:739
+#: src/dlg-add.c:748
 msgctxt "Window title"
 msgid "Load Options"
 msgstr "პარამეტრების ჩატვირთვა"
 
-#: src/dlg-add.c:748
+#: src/dlg-add.c:757
 msgid "_Apply"
 msgstr "_გადატარება"
 
-#: src/dlg-add.c:749 src/dlg-delete.c:132
+#: src/dlg-add.c:758 src/dlg-delete.c:132
 msgid "_Delete"
 msgstr "_წაშლა"
 
-#: src/dlg-add.c:833
+#: src/dlg-add.c:842
 msgctxt "Window title"
 msgid "Save Options"
 msgstr "პარამეტრების შენახვა"
 
-#: src/dlg-add.c:834
+#: src/dlg-add.c:843
 msgid "_Options Name:"
 msgstr "_პარამეტრის სახელი:"
 
@@ -272,12 +272,12 @@ msgstr ""
 msgid "Wrong password."
 msgstr "არასწორი პაროლი."
 
-#: src/dlg-batch-add.c:88 src/fr-application.c:246 src/fr-application.c:282
-#: src/fr-application.c:607
+#: src/dlg-batch-add.c:88 src/fr-application.c:250 src/fr-application.c:286
+#: src/fr-application.c:608
 msgid "Compress"
 msgstr "შეკუმშვა"
 
-#: src/dlg-extract.c:91 src/fr-window.c:6795
+#: src/dlg-extract.c:91 src/fr-window.c:6908
 #, c-format
 msgid ""
 "Destination folder “%s” does not exist.\n"
@@ -285,22 +285,22 @@ msgid ""
 "Do you want to create it?"
 msgstr ""
 
-#: src/dlg-extract.c:98 src/fr-window.c:6803
+#: src/dlg-extract.c:98 src/fr-window.c:6916
 msgid "Create _Folder"
 msgstr "საქაღალდის _შექმნა"
 
 #: src/dlg-extract.c:138 src/dlg-extract.c:170 src/dlg-extract.c:199
-#: src/fr-window.c:4359 src/fr-window.c:6719 src/fr-window.c:6724
-#: src/fr-window.c:6824 src/fr-window.c:6843 src/fr-window.c:6848
+#: src/fr-window.c:4438 src/fr-window.c:6833 src/fr-window.c:6838
+#: src/fr-window.c:6937 src/fr-window.c:6956 src/fr-window.c:6961
 msgid "Extraction not performed"
 msgstr ""
 
-#: src/dlg-extract.c:139 src/fr-window.c:6820
+#: src/dlg-extract.c:139 src/fr-window.c:6933
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr ""
 
-#: src/dlg-extract.c:200 src/fr-window.c:4586 src/fr-window.c:4688
+#: src/dlg-extract.c:200 src/fr-window.c:4669 src/fr-window.c:4772
 #, c-format
 msgid ""
 "You don’t have the right permissions to extract archives in the folder “%s”"
@@ -311,8 +311,8 @@ msgctxt "Window title"
 msgid "Extract"
 msgstr "გაშლა"
 
-#: src/dlg-open-with.c:57 src/fr-window.c:4153 src/fr-window.c:8881
-#: src/fr-window.c:8915 src/fr-window.c:9157 src/fr-window.c:9230
+#: src/dlg-open-with.c:57 src/fr-window.c:4228 src/fr-window.c:9034
+#: src/fr-window.c:9069 src/fr-window.c:9315 src/fr-window.c:9388
 msgid "Could not perform the operation"
 msgstr ""
 
@@ -321,23 +321,23 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "შიდა შეცდომა პროგრამის მოძებნისას:"
 
 #: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
-#: src/dlg-package-installer.c:328 src/fr-archive.c:750 src/fr-window.c:4028
-#: src/fr-window.c:7526 src/fr-window.c:7883 src/fr-window.c:9443
+#: src/dlg-package-installer.c:330 src/fr-archive.c:756 src/fr-window.c:4101
+#: src/fr-window.c:7663 src/fr-window.c:8025 src/fr-window.c:9611
 msgid "Archive type not supported."
 msgstr ""
 
-#: src/dlg-package-installer.c:311
+#: src/dlg-package-installer.c:313
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
 "Do you want to search for a command to open this file?"
 msgstr ""
 
-#: src/dlg-package-installer.c:315
+#: src/dlg-package-installer.c:317
 msgid "Could not open this file type"
 msgstr ""
 
-#: src/dlg-package-installer.c:318
+#: src/dlg-package-installer.c:320
 msgid "_Search Command"
 msgstr ""
 
@@ -350,6 +350,10 @@ msgstr ""
 #, c-format
 msgid "%s Properties"
 msgstr "%s-ის თვისებები"
+
+#: src/dlg-prop.c:121 src/fr-window.c:1603 src/fr-window.c:1631
+msgid "%d %B %Y, %H:%M"
+msgstr "%d %B %Y, %H:%M"
 
 #: src/dlg-update.c:162
 #, c-format
@@ -379,7 +383,7 @@ msgstr "_განახლება"
 
 #: src/dlg-update.c:319
 msgid "Update Files"
-msgstr ""
+msgstr "ფაილების განახლება"
 
 #: src/fr-application-menu.c:130
 msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
@@ -443,24 +447,24 @@ msgstr ""
 msgid "Show version"
 msgstr "ვერსიის ჩვენება"
 
-#: src/fr-application.c:318 src/fr-application.c:344 src/fr-application.c:630
+#: src/fr-application.c:322 src/fr-application.c:348 src/fr-application.c:631
 msgctxt "Window title"
 msgid "Extract archive"
 msgstr "არქივის გაშლა"
 
-#: src/fr-application.c:510
+#: src/fr-application.c:511
 msgid "— Create and modify an archive"
 msgstr ""
 
-#: src/fr-archive.c:1851
+#: src/fr-archive.c:1866
 msgid "You don’t have the right permissions."
 msgstr ""
 
-#: src/fr-archive.c:1851
+#: src/fr-archive.c:1866
 msgid "This archive type cannot be modified"
 msgstr ""
 
-#: src/fr-archive.c:1865 src/fr-new-archive-dialog.c:478
+#: src/fr-archive.c:1880 src/fr-new-archive-dialog.c:478
 msgid "You can’t add an archive to itself."
 msgstr ""
 
@@ -482,7 +486,7 @@ msgstr "\"%s\"-ის გაშნა"
 msgid "Removing “%s”"
 msgstr "%s-ის წაშლა"
 
-#: src/fr-command-rar.c:758
+#: src/fr-command-rar.c:749
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "ტომი ვერ ვიპოვე: %s"
@@ -499,32 +503,32 @@ msgstr "არქივის თავიდან შეკუმშვა"
 msgid "Decompressing archive"
 msgstr "არქივის გაშლა"
 
-#: src/fr-command.c:597
+#: src/fr-command.c:604
 #, c-format
 msgid "Archive not found"
 msgstr "არქივი ვერ ვიპოვე"
 
-#: src/fr-file-selector-dialog.c:802 src/fr-file-selector-dialog.c:847
+#: src/fr-file-selector-dialog.c:813 src/fr-file-selector-dialog.c:858
 msgid "Could not load the location"
 msgstr "მდებარეობის ჩატვირთვის შეცდომა"
 
 #: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
 #: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
 #: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
-#: src/fr-window.c:2979
+#: src/fr-window.c:3035
 msgid "Could not create the archive"
 msgstr "არქივის შექმნის შეცდომა"
 
 #: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
 msgid "You have to specify an archive name."
-msgstr "მიუთითეთ სახელი"
+msgstr "არქივის სახელის მითითება აუცილებელია."
 
 #: src/fr-new-archive-dialog.c:438
 msgid "You don’t have permission to create an archive in this folder"
 msgstr ""
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8197
+#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8340
 msgid "New name is the same as old one, please type other name."
 msgstr ""
 
@@ -540,7 +544,7 @@ msgid ""
 msgstr ""
 "ფაილი \"%s\"-ში უკვე არსებობს.  მისი ჩანაცვლება არსებულ შემცველობას წაშლის."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6639
+#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6752
 msgid "_Replace"
 msgstr "_გამოცვლა"
 
@@ -548,325 +552,325 @@ msgstr "_გამოცვლა"
 msgid "Could not delete the old archive."
 msgstr ""
 
-#: src/fr-window-actions-callbacks.c:289
+#: src/fr-window-actions-callbacks.c:314
 msgctxt "Window title"
 msgid "Open"
 msgstr "გახსნა"
 
-#: src/fr-window-actions-callbacks.c:302
+#: src/fr-window-actions-callbacks.c:327
 msgid "All archives"
 msgstr "ყველა არქივი"
 
-#: src/fr-window-actions-callbacks.c:309
+#: src/fr-window-actions-callbacks.c:334
 msgid "All files"
 msgstr "ყველა ფაილი"
 
-#: src/fr-window.c:1172
+#: src/fr-window.c:1192
 msgid "Operation completed"
 msgstr "ოპერაცია დასრულდა"
 
-#: src/fr-window.c:1585
+#: src/fr-window.c:1611
 msgid "Folder"
 msgstr "საქაღალდე"
 
-#: src/fr-window.c:1975
+#: src/fr-window.c:2008
 msgid "[read only]"
 msgstr ""
 
-#: src/fr-window.c:2114
+#: src/fr-window.c:2151
 #, c-format
 msgid "Could not display the folder “%s”"
 msgstr ""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2287 src/fr-window.c:2325
+#: src/fr-window.c:2327 src/fr-window.c:2365
 #, c-format
 msgid "Creating “%s”"
 msgstr "%s-ის შექმნა"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2291
+#: src/fr-window.c:2331
 #, c-format
 msgid "Loading “%s”"
 msgstr "%s-ის ჩატვირთვა"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2295
+#: src/fr-window.c:2335
 #, c-format
 msgid "Reading “%s”"
 msgstr "%s-ის წაკითხვა"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2299
+#: src/fr-window.c:2339
 #, c-format
 msgid "Deleting the files from “%s”"
 msgstr ""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2303
+#: src/fr-window.c:2343
 #, c-format
 msgid "Testing “%s”"
 msgstr "%s_ის ტესტირება"
 
-#: src/fr-window.c:2306
+#: src/fr-window.c:2346
 msgid "Getting the file list"
 msgstr ""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2310
+#: src/fr-window.c:2350
 #, c-format
 msgid "Copying the files to add to “%s”"
 msgstr ""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2314
+#: src/fr-window.c:2354
 #, c-format
 msgid "Adding the files to “%s”"
 msgstr ""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2318
+#: src/fr-window.c:2358
 #, c-format
 msgid "Extracting the files from “%s”"
 msgstr ""
 
-#: src/fr-window.c:2321
+#: src/fr-window.c:2361
 msgid "Copying the extracted files to the destination"
 msgstr ""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2330
+#: src/fr-window.c:2370
 #, c-format
 msgid "Saving “%s”"
 msgstr "'%s'-ის შენახვა"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2337
+#: src/fr-window.c:2377
 #, c-format
 msgid "Renaming the files in “%s”"
 msgstr ""
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2341
+#: src/fr-window.c:2381
 #, c-format
 msgid "Updating the files in “%s”"
 msgstr ""
 
-#: src/fr-window.c:2630
+#: src/fr-window.c:2678
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/fr-window.c:2634 src/fr-window.c:3256
+#: src/fr-window.c:2682 src/fr-window.c:3314
 msgid "Please wait…"
 msgstr "გთხოვთ, მოითმინოთ…"
 
-#: src/fr-window.c:2750
+#: src/fr-window.c:2800
 msgid "Extraction completed successfully"
 msgstr ""
 
-#: src/fr-window.c:2753
+#: src/fr-window.c:2803
 msgid "_Show the Files"
 msgstr "_ფაილების ჩვენება"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2770 src/fr-window.c:6149
+#: src/fr-window.c:2821 src/fr-window.c:6256
 #, c-format
 msgid "“%s” created successfully"
 msgstr ""
 
-#: src/fr-window.c:2777
+#: src/fr-window.c:2828
 msgid "_Open the Archive"
 msgstr ""
 
-#: src/fr-window.c:2865 src/fr-window.c:3035
+#: src/fr-window.c:2918 src/fr-window.c:3091
 msgid "Command exited abnormally."
 msgstr ""
 
-#: src/fr-window.c:2984
+#: src/fr-window.c:3040
 msgid "An error occurred while extracting files."
 msgstr ""
 
-#: src/fr-window.c:2990
+#: src/fr-window.c:3046
 #, c-format
 msgid "Could not open “%s”"
 msgstr "%s-ის გახსნის შეცდომა"
 
-#: src/fr-window.c:2995
+#: src/fr-window.c:3051
 msgid "An error occurred while loading the archive."
 msgstr ""
 
-#: src/fr-window.c:2999
+#: src/fr-window.c:3055
 msgid "An error occurred while deleting files from the archive."
 msgstr ""
 
-#: src/fr-window.c:3005
+#: src/fr-window.c:3061
 msgid "An error occurred while adding files to the archive."
 msgstr ""
 
-#: src/fr-window.c:3009
+#: src/fr-window.c:3065
 msgid "An error occurred while testing archive."
 msgstr ""
 
-#: src/fr-window.c:3014
+#: src/fr-window.c:3070
 msgid "An error occurred while saving the archive."
 msgstr ""
 
-#: src/fr-window.c:3018
+#: src/fr-window.c:3074
 msgid "An error occurred while renaming the files."
 msgstr ""
 
-#: src/fr-window.c:3022
+#: src/fr-window.c:3078
 msgid "An error occurred while updating the files."
 msgstr ""
 
-#: src/fr-window.c:3026
+#: src/fr-window.c:3082
 msgid "An error occurred."
 msgstr "შეცდომა."
 
-#: src/fr-window.c:3032
+#: src/fr-window.c:3088
 msgid "Command not found."
 msgstr "ბრძანება ვერ ვიპოვე."
 
-#: src/fr-window.c:3188
+#: src/fr-window.c:3245
 msgid "Test Result"
 msgstr "ტესტის შედეგები"
 
-#: src/fr-window.c:4178
+#: src/fr-window.c:4253
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
 
-#: src/fr-window.c:4207
+#: src/fr-window.c:4282
 msgid "Do you want to create a new archive with these files?"
 msgstr ""
 
-#: src/fr-window.c:4210
+#: src/fr-window.c:4285
 msgid "Create _Archive"
 msgstr "არქივის შექმნა"
 
-#: src/fr-window.c:4239 src/fr-window.c:7334
+#: src/fr-window.c:4314 src/fr-window.c:7468
 msgid "New Archive"
 msgstr "ახალი არქივი"
 
-#: src/fr-window.c:4948
+#: src/fr-window.c:5037
 msgid "Folders"
 msgstr "საქაღალდეები"
 
-#: src/fr-window.c:4986 src/ui/file-selector.ui:206
+#: src/fr-window.c:5076 src/ui/file-selector.ui:206
 msgctxt "File"
 msgid "Size"
 msgstr "ზომა"
 
-#: src/fr-window.c:4987
+#: src/fr-window.c:5077
 msgctxt "File"
 msgid "Type"
 msgstr "ტიპით"
 
-#: src/fr-window.c:4988 src/ui/file-selector.ui:222
+#: src/fr-window.c:5078 src/ui/file-selector.ui:222
 msgctxt "File"
 msgid "Modified"
 msgstr "შეიცვალა"
 
-#: src/fr-window.c:4989
+#: src/fr-window.c:5079
 msgctxt "File"
 msgid "Location"
 msgstr "მდებარეობა"
 
-#: src/fr-window.c:4998 src/ui/file-selector.ui:175
+#: src/fr-window.c:5088 src/ui/file-selector.ui:175
 msgctxt "File"
 msgid "Name"
 msgstr "სახელი"
 
-#: src/fr-window.c:5744
+#: src/fr-window.c:5841
 msgctxt "Action"
 msgid "_Extract"
 msgstr "_გაშლა"
 
-#: src/fr-window.c:5748
+#: src/fr-window.c:5845
 msgctxt "Action"
 msgid "Add Files"
 msgstr "დაამატეთ ფაილები"
 
-#: src/fr-window.c:5772
+#: src/fr-window.c:5869
 msgid "Find files by name"
 msgstr ""
 
-#: src/fr-window.c:5788
+#: src/fr-window.c:5885
 msgid "Go to the previous visited location"
 msgstr ""
 
-#: src/fr-window.c:5793
+#: src/fr-window.c:5890
 msgid "Go to the next visited location"
 msgstr ""
 
-#: src/fr-window.c:5803
+#: src/fr-window.c:5900
 msgid "Go to the home location"
 msgstr ""
 
 #. Translators: after the colon there is a folder name.
-#: src/fr-window.c:5812 src/ui/file-selector.ui:83
+#: src/fr-window.c:5909 src/ui/file-selector.ui:83
 #: src/ui/new-archive-dialog.ui:93
 msgid "_Location:"
 msgstr "_მდებარეობა:"
 
-#: src/fr-window.c:6154 src/ui/menus.ui:7 src/ui/menus.ui:47 src/ui/menus.ui:83
+#: src/fr-window.c:6261 src/ui/menus.ui:7 src/ui/menus.ui:52 src/ui/menus.ui:88
 msgctxt "Action"
 msgid "Open"
 msgstr "გახსნა"
 
-#: src/fr-window.c:6627
+#: src/fr-window.c:6740
 #, c-format
 msgid "Replace file “%s”?"
 msgstr ""
 
-#: src/fr-window.c:6630
+#: src/fr-window.c:6743
 #, c-format
 msgid "Another file with the same name already exists in “%s”."
 msgstr ""
 
-#: src/fr-window.c:6636
+#: src/fr-window.c:6749
 msgid "Replace _All"
 msgstr "ყველ_აფრის ჩანაცვლება"
 
-#: src/fr-window.c:6637
+#: src/fr-window.c:6750
 msgid "Replace _Nothing"
 msgstr ""
 
-#: src/fr-window.c:6638
+#: src/fr-window.c:6751
 msgid "_Skip"
 msgstr "_გამოტოვება"
 
-#: src/fr-window.c:7518 src/fr-window.c:7875
+#: src/fr-window.c:7655 src/fr-window.c:8017
 #, c-format
 msgid "Could not save the archive “%s”"
 msgstr ""
 
-#: src/fr-window.c:7645
+#: src/fr-window.c:7783
 msgid "Save"
 msgstr "შენახვა"
 
-#: src/fr-window.c:7969
+#: src/fr-window.c:8111
 msgid "Last Output"
 msgstr ""
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8192
+#: src/fr-window.c:8335
 msgid "New name is void, please type a name."
 msgstr ""
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8202
+#: src/fr-window.c:8345
 #, c-format
 msgid ""
 "Name “%s” is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
 
-#: src/fr-window.c:8238
+#: src/fr-window.c:8380
 #, c-format
 msgid ""
 "A folder named “%s” already exists.\n"
@@ -874,11 +878,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/fr-window.c:8238 src/fr-window.c:8240
+#: src/fr-window.c:8380 src/fr-window.c:8382
 msgid "Please use a different name."
 msgstr "გამოიყენეთ სხვა სახელი."
 
-#: src/fr-window.c:8240
+#: src/fr-window.c:8382
 #, c-format
 msgid ""
 "A file named “%s” already exists.\n"
@@ -889,70 +893,63 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8310
+#: src/fr-window.c:8452
 msgid "Rename"
 msgstr "სახელის გადარქმევა"
 
-#: src/fr-window.c:8311
+#: src/fr-window.c:8453
 msgid "_New folder name:"
 msgstr "_ახალი საქაღალდის სახელი:"
 
-#: src/fr-window.c:8311
+#: src/fr-window.c:8453
 msgid "_New file name:"
 msgstr "_ახალი ფაილის სახელი:"
 
-#: src/fr-window.c:8315
+#: src/fr-window.c:8457
 msgid "_Rename"
 msgstr "_სახელის გადარქმევა"
 
-#: src/fr-window.c:8332 src/fr-window.c:8350
+#: src/fr-window.c:8474 src/fr-window.c:8492
 msgid "Could not rename the folder"
 msgstr ""
 
-#: src/fr-window.c:8332 src/fr-window.c:8350
+#: src/fr-window.c:8474 src/fr-window.c:8492
 msgid "Could not rename the file"
 msgstr ""
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8788
+#: src/fr-window.c:8940
 #, c-format
 msgid "Moving the files from “%s” to “%s”"
 msgstr ""
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8791
+#: src/fr-window.c:8943
 #, c-format
 msgid "Copying the files from “%s” to “%s”"
 msgstr ""
 
-#: src/fr-window.c:8842
+#: src/fr-window.c:8995
 msgid "Paste Selection"
 msgstr "მონიშნულის ჩასმა"
 
-#: src/fr-window.c:8843
+#: src/fr-window.c:8996
 msgid "_Destination folder:"
 msgstr "_დანიშნულების საქაღალდე:"
 
-#: src/fr-window.c:8847 src/ui/app-menubar.ui:61
+#: src/fr-window.c:9000 src/ui/app-menubar.ui:61
 msgid "_Paste"
 msgstr "ჩასმა"
 
-#. This is the time format used in the "Date Modified" column and
-#. * in the Properties dialog.  See the man page of strftime for an
-#. * explanation of the values.
-#: src/glib-utils.c:787
-msgid "%d %B %Y, %H:%M"
-msgstr "%d %B %Y, %H:%M"
-
-#: src/gtk-utils.c:234
+#: src/gtk-utils.c:208
 msgid "C_ommand Line Output:"
 msgstr ""
 
-#: src/gtk-utils.c:509
+#: src/gtk-utils.c:369
 msgid "Could not display help"
 msgstr ""
 
-#: src/gtk-utils.c:591
+#: src/gtk-utils.c:432
 msgid "Change password visibility"
 msgstr ""
 
@@ -1023,7 +1020,7 @@ msgstr "ქმედებები"
 
 #: src/ui/add-dialog-options.ui:189
 msgid "Add only if _newer"
-msgstr ""
+msgstr "დაამატეთ მხოლოდ იმ შემთხვევაში, თუ _უფრო ახალია"
 
 #: src/ui/add-dialog-options.ui:206
 msgid "_Follow symbolic links"
@@ -1073,8 +1070,8 @@ msgstr "_კოპირება"
 msgid "_Add Files…"
 msgstr "_ფაილების დამატება…"
 
-#: src/ui/app-menubar.ui:72 src/ui/menus.ui:35 src/ui/menus.ui:71
-#: src/ui/menus.ui:107
+#: src/ui/app-menubar.ui:72 src/ui/menus.ui:40 src/ui/menus.ui:76
+#: src/ui/menus.ui:112
 msgid "_Rename…"
 msgstr "_გადარქმევა…"
 
@@ -1318,23 +1315,27 @@ msgstr ""
 msgid "_Open With…"
 msgstr "_გამხსნელი პროგრამა…"
 
-#: src/ui/menus.ui:17 src/ui/menus.ui:53 src/ui/menus.ui:89
+#: src/ui/menus.ui:15
+msgid "Open _Item Location"
+msgstr "მდებარეობის გახსნა"
+
+#: src/ui/menus.ui:22 src/ui/menus.ui:58 src/ui/menus.ui:94
 msgid "_Extract…"
 msgstr "_გაშლა…"
 
-#: src/ui/menus.ui:23 src/ui/menus.ui:59 src/ui/menus.ui:95
+#: src/ui/menus.ui:28 src/ui/menus.ui:64 src/ui/menus.ui:100
 msgid "Cut"
 msgstr "ამოჭრა"
 
-#: src/ui/menus.ui:27 src/ui/menus.ui:63 src/ui/menus.ui:99
+#: src/ui/menus.ui:32 src/ui/menus.ui:68 src/ui/menus.ui:104
 msgid "Copy"
 msgstr "კოპირება"
 
-#: src/ui/menus.ui:31 src/ui/menus.ui:67 src/ui/menus.ui:103
+#: src/ui/menus.ui:36 src/ui/menus.ui:72 src/ui/menus.ui:108
 msgid "Paste"
 msgstr "ჩასმა"
 
-#: src/ui/menus.ui:39 src/ui/menus.ui:75 src/ui/menus.ui:111
+#: src/ui/menus.ui:44 src/ui/menus.ui:80 src/ui/menus.ui:116
 msgid "Delete"
 msgstr "წაშლა"
 
