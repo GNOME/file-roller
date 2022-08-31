@@ -20,6 +20,7 @@ like tar and zip. The supported file types are:
 * Cabinet File (.cab)
 * UNIX CPIO Archive (.cpio)
 * Debian Linux Package (.deb) [Read-only mode]
+* Apple Disk Image (.dmg) [Read-only mode]
 * ISO-9660 CD Disc Image (.iso) [Read-only mode]
 * Java Archive (.jar)
 * Java Enterprise archive (.ear)
