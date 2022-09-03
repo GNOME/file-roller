@@ -7311,8 +7311,9 @@ fr_window_get_current_location (FrWindow *window)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	if (private->history_current == NULL) {
-		fr_window_history_add (window, "/");
-		return private->history_current->data;
+		const char *path = "/";
+		fr_window_history_add (window, path);
+		return path;
 	}
 	else
 		return (const char*) private->history_current->data;
