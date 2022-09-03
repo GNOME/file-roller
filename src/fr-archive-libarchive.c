@@ -398,7 +398,7 @@ static goffset
 _g_file_get_size (GFile        *file,
 		  GCancellable *cancellable)
 {
-	GFileInfo *info;
+	g_autoptr (GFileInfo) info = NULL;
 	goffset    size;
 
 	info = g_file_query_info (file,
@@ -410,7 +410,6 @@ _g_file_get_size (GFile        *file,
 		return 0;
 
 	size = g_file_info_get_size (info);
-	g_object_unref (info);
 
 	return size;
 }
@@ -419,15 +418,13 @@ _g_file_get_size (GFile        *file,
 static GError *
 _g_error_new_from_archive_error (const char *s)
 {
-	char   *msg;
+	g_autofree char *msg = NULL;
 	GError *error;
 
 	msg = (s != NULL) ? g_locale_to_utf8 (s, -1, NULL, NULL, NULL) : NULL;
 	if (msg == NULL)
 		msg = g_strdup ("Fatal error");
 	error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, msg);
-
-	g_free (msg);
 
 	return error;
 }
@@ -710,7 +707,7 @@ _g_file_contains_symlinks_in_path (const char *relative_path,
 				   GHashTable *symlinks)
 {
 	gboolean  contains_symlinks = FALSE;
-	GFile    *parent;
+	g_autoptr (GFile) parent = NULL;
 	char    **components;
 	int       i;
 
@@ -729,7 +726,6 @@ _g_file_contains_symlinks_in_path (const char *relative_path,
 			continue;
 
 		tmp = g_file_get_child (parent, components[i]);
-		g_object_unref (parent);
 		parent = tmp;
 
 		if (g_hash_table_contains (symlinks, parent)) {
@@ -739,7 +735,6 @@ _g_file_contains_symlinks_in_path (const char *relative_path,
 	}
 
 	g_strfreev (components);
-	g_object_unref (parent);
 
 	return contains_symlinks;
 }
@@ -752,10 +747,10 @@ extract_archive_thread (GSimpleAsyncResult *result,
 {
 	ExtractData          *extract_data;
 	LoadData             *load_data;
-	GHashTable           *checked_folders;
-	GHashTable           *created_files;
-	GHashTable           *folders_created_during_extraction;
-	GHashTable           *symlinks;
+	g_autoptr (GHashTable) checked_folders = NULL;
+	g_autoptr (GHashTable) created_files = NULL;
+	g_autoptr (GHashTable) folders_created_during_extraction = NULL;
+	g_autoptr (GHashTable) symlinks = NULL;
 	struct archive       *a;
 	struct archive_entry *entry;
 	int                   r;
@@ -777,11 +772,11 @@ extract_archive_thread (GSimpleAsyncResult *result,
 
 	while ((r = archive_read_next_header (a, &entry)) == ARCHIVE_OK) {
 		const char    *pathname;
-		char          *fullpath;
+		g_autofree char * fullpath = NULL;
 		const char    *relative_path;
-		GFile         *file;
-		GFile         *parent;
-		GOutputStream *ostream;
+		g_autoptr (GFile) file = NULL;
+		g_autoptr (GFile) parent = NULL;
+		g_autoptr (GOutputStream) ostream = NULL;
 		const void    *buffer;
 		size_t         buffer_size;
 		int64_t        target_offset, actual_offset;
@@ -827,7 +822,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		if ((g_hash_table_lookup (folders_created_during_extraction, file) == NULL)
 		    && (extract_data->skip_older || ! extract_data->overwrite))
 		{
-			GFileInfo *info;
+			g_autoptr (GFileInfo) info = NULL;
 
 			info = g_file_query_info (file,
 						  G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME "," G_FILE_ATTRIBUTE_TIME_MODIFIED,
@@ -848,11 +843,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 						skip = TRUE;
 				}
 
-				g_object_unref (info);
-
 				if (skip) {
-					g_object_unref (file);
-
 					archive_read_data_skip (a);
 					fr_archive_progress_inc_completed_bytes (load_data->archive, archive_entry_size_is_set (entry) ? archive_entry_size (entry) : 0);
 
@@ -867,7 +858,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 			else {
 				if (! g_error_matches (local_error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND)) {
 					load_data->error = local_error;
-					g_object_unref (info);
 					break;
 				}
 				g_clear_error (&local_error);
@@ -906,7 +896,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				}
 			}
 		}
-		g_object_unref (parent);
 
 		/* create the file */
 
@@ -917,17 +906,16 @@ extract_archive_thread (GSimpleAsyncResult *result,
 
 			linkname = archive_entry_hardlink (entry);
 			if (linkname != NULL) {
-				char        *link_fullpath;
-				const char  *relative_path;
-				GFile       *link_file;
-				char        *oldname;
-				char        *newname;
+				g_autofree char *link_fullpath = NULL;
+				const char *relative_path;
+				g_autoptr (GFile) link_file = NULL;
+				g_autofree char *oldname = NULL;
+				g_autofree char *newname = NULL;
 				int          r;
 
 				link_fullpath = (*linkname == '/') ? g_strdup (linkname) : g_strconcat ("/", linkname, NULL);
 				relative_path = _g_path_get_relative_basename_safe (link_fullpath, extract_data->base_dir, extract_data->junk_paths);
 				if (relative_path == NULL) {
-					g_free (link_fullpath);
 					archive_read_data_skip (a);
 					continue;
 				}
@@ -953,21 +941,10 @@ extract_archive_thread (GSimpleAsyncResult *result,
 						filetype = AE_IFREG; /* treat as a regular file to save the data */
 				}
 				else {
-					char *uri;
-					char *msg;
-
-					uri = g_file_get_uri (file);
-					msg = g_strdup_printf ("Could not create the hard link %s", uri);
+					g_autofree char *uri = g_file_get_uri (file);
+					g_autofree char *msg = g_strdup_printf ("Could not create the hard link %s", uri);
 					load_data->error = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, msg);
-
-					g_free (msg);
-					g_free (uri);
 				}
-
-				g_free (newname);
-				g_free (oldname);
-				g_object_unref (link_file);
-				g_free (link_fullpath);
 			}
 		}
 
@@ -1010,8 +987,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				if ((r == ARCHIVE_EOF) && (target_offset > actual_offset))
 					_g_output_stream_add_padding (extract_data, ostream, target_offset, actual_offset, cancellable, &load_data->error);
 
-				_g_object_unref (ostream);
-
 				if (r != ARCHIVE_EOF)
 					load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
 				else
@@ -1045,9 +1020,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 			}
 		}
 
-		g_object_unref (file);
-		g_free (fullpath);
-
 		if (load_data->error != NULL)
 			break;
 
@@ -1067,10 +1039,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	if (load_data->error != NULL)
 		g_simple_async_result_set_from_error (result, load_data->error);
 
-	g_hash_table_unref (folders_created_during_extraction);
-	g_hash_table_unref (created_files);
-	g_hash_table_unref (checked_folders);
-	g_hash_table_unref (symlinks);
 	archive_read_free (a);
 	extract_data_free (extract_data);
 }
@@ -1233,9 +1201,9 @@ save_data_open (struct archive *a,
 {
 	SaveData *save_data = client_data;
 	LoadData *load_data = LOAD_DATA (save_data);
-	GFile    *parent;
-	char     *basename;
-	char     *tmpname;
+	g_autoptr (GFile) parent = NULL;
+	g_autofree char * basename = NULL;
+	g_autofree char * tmpname = NULL;
 
 	if (load_data->error != NULL)
 		return ARCHIVE_FATAL;
@@ -1245,10 +1213,6 @@ save_data_open (struct archive *a,
 	tmpname = _g_filename_get_random (16, basename);
 	save_data->tmp_file = g_file_get_child (parent, tmpname);
 	save_data->ostream = (GOutputStream *) g_file_create (save_data->tmp_file, G_FILE_CREATE_NONE, load_data->cancellable, &load_data->error);
-
-	g_free (tmpname);
-	g_free (basename);
-	g_object_unref (parent);
 
 	return (save_data->ostream != NULL) ? ARCHIVE_OK : ARCHIVE_FATAL;
 }
@@ -1568,7 +1532,7 @@ _archive_write_file (struct archive       *b,
 		     GCancellable         *cancellable)
 {
 	LoadData             *load_data = LOAD_DATA (save_data);
-	GFileInfo            *info;
+	g_autoptr (GFileInfo) info = NULL;
 	struct archive_entry *w_entry;
 	int                   rb;
 
@@ -1585,7 +1549,6 @@ _archive_write_file (struct archive       *b,
 	w_entry = archive_entry_new ();
 	if (! _archive_entry_copy_file_info (w_entry, info, save_data)) {
 		archive_entry_free (w_entry);
-		g_object_unref (info);
 		return WRITE_ACTION_SKIP_ENTRY;
 	}
 
@@ -1593,7 +1556,6 @@ _archive_write_file (struct archive       *b,
 
 	if (save_data->update && (r_entry != NULL) && (archive_entry_mtime (w_entry) < archive_entry_mtime (r_entry))) {
 		archive_entry_free (w_entry);
-		g_object_unref (info);
 		return WRITE_ACTION_WRITE_ENTRY;
 	}
 
@@ -1603,7 +1565,7 @@ _archive_write_file (struct archive       *b,
 	/* write the file data */
 
 	if (g_file_info_get_file_type (info) == G_FILE_TYPE_REGULAR) {
-		GInputStream *istream;
+		g_autoptr (GInputStream) istream = NULL;
 
 		istream = (GInputStream *) g_file_read (add_file->file, cancellable, &load_data->error);
 		if (istream != NULL) {
@@ -1613,8 +1575,6 @@ _archive_write_file (struct archive       *b,
 				archive_write_data (b, save_data->buffer, bytes_read);
 				fr_archive_progress_inc_completed_bytes (load_data->archive, bytes_read);
 			}
-
-			g_object_unref (istream);
 		}
 	}
 
@@ -1624,7 +1584,6 @@ _archive_write_file (struct archive       *b,
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (b));
 
 	archive_entry_free (w_entry);
-	g_object_unref (info);
 
 	return (load_data->error == NULL) ? WRITE_ACTION_SKIP_ENTRY : WRITE_ACTION_ABORT;
 }
@@ -1812,7 +1771,7 @@ _add_files_begin (SaveData *save_data,
 	fr_archive_progress_set_total_files (load_data->archive, add_data->n_files_to_add);
 
 	if (load_data->archive->files_to_add_size == 0) {
-		GList *files_to_add;
+		g_autoptr (GList) files_to_add = NULL;
 		GList *scan;
 
 		files_to_add = g_hash_table_get_values (add_data->files_to_add);
@@ -1824,8 +1783,6 @@ _add_files_begin (SaveData *save_data,
 
 			load_data->archive->files_to_add_size += _g_file_get_size (add_file->file, load_data->cancellable);
 		}
-
-		g_list_free (files_to_add);
 	}
 
 	FrArchiveLibarchivePrivate *private = fr_archive_libarchive_get_instance_private (FR_ARCHIVE_LIBARCHIVE (load_data->archive));
@@ -1869,7 +1826,7 @@ _add_files_end (SaveData *save_data,
 {
 	AddData  *add_data = user_data;
 	LoadData *load_data = LOAD_DATA (save_data);
-	GList    *remaining_files;
+	g_autoptr (GList) remaining_files = NULL;
 	GList    *scan;
 
 	/* allow to add files to a new archive */
@@ -1898,8 +1855,6 @@ _add_files_end (SaveData *save_data,
 
 		fr_archive_progress_inc_completed_files (load_data->archive, 1);
 	}
-
-	g_list_free (remaining_files);
 }
 
 
@@ -1933,18 +1888,12 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		GFile *file = G_FILE (scan->data);
-		char  *relative_pathname;
-		char  *archive_pathname;
-
-		relative_pathname = g_file_get_relative_path (base_dir, file);
-		archive_pathname = g_build_filename (dest_dir, relative_pathname, NULL);
+		g_autofree char *relative_pathname = g_file_get_relative_path (base_dir, file);
+		g_autofree char *archive_pathname = g_build_filename (dest_dir, relative_pathname, NULL);
 		g_hash_table_insert (add_data->files_to_add,
 				     g_strdup (archive_pathname),
 				     add_file_new (file, archive_pathname));
 		add_data->n_files_to_add++;
-
-		g_free (archive_pathname);
-		g_free (relative_pathname);
 	}
 
 	_fr_archive_libarchive_save (archive,
@@ -2142,26 +2091,17 @@ fr_archive_libarchive_rename (FrArchive           *archive,
 	rename_data->n_files_to_rename = 0;
 
 	if (is_dir) {
-		char  *old_dirname;
-		char  *new_dirname;
-		int    old_dirname_len;
+		g_autofree char *old_dirname = g_build_filename (current_dir + 1, old_name, "/", NULL);
+		int old_dirname_len = strlen (old_dirname);
+		g_autofree char *new_dirname = g_build_filename (current_dir + 1, new_name, "/", NULL);
 		GList *scan;
-
-		old_dirname = g_build_filename (current_dir + 1, old_name, "/", NULL);
-		old_dirname_len = strlen (old_dirname);
-		new_dirname = g_build_filename (current_dir + 1, new_name, "/", NULL);
 
 		for (scan = file_list; scan; scan = scan->next) {
 			char *old_pathname = scan->data;
-			char *new_pathname;
-
-			new_pathname = g_build_filename (new_dirname, old_pathname + old_dirname_len, NULL);
+			char *new_pathname = g_build_filename (new_dirname, old_pathname + old_dirname_len, NULL);
 			g_hash_table_insert (rename_data->files_to_rename, g_strdup (old_pathname), new_pathname);
 			rename_data->n_files_to_rename++;
 		}
-
-		g_free (new_dirname);
-		g_free (old_dirname);
 	}
 	else {
 		char *old_pathname = (char *) file_list->data;
@@ -2223,14 +2163,12 @@ fr_archive_libarchive_paste_clipboard (FrArchive           *archive,
 	for (scan = files; scan; scan = scan->next) {
 		const char *old_name = (char *) scan->data;
 		char       *new_name;
-		GFile      *file;
+		g_autoptr (GFile) file = NULL;
 
 		new_name = g_build_filename (current_dir, old_name + strlen (base_dir) - 1, NULL);
 		file = _g_file_append_path (tmp_dir, old_name, NULL);
 		g_hash_table_insert (add_data->files_to_add, new_name, add_file_new (file, new_name));
 		add_data->n_files_to_add++;
-
-		g_object_unref (file);
 	}
 
 	_fr_archive_libarchive_save (archive,
@@ -2277,17 +2215,12 @@ fr_archive_libarchive_add_dropped_files (FrArchive           *archive,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		GFile *file = G_FILE (scan->data);
-		char  *basename;
-		char  *archive_pathname;
+		g_autofree char *basename = g_file_get_basename (file);
+		g_autofree char *archive_pathname = g_build_filename (dest_dir, basename, NULL);
 
-		basename = g_file_get_basename (file);
-		archive_pathname = g_build_filename (dest_dir, basename, NULL);
 		g_hash_table_insert (add_data->files_to_add,
 				     g_strdup (archive_pathname),
 				     add_file_new (file, archive_pathname));
-
-		g_free (archive_pathname);
-		g_free (basename);
 	}
 
 	_fr_archive_libarchive_save (archive,
@@ -2336,13 +2269,9 @@ fr_archive_libarchive_update_open_files (FrArchive           *archive,
 	{
 		GFile *temp_dir = G_FILE (scan_dir->data);
 		GFile *extracted_file = G_FILE (scan_file->data);
-		char  *archive_pathname;
-
-		archive_pathname = g_file_get_relative_path (temp_dir, extracted_file);
+		g_autofree char *archive_pathname = g_file_get_relative_path (temp_dir, extracted_file);
 		g_hash_table_insert (add_data->files_to_add, g_strdup (archive_pathname), add_file_new (extracted_file, archive_pathname));
 		add_data->n_files_to_add++;
-
-		g_free (archive_pathname);
 	}
 
 	_fr_archive_libarchive_save (archive,
