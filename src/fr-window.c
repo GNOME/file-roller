@@ -3287,7 +3287,6 @@ _archive_operation_started (FrWindow *window,
 			    FrAction  action)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	GFile *archive;
 
 	private->action = action;
 	_fr_window_start_activity_mode (window);
@@ -3295,10 +3294,6 @@ _archive_operation_started (FrWindow *window,
 #ifdef DEBUG
 	debug (DEBUG_INFO, "%s [START] (FR::Window)\n", action_names[action]);
 #endif
-
-	archive = private->pd_last_archive;
-	if (archive == NULL)
-		archive =  private->archive_file;
 
 	switch (action) {
 	case FR_ACTION_EXTRACTING_FILES:
