@@ -262,19 +262,21 @@ handle_method_call (GDBusConnection       *connection,
 		gboolean    use_progress_dialog;
 		int         i;
 		GList      *file_list = NULL;
-		GFile      *destination;
+		GFile      *destination = NULL;
 		GtkWidget  *window;
 
 		g_variant_get (parameters, "(^assb)", &files, &destination_uri, &use_progress_dialog);
 
 		if ((destination_uri != NULL) && (strcmp (destination_uri, "") != 0))
 			destination = g_file_new_for_uri (destination_uri);
-		else
-			destination = g_file_get_parent (G_FILE (file_list->data));
 
 		for (i = 0; files[i] != NULL; i++)
 			file_list = g_list_prepend (file_list, g_file_new_for_uri (files[i]));
 		file_list = g_list_reverse (file_list);
+
+		if (destination == NULL && file_list != NULL) {
+			destination = g_file_get_parent (G_FILE (file_list->data));
+		}
 
 		window = fr_window_new ();
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
