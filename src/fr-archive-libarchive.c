@@ -42,6 +42,38 @@
 #define FILE_ATTRIBUTES_NEEDED_BY_ARCHIVE_ENTRY ("standard::*,time::*,access::*,unix::*")
 
 
+/* workaround the struct types of libarchive */
+typedef struct archive _archive_read_ctx;
+
+static void
+_archive_read_ctx_free(_archive_read_ctx *arch)
+{
+	archive_read_free(arch);
+}
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(_archive_read_ctx, _archive_read_ctx_free)
+
+typedef struct archive _archive_write_ctx;
+
+static void
+_archive_write_ctx_free(_archive_write_ctx *arch)
+{
+	archive_write_free(arch);
+}
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(_archive_write_ctx, _archive_write_ctx_free)
+
+typedef struct archive_entry _archive_entry_ctx;
+
+static void
+_archive_entry_ctx_free(_archive_entry_ctx *entry)
+{
+	archive_entry_free(entry);
+}
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(_archive_entry_ctx, _archive_entry_ctx_free)
+
+
 typedef struct {
 	gssize compressed_size;
 	gssize uncompressed_size;
@@ -376,7 +408,7 @@ load_data_close (struct archive *a,
 
 static int
 create_read_object (LoadData        *load_data,
-		    struct archive **a)
+                    _archive_read_ctx **a)
 {
 	*a = archive_read_new ();
 	archive_read_support_filter_all (*a);
@@ -438,7 +470,7 @@ list_archive_thread (GSimpleAsyncResult *result,
 		     GCancellable       *cancellable)
 {
 	g_autoptr (LoadData) load_data = NULL;
-	struct archive       *a;
+	g_autoptr (_archive_read_ctx) a = NULL;
 	struct archive_entry *entry;
 	int                   r;
 
@@ -449,7 +481,6 @@ list_archive_thread (GSimpleAsyncResult *result,
 
 	r = create_read_object (load_data, &a);
 	if (r != ARCHIVE_OK) {
-		archive_read_free(a);
 		return;
 	}
 
@@ -511,8 +542,6 @@ list_archive_thread (GSimpleAsyncResult *result,
 		g_cancellable_set_error_if_cancelled (cancellable, &load_data->error);
 	if (load_data->error != NULL)
 		g_simple_async_result_set_from_error (result, load_data->error);
-
-	archive_read_free (a);
 }
 
 
@@ -754,7 +783,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	g_autoptr (GHashTable) created_files = NULL;
 	g_autoptr (GHashTable) folders_created_during_extraction = NULL;
 	g_autoptr (GHashTable) symlinks = NULL;
-	struct archive       *a;
+	g_autoptr (_archive_read_ctx) a = NULL;
 	struct archive_entry *entry;
 	int                   r;
 
@@ -763,7 +792,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 
 	r = create_read_object (load_data, &a);
 	if (r != ARCHIVE_OK) {
-		archive_read_free(a);
 		return;
 	}
 
@@ -1041,8 +1069,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		g_cancellable_set_error_if_cancelled (cancellable, &load_data->error);
 	if (load_data->error != NULL)
 		g_simple_async_result_set_from_error (result, load_data->error);
-
-	archive_read_free (a);
 }
 
 
@@ -1537,7 +1563,7 @@ _archive_write_file (struct archive       *b,
 {
 	LoadData             *load_data = LOAD_DATA (save_data);
 	g_autoptr (GFileInfo) info = NULL;
-	struct archive_entry *w_entry;
+	g_autoptr (_archive_entry_ctx) w_entry = NULL;
 	int                   rb;
 
 	/* write the file header */
@@ -1552,14 +1578,12 @@ _archive_write_file (struct archive       *b,
 
 	w_entry = archive_entry_new ();
 	if (! _archive_entry_copy_file_info (w_entry, info, save_data)) {
-		archive_entry_free (w_entry);
 		return WRITE_ACTION_SKIP_ENTRY;
 	}
 
 	/* honor the update flag */
 
 	if (save_data->update && (r_entry != NULL) && (archive_entry_mtime (w_entry) < archive_entry_mtime (r_entry))) {
-		archive_entry_free (w_entry);
 		return WRITE_ACTION_WRITE_ENTRY;
 	}
 
@@ -1587,8 +1611,6 @@ _archive_write_file (struct archive       *b,
 	if ((load_data->error == NULL) && (rb <= ARCHIVE_FAILED))
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (b));
 
-	archive_entry_free (w_entry);
-
 	return (load_data->error == NULL) ? WRITE_ACTION_SKIP_ENTRY : WRITE_ACTION_ABORT;
 }
 
@@ -1600,7 +1622,8 @@ save_archive_thread (GSimpleAsyncResult *result,
 {
 	g_autoptr (SaveData) save_data = NULL;
 	LoadData             *load_data;
-	struct archive       *a, *b;
+	g_autoptr (_archive_read_ctx) a = NULL;
+	g_autoptr (_archive_write_ctx) b = NULL;
 	struct archive_entry *r_entry;
 	int                   ra = ARCHIVE_OK, rb = ARCHIVE_OK;
 
@@ -1618,7 +1641,7 @@ save_archive_thread (GSimpleAsyncResult *result,
 		save_data->begin_operation (save_data, save_data->user_data);
 
 	while ((load_data->error == NULL) && (ra = archive_read_next_header (a, &r_entry)) == ARCHIVE_OK) {
-		struct archive_entry *w_entry;
+		g_autoptr (_archive_entry_ctx) w_entry = NULL;
 		WriteAction           action;
 
 		if (g_cancellable_is_cancelled (cancellable))
@@ -1661,8 +1684,6 @@ save_archive_thread (GSimpleAsyncResult *result,
 		}
 		else if (action == WRITE_ACTION_SKIP_ENTRY)
 			fr_archive_progress_inc_completed_bytes (load_data->archive, archive_entry_size (r_entry));
-
-		archive_entry_free (w_entry);
 	}
 
 	if (g_error_matches (load_data->error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
@@ -1681,9 +1702,6 @@ save_archive_thread (GSimpleAsyncResult *result,
 		g_cancellable_set_error_if_cancelled (cancellable, &load_data->error);
 	if (load_data->error != NULL)
 		g_simple_async_result_set_from_error (result, load_data->error);
-
-	archive_read_free (a);
-	archive_write_free (b);
 }
 
 
