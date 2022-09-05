@@ -123,6 +123,15 @@ update_file_list (DialogData *data)
 	GList       *scan;
 	GtkTreeIter  iter;
 
+	/*gtk_window_set_modal (GTK_WINDOW (data->update_files_dialog), FALSE);*/
+	gtk_widget_hide (data->update_files_dialog);
+	/*gtk_window_set_modal (GTK_WINDOW (data->update_file_dialog), FALSE);*/
+	gtk_widget_hide (data->update_file_dialog);
+
+	if (data->file_list == NULL) {
+		return;
+	}
+
 	n_files = g_list_length (data->file_list);
 
 	/* update the file list */
@@ -208,22 +217,12 @@ update_file_list (DialogData *data)
 	/* show the appropriate dialog */
 
 	if (n_files == 1) {
-		/*gtk_window_set_modal (GTK_WINDOW (data->update_files_dialog), FALSE);*/
-		gtk_widget_hide (data->update_files_dialog);
 		/*gtk_window_set_modal (GTK_WINDOW (data->update_file_dialog), TRUE);*/
 		gtk_widget_show (data->update_file_dialog);
 	}
 	else if (n_files > 1) {
-		/*gtk_window_set_modal (GTK_WINDOW (data->update_file_dialog), FALSE);*/
-		gtk_widget_hide (data->update_file_dialog);
 		/*gtk_window_set_modal (GTK_WINDOW (data->update_files_dialog), TRUE);*/
 		gtk_widget_show (data->update_files_dialog);
-	}
-	else { /* n_files == 0 */
-		/*gtk_window_set_modal (GTK_WINDOW (data->update_files_dialog), FALSE);*/
-		gtk_widget_hide (data->update_files_dialog);
-		/*gtk_window_set_modal (GTK_WINDOW (data->update_file_dialog), FALSE);*/
-		gtk_widget_hide (data->update_file_dialog);
 	}
 }
 
