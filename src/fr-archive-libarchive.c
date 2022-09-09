@@ -234,6 +234,8 @@ load_data_free (LoadData *load_data)
 	g_free (load_data);
 }
 
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (LoadData, load_data_free)
+
 
 static int
 load_data_open (struct archive *a,
@@ -435,7 +437,7 @@ list_archive_thread (GSimpleAsyncResult *result,
 		     GObject            *object,
 		     GCancellable       *cancellable)
 {
-	LoadData             *load_data;
+	g_autoptr (LoadData) load_data = NULL;
 	struct archive       *a;
 	struct archive_entry *entry;
 	int                   r;
@@ -511,7 +513,6 @@ list_archive_thread (GSimpleAsyncResult *result,
 		g_simple_async_result_set_from_error (result, load_data->error);
 
 	archive_read_free (a);
-	load_data_free (load_data);
 }
 
 
@@ -576,6 +577,8 @@ extract_data_free (ExtractData *extract_data)
 	g_free (extract_data->null_buffer);
 	load_data_free (LOAD_DATA (extract_data));
 }
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ExtractData, extract_data_free)
 
 
 static gboolean
@@ -745,7 +748,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 			GObject            *object,
 			GCancellable       *cancellable)
 {
-	ExtractData          *extract_data;
+	g_autoptr (ExtractData) extract_data = NULL;
 	LoadData             *load_data;
 	g_autoptr (GHashTable) checked_folders = NULL;
 	g_autoptr (GHashTable) created_files = NULL;
@@ -1040,7 +1043,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		g_simple_async_result_set_from_error (result, load_data->error);
 
 	archive_read_free (a);
-	extract_data_free (extract_data);
 }
 
 
@@ -1193,6 +1195,8 @@ save_data_free (SaveData *save_data)
 	_g_object_unref (save_data->tmp_file);
 	load_data_free (LOAD_DATA (save_data));
 }
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (SaveData, save_data_free)
 
 
 static int
@@ -1594,7 +1598,7 @@ save_archive_thread (GSimpleAsyncResult *result,
 		     GObject            *object,
 		     GCancellable       *cancellable)
 {
-	SaveData             *save_data;
+	g_autoptr (SaveData) save_data = NULL;
 	LoadData             *load_data;
 	struct archive       *a, *b;
 	struct archive_entry *r_entry;
@@ -1680,7 +1684,6 @@ save_archive_thread (GSimpleAsyncResult *result,
 
 	archive_read_free (a);
 	archive_write_free (b);
-	save_data_free (save_data);
 }
 
 
