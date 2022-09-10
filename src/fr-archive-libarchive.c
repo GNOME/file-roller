@@ -810,7 +810,8 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		g_autoptr (GOutputStream) ostream = NULL;
 		const void    *buffer;
 		size_t         buffer_size;
-		int64_t        target_offset, actual_offset;
+		int64_t target_offset = 0;
+		int64_t actual_offset = 0;
 		GError        *local_error = NULL;
 		__LA_MODE_T    filetype;
 
@@ -997,7 +998,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				if (ostream == NULL)
 					break;
 
-				actual_offset = 0;
 				while ((r = archive_read_data_block (a, &buffer, &buffer_size, &target_offset)) == ARCHIVE_OK) {
 					gsize bytes_written;
 
