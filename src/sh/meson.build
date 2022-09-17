@@ -1,1 +1,1 @@
-install_data('isoinfo.sh', install_dir : privexecdir)
+install_data('isoinfo.sh', install_dir: privexecdir)

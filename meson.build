@@ -1,7 +1,9 @@
-project('file-roller', 'c',
-  license : 'GPL2+',
-  version : '43.alpha',
-  meson_version : '>=0.59'
+project(
+  'file-roller',
+  'c',
+  license: 'GPL2+',
+  version: '43.alpha',
+  meson_version: '>=0.59',
 )
 
 glib_version = '>=2.38'
@@ -27,9 +29,9 @@ use_native_appchooser = get_option('use_native_appchooser')
 
 libm_dep = c_comp.find_library('m')
 thread_dep = dependency('threads')
-glib_dep = dependency('glib-2.0', version : glib_version)
+glib_dep = dependency('glib-2.0', version: glib_version)
 gthread_dep = dependency('gthread-2.0')
-gtk_dep = dependency('gtk+-3.0', version : gtk_version)
+gtk_dep = dependency('gtk+-3.0', version: gtk_version)
 hdy_dep = dependency('libhandy-1', version: hdy_version)
 libportal_dep = dependency('libportal', version: '>= 0.5', required: use_native_appchooser)
 libportal_gtk3_dep = dependency('libportal-gtk3', version: '>= 0.5', required: use_native_appchooser)
@@ -37,18 +39,18 @@ libportal_gtk3_dep = dependency('libportal-gtk3', version: '>= 0.5', required: u
 # Optional dependencies
 gobject_introspection_dep = dependency('gobject-introspection-1.0', required: get_option('introspection'))
 
-libnautilus_extension_dep = dependency('libnautilus-extension-4', version : nautilus_version, required : get_option('nautilus-actions'))
+libnautilus_extension_dep = dependency('libnautilus-extension-4', version: nautilus_version, required: get_option('nautilus-actions'))
 build_nautilus_actions = libnautilus_extension_dep.found()
 
-libjson_glib_dep = dependency('json-glib-1.0', version : json_glib_version, required : false)
+libjson_glib_dep = dependency('json-glib-1.0', version: json_glib_version, required: false)
 use_json_glib = libjson_glib_dep.found()
 
-libarchive_dep = dependency('libarchive', version : libarchive_version, required : get_option('libarchive'))
+libarchive_dep = dependency('libarchive', version: libarchive_version, required: get_option('libarchive'))
 use_libarchive = libarchive_dep.found()
 
 cpio_path = 'cpio'
 if get_option('cpio') == 'auto'
-  cpio = find_program('gcpio', 'cpio', required : false)
+  cpio = find_program('gcpio', 'cpio', required: false)
   if cpio.found()
     cpio_path = cpio.full_path()
   endif
@@ -82,9 +84,9 @@ if get_option('run-in-place')
   config_data.set_quoted('SHDIR', join_paths(meson.project_source_root(), 'src', 'sh'))
 else
   config_data.set_quoted('PRIVDATADIR', join_paths(datadir, meson.project_name()))
-  config_data.set_quoted('PRIVEXECDIR', privexecdir)  
+  config_data.set_quoted('PRIVEXECDIR', privexecdir)
   config_data.set_quoted('UIDIR', join_paths(datadir, meson.project_name(), 'ui'))
-  config_data.set_quoted('SHDIR', join_paths(prefix, get_option('libexecdir'), meson.project_name()))  
+  config_data.set_quoted('SHDIR', join_paths(prefix, get_option('libexecdir'), meson.project_name()))
 endif
 if build_introspection
   config_data.set('ENABLE_INTROSPECTION', 1)
@@ -103,26 +105,26 @@ if get_option('buildtype').contains('debug')
 endif
 config_data.set_quoted('CPIO_PATH', cpio_path)
 config_data.set('USE_NATIVE_APPCHOOSER', use_native_appchooser)
-config_file = configure_file(output : 'config.h', configuration : config_data)
+config_file = configure_file(output: 'config.h', configuration: config_data)
 config_inc = include_directories('.')
 
 # C args
 
-c_args = [ '-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38' ]
+c_args = ['-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38']
 if get_option('buildtype').contains('debug')
-  test_args = [ 
-    '-Wall', 
+  test_args = [
+    '-Wall',
     '-Wextra',
-    '-Wcast-align', 
+    '-Wcast-align',
     '-Wmissing-prototypes',
-    '-Wnested-externs', 
-    '-Wpointer-arith', 
+    '-Wnested-externs',
+    '-Wpointer-arith',
     '-Wformat-security',
     '-Wno-unused-parameter',
   ]
 else
-  c_args += [ '-Wno-deprecated-declarations' ]
-  test_args = [ '-Wall' ]
+  c_args += ['-Wno-deprecated-declarations']
+  test_args = ['-Wall']
 endif
 c_args += c_comp.get_supported_arguments(test_args)
 

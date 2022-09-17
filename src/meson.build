@@ -54,7 +54,7 @@ source_files = files(
   'main.c',
   'open-file.c',
   'preferences.c',
-  'rar-utils.c'
+  'rar-utils.c',
 )
 
 fr_headers = files(
@@ -95,48 +95,60 @@ fr_headers = files(
 )
 
 if libjson_glib_dep.found()
-  source_files += [ 'fr-command-unarchiver.c' ]
-  fr_headers += [ 'fr-command-unarchiver.h' ]
+  source_files += ['fr-command-unarchiver.c']
+  fr_headers += ['fr-command-unarchiver.h']
 endif
 if use_libarchive
-  source_files += [ 'fr-archive-libarchive.c' ]
-  fr_headers += [ 'fr-archive-libarchive.h' ]
-endif 
+  source_files += ['fr-archive-libarchive.c']
+  fr_headers += ['fr-archive-libarchive.h']
+endif
 
-gresource_files = gnome.compile_resources('fr-resources', 'file-roller.gresource.xml', c_name : 'fr')
+gresource_files = gnome.compile_resources(
+  'fr-resources',
+  'file-roller.gresource.xml',
+  c_name: 'fr',
+)
 
-marshal_files = gnome.genmarshal('fr-marshal', prefix : 'fr_marshal', sources : 'fr-marshal.list' )
+marshal_files = gnome.genmarshal(
+  'fr-marshal',
+  prefix: 'fr_marshal',
+  sources: 'fr-marshal.list',
+)
 
-enum_files = gnome.mkenums_simple('fr-enum-types', 
-  sources: [ 'typedefs.h' ]
+enum_files = gnome.mkenums_simple(
+  'fr-enum-types',
+  sources: [
+    'typedefs.h',
+  ],
 )
 
 # Build targets
 
-fr_exe = executable('file-roller',
-  sources : [ 
-    config_file, 
-    source_files, 
-    gresource_files, 
+fr_exe = executable(
+  'file-roller',
+  sources: [
+    config_file,
+    source_files,
+    gresource_files,
     marshal_files,
-    enum_files
-  ],     
-  dependencies : [ 
-    libm_dep, 
+    enum_files,
+  ],
+  dependencies: [
+    libm_dep,
     thread_dep,
-    glib_dep, 
-    gthread_dep, 
-    gtk_dep, 
+    glib_dep,
+    gthread_dep,
+    gtk_dep,
     hdy_dep,
     use_native_appchooser ? libportal_dep : [],
     use_native_appchooser ? libportal_gtk3_dep : [],
     build_introspection ? gobject_introspection_dep : [],
     use_json_glib ? libjson_glib_dep : [],
-    use_libarchive ? libarchive_dep : []
+    use_libarchive ? libarchive_dep : [],
   ],
-  include_directories : config_inc,
-  c_args : c_args,
-  install : true,
+  include_directories: config_inc,
+  c_args: c_args,
+  install: true,
   # Required for GIRepository to be able to dump symbols.
   export_dynamic: build_introspection,
 )
@@ -153,7 +165,7 @@ if build_introspection
     namespace: 'FileRoller',
     nsversion: '1.0',
     identifier_prefix: 'Fr',
-    includes : [
+    includes: [
       'Gio-2.0',
       'GObject-2.0',
       'Gtk-3.0',
@@ -161,36 +173,37 @@ if build_introspection
   )
 endif
 
-executable('test-server', 'test-server.c',
-  dependencies : [ 
-    libm_dep, 
+executable(
+  'test-server',
+  'test-server.c',
+  dependencies: [
+    libm_dep,
     thread_dep,
-    glib_dep, 
-    gthread_dep, 
-    gtk_dep, 
-    use_json_glib ? libjson_glib_dep : []
-  ],  
-  include_directories : config_inc,
-  c_args : c_args,
-  install : false
+    glib_dep,
+    gthread_dep,
+    gtk_dep,
+    use_json_glib ? libjson_glib_dep : [],
+  ],
+  include_directories: config_inc,
+  c_args: c_args,
+  install: false,
 )
 
-test('safe-path', 
-  executable('test-safe-path',
-    sources : [ 
-      'test-safe-path.c', 
-      'glib-utils.c'
-    ],
-    dependencies : [ 
-      libm_dep, 
+test(
+  'safe-path',
+  executable(
+    'test-safe-path',
+    sources: ['test-safe-path.c', 'glib-utils.c'],
+    dependencies: [
+      libm_dep,
       thread_dep,
-      glib_dep, 
+      glib_dep,
       gthread_dep,
-      gtk_dep, 
+      gtk_dep,
     ],
-    include_directories : config_inc,
-    c_args : c_args,
-  )
+    include_directories: config_inc,
+    c_args: c_args,
+  ),
 )
 
 # Subdirectories

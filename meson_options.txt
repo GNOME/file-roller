@@ -1,55 +1,64 @@
-option('run-in-place', 
-  type : 'boolean', 
-  value : false, 
-  description : 'Load ui data from the source tree'
+option(
+  'run-in-place',
+  type: 'boolean',
+  value: false,
+  description: 'Load ui data from the source tree',
 )
 
-option('nautilus-actions',
-  type : 'feature',
-  value : 'auto',
-  description : 'Build the nautilus context menu actions'
+option(
+  'nautilus-actions',
+  type: 'feature',
+  value: 'auto',
+  description: 'Build the nautilus context menu actions',
 )
 
-option('notification',
-  type : 'feature',
-  value : 'auto',
-  description : 'Enable operation completion notification'
+option(
+  'notification',
+  type: 'feature',
+  value: 'auto',
+  description: 'Enable operation completion notification',
 )
 
-option('use_native_appchooser',
-  type : 'boolean',
-  value : true,
-  description : '''Whether to use desktop environment’s native app chooser via
+option(
+  'use_native_appchooser',
+  type: 'boolean',
+  value: true,
+  description: '''Whether to use desktop environment’s native app chooser via
   XDG portal. Offers better desktop integration but ‘Open with…’ dialogue will
-  ask for each file individually, when opening multiple files.'''
+  ask for each file individually, when opening multiple files.''',
 )
 
-option('packagekit',
-  type : 'boolean', 
-  value : true, 
-  description : 'Build PackageKit installer for missing utilities'
+option(
+  'packagekit',
+  type: 'boolean',
+  value: true,
+  description: 'Build PackageKit installer for missing utilities',
 )
 
-option('libarchive',
-  type : 'feature',
-  value : 'auto',
-  description : 'Enable code that requires libarchive'
+option(
+  'libarchive',
+  type: 'feature',
+  value: 'auto',
+  description: 'Enable code that requires libarchive',
 )
 
-option('cpio',
-  type : 'string',
-  value : 'auto',
-  description : 'Path to the cpio program'
+option(
+  'cpio',
+  type: 'string',
+  value: 'auto',
+  description: 'Path to the cpio program',
 )
 
-option('introspection',
-  type : 'feature',
-  value : 'disabled',
-  description : 'Generate introspection data for the executable (e.g. for static analysis and API docs)'
+option(
+  'introspection',
+  type: 'feature',
+  value: 'disabled',
+  description: 'Generate introspection data for the executable (e.g. for static analysis and API docs)',
 )
 
-option('api_docs',
-  type : 'feature',
-  value : 'disabled',
-  description : 'Use gi-docgen to build API documentation (only useful for people developing File Roller)'
+option(
+  'api_docs',
+  type: 'feature',
+  value: 'disabled',
+  description: 'Use gi-docgen to build API documentation (only useful for people developing File Roller)',
 )
