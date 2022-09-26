@@ -242,7 +242,7 @@ extract_cb_start_extracting (DialogData *data)
 	else if (pattern_files) {
 		const char *pattern;
 
-		pattern = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("file_pattern_entry")));
+		pattern = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("file_pattern_entry")));
 		file_list = fr_window_get_file_list_pattern (window, pattern);
 		if (file_list == NULL) {
 			gtk_window_destroy (GTK_WINDOW (data->dialog));

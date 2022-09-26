@@ -125,7 +125,7 @@ fr_new_archive_dialog_init (FrNewArchiveDialog *self)
 static void
 _fr_new_archive_dialog_update_sensitivity (FrNewArchiveDialog *self)
 {
-	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), ! _g_utf8_all_spaces (gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("filename_entry")))));
+	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), ! _g_utf8_all_spaces (gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")))));
 	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), ! self->can_encrypt_header);
 	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->can_encrypt_header);
 	gtk_widget_set_sensitive (GET_WIDGET ("volume_spinbutton"), ! self->can_create_volumes || gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("volume_checkbutton"))));
@@ -238,7 +238,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 		char *default_name_no_ext;
 
 		default_name_no_ext = _g_path_remove_extension_if_archive (default_name);
-		gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("filename_entry")), default_name_no_ext);
+		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")), default_name_no_ext);
 
 		g_free (default_name_no_ext);
 	}
@@ -342,7 +342,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 
 	/* Check whether the user entered a valid archive name. */
 
-	basename = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("filename_entry")));
+	basename = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")));
 	if ((basename == NULL) || (*basename == '\0')) {
 		GtkWidget *d;
 
@@ -550,7 +550,7 @@ fr_new_archive_dialog_get_password (FrNewArchiveDialog *self)
 	n_format = get_selected_format (self);
 
 	if (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT)
-		password = (char*) gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("password_entry")));
+		password = (char*) gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("password_entry")));
 
 	return password;
 }
@@ -565,7 +565,7 @@ fr_new_archive_dialog_get_encrypt_header (FrNewArchiveDialog *self)
 	n_format = get_selected_format (self);
 
 	if (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT) {
-		const char *password = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("password_entry")));
+		const char *password = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("password_entry")));
 		if (password != NULL) {
 			if (strcmp (password, "") != 0) {
 				if (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER)

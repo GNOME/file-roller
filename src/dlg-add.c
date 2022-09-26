@@ -109,15 +109,15 @@ file_selector_response_cb (GtkDialog *dialog,
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")));
 	follow_links = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")));
 
-	include_files = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("include_files_entry")));
+	include_files = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("include_files_entry")));
 	if (_g_utf8_all_spaces (include_files))
 		include_files = "*";
 
-	exclude_files = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("exclude_files_entry")));
+	exclude_files = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("exclude_files_entry")));
 	if (_g_utf8_all_spaces (exclude_files))
 		exclude_files = NULL;
 
-	exclude_folders = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("exclude_folders_entry")));
+	exclude_folders = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("exclude_folders_entry")));
 	if (_g_utf8_all_spaces (exclude_folders))
 		exclude_folders = NULL;
 
@@ -282,12 +282,12 @@ sync_widgets_with_options (DialogData *data,
 
 	if ((include_files == NULL) || (include_files[0] == '\0'))
 		include_files = "*";
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("include_files_entry")), include_files);
+	gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("include_files_entry")), include_files);
 
 	if (exclude_files != NULL)
-		gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("exclude_files_entry")), exclude_files);
+		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("exclude_files_entry")), exclude_files);
 	if (exclude_folders != NULL)
-		gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("exclude_folders_entry")), exclude_folders);
+		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("exclude_folders_entry")), exclude_folders);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")), update);
 
 	if ((data->window->archive != NULL) && data->window->archive->propAddCanStoreLinks) {
@@ -477,15 +477,15 @@ get_options_from_widgets (DialogData   *data,
 	*update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")));
 	*no_symlinks = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")));
 
-	*include_files = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("include_files_entry")));
+	*include_files = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("include_files_entry")));
 	if (_g_utf8_all_spaces (*include_files))
 		*include_files = "";
 
-	*exclude_files = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("exclude_files_entry")));
+	*exclude_files = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("exclude_files_entry")));
 	if (_g_utf8_all_spaces (*exclude_files))
 		*exclude_files = "";
 
-	*exclude_folders = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("exclude_folders_entry")));
+	*exclude_folders = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("exclude_folders_entry")));
 	if (_g_utf8_all_spaces (*exclude_folders))
 		*exclude_folders = "";
 }

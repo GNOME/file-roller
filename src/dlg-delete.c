@@ -75,7 +75,7 @@ response_cb (GtkDialog  *widget,
 		else if (pattern_files) {
 			const char *pattern;
 
-			pattern = gtk_entry_get_text (GTK_ENTRY (data->d_files_entry));
+			pattern = gtk_editable_get_text (GTK_EDITABLE (data->d_files_entry));
 			file_list = fr_window_get_file_list_pattern (window, pattern);
 			if (file_list == NULL)
 				do_not_remove_if_null = TRUE;

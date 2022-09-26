@@ -126,7 +126,7 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 
 	entry = _gtk_builder_get_widget (builder, "value_entry");
 	gtk_entry_set_max_length (GTK_ENTRY (entry), max_length);
-	gtk_entry_set_text (GTK_ENTRY (entry), default_value);
+	gtk_editable_set_text (GTK_EDITABLE (entry), default_value);
 
 	/* Add buttons */
 
@@ -143,7 +143,7 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	gtk_widget_grab_focus (entry);
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES)
-		result = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
+		result = g_strdup (gtk_editable_get_text (GTK_EDITABLE (entry)));
 	else
 		result = NULL;
 
@@ -298,10 +298,7 @@ _gtk_entry_set_locale_text (GtkEntry   *entry,
 		return;
 
 	utf8_text = g_locale_to_utf8 (text, -1, NULL, NULL, NULL);
-	if (utf8_text != NULL)
-		gtk_entry_set_text (entry, utf8_text);
-	else
-		gtk_entry_set_text (entry, "");
+	gtk_editable_set_text (GTK_EDITABLE (entry), (utf8_text != NULL) ? utf8_text : "");
 	g_free (utf8_text);
 }
 
@@ -312,7 +309,7 @@ _gtk_entry_get_locale_text (GtkEntry *entry)
 	const char *utf8_text;
 	char       *text;
 
-	utf8_text = gtk_entry_get_text (entry);
+	utf8_text = gtk_editable_get_text (GTK_EDITABLE (entry));
 	if (utf8_text == NULL)
 		return NULL;
 

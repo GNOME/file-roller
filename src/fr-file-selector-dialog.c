@@ -148,7 +148,7 @@ set_current_folder (FrFileSelectorDialog *self,
 		return;
 
 	folder_name = g_file_get_parse_name (folder);
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("location_entry")), folder_name);
+	gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("location_entry")), folder_name);
 	g_free (folder_name);
 
 	gtk_places_sidebar_set_location (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")), folder);

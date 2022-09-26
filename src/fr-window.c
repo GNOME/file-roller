@@ -1352,7 +1352,7 @@ _fr_window_create_filter (FrWindow *window)
 	const char *filter_str;
 
 	filter = NULL;
-	filter_str = gtk_entry_get_text (GTK_ENTRY (private->filter_entry));
+	filter_str = gtk_editable_get_text (GTK_EDITABLE (private->filter_entry));
 	if ((filter_str != NULL) && (*filter_str != '\0')) {
 		char *escaped;
 		char *pattern;
@@ -1732,7 +1732,7 @@ fr_window_update_current_location (FrWindow *window)
 	if (private->list_mode == FR_WINDOW_LIST_MODE_FLAT)
 		return;
 
-	gtk_entry_set_text (GTK_ENTRY (private->location_entry), private->archive_present? current_dir: "");
+	gtk_editable_set_text (GTK_EDITABLE (private->location_entry), private->archive_present? current_dir: "");
 
 	fr_window_enable_action (window, "go-back", private->archive_present && (current_dir != NULL) && (private->history_current != NULL) && (private->history_current->next != NULL));
 	fr_window_enable_action (window, "go-forward", private->archive_present && (current_dir != NULL) && (private->history_current != NULL) && (private->history_current->prev != NULL));
@@ -2023,7 +2023,7 @@ location_entry_key_press_event_cb (GtkWidget   *widget,
 	    || (event->keyval == GDK_KEY_ISO_Enter))
 	{
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
-		fr_window_go_to_location (window, gtk_entry_get_text (GTK_ENTRY (private->location_entry)), FALSE);
+		fr_window_go_to_location (window, gtk_editable_get_text (GTK_EDITABLE (private->location_entry)), FALSE);
 	}
 
 	return FALSE;
@@ -7411,7 +7411,7 @@ fr_window_find (FrWindow *window,
 		private->filter_mode = FALSE;
 		private->list_mode = private->last_list_mode;
 
-		gtk_entry_set_text (GTK_ENTRY (private->filter_entry), "");
+		gtk_editable_set_text (GTK_EDITABLE (private->filter_entry), "");
 		gtk_widget_hide (private->filter_bar);
 
 		gtk_list_store_clear (private->list_store);
@@ -7420,7 +7420,7 @@ fr_window_find (FrWindow *window,
 		fr_window_update_file_list (window, TRUE);
 		fr_window_update_dir_tree (window);
 		fr_window_update_current_location (window);
-		fr_window_go_to_location (window, gtk_entry_get_text (GTK_ENTRY (private->location_entry)), FALSE);
+		fr_window_go_to_location (window, gtk_editable_get_text (GTK_EDITABLE (private->location_entry)), FALSE);
 	}
 }
 
