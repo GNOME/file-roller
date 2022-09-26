@@ -109,7 +109,6 @@ dlg_delete__common (FrWindow *window,
 	            GList    *selected_files)
 {
 	DialogData *data;
-	GtkWidget  *content_area;
 	GtkWidget  *delete_box;
 	GtkWidget  *ok_button;
 
@@ -142,8 +141,7 @@ dlg_delete__common (FrWindow *window,
 	data->d_files_radio = _gtk_builder_get_widget (data->builder, "d_files_radio");
 	data->d_files_entry = _gtk_builder_get_widget (data->builder, "d_files_entry");
 
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
-	gtk_container_add (GTK_CONTAINER (content_area), delete_box);
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))), delete_box);
 
 	/* Set widgets data. */
 

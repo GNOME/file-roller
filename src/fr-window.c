@@ -5557,7 +5557,7 @@ fr_window_construct (FrWindow *window)
 	/* Create the application. */
 
 	private->layout = gtk_grid_new ();
-	gtk_container_add (GTK_CONTAINER (window), private->layout);
+	gtk_window_set_child (GTK_WINDOW (window), private->layout);
 	gtk_widget_show (private->layout);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
@@ -5720,7 +5720,7 @@ fr_window_construct (FrWindow *window)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (list_scrolled_window),
 					GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
-	gtk_container_add (GTK_CONTAINER (list_scrolled_window), private->list_view);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (list_scrolled_window), private->list_view);
 
 	/* filter bar */
 
@@ -5737,7 +5737,7 @@ fr_window_construct (FrWindow *window)
 			  G_CALLBACK (filter_entry_stop_search_cb),
 			  window);
 	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (private->filter_bar), GTK_ENTRY (private->filter_entry));
-	gtk_container_add (GTK_CONTAINER (private->filter_bar), filter_box);
+	gtk_search_bar_set_child (GTK_SEARCH_BAR (private->filter_bar), filter_box);
 	gtk_box_pack_start (GTK_BOX (filter_box), private->filter_entry, TRUE, TRUE, 0);
 	gtk_widget_show_all (private->filter_bar);
 	fr_window_attach (FR_WINDOW (window), private->filter_bar, FR_WINDOW_AREA_FILTERBAR);
@@ -5785,7 +5785,7 @@ fr_window_construct (FrWindow *window)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scrolled_window),
 					GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
-	gtk_container_add (GTK_CONTAINER (tree_scrolled_window), private->tree_view);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (tree_scrolled_window), private->tree_view);
 
 	/* side pane */
 
@@ -8142,7 +8142,7 @@ fr_window_view_last_output (FrWindow   *window,
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 
-	gtk_container_add (GTK_CONTAINER (scrolled), text_view);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled), text_view);
 	gtk_box_pack_start (GTK_BOX (vbox), scrolled,
 			    TRUE, TRUE, 0);
 

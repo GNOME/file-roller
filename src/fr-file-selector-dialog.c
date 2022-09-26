@@ -758,10 +758,10 @@ fr_file_selector_dialog_set_extra_widget (FrFileSelectorDialog *self,
 					  GtkWidget            *extra_widget)
 {
 	if (self->extra_widget != NULL)
-		gtk_container_remove (GTK_CONTAINER (GET_WIDGET ("extra_widget_container")), self->extra_widget);
+		gtk_box_remove (GTK_BOX (GET_WIDGET ("extra_widget_container")), self->extra_widget);
 	self->extra_widget = extra_widget;
 	if (self->extra_widget != NULL)
-		gtk_container_add (GTK_CONTAINER (GET_WIDGET ("extra_widget_container")), self->extra_widget);
+		gtk_box_append (GTK_BOX (GET_WIDGET ("extra_widget_container")), self->extra_widget);
 }
 
 

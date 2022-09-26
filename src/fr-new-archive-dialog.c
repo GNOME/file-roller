@@ -211,7 +211,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	_g_object_unref (self->original_file);
 	self->original_file = _g_object_ref (original_file);
 
-	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
 
 	gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
 	switch (action) {

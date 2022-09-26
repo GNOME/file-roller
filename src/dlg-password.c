@@ -91,8 +91,7 @@ dlg_password (GtkWidget *widget,
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     NULL);
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
-	gtk_container_add (GTK_CONTAINER (content_area),
-			   GET_WIDGET ("password_vbox"));
+	gtk_box_append (GTK_BOX (content_area), GET_WIDGET ("password_vbox"));
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 				_GTK_LABEL_SAVE, GTK_RESPONSE_OK,

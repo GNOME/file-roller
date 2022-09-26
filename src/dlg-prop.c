@@ -49,7 +49,6 @@ void
 dlg_prop (FrWindow *window)
 {
 	DialogData *data;
-	GtkWidget  *content_area;
 	GtkWidget  *label;
 	GtkWidget  *table;
 	GFile      *parent;
@@ -77,8 +76,7 @@ dlg_prop (FrWindow *window)
 				       "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				       NULL);
 
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
-	gtk_container_add (GTK_CONTAINER (content_area), table);
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))), table);
 
 	/* Set widgets data. */
 

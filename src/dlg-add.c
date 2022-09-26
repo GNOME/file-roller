@@ -750,7 +750,7 @@ load_options_activate_cb (GSimpleAction *action,
 					 "modal", TRUE,
 					 "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 					 NULL);
-	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (aod_data->dialog))),
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (aod_data->dialog))),
 			   _gtk_builder_get_widget (aod_data->builder, "add_options_dialog"));
 
 	gtk_dialog_add_buttons (GTK_DIALOG (aod_data->dialog),

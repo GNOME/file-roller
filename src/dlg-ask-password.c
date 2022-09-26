@@ -114,8 +114,8 @@ dlg_ask_password__common (FrWindow       *window,
 				     "modal", TRUE,
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     NULL);
-	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))),
-			   GET_WIDGET ("password_vbox"));
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))),
+			GET_WIDGET ("password_vbox"));
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 				_("_OK"), GTK_RESPONSE_OK,
@@ -151,7 +151,7 @@ dlg_ask_password__common (FrWindow       *window,
 
 		info_bar = gtk_info_bar_new ();
 		label = gtk_label_new (_("Wrong password."));
-		gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar))), label);
+		gtk_box_append (GTK_BOX (gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar))), label);
 		gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_ERROR);
 		gtk_box_pack_start (GTK_BOX (GET_WIDGET ("error_box")), info_bar, TRUE, TRUE, 0);
 		gtk_widget_show_all (GET_WIDGET ("error_box"));

@@ -321,7 +321,7 @@ dlg_update (FrWindow *window)
 						  NULL);
 	content = _gtk_builder_get_widget (data->builder, "update_files_dialog_content");
 	gtk_widget_set_vexpand (content, TRUE);
-	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (data->update_files_dialog))), content);
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->update_files_dialog))), content);
 
 	gtk_dialog_add_button (GTK_DIALOG (data->update_files_dialog ), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
 	gtk_dialog_add_button (GTK_DIALOG (data->update_files_dialog ), _("_Update"), DIALOG_RESPONSE_UPDATE);

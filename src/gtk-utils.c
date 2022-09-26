@@ -101,7 +101,6 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	GtkWidget  *dialog;
 	GtkWidget  *label;
 	GtkWidget  *entry;
-	GtkWidget  *content_area;
 	GtkWidget  *request_box;
 	char       *result;
 
@@ -116,8 +115,7 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
 	gtk_window_set_title (GTK_WINDOW (dialog), title);
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-	gtk_container_add (GTK_CONTAINER (content_area), request_box);
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), request_box);
 	g_object_weak_ref (G_OBJECT (request_box), (GWeakNotify) g_object_unref, builder);
 
 	if (flags & GTK_DIALOG_MODAL)
@@ -217,7 +215,7 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 
 		text_view = gtk_text_view_new ();
 		gtk_label_set_mnemonic_widget (GTK_LABEL (label), text_view);
-		gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
+		gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled_window), text_view);
 
 		text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
 		gtk_text_buffer_create_tag (text_buffer, "monospace",
@@ -528,7 +526,7 @@ _gtk_header_bar_create_image_toggle_button (const char       *icon_name,
 	g_return_val_if_fail (action_name != NULL, NULL);
 
 	button = gtk_toggle_button_new ();
-	gtk_container_add (GTK_CONTAINER (button), gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU));
+	gtk_button_set_child (GTK_BUTTON (button), gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU));
 	_gtk_menu_button_set_style_for_header_bar (button);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
 	if (tooltip != NULL)
