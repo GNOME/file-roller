@@ -126,7 +126,7 @@ static void
 _fr_new_archive_dialog_update_sensitivity (FrNewArchiveDialog *self)
 {
 	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), ! _g_utf8_all_spaces (gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")))));
-	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), ! self->can_encrypt_header);
+	gtk_check_button_set_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), ! self->can_encrypt_header);
 	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->can_encrypt_header);
 	gtk_widget_set_sensitive (GET_WIDGET ("volume_spinbutton"), ! self->can_create_volumes || gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("volume_checkbutton"))));
 }

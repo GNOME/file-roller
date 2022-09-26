@@ -114,7 +114,7 @@ dlg_password (GtkWidget *widget,
 				      fr_window_get_encrypt_header (window));
 
 	if (! fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_ENCRYPT_HEADER)) {
-		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), TRUE);
+		gtk_check_button_set_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), TRUE);
 		gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), FALSE);
 	}
 

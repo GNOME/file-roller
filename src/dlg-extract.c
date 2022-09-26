@@ -221,10 +221,10 @@ extract_cb_start_extracting (DialogData *data)
 
 	fr_window_set_extract_default_dir (window, destination);
 
-	skip_newer = ! gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton")));
+	skip_newer = ! gtk_check_button_get_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton")));
 	junk_paths = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_structure_checkbutton")));
 
-	if (! gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))))
+	if (! gtk_check_button_get_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))))
 		g_settings_set_boolean (data->settings, PREF_EXTRACT_SKIP_NEWER, skip_newer);
 	g_settings_set_boolean (data->settings, PREF_EXTRACT_RECREATE_FOLDERS, ! junk_paths);
 

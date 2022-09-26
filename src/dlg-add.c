@@ -292,12 +292,12 @@ sync_widgets_with_options (DialogData *data,
 
 	if ((data->window->archive != NULL) && data->window->archive->propAddCanStoreLinks) {
 		gtk_widget_set_sensitive (GET_WIDGET ("follow_links_checkbutton"), TRUE);
-		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")), FALSE);
+		gtk_check_button_set_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("follow_links_checkbutton")), FALSE);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")), ! no_follow_symlinks);
 	}
 	else {
 		gtk_widget_set_sensitive (GET_WIDGET ("follow_links_checkbutton"), FALSE);
-		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")), TRUE);
+		gtk_check_button_set_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("follow_links_checkbutton")), TRUE);
 	}
 }
 
