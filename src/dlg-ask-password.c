@@ -154,7 +154,7 @@ dlg_ask_password__common (FrWindow       *window,
 		gtk_box_append (GTK_BOX (gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar))), label);
 		gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_ERROR);
 		_gtk_box_append_expanded (GTK_BOX (GET_WIDGET ("error_box")), info_bar);
-		gtk_widget_show_all (GET_WIDGET ("error_box"));
+		gtk_widget_show (GET_WIDGET ("error_box"));
 
 		_gtk_entry_set_locale_text (GTK_ENTRY (data->password_entry),
 					    fr_window_get_password (window));

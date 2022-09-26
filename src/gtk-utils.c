@@ -238,7 +238,7 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 			gtk_text_buffer_insert (text_buffer, &iter, "\n", 1);
 		}
 
-		gtk_widget_show_all (output_box);
+		gtk_widget_show (output_box);
 	}
 
 	return dialog;
@@ -528,7 +528,7 @@ _gtk_header_bar_create_image_toggle_button (const char       *icon_name,
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
 	if (tooltip != NULL)
 		gtk_widget_set_tooltip_text (button, tooltip);
-	gtk_widget_show_all (button);
+	gtk_widget_show (button);
 
 	return button;
 }

@@ -1789,7 +1789,7 @@ fr_window_update_dir_tree (FrWindow *window)
 	else {
 		gtk_widget_set_sensitive (private->tree_view, TRUE);
 		if (! gtk_widget_get_visible (private->sidepane))
-			gtk_widget_show_all (private->sidepane);
+			gtk_widget_show (private->sidepane);
 	}
 
 	if (gtk_widget_get_realized (private->tree_view))
@@ -1918,7 +1918,7 @@ fr_window_update_file_list (FrWindow *window,
 
 		if (private->archive_new) {
 			gtk_widget_set_sensitive (private->list_view, TRUE);
-			gtk_widget_show_all (gtk_widget_get_parent (private->list_view));
+			gtk_widget_show (gtk_widget_get_parent (private->list_view));
 		}
 		else {
 			gtk_widget_set_sensitive (private->list_view, FALSE);
@@ -1929,7 +1929,7 @@ fr_window_update_file_list (FrWindow *window,
 	}
 	else {
 		gtk_widget_set_sensitive (private->list_view, TRUE);
-		gtk_widget_show_all (gtk_widget_get_parent (private->list_view));
+		gtk_widget_show (gtk_widget_get_parent (private->list_view));
 	}
 
 	if (private->give_focus_to_the_list) {
@@ -5739,7 +5739,7 @@ fr_window_construct (FrWindow *window)
 	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (private->filter_bar), GTK_ENTRY (private->filter_entry));
 	gtk_search_bar_set_child (GTK_SEARCH_BAR (private->filter_bar), filter_box);
 	_gtk_box_append_expanded (GTK_BOX (filter_box), private->filter_entry);
-	gtk_widget_show_all (private->filter_bar);
+	gtk_widget_show (private->filter_bar);
 	fr_window_attach (FR_WINDOW (window), private->filter_bar, FR_WINDOW_AREA_FILTERBAR);
 
 	/* tree view */
@@ -5813,7 +5813,7 @@ fr_window_construct (FrWindow *window)
 			  window);
 
 	fr_window_attach (FR_WINDOW (window), private->paned, FR_WINDOW_AREA_CONTENTS);
-	gtk_widget_show_all (private->paned);
+	gtk_widget_show (private->paned);
 
         /* ui actions */
 
@@ -5856,7 +5856,7 @@ fr_window_construct (FrWindow *window)
                 gtk_size_group_add_widget (header_bar_size_group, button);
                 gtk_menu_button_set_direction (GTK_MENU_BUTTON (button), GTK_ARROW_NONE);
                 gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
-                gtk_widget_show_all (button);
+                gtk_widget_show (button);
                 gtk_header_bar_pack_end (GTK_HEADER_BAR (private->headerbar), button);
 
                 _gtk_add_accelerators_from_menu (menu);
@@ -5883,7 +5883,7 @@ fr_window_construct (FrWindow *window)
 			_gtk_header_bar_create_image_button ("go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"));
 	gtk_box_append (GTK_BOX (navigation_commands),
 			_gtk_header_bar_create_image_button ("go-next-symbolic", _("Go to the next visited location"), "win.go-forward"));
-	gtk_widget_show_all (navigation_commands);
+	gtk_widget_show (navigation_commands);
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
 	gtk_box_append (GTK_BOX (location_bar_content), navigation_commands);
@@ -5912,7 +5912,7 @@ fr_window_construct (FrWindow *window)
 	_gtk_box_append_expanded (GTK_BOX (location_box), private->location_entry);
 	_gtk_box_append_expanded (GTK_BOX (location_bar_content), location_box);
 
-	gtk_widget_show_all (private->location_bar);
+	gtk_widget_show (private->location_bar);
 	fr_window_attach (FR_WINDOW (window), private->location_bar, FR_WINDOW_AREA_LOCATIONBAR);
 	if (private->list_mode == FR_WINDOW_LIST_MODE_FLAT)
 		gtk_widget_hide (private->location_bar);
@@ -8139,7 +8139,7 @@ fr_window_view_last_output (FrWindow   *window,
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled), text_view);
 	_gtk_box_append_expanded (GTK_BOX (vbox), scrolled);
 
-	gtk_widget_show_all (vbox);
+	gtk_widget_show (vbox);
 	_gtk_box_append_expanded (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), vbox);
 
 	/* signals */
