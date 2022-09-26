@@ -195,7 +195,6 @@ dlg_add (FrWindow *window)
 	options_button = gtk_menu_button_new ();
 	gtk_button_set_label (GTK_BUTTON (options_button), _("_Options"));
 	gtk_button_set_use_underline (GTK_BUTTON (options_button), TRUE);
-	gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (options_button), TRUE);
 	gtk_widget_show (options_button);
 
 	/* load options */
