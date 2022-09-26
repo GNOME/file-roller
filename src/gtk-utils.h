@@ -105,5 +105,6 @@ void	      _gtk_application_add_accelerators    (GtkApplication   *app,
 						    int               n_accelerators);
 void	      _gtk_popover_popup_at_selected (GtkPopover *popover, GtkTreeView *view);
 void	      _gtk_popover_popup_at_position (GtkPopover *popover, gdouble x, gdouble y);
+void          _gtk_box_append_expanded       (GtkBox *box, GtkWidget *child);
 
 #endif

@@ -204,14 +204,14 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 				  output_box, TRUE, TRUE, 0);
 
 		label = gtk_label_new_with_mnemonic (_("C_ommand Line Output:"));
-		gtk_box_pack_start (GTK_BOX (output_box), label, FALSE, FALSE, 0);
+		gtk_box_append (GTK_BOX (output_box), label);
 
 		scrolled_window = g_object_new (GTK_TYPE_SCROLLED_WINDOW,
 						"shadow-type", GTK_SHADOW_IN,
 						"width-request", 450,
 						"height-request", 200,
 						NULL);
-		gtk_box_pack_start (GTK_BOX (output_box), scrolled_window, TRUE, TRUE, 0);
+		_gtk_box_append_expanded (GTK_BOX (output_box), scrolled_window);
 
 		text_view = gtk_text_view_new ();
 		gtk_label_set_mnemonic_widget (GTK_LABEL (label), text_view);
@@ -719,4 +719,13 @@ _gtk_popover_popup_at_position (GtkPopover *popover, gdouble x, gdouble y)
 
 	gtk_popover_set_pointing_to (GTK_POPOVER (popover), &rect);
 	gtk_popover_popup (GTK_POPOVER (popover));
+}
+
+
+void
+_gtk_box_append_expanded (GtkBox *box, GtkWidget *child)
+{
+	gtk_widget_set_hexpand (child, TRUE);
+	gtk_widget_set_vexpand (child, TRUE);
+	gtk_box_append (box, child);
 }

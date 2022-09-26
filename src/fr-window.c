@@ -5738,7 +5738,7 @@ fr_window_construct (FrWindow *window)
 			  window);
 	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (private->filter_bar), GTK_ENTRY (private->filter_entry));
 	gtk_search_bar_set_child (GTK_SEARCH_BAR (private->filter_bar), filter_box);
-	gtk_box_pack_start (GTK_BOX (filter_box), private->filter_entry, TRUE, TRUE, 0);
+	_gtk_box_append_expanded (GTK_BOX (filter_box), private->filter_entry);
 	gtk_widget_show_all (private->filter_bar);
 	fr_window_attach (FR_WINDOW (window), private->filter_bar, FR_WINDOW_AREA_FILTERBAR);
 
@@ -5790,7 +5790,7 @@ fr_window_construct (FrWindow *window)
 	/* side pane */
 
 	private->sidepane = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_box_pack_start (GTK_BOX (private->sidepane), tree_scrolled_window, TRUE, TRUE, 0);
+	_gtk_box_append_expanded (GTK_BOX (private->sidepane), tree_scrolled_window);
 
 	/* main content */
 
@@ -5876,36 +5876,28 @@ fr_window_construct (FrWindow *window)
 
 	location_bar_content = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (location_bar_content), 4);
-	gtk_box_pack_start (GTK_BOX (private->location_bar), location_bar_content, TRUE, TRUE, 0);
+	_gtk_box_append_expanded (GTK_BOX (private->location_bar), location_bar_content);
 
 	navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_box_pack_start (GTK_BOX (navigation_commands),
-			    _gtk_header_bar_create_image_button ("go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"),
-			    FALSE,
-			    FALSE,
-			    0);
-	gtk_box_pack_start (GTK_BOX (navigation_commands),
-			    _gtk_header_bar_create_image_button ("go-next-symbolic", _("Go to the next visited location"), "win.go-forward"),
-			    FALSE,
-			    FALSE,
-			    0);
+	gtk_box_append (GTK_BOX (navigation_commands),
+			_gtk_header_bar_create_image_button ("go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"));
+	gtk_box_append (GTK_BOX (navigation_commands),
+			_gtk_header_bar_create_image_button ("go-next-symbolic", _("Go to the next visited location"), "win.go-forward"));
 	gtk_widget_show_all (navigation_commands);
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
-	gtk_box_pack_start (GTK_BOX (location_bar_content), navigation_commands, FALSE, FALSE, 0);
-
-	gtk_box_pack_start (GTK_BOX (location_bar_content),
-			    _gtk_header_bar_create_image_button ("user-home-symbolic", _("Go to the home location"), "win.go-home"),
-			    FALSE,
-			    FALSE,
-			    0);
+	gtk_box_append (GTK_BOX (location_bar_content), navigation_commands);
+	gtk_box_append (GTK_BOX (location_bar_content),
+			_gtk_header_bar_create_image_button ("user-home-symbolic", _("Go to the home location"), "win.go-home"));
 
 	/* current location */
 
 	location_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	/* Translators: after the colon there is a folder name. */
 	private->location_label = gtk_label_new_with_mnemonic (_("_Location:"));
-	gtk_box_pack_start (GTK_BOX (location_box), private->location_label, FALSE, FALSE, 5);
+	gtk_widget_set_margin_right (private->location_label, 5);
+	gtk_widget_set_margin_left (private->location_label, 5);
+	gtk_box_append (GTK_BOX (location_box), private->location_label);
 
 	private->location_entry = gtk_entry_new ();
 	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (private->location_entry),
@@ -5915,8 +5907,10 @@ fr_window_construct (FrWindow *window)
 			  "key_press_event",
 			  G_CALLBACK (location_entry_key_press_event_cb),
 			  window);
-	gtk_box_pack_start (GTK_BOX (location_box), private->location_entry, TRUE, TRUE, 5);
-	gtk_box_pack_start (GTK_BOX (location_bar_content), location_box, TRUE, TRUE, 0);
+	gtk_widget_set_margin_right (private->location_entry, 5);
+	gtk_widget_set_margin_left (private->location_entry, 5);
+	_gtk_box_append_expanded (GTK_BOX (location_box), private->location_entry);
+	_gtk_box_append_expanded (GTK_BOX (location_bar_content), location_box);
 
 	gtk_widget_show_all (private->location_bar);
 	fr_window_attach (FR_WINDOW (window), private->location_bar, FR_WINDOW_AREA_LOCATIONBAR);
@@ -8143,13 +8137,10 @@ fr_window_view_last_output (FrWindow   *window,
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled), text_view);
-	gtk_box_pack_start (GTK_BOX (vbox), scrolled,
-			    TRUE, TRUE, 0);
+	_gtk_box_append_expanded (GTK_BOX (vbox), scrolled);
 
 	gtk_widget_show_all (vbox);
-	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
-			    vbox,
-			    TRUE, TRUE, 0);
+	_gtk_box_append_expanded (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), vbox);
 
 	/* signals */
 
