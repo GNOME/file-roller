@@ -2,12 +2,12 @@ project(
   'file-roller',
   'c',
   license: 'GPL-2.0-or-later',
-  version: '43.0',
+  version: '44.alpha',
   meson_version: '>=0.59',
 )
 
 glib_version = '>=2.38'
-gtk_version = '>=3.22.0'
+gtk4_version = '>=4.8.1'
 hdy_version = '>=1.5.0'
 nautilus_version = '>=43.beta'
 json_glib_version = '>=0.14.0'
@@ -31,7 +31,7 @@ libm_dep = c_comp.find_library('m')
 thread_dep = dependency('threads')
 glib_dep = dependency('glib-2.0', version: glib_version)
 gthread_dep = dependency('gthread-2.0')
-gtk_dep = dependency('gtk+-3.0', version: gtk_version)
+gtk_dep = dependency('gtk4', version: gtk4_version)
 hdy_dep = dependency('libhandy-1', version: hdy_version)
 libportal_dep = dependency('libportal', version: '>= 0.5', required: use_native_appchooser)
 libportal_gtk3_dep = dependency('libportal-gtk3', version: '>= 0.5', required: use_native_appchooser)
