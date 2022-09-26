@@ -80,7 +80,7 @@ file_selector_response_cb (GtkDialog *dialog,
 	dlg_add_folder_save_last_options (data);
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (data->dialog);
+		gtk_window_destroy (GTK_WINDOW (data->dialog));
 		return;
 	}
 
@@ -101,7 +101,7 @@ file_selector_response_cb (GtkDialog *dialog,
 					   _("Could not add the files to the archive"),
 					   _("You don’t have the right permissions to read files from folder “%s”"),
 					   utf8_path);
-		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_window_destroy), NULL);
 		gtk_widget_show (d);
 		return;
 	}
@@ -136,7 +136,7 @@ file_selector_response_cb (GtkDialog *dialog,
 	_g_object_list_unref (files);
 	g_object_unref (current_folder);
 
-	gtk_widget_destroy (data->dialog);
+	gtk_window_destroy (GTK_WINDOW (data->dialog));
 
 	return;
 }
@@ -622,7 +622,7 @@ aod_apply_cb (GtkButton *button,
 	dlg_add_folder_load_options (data, options_name);
 	g_free (options_name);
 
-	gtk_widget_destroy (aod_data->dialog);
+	gtk_window_destroy (GTK_WINDOW (aod_data->dialog));
 }
 
 
@@ -779,7 +779,7 @@ load_options_activate_cb (GSimpleAction *action,
 			  aod_data);
 	g_signal_connect_swapped (GTK_BUTTON (cancel_button),
 				  "clicked",
-				  G_CALLBACK (gtk_widget_destroy),
+				  G_CALLBACK (gtk_window_destroy),
 				  aod_data->dialog);
 	g_signal_connect (GTK_BUTTON (ok_button),
 			  "clicked",

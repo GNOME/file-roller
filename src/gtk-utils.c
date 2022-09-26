@@ -149,7 +149,7 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	else
 		result = NULL;
 
-	gtk_widget_destroy (dialog);
+	gtk_window_destroy (GTK_WINDOW (dialog));
 
 	return result;
 }
@@ -270,7 +270,7 @@ _gtk_error_dialog_run (GtkWindow  *parent,
 	g_free (message);
 
 	g_signal_connect (GTK_MESSAGE_DIALOG (d), "response",
-			  G_CALLBACK (gtk_widget_destroy),
+			  G_CALLBACK (gtk_window_destroy),
 			  NULL);
 
 	gtk_widget_show (d);
@@ -373,7 +373,7 @@ _gtk_show_help_dialog (GtkWindow  *parent,
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
 		g_signal_connect (GTK_MESSAGE_DIALOG (dialog), "response",
-				  G_CALLBACK (gtk_widget_destroy),
+				  G_CALLBACK (gtk_window_destroy),
 				  NULL);
 
 		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);

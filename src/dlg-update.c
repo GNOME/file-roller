@@ -107,9 +107,9 @@ execute_update (DialogData *data)
 
 		n_files = g_list_length (data->file_list);
 		if (n_files == 1)
-			gtk_widget_destroy (data->update_file_dialog);
+			gtk_window_destroy (GTK_WINDOW (data->update_file_dialog));
 		else
-			gtk_widget_destroy (data->update_files_dialog);
+			gtk_window_destroy (GTK_WINDOW (data->update_files_dialog));
 	}
 	if (selection != NULL)
 		g_list_free (selection);
@@ -276,7 +276,7 @@ update_dialog_response (GtkDialog   *dialog,
 	switch (response_id) {
 	case GTK_RESPONSE_CANCEL:
 	case GTK_RESPONSE_DELETE_EVENT:
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		break;
 
 	case DIALOG_RESPONSE_UPDATE:

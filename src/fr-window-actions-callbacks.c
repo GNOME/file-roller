@@ -260,7 +260,7 @@ window_archive_loaded_cb (FrWindow  *window,
 {
 	if (success) {
 		g_signal_handlers_disconnect_by_data (window, file_sel);
-		gtk_widget_destroy (file_sel);
+		gtk_window_destroy (GTK_WINDOW (file_sel));
 	}
 	else {
 		FrWindow *original_window =  g_object_get_data (G_OBJECT (file_sel), "fr_window");
@@ -279,7 +279,7 @@ open_file_response_cb (GtkDialog *dialog,
 	GFile    *file;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (file_sel);
+		gtk_window_destroy (GTK_WINDOW (file_sel));
 		return;
 	}
 

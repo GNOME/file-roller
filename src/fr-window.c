@@ -599,7 +599,7 @@ fr_window_close (FrWindow *window)
 			g_settings_set_int (private->settings_listing, PREF_LISTING_NAME_COLUMN_WIDTH, width);
 	}
 
-	gtk_widget_destroy (GTK_WIDGET (window));
+	gtk_window_destroy (GTK_WINDOW (window));
 }
 
 
@@ -2158,7 +2158,7 @@ show_folder (GtkWindow *parent_window,
 					   "%s",
 					   error->message);
 		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (d);
+		gtk_window_destroy (GTK_WINDOW (d));
 
 		g_free (message);
 		g_clear_error (&error);
@@ -2720,7 +2720,7 @@ fr_window_close_confirmation_dialog (FrWindow  *window,
 				     GtkDialog *dialog)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 	if (private->batch_mode && private->destroy_with_confirmation_dialog)
 		_fr_window_close_after_notification (window);
 }
@@ -2891,7 +2891,7 @@ error_dialog_response_cb (GtkDialog *dialog,
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 
 	private->showing_error_dialog = FALSE;
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 
 	if (private->destroy_with_error_dialog) {
 		if (private->batch_mode) {
@@ -2900,7 +2900,7 @@ error_dialog_response_cb (GtkDialog *dialog,
 				       0,
 				       NULL);
 		}
-		gtk_widget_destroy (GTK_WIDGET (window));
+		gtk_window_destroy (GTK_WINDOW (window));
 	}
 }
 
@@ -2921,7 +2921,7 @@ fr_window_show_error_dialog (FrWindow   *window,
 			       0,
 			       error);
 
-		gtk_widget_destroy (GTK_WIDGET (window));
+		gtk_window_destroy (GTK_WINDOW (window));
 
 		return;
 	}
@@ -4132,7 +4132,7 @@ new_archive_dialog_response_cb (GtkDialog *dialog,
 	int         volume_size;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		_archive_operation_cancelled (window, FR_ACTION_CREATING_NEW_ARCHIVE);
 		return;
 	}
@@ -4160,10 +4160,10 @@ new_archive_dialog_response_cb (GtkDialog *dialog,
 						   mime_type,
 						   GTK_WINDOW (dialog)))
 	{
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 	}
 	else if (new_window)
-		gtk_widget_destroy (archive_window);
+		gtk_window_destroy (GTK_WINDOW (archive_window));
 
 	g_object_unref (file);
 }
@@ -4226,7 +4226,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 					   _("Could not perform the operation"),
 					   NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy(d);
+		gtk_window_destroy (GTK_WINDOW (d));
 
  		return;
 	}
@@ -4258,7 +4258,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 			gtk_dialog_set_default_response (GTK_DIALOG (d), 2);
 
 			r = gtk_dialog_run (GTK_DIALOG (d));
-			gtk_widget_destroy (GTK_WIDGET (d));
+			gtk_window_destroy (GTK_WINDOW (d));
 
 			if (r == 0)  /* Add */
 				fr_window_archive_add_dropped_items (window, list);
@@ -4285,7 +4285,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 
 			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 			r = gtk_dialog_run (GTK_DIALOG (d));
-			gtk_widget_destroy (GTK_WIDGET (d));
+			gtk_window_destroy (GTK_WINDOW (d));
 
 			if (r == GTK_RESPONSE_YES) {
 				GFile     *first_file;
@@ -5491,7 +5491,7 @@ fr_window_attach (FrWindow      *window,
 	case FR_WINDOW_AREA_CONTENTS:
 		position = 4;
 		if (private->contents != NULL)
-			gtk_widget_destroy (private->contents);
+			g_object_unref (private->contents);
 		private->contents = child;
 		gtk_widget_set_vexpand (child, TRUE);
 		break;
@@ -6681,7 +6681,7 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 		break;
 	}
 
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 
 	if (do_not_extract) {
 		fr_window_batch_stop (odata->window);
@@ -6916,7 +6916,7 @@ _fr_window_archive_extract_from_edata_maybe (FrWindow    *window,
 
 			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 			r = gtk_dialog_run (GTK_DIALOG (d));
-			gtk_widget_destroy (GTK_WIDGET (d));
+			gtk_window_destroy (GTK_WINDOW (d));
 
 			g_free (msg);
 
@@ -7661,7 +7661,7 @@ fr_window_archive_save_as (FrWindow   *window,
 					   "%s",
 					   _("Archive type not supported."));
 		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (d);
+		gtk_window_destroy (GTK_WINDOW (d));
 
 		g_free (message);
 
@@ -7731,7 +7731,7 @@ save_as_archive_dialog_response_cb (GtkDialog *dialog,
 	GSettings  *settings;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		_archive_operation_cancelled (window, FR_ACTION_CREATING_ARCHIVE);
 		return;
 	}
@@ -7753,7 +7753,7 @@ save_as_archive_dialog_response_cb (GtkDialog *dialog,
 
 	fr_window_archive_save_as (window, file, mime_type, password, encrypt_header, volume_size);
 
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 	g_object_unref (file);
 }
 
@@ -8023,7 +8023,7 @@ fr_window_archive_encrypt (FrWindow   *window,
 					   "%s",
 					   _("Archive type not supported."));
 		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (d);
+		gtk_window_destroy (GTK_WINDOW (d));
 
 		g_free (message);
 		g_object_unref (temp_new_file);
@@ -8155,7 +8155,7 @@ fr_window_view_last_output (FrWindow   *window,
 
 	g_signal_connect (GTK_DIALOG (dialog),
 			  "response",
-			  G_CALLBACK (gtk_widget_destroy),
+			  G_CALLBACK (gtk_window_destroy),
 			  NULL);
 
 	g_signal_connect (GTK_DIALOG (dialog),
@@ -8474,7 +8474,7 @@ fr_window_rename_selection (FrWindow *window,
 						     "%s",
 						     reason);
 			gtk_dialog_run (GTK_DIALOG (dlg));
-			gtk_widget_destroy (dlg);
+			gtk_window_destroy (GTK_WINDOW (dlg));
 
 			g_free (reason);
 			g_free (utf8_name);
@@ -8493,7 +8493,7 @@ fr_window_rename_selection (FrWindow *window,
 						       _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,
 						       NULL);
 			gtk_dialog_run (GTK_DIALOG (dlg));
-			gtk_widget_destroy (dlg);
+			gtk_window_destroy (GTK_WINDOW (dlg));
 			g_free (reason);
 			g_free (new_name);
 			goto retry__rename_selection;
@@ -9737,11 +9737,11 @@ fr_window_exec_batch_action (FrWindow      *window,
 			FrWindowPrivate *private = fr_window_get_instance_private (window);
 
 			if ((private->progress_dialog != NULL) && (gtk_widget_get_parent (private->progress_dialog) != GTK_WIDGET (window))) {
-				gtk_widget_destroy (private->progress_dialog);
+				gtk_window_destroy (GTK_WINDOW (private->progress_dialog));
 				private->progress_dialog = NULL;
 			}
 		}
-		gtk_widget_destroy (GTK_WIDGET (window));
+		gtk_window_destroy (GTK_WINDOW (window));
 		break;
 
 	default:
@@ -9903,7 +9903,7 @@ fr_window_batch_stop (FrWindow *window)
 			       fr_window_signals[READY],
 			       0,
 			       NULL);
-		gtk_widget_destroy (GTK_WIDGET (window));
+		gtk_window_destroy (GTK_WINDOW (window));
 	}
 }
 

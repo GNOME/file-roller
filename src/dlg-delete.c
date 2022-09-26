@@ -91,7 +91,7 @@ response_cb (GtkDialog  *widget,
 	}
 
 	/* close the dialog. */
-	gtk_widget_destroy (data->dialog);
+	gtk_window_destroy (GTK_WINDOW (data->dialog));
 }
 
 
@@ -166,7 +166,7 @@ dlg_delete__common (FrWindow *window,
 			  data);
 //	g_signal_connect_swapped (GTK_BUTTON (cancel_button),
 //				  "clicked",
-//				  G_CALLBACK (gtk_widget_destroy),
+//				  G_CALLBACK (gtk_window_destroy),
 //				  G_OBJECT (data->dialog));
 //	g_signal_connect (GTK_BUTTON (ok_button),
 //			  "clicked",

@@ -353,7 +353,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 					   "%s",
 					   _("You have to specify an archive name."));
 		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
+		gtk_window_destroy (GTK_WINDOW (d));
 
 		return NULL;
 	}
@@ -372,7 +372,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 					   "%s",
 					   _("You have to specify an archive name."));
 		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
+		gtk_window_destroy (GTK_WINDOW (d));
 
 		return NULL;
 	}
@@ -389,7 +389,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 						error->message);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		g_error_free (error);
 		g_free (basename_ext);
 		g_object_unref (parent);
@@ -438,7 +438,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 						_("You don’t have permission to create an archive in this folder"));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		g_object_unref (parent_info);
 		g_object_unref (file);
 
@@ -456,7 +456,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 						_("New name is the same as old one, please type other name."));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		g_object_unref (parent_info);
 		g_object_unref (file);
 
@@ -478,7 +478,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 								_("You can’t add an archive to itself."));
 				gtk_dialog_run (GTK_DIALOG (dialog));
 
-				gtk_widget_destroy (GTK_WIDGET (dialog));
+				gtk_window_destroy (GTK_WINDOW (dialog));
 				g_object_unref (parent_info);
 				g_object_unref (file);
 
@@ -507,7 +507,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 						  NULL);
 		overwrite = gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK;
 
-		gtk_widget_destroy (dialog);
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		g_free (secondary_message);
 		g_free (message);
 		g_free (filename);
@@ -523,7 +523,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 								error->message);
 				gtk_dialog_run (GTK_DIALOG (dialog));
 
-				gtk_widget_destroy (GTK_WIDGET (dialog));
+				gtk_window_destroy (GTK_WINDOW (dialog));
 				g_error_free (error);
 				g_object_unref (parent_info);
 				g_object_unref (file);

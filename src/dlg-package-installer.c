@@ -236,7 +236,7 @@ confirm_search_dialog_response_cb (GtkDialog *dialog,
 {
 	InstallerData *idata = user_data;
 
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 
 	if (response_id == GTK_RESPONSE_YES) {
 		install_packages (idata);

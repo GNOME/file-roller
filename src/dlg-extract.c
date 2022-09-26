@@ -115,7 +115,7 @@ create_destination_response_cb (GtkDialog    *dialog,
 		      int           response,
 		      DialogData   *data)
 {
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 
 	if (response != GTK_RESPONSE_YES) {
 		data->do_not_extract = TRUE;
@@ -138,7 +138,7 @@ extract_cb_possibly_try_to_create_destination_directory (DialogData  *data)
 					   _("Extraction not performed"),
 					   _("Could not create the destination folder: %s."),
 					   error->message);
-		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_window_destroy), NULL);
 		gtk_widget_show (d);
 	} else {
 		extract_cb_check_whether_preparing_destination_failed (data);
@@ -151,10 +151,10 @@ extraction_not_performed_cb (GtkDialog    *dialog,
 		      int           response,
 		      DialogData   *data)
 {
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 
 	if (fr_window_is_batch_mode (data->window)) {
-		gtk_widget_destroy (data->dialog);
+		gtk_window_destroy (GTK_WINDOW (data->dialog));
 	}
 }
 
@@ -199,7 +199,7 @@ extract_cb_check_permissions (DialogData  *data)
 					   _("Extraction not performed"),
 					   _("You don’t have the right permissions to extract archives in the folder “%s”"),
 					   utf8_path);
-		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		g_signal_connect (GTK_MESSAGE_DIALOG (d), "response", G_CALLBACK (gtk_window_destroy), NULL);
 		gtk_widget_show (d);
 	} else {
 		extract_cb_start_extracting (data);
@@ -245,7 +245,7 @@ extract_cb_start_extracting (DialogData *data)
 		pattern = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("file_pattern_entry")));
 		file_list = fr_window_get_file_list_pattern (window, pattern);
 		if (file_list == NULL) {
-			gtk_widget_destroy (data->dialog);
+			gtk_window_destroy (GTK_WINDOW (data->dialog));
 			return;
 		}
 	}
@@ -260,7 +260,7 @@ extract_cb_start_extracting (DialogData *data)
 	/* close the dialog. */
 
 	data->destination = NULL; /* do not free when destroying the dialog. */
-	gtk_widget_destroy (data->dialog);
+	gtk_window_destroy (GTK_WINDOW (data->dialog));
 
 	/* extract ! */
 
@@ -284,7 +284,7 @@ file_selector_response_cb (GtkDialog    *dialog,
 		      DialogData   *data)
 {
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (data->dialog);
+		gtk_window_destroy (GTK_WINDOW (data->dialog));
 	} else if (response == GTK_RESPONSE_OK) {
 		extract_cb (dialog, data);
 	}

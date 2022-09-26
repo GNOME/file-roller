@@ -65,7 +65,7 @@ response_cb (GtkDialog  *dialog,
 		g_free (password);
 	}
 
-	gtk_widget_destroy (data->dialog);
+	gtk_window_destroy (GTK_WINDOW (data->dialog));
 }
 
 

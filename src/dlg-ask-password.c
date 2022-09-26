@@ -82,13 +82,13 @@ ask_password__response_cb (GtkDialog  *dialog,
 	default:
 		fr_window_dnd_extraction_finished (data->window, TRUE);
 		if (fr_window_is_batch_mode (data->window))
-			gtk_widget_destroy (GTK_WIDGET (data->window));
+			gtk_window_destroy (GTK_WINDOW (data->window));
 		else
 			fr_window_reset_current_action (data->window);
 		break;
 	}
 
-	gtk_widget_destroy (data->dialog);
+	gtk_window_destroy (GTK_WINDOW (data->dialog));
 }
 
 

@@ -76,13 +76,13 @@ app_chooser_response_cb (GtkDialog *dialog,
 			g_object_unref (app_info);
 		}
 		g_free (o_data);
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		break;
 
 	case GTK_RESPONSE_CANCEL:
 	case GTK_RESPONSE_DELETE_EVENT:
 		g_free (o_data);
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		break;
 
 	default:

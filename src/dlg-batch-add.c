@@ -54,7 +54,7 @@ dialog_response_cb (GtkDialog *dialog,
 	else
 		fr_window_batch_stop (window);
 
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 }
 
 
