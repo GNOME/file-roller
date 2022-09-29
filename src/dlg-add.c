@@ -825,34 +825,58 @@ load_options_activate_cb (GSimpleAction *action,
 
 
 static void
-save_options_activate_cb (GSimpleAction *action,
-			  GVariant *parameter,
-			  gpointer user_data)
+options_name_dialog_response_cb (GtkDialog *dialog,
+				 int        response_id,
+				 gpointer   user_data)
 {
-	GFile *options_dir;
-	GFile *options_file;
-	char  *opt_filename;
 	DialogData *data = user_data;
+	char       *opt_filename;
+	GFile      *options_dir;
+	GFile      *options_file;
+
+	if (response_id != GTK_RESPONSE_YES) {
+		gtk_window_destroy (GTK_WINDOW (dialog));
+		return;
+	}
+
+	opt_filename = _gth_request_dialog_get_text (dialog);
+	gtk_window_destroy (GTK_WINDOW (dialog));
+
+	if (opt_filename == NULL)
+		return;
 
 	options_dir = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, TRUE);
 	_g_file_make_directory_tree (options_dir, 0700, NULL);
-
-	opt_filename = _gtk_request_dialog_run (GTK_WINDOW (data->dialog),
-						GTK_DIALOG_MODAL,
-						C_("Window title", "Save Options"),
-						_("_Options Name:"),
-						(data->last_options != NULL) ? data->last_options : "",
-						1024,
-						_GTK_LABEL_CANCEL,
-						_GTK_LABEL_SAVE);
-	if (opt_filename == NULL)
-		return;
 
 	options_file = g_file_get_child_for_display_name (options_dir, opt_filename, NULL);
 	dlg_add_folder_save_current_options (data, options_file);
 	dlg_add_folder_save_last_used_options (data, opt_filename);
 
-	g_free (opt_filename);
 	g_object_unref (options_file);
 	g_object_unref (options_dir);
+	g_free (opt_filename);
+}
+
+
+static void
+save_options_activate_cb (GSimpleAction *action,
+			  GVariant *parameter,
+			  gpointer user_data)
+{
+	DialogData *data = user_data;
+	GtkWidget  *dialog;
+
+	dialog = _gtk_request_dialog_new (GTK_WINDOW (data->dialog),
+					  GTK_DIALOG_MODAL,
+					  C_("Window title", "Save Options"),
+					  _("_Options Name:"),
+					  (data->last_options != NULL) ? data->last_options : "",
+					  1024,
+					  _GTK_LABEL_CANCEL,
+					  _GTK_LABEL_SAVE);
+	g_signal_connect (dialog,
+			  "response",
+			  G_CALLBACK (options_name_dialog_response_cb),
+			  data);
+	gtk_widget_show (dialog);
 }

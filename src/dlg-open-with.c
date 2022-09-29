@@ -31,7 +31,7 @@
 
 #ifdef USE_NATIVE_APPCHOOSER
 # include <libportal/portal.h>
-# include <libportal-gtk3/portal-gtk3.h>
+# include <libportal-gtk4/portal-gtk4.h>
 #endif
 
 typedef struct {

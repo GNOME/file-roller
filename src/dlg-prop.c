@@ -70,11 +70,11 @@ dlg_prop (FrWindow *window)
 
 	/* Make the dialog */
 
-	data->dialog = gtk_widget_new (GTK_TYPE_DIALOG,
-				       "transient-for", GTK_WINDOW (window),
-				       "modal", TRUE,
-				       "use-header-bar", _gtk_settings_get_dialogs_use_header (),
-				       NULL);
+	data->dialog = g_object_new (GTK_TYPE_DIALOG,
+				     "transient-for", GTK_WINDOW (window),
+				     "modal", TRUE,
+				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
+				     NULL);
 
 	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))), table);
 

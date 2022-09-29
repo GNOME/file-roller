@@ -79,6 +79,15 @@ _g_object_list_unref (GList *list)
 	g_list_free_full (list, (GDestroyNotify) g_object_unref);
 }
 
+
+void
+_g_object_unref_on_weak_notify (gpointer  data,
+				GObject  *where_the_object_was)
+{
+	g_object_unref (data);
+}
+
+
 /* enum */
 
 

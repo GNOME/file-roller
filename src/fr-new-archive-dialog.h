@@ -32,6 +32,11 @@ typedef enum {
 
 G_DECLARE_FINAL_TYPE (FrNewArchiveDialog, fr_new_archive_dialog, FR, NEW_ARCHIVE_DIALOG, GtkDialog)
 
+typedef void (*FrNewArchiveDialogCallback) (FrNewArchiveDialog *dialog,
+					    GFile              *file,
+					    const char         *mime_type,
+					    gpointer            user_data);
+
 GtkWidget *     fr_new_archive_dialog_new                 (const char          *title,
 							   GtkWindow           *parent,
 							   FrNewArchiveAction   action,
@@ -46,12 +51,9 @@ GtkWidget *     fr_new_archive_dialog_new                 (const char          *
 void		fr_new_archive_dialog_set_files_to_add    (FrNewArchiveDialog  *dialog,
 							   GList               *file_list);
 
-/**
- * fr_new_archive_dialog_get_file:
- * Returns: (transfer full)
- */
-GFile *         fr_new_archive_dialog_get_file            (FrNewArchiveDialog  *dialog,
-							   const char         **mime_type);
+void            fr_new_archive_dialog_get_file            (FrNewArchiveDialog  *dialog,
+							   FrNewArchiveDialogCallback callback,
+							   gpointer user_data);
 const char *    fr_new_archive_dialog_get_password        (FrNewArchiveDialog  *dialog);
 gboolean        fr_new_archive_dialog_get_encrypt_header  (FrNewArchiveDialog  *dialog);
 int             fr_new_archive_dialog_get_volume_size     (FrNewArchiveDialog  *dialog);

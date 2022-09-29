@@ -24,6 +24,15 @@
 #include "gtk-utils.h"
 
 
+void
+_gtk_dialog_run (GtkDialog *dialog)
+{
+	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+	g_signal_connect (dialog, "response", G_CALLBACK (gtk_window_destroy), NULL);
+	gtk_widget_show (GTK_WIDGET (dialog));
+}
+
+
 GtkWidget *
 _gtk_message_dialog_new (GtkWindow      *parent,
 			 GtkDialogFlags  flags,
@@ -74,21 +83,8 @@ _gtk_message_dialog_new (GtkWindow      *parent,
 }
 
 
-static GtkWidget *
-create_button (const char *text)
-{
-	GtkWidget *button;
-
-	button = gtk_button_new_with_mnemonic (text);
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_show (button);
-
-	return button;
-}
-
-
-char *
-_gtk_request_dialog_run (GtkWindow      *parent,
+GtkWidget *
+_gtk_request_dialog_new (GtkWindow      *parent,
 			 GtkDialogFlags  flags,
 			 const char     *title,
 			 const char     *message,
@@ -102,7 +98,6 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	GtkWidget  *label;
 	GtkWidget  *entry;
 	GtkWidget  *request_box;
-	char       *result;
 
 	builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "request-dialog.ui");
 	request_box = _gtk_builder_get_widget (builder, "request_box");
@@ -116,7 +111,7 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
 	gtk_window_set_title (GTK_WINDOW (dialog), title);
 	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), request_box);
-	g_object_weak_ref (G_OBJECT (request_box), (GWeakNotify) g_object_unref, builder);
+	g_object_set_data_full (G_OBJECT (dialog), "builder", builder, g_object_unref);
 
 	if (flags & GTK_DIALOG_MODAL)
 		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
@@ -127,29 +122,37 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	entry = _gtk_builder_get_widget (builder, "value_entry");
 	gtk_entry_set_max_length (GTK_ENTRY (entry), max_length);
 	gtk_editable_set_text (GTK_EDITABLE (entry), default_value);
+	gtk_widget_grab_focus (entry);
 
 	/* Add buttons */
 
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-				      create_button (no_button_text),
+				      gtk_button_new_with_mnemonic (no_button_text),
 				      GTK_RESPONSE_CANCEL);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-				      create_button (yes_button_text),
+				      gtk_button_new_with_mnemonic (yes_button_text),
 				      GTK_RESPONSE_YES);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 
-	/* Run dialog */
+	return dialog;
+}
 
-	gtk_widget_grab_focus (entry);
 
-	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES)
-		result = g_strdup (gtk_editable_get_text (GTK_EDITABLE (entry)));
-	else
-		result = NULL;
+char *
+_gth_request_dialog_get_text (GtkDialog *dialog)
+{
+	GtkBuilder *builder;
+	GtkWidget  *entry;
 
-	gtk_window_destroy (GTK_WINDOW (dialog));
+	builder = g_object_get_data (G_OBJECT (dialog), "builder");
+	if (builder == NULL)
+		return NULL;
 
-	return result;
+	entry = _gtk_builder_get_widget (builder, "value_entry");
+	if (entry == NULL)
+		return NULL;
+
+	return g_strdup (gtk_editable_get_text (GTK_EDITABLE (entry)));
 }
 
 
@@ -200,18 +203,20 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 		GList         *scan;
 
 		output_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
-		gtk_box_pack_end (GTK_BOX (gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (dialog))),
-				  output_box, TRUE, TRUE, 0);
+		_gtk_box_pack_end (GTK_BOX (gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (dialog))),
+				   output_box,
+				   TRUE,
+				   FALSE);
 
 		label = gtk_label_new_with_mnemonic (_("C_ommand Line Output:"));
 		gtk_box_append (GTK_BOX (output_box), label);
 
 		scrolled_window = g_object_new (GTK_TYPE_SCROLLED_WINDOW,
-						"shadow-type", GTK_SHADOW_IN,
+						"has-frame", TRUE,
 						"width-request", 450,
 						"height-request", 200,
 						NULL);
-		_gtk_box_append_expanded (GTK_BOX (output_box), scrolled_window);
+		_gtk_box_pack_start (GTK_BOX (output_box), scrolled_window, TRUE, TRUE);
 
 		text_view = gtk_text_view_new ();
 		gtk_label_set_mnemonic_widget (GTK_LABEL (label), text_view);
@@ -265,25 +270,21 @@ _gtk_error_dialog_run (GtkWindow  *parent,
 				      message,
 				      _GTK_LABEL_CLOSE, GTK_RESPONSE_CANCEL,
 				      NULL);
+	_gtk_dialog_run (GTK_DIALOG (d));
+
 	g_free (message);
-
-	g_signal_connect (GTK_MESSAGE_DIALOG (d), "response",
-			  G_CALLBACK (gtk_window_destroy),
-			  NULL);
-
-	gtk_widget_show (d);
 }
 
 
 void
 _gtk_dialog_add_to_window_group (GtkDialog *dialog)
 {
-	GtkWidget *toplevel;
+	GtkRoot *toplevel;
 
 	g_return_if_fail (dialog != NULL);
 
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (dialog));
-	if (gtk_widget_is_toplevel (toplevel) && gtk_window_has_group (GTK_WINDOW (toplevel)))
+	toplevel = gtk_widget_get_root (GTK_WIDGET (dialog));
+	if ((toplevel != NULL) && gtk_window_has_group (GTK_WINDOW (toplevel)))
 		gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (toplevel)), GTK_WINDOW (dialog));
 }
 
@@ -319,64 +320,15 @@ _gtk_entry_get_locale_text (GtkEntry *entry)
 }
 
 
-GdkPixbuf *
-_g_icon_get_pixbuf (GIcon        *icon,
-		    int           icon_size,
-		    GtkIconTheme *icon_theme)
-{
-	GdkPixbuf   *pixbuf = NULL;
-	GtkIconInfo *icon_info;
-
-	icon_info = gtk_icon_theme_lookup_by_gicon (icon_theme,
-						    icon,
-						    icon_size,
-						    GTK_ICON_LOOKUP_USE_BUILTIN);
-
-	if (icon_info != NULL) {
-		GError *error = NULL;
-
-		pixbuf = gtk_icon_info_load_icon (icon_info, &error);
-		if (error != NULL) {
-			g_print ("%s\n", error->message);
-			g_error_free (error);
-		}
-
-		g_object_unref (icon_info);
-	}
-
-	return pixbuf;
-}
-
-
 void
 _gtk_show_help_dialog (GtkWindow  *parent,
 		       const char *section)
 {
-	char   *uri;
-	GError *error = NULL;
+	char *uri;
 
 	uri = g_strconcat ("help:file-roller", section ? "?" : NULL, section, NULL);
-	if (! gtk_show_uri_on_window (parent, uri, GDK_CURRENT_TIME, &error)) {
-  		GtkWidget *dialog;
+	gtk_show_uri (parent, uri, GDK_CURRENT_TIME);
 
-		dialog = _gtk_message_dialog_new (parent,
-						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  _("Could not display help"),
-						  error->message,
-						  _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-
-		g_signal_connect (GTK_MESSAGE_DIALOG (dialog), "response",
-				  G_CALLBACK (gtk_window_destroy),
-				  NULL);
-
-		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-
-		gtk_widget_show (dialog);
-
-		g_clear_error (&error);
-	}
 	g_free (uri);
 }
 
@@ -389,32 +341,19 @@ _gtk_builder_get_widget (GtkBuilder *builder,
 }
 
 
-int
-_gtk_widget_lookup_for_size (GtkWidget   *widget,
-			     GtkIconSize  icon_size)
-{
-	int w, h;
-
-	if (! gtk_icon_size_lookup (icon_size, &w, &h))
-		w = h = 16;
-
-	return MAX (w, h);
-}
-
-
 static void
 password_entry_icon_press_cb (GtkEntry            *entry,
 			      GtkEntryIconPosition icon_pos,
-			      GdkEvent            *event,
 			      gpointer             user_data)
 {
-	gboolean visibility = gtk_entry_get_visibility (entry);
+	gboolean visibility;
+
+	visibility = gtk_entry_get_visibility (entry);
 	gtk_entry_set_visibility (entry, ! visibility);
-	if (visibility) {
+	if (visibility)
 		gtk_entry_set_icon_from_icon_name (entry, GTK_ENTRY_ICON_SECONDARY, "view-reveal-symbolic");
-	} else {
+	else
 		gtk_entry_set_icon_from_icon_name (entry, GTK_ENTRY_ICON_SECONDARY, "view-conceal-symbolic");
-	}
 }
 
 
@@ -462,7 +401,7 @@ _gtk_image_button_new_for_header_bar (const char *icon_name)
 {
 	GtkWidget *button;
 
-	button = gtk_button_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
+	button = gtk_button_new_from_icon_name (icon_name);
 	_gtk_menu_button_set_style_for_header_bar (button);
 
 	return button;
@@ -523,7 +462,7 @@ _gtk_header_bar_create_image_toggle_button (const char       *icon_name,
 	g_return_val_if_fail (action_name != NULL, NULL);
 
 	button = gtk_toggle_button_new ();
-	gtk_button_set_child (GTK_BUTTON (button), gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU));
+	gtk_button_set_child (GTK_BUTTON (button), gtk_image_new_from_icon_name (icon_name));
 	_gtk_menu_button_set_style_for_header_bar (button);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
 	if (tooltip != NULL)
@@ -720,9 +659,34 @@ _gtk_popover_popup_at_position (GtkPopover *popover, gdouble x, gdouble y)
 
 
 void
-_gtk_box_append_expanded (GtkBox *box, GtkWidget *child)
+_gtk_box_pack_start (GtkBox    *box,
+		     GtkWidget *child,
+		     gboolean   hexpand,
+		     gboolean   vexpand)
 {
-	gtk_widget_set_hexpand (child, TRUE);
-	gtk_widget_set_vexpand (child, TRUE);
+	gtk_widget_set_hexpand (child, hexpand);
+	gtk_widget_set_vexpand (child, vexpand);
+	gtk_box_prepend (box, child);
+}
+
+
+void
+_gtk_box_pack_end (GtkBox    *box,
+		   GtkWidget *child,
+		   gboolean   hexpand,
+		   gboolean   vexpand)
+{
+	gtk_widget_set_hexpand (child, hexpand);
+	gtk_widget_set_vexpand (child, vexpand);
 	gtk_box_append (box, child);
+}
+
+
+void
+_gtk_widget_set_margin (GtkWidget *widget, int margin)
+{
+	gtk_widget_set_margin_start (widget, margin);
+	gtk_widget_set_margin_end (widget, margin);
+	gtk_widget_set_margin_top (widget, margin);
+	gtk_widget_set_margin_bottom (widget, margin);
 }

@@ -28,7 +28,6 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <glib/gprintf.h>
-#include <handy.h>
 #include "file-utils.h"
 #include "fr-application.h"
 #include "fr-application-menu.h"
@@ -489,10 +488,6 @@ fr_application_startup (GApplication *application)
 		      "gtk-shell-shows-menubar", &shell_shows_menubar,
 		      NULL);
 
-	hdy_init ();
-	hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
-					    HDY_COLOR_SCHEME_PREFER_LIGHT);
-
 	if (shell_shows_menubar)
 		fr_initialize_app_menubar (application);
 	else
@@ -508,17 +503,11 @@ static GOptionContext *
 fr_application_create_option_context (void)
 {
 	GOptionContext *context;
-	static gsize    initialized = FALSE;
 
 	context = g_option_context_new (N_("— Create and modify an archive"));
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 	g_option_context_set_ignore_unknown_options (context, TRUE);
-
-	if (g_once_init_enter (&initialized)) {
-		g_option_context_add_group (context, gtk_get_option_group (TRUE));
-		g_once_init_leave (&initialized, TRUE);
-	}
 
 	return context;
 }
@@ -528,9 +517,6 @@ static int
 fr_application_command_line_finished (GApplication *application,
 				      int           status)
 {
-	if (status == EXIT_SUCCESS)
-		gdk_notify_startup_complete ();
-
 	/* reset arguments */
 
 	remaining_args = NULL;
@@ -725,8 +711,6 @@ fr_application_activate (GApplication *application)
 		if (! fr_window_is_batch_mode (FR_WINDOW (link->data)))
 			gtk_widget_show (GTK_WIDGET (link->data));
 	}
-
-	gdk_notify_startup_complete ();
 }
 
 

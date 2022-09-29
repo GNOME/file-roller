@@ -40,20 +40,22 @@ typedef struct {
 	const char *accelerator;
 } FrAccelerator;
 
+void          _gtk_dialog_run                      (GtkDialog *dialog);
 GtkWidget *   _gtk_message_dialog_new              (GtkWindow        *parent,
 						    GtkDialogFlags    flags,
 						    const char       *message,
 						    const char       *secondary_message,
 						    const char       *first_button_text,
 						    ...);
-gchar *       _gtk_request_dialog_run              (GtkWindow        *parent,
+GtkWidget *   _gtk_request_dialog_new              (GtkWindow        *parent,
 						    GtkDialogFlags    flags,
 						    const char       *title,
 						    const char       *message,
 						    const char       *default_value,
 						    int               max_length,
-						    const char       *no_button_text,
-						    const char       *yes_button_text);
+						    const gchar      *no_button_text,
+						    const gchar      *yes_button_text);
+char *        _gth_request_dialog_get_text         (GtkDialog        *dialog);
 GtkWidget *   _gtk_error_dialog_new                (GtkWindow        *parent,
 						    GtkDialogFlags    flags,
 						    GList            *row_output,
@@ -66,17 +68,12 @@ void          _gtk_error_dialog_run                (GtkWindow        *parent,
 						    ...);
 void          _gtk_dialog_add_to_window_group      (GtkDialog        *dialog);
 void          _gtk_entry_set_locale_text           (GtkEntry         *entry,
-					     	    const char       *text);
+						    const char       *text);
 char *        _gtk_entry_get_locale_text           (GtkEntry         *entry);
-GdkPixbuf *   _g_icon_get_pixbuf                   (GIcon            *icon,
-						    int               size,
-						    GtkIconTheme     *icon_theme);
 void          _gtk_show_help_dialog                (GtkWindow        *parent,
 						    const char       *section);
 GtkWidget *   _gtk_builder_get_widget              (GtkBuilder       *builder,
 						    const char       *name);
-int           _gtk_widget_lookup_for_size          (GtkWidget        *widget,
-						    GtkIconSize       icon_size);
 void          _gtk_entry_use_as_password_entry     (GtkEntry         *entry);
 GtkWidget *   _gtk_menu_button_new_for_header_bar  (void);
 GtkWidget *   _gtk_image_button_new_for_header_bar (const char       *icon_name);
@@ -105,6 +102,15 @@ void	      _gtk_application_add_accelerators    (GtkApplication   *app,
 						    int               n_accelerators);
 void	      _gtk_popover_popup_at_selected (GtkPopover *popover, GtkTreeView *view);
 void	      _gtk_popover_popup_at_position (GtkPopover *popover, gdouble x, gdouble y);
-void          _gtk_box_append_expanded       (GtkBox *box, GtkWidget *child);
+void          _gtk_box_pack_start            (GtkBox     *box,
+					      GtkWidget  *child,
+					      gboolean    hexpand,
+					      gboolean    vexpand);
+void          _gtk_box_pack_end              (GtkBox     *box,
+					      GtkWidget  *child,
+					      gboolean    hexpand,
+					      gboolean    vexpand);
+void          _gtk_widget_set_margin         (GtkWidget  *widget,
+					      int         margin);
 
 #endif

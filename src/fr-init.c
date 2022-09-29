@@ -605,15 +605,7 @@ fr_initialize_data (void)
 	if (initialized)
 		return;
 	initialized = TRUE;
-
-	ProgramsCache = g_hash_table_new_full (g_str_hash,
-					       g_str_equal,
-					       g_free,
-					       NULL);
-
-	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-					   PRIVDATADIR G_DIR_SEPARATOR_S "icons");
-
+	ProgramsCache = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	register_archives ();
 	compute_supported_archive_types ();
 }

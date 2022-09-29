@@ -31,70 +31,12 @@ struct _FrLocationBar {
 G_DEFINE_TYPE (FrLocationBar, fr_location_bar, GTK_TYPE_BOX)
 
 
-static gboolean
-fr_location_bar_draw (GtkWidget    *widget,
-		      cairo_t      *cr)
-{
-	GtkStyleContext *context;
-	guint            border_width;
-
-	context = gtk_widget_get_style_context (widget);
-	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
-	gtk_render_background (context,
-			       cr,
-			       border_width,
-			       border_width,
-	                       gtk_widget_get_allocated_width (widget) - 2 * border_width,
-	                       gtk_widget_get_allocated_height (widget) - 2 * border_width);
-	gtk_render_frame (context,
-			  cr,
-			  border_width,
-			  border_width,
-	                  gtk_widget_get_allocated_width (widget) - 2 * border_width,
-	                  gtk_widget_get_allocated_height (widget) - 2 * border_width);
-
-	GTK_WIDGET_CLASS (fr_location_bar_parent_class)->draw (widget, cr);
-
-	return FALSE;
-}
-
-
-static void
-fr_location_bar_class_init (FrLocationBarClass *klass)
-{
-	GtkWidgetClass *widget_class;
-
-	widget_class = GTK_WIDGET_CLASS (klass);
-	widget_class->draw = fr_location_bar_draw;
-}
-
-
 static const char *css =
 ".location-bar {\n"
 "	border-width: 0 0 1px 0;\n" /* remove the top border, already provided by the headerbar */
 "}";
 
 
-static void
-fr_location_bar_init (FrLocationBar *self)
-{
-	GtkStyleContext *style_context;
-	GtkCssProvider  *css_provider;
-
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (self), GTK_ORIENTATION_HORIZONTAL);
-	gtk_box_set_spacing (GTK_BOX (self), 6);
-
-	style_context = gtk_widget_get_style_context (GTK_WIDGET (self));
-	gtk_style_context_add_class (style_context, "toolbar");
-	gtk_style_context_add_class (style_context, "primary-toolbar");
-	gtk_style_context_add_class (style_context, "location-bar");
-
-	css_provider = gtk_css_provider_new ();
-	gtk_css_provider_load_from_data (css_provider, css, -1, NULL);
-	gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-						   GTK_STYLE_PROVIDER (css_provider),
-						   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-}
 
 
 GtkWidget *

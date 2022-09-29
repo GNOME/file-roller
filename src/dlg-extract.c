@@ -325,16 +325,15 @@ dlg_extract__common (FrWindow *window,
 
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 510);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (data->dialog), FALSE);
-	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (data->dialog), FALSE);
 	gtk_file_chooser_set_create_folders (GTK_FILE_CHOOSER (data->dialog), TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
 	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "extract-dialog-options.ui");
-	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (data->dialog), GET_WIDGET ("extra_widget"));
+	//gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (data->dialog), GET_WIDGET ("extra_widget"));
 
 	/* Set widgets data. */
 
-	gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (data->dialog), fr_window_get_extract_default_dir (window), NULL);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->dialog), fr_window_get_extract_default_dir (window), NULL);
 
 	if (data->selected_files != NULL)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("selected_files_radiobutton")), TRUE);

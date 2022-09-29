@@ -24,7 +24,6 @@
 #include "gio-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
-#include "gth-icon-cache.h"
 
 
 #define GET_WIDGET(x) (_gtk_builder_get_widget (self->builder, (x)))
@@ -102,7 +101,6 @@ struct _FrFileSelectorDialog {
 	GtkWidget     *extra_widget;
 	GFile         *current_folder;
 	LoadData      *current_operation;
-	GthIconCache  *icon_cache;
 	GSettings     *settings;
 	gboolean       show_hidden;
 	GSimpleActionGroup *action_map;
@@ -151,56 +149,7 @@ set_current_folder (FrFileSelectorDialog *self,
 	gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("location_entry")), folder_name);
 	g_free (folder_name);
 
-	gtk_places_sidebar_set_location (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")), folder);
-}
-
-
-/* Taken from the Gtk+ file gtkfilechooserdefault.c
- * Copyright (C) 2003, Red Hat, Inc.
- *
- * Changed by File-Roller authors
- *
- * Guesses a size based upon font sizes */
-static int
-get_font_size (GtkWidget *widget)
-{
-	GtkStyleContext      *context;
-	GtkStateFlags         state;
-	int                   font_size;
-	GdkScreen            *screen;
-	double                resolution;
-	PangoFontDescription *font;
-
-	context = gtk_widget_get_style_context (widget);
-	state = gtk_widget_get_state_flags (widget);
-
-	screen = gtk_widget_get_screen (widget);
-	if (screen) {
-		resolution = gdk_screen_get_resolution (screen);
-		if (resolution < 0.0) /* will be -1 if the resolution is not defined in the GdkScreen */
-			resolution = 96.0;
-	}
-	else
-		resolution = 96.0; /* wheeee */
-
-	gtk_style_context_get (context, state, "font", &font, NULL);
-	font_size = pango_font_description_get_size (font);
-	font_size = PANGO_PIXELS (font_size) * resolution / 72.0;
-
-	return font_size;
-}
-
-
-static void
-find_good_window_size_from_style (GtkWidget *widget,
-				  int       *width,
-				  int       *height)
-{
-	int font_size;
-
-	font_size = get_font_size (widget);
-	*width = font_size * FILE_LIST_CHARS;
-	*height = font_size * FILE_LIST_LINES;
+	//gtk_places_sidebar_set_location (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")), folder);
 }
 
 
@@ -218,7 +167,8 @@ fr_file_selector_dialog_get_default_size (FrFileSelectorDialog *self,
 		return;
 	}
 
-	find_good_window_size_from_style (GTK_WIDGET (self), default_width, default_height);
+	*default_width = 300;
+	*default_height = 300;
 
 	if ((self->extra_widget != NULL) && gtk_widget_get_visible (self->extra_widget)) {
 		GtkRequisition req;
@@ -244,38 +194,16 @@ static void
 fr_file_selector_dialog_realize (GtkWidget *widget)
 {
 	FrFileSelectorDialog *self;
-	GIcon                *icon;
 	int                   sidebar_size;
 
 	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->realize (widget);
 
 	self = FR_FILE_SELECTOR_DIALOG (widget);
-
-	self->icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
-	icon = g_content_type_get_icon ("text/plain");
-	gth_icon_cache_set_fallback (self->icon_cache, icon);
-	g_object_unref (icon);
-
 	_fr_file_selector_dialog_update_size (self);
-
 	sidebar_size = g_settings_get_int (self->settings, PREF_FILE_SELECTOR_SIDEBAR_SIZE);
 	if (sidebar_size <= 0)
-		sidebar_size = get_font_size (widget) * SIDEBAR_CHARS;
+		sidebar_size = 300;
 	gtk_paned_set_position (GTK_PANED (GET_WIDGET ("main_paned")), sidebar_size);
-}
-
-
-static void
-fr_file_selector_dialog_unrealize (GtkWidget *widget)
-{
-	FrFileSelectorDialog *self;
-
-	self = FR_FILE_SELECTOR_DIALOG (widget);
-
-	gth_icon_cache_free (self->icon_cache);
-	self->icon_cache = NULL;
-
-	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->unrealize (widget);
 }
 
 
@@ -288,7 +216,7 @@ fr_file_selector_dialog_unmap (GtkWidget *widget)
 
 	self = FR_FILE_SELECTOR_DIALOG (widget);
 
-	gtk_window_get_size (GTK_WINDOW (self), &width, &height);
+	gtk_widget_get_size_request (GTK_WIDGET (self), &width, &height);
 	g_settings_set (self->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", width, height);
 	g_settings_set_boolean (self->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN, self->show_hidden);
 	g_settings_set_int (self->settings,
@@ -314,7 +242,6 @@ fr_file_selector_dialog_class_init (FrFileSelectorDialogClass *klass)
 
 	widget_class = (GtkWidgetClass *) klass;
 	widget_class->realize = fr_file_selector_dialog_realize;
-	widget_class->unrealize = fr_file_selector_dialog_unrealize;
 	widget_class->unmap = fr_file_selector_dialog_unmap;
 }
 
@@ -326,36 +253,36 @@ files_name_column_sort_func (GtkTreeModel *model,
 			     gpointer      user_data)
 {
 	GtkSortType  sort_order;
-        char        *key_a;
-        char        *key_b;
-        gboolean     is_folder_a;
-        gboolean     is_folder_b;
-        gint         result;
+	char        *key_a;
+	char        *key_b;
+	gboolean     is_folder_a;
+	gboolean     is_folder_b;
+	gint         result;
 
 	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
-        gtk_tree_model_get (model, a,
-        		    FILE_LIST_COLUMN_NAME_ORDER, &key_a,
-        		    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_a,
-                            -1);
-        gtk_tree_model_get (model, b,
-        		    FILE_LIST_COLUMN_NAME_ORDER, &key_b,
-        		    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_b,
-                            -1);
+	gtk_tree_model_get (model, a,
+			    FILE_LIST_COLUMN_NAME_ORDER, &key_a,
+			    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_a,
+			    -1);
+	gtk_tree_model_get (model, b,
+			    FILE_LIST_COLUMN_NAME_ORDER, &key_b,
+			    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_b,
+			    -1);
 
-        if (is_folder_a == is_folder_b) {
-        	result = strcmp (key_a, key_b);
-        }
-        else {
-        	result = is_folder_a ? -1 : 1;
-        	if (sort_order == GTK_SORT_DESCENDING)
-        		result = -1 * result;
-        }
+	if (is_folder_a == is_folder_b) {
+		result = strcmp (key_a, key_b);
+	}
+	else {
+		result = is_folder_a ? -1 : 1;
+		if (sort_order == GTK_SORT_DESCENDING)
+			result = -1 * result;
+	}
 
-        g_free (key_a);
-        g_free (key_b);
+	g_free (key_a);
+	g_free (key_b);
 
-        return result;
+	return result;
 }
 
 
@@ -366,46 +293,46 @@ files_size_column_sort_func (GtkTreeModel *model,
 			     gpointer      user_data)
 {
 	GtkSortType  sort_order;
-        char        *key_a;
-        char        *key_b;
-        gint64       size_a;
-        gint64       size_b;
-        gboolean     is_folder_a;
-        gboolean     is_folder_b;
-        int          result;
+	char        *key_a;
+	char        *key_b;
+	gint64       size_a;
+	gint64       size_b;
+	gboolean     is_folder_a;
+	gboolean     is_folder_b;
+	int          result;
 
-        gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
-        gtk_tree_model_get (model, a,
-        		    FILE_LIST_COLUMN_NAME_ORDER, &key_a,
-        		    FILE_LIST_COLUMN_SIZE_ORDER, &size_a,
-        		    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_a,
-                            -1);
-        gtk_tree_model_get (model, b,
-        		    FILE_LIST_COLUMN_NAME_ORDER, &key_b,
-        		    FILE_LIST_COLUMN_SIZE_ORDER, &size_b,
-        		    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_b,
-                            -1);
+	gtk_tree_model_get (model, a,
+			    FILE_LIST_COLUMN_NAME_ORDER, &key_a,
+			    FILE_LIST_COLUMN_SIZE_ORDER, &size_a,
+			    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_a,
+			    -1);
+	gtk_tree_model_get (model, b,
+			    FILE_LIST_COLUMN_NAME_ORDER, &key_b,
+			    FILE_LIST_COLUMN_SIZE_ORDER, &size_b,
+			    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_b,
+			    -1);
 
-        if (is_folder_a == is_folder_b) {
-        	if (is_folder_a) {
-                	result = strcmp (key_a, key_b);
-                	if (sort_order == GTK_SORT_DESCENDING)
-                		result = -1 * result;
-        	}
-        	else
-        		result = size_a - size_b;
-        }
-        else {
-        	result = is_folder_a ? -1 : 1;
-        	if (sort_order == GTK_SORT_DESCENDING)
-        		result = -1 * result;
-        }
+	if (is_folder_a == is_folder_b) {
+		if (is_folder_a) {
+			result = strcmp (key_a, key_b);
+			if (sort_order == GTK_SORT_DESCENDING)
+				result = -1 * result;
+		}
+		else
+			result = size_a - size_b;
+	}
+	else {
+		result = is_folder_a ? -1 : 1;
+		if (sort_order == GTK_SORT_DESCENDING)
+			result = -1 * result;
+	}
 
-        g_free (key_a);
-        g_free (key_b);
+	g_free (key_a);
+	g_free (key_b);
 
-        return result;
+	return result;
 }
 
 
@@ -416,33 +343,33 @@ files_modified_column_sort_func (GtkTreeModel *model,
 				 gpointer      user_data)
 {
 	GtkSortType sort_order;
-        glong       modified_a;
-        glong       modified_b;
-        gboolean    is_folder_a;
-        gboolean    is_folder_b;
-        int         result;
+	glong       modified_a;
+	glong       modified_b;
+	gboolean    is_folder_a;
+	gboolean    is_folder_b;
+	int         result;
 
-        gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
-        gtk_tree_model_get (model, a,
-        		    FILE_LIST_COLUMN_MODIFIED_ORDER, &modified_a,
-        		    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_a,
-                            -1);
-        gtk_tree_model_get (model, b,
-        		    FILE_LIST_COLUMN_MODIFIED_ORDER, &modified_b,
-        		    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_b,
-                            -1);
+	gtk_tree_model_get (model, a,
+			    FILE_LIST_COLUMN_MODIFIED_ORDER, &modified_a,
+			    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_a,
+			    -1);
+	gtk_tree_model_get (model, b,
+			    FILE_LIST_COLUMN_MODIFIED_ORDER, &modified_b,
+			    FILE_LIST_COLUMN_IS_FOLDER, &is_folder_b,
+			    -1);
 
-        if (is_folder_a == is_folder_b) {
-        	result = modified_a - modified_b;
-        }
-        else {
-        	result = is_folder_a ? -1 : 1;
-        	if (sort_order == GTK_SORT_DESCENDING)
-        		result = -1 * result;
-        }
+	if (is_folder_a == is_folder_b) {
+		result = modified_a - modified_b;
+	}
+	else {
+		result = is_folder_a ? -1 : 1;
+		if (sort_order == GTK_SORT_DESCENDING)
+			result = -1 * result;
+	}
 
-        return result;
+	return result;
 }
 
 
@@ -499,9 +426,9 @@ is_selected_cellrenderertoggle_toggled_cb (GtkCellRendererToggle *cell_renderer,
 		return;
 	}
 
-        gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter,
-        		    FILE_LIST_COLUMN_IS_SELECTED, &is_selected,
-                            -1);
+	gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter,
+			    FILE_LIST_COLUMN_IS_SELECTED, &is_selected,
+			    -1);
 	gtk_list_store_set (list_store, &iter,
 			    FILE_LIST_COLUMN_IS_SELECTED, ! is_selected,
 			    -1);
@@ -528,14 +455,14 @@ files_treeview_row_activated_cb (GtkTreeView       *tree_view,
 	if (! gtk_tree_model_get_iter (tree_model, &iter, path))
 		return;
 
-        gtk_tree_model_get (tree_model, &iter,
-        		    FILE_LIST_COLUMN_FILE, &file,
-        		    FILE_LIST_COLUMN_IS_FOLDER, &is_folder,
-        		    -1);
-        if (is_folder)
-        	fr_file_selector_dialog_set_current_folder (self, file);
+	gtk_tree_model_get (tree_model, &iter,
+			    FILE_LIST_COLUMN_FILE, &file,
+			    FILE_LIST_COLUMN_IS_FOLDER, &is_folder,
+			    -1);
+	if (is_folder)
+		fr_file_selector_dialog_set_current_folder (self, file);
 
-        g_object_unref (file);
+	g_object_unref (file);
 }
 
 
@@ -559,7 +486,7 @@ go_up_button_clicked_cb (GtkButton *button,
 }
 
 
-static void
+/*static void
 places_sidebar_open_location_cb (GtkPlacesSidebar  *sidebar,
 				 GFile             *location,
 				 GtkPlacesOpenFlags open_flags,
@@ -568,22 +495,19 @@ places_sidebar_open_location_cb (GtkPlacesSidebar  *sidebar,
 	FrFileSelectorDialog *self = user_data;
 
 	fr_file_selector_dialog_set_current_folder (self, location);
-}
+	}*/
 
 
 static gboolean
-files_treeview_button_press_event_cb (GtkWidget      *widget,
-				      GdkEventButton *event,
-				      gpointer        user_data)
+files_treeview_events_cb (GtkEventControllerLegacy *controller,
+			  GdkEvent                 *event,
+			  gpointer                  user_data)
 {
 	FrFileSelectorDialog *self = user_data;
+	double                x, y;
 
-	if (event->button == 3) {
-		int wx;
-		int wy;
-		gtk_tree_view_convert_bin_window_to_widget_coords (GTK_TREE_VIEW (widget), event->x, event->y, &wx, &wy);
-		_gtk_popover_popup_at_position (self->file_context_menu, wx, wy);
-
+	if (gdk_event_triggers_context_menu (event) && gdk_event_get_position (event, &x, &y)) {
+		_gtk_popover_popup_at_position (self->file_context_menu, x, y);
 		return TRUE;
 	}
 
@@ -604,8 +528,8 @@ select_all_files (FrFileSelectorDialog *self,
 
 	do {
 		gtk_list_store_set (list_store, &iter,
-	        		    FILE_LIST_COLUMN_IS_SELECTED, value,
-	                            -1);
+				    FILE_LIST_COLUMN_IS_SELECTED, value,
+				    -1);
 	}
 	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
 
@@ -624,8 +548,8 @@ select_all_activate_cb (GSimpleAction *action,
 
 static void
 unselect_all_activate_cb (GSimpleAction *action,
-				   GVariant *state,
-				    gpointer user_data)
+			  GVariant *state,
+			  gpointer user_data)
 {
 	select_all_files (FR_FILE_SELECTOR_DIALOG (user_data), FALSE);
 }
@@ -639,8 +563,8 @@ _set_current_folder (FrFileSelectorDialog *self,
 
 static void
 show_hidden_files_toggled_cb (GSimpleAction *action,
-				       GVariant *state,
-				        gpointer user_data)
+			      GVariant *state,
+			      gpointer user_data)
 {
 	FrFileSelectorDialog *self = user_data;
 	GFile                *folder;
@@ -694,14 +618,13 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 {
 	self->current_folder = NULL;
 	self->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "file-selector.ui");
-	self->icon_cache = NULL;
 	self->settings = g_settings_new ("org.gnome.FileRoller.FileSelector");
 	self->show_hidden = g_settings_get_boolean (self->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN);
 	self->action_map = g_simple_action_group_new ();
-	self->file_context_menu = GTK_POPOVER (gtk_popover_new_from_model (GET_WIDGET ("files_treeview"), G_MENU_MODEL (gtk_builder_get_object (self->builder, "file_list_context_menu_model"))));
+	self->file_context_menu = GTK_POPOVER (gtk_popover_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (self->builder, "file_list_context_menu_model"))));
 
-	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
-	_gtk_box_append_expanded (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
+	_gtk_widget_set_margin (GTK_WIDGET (self), 5);
+	_gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"), TRUE, TRUE);
 
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, files_name_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_SIZE, files_size_column_sort_func, self, NULL);
@@ -720,14 +643,17 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  "clicked",
 			  G_CALLBACK (go_up_button_clicked_cb),
 			  self);
-	g_signal_connect (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")),
+	/*g_signal_connect (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")),
 			  "open-location",
 			  G_CALLBACK (places_sidebar_open_location_cb),
+			  self);*/
+
+	GtkEventController *event_controller = gtk_event_controller_legacy_new ();
+	g_signal_connect (event_controller,
+			  "event",
+			  G_CALLBACK (files_treeview_events_cb),
 			  self);
-	g_signal_connect (GTK_TREE_VIEW (GET_WIDGET ("files_treeview")),
-			  "button-press-event",
-			  G_CALLBACK (files_treeview_button_press_event_cb),
-			  self);
+	gtk_widget_add_controller (GET_WIDGET ("files_treeview"), GTK_EVENT_CONTROLLER (event_controller));
 
 	g_action_map_add_action_entries (G_ACTION_MAP (self->action_map),
 			dlg_entries, G_N_ELEMENTS (dlg_entries),
@@ -825,7 +751,7 @@ folder_mount_enclosing_volume_ready_cb (GObject      *source_object,
 
 static void
 get_folder_content_done_cb (GError   *error,
-		            gpointer  user_data)
+			    gpointer  user_data)
 {
 	LoadData             *load_data = user_data;
 	FrFileSelectorDialog *self = load_data->dialog;
@@ -879,7 +805,7 @@ get_folder_content_done_cb (GError   *error,
 	gtk_list_store_clear (list_store);
 	for (scan = load_data->files; scan; scan = scan->next) {
 		FileInfo  *file_info = scan->data;
-		GdkPixbuf *icon_pixbuf;
+		GIcon     *icon;
 		char      *size;
 		GTimeVal   timeval;
 		GDateTime *datetime;
@@ -892,7 +818,7 @@ get_folder_content_done_cb (GError   *error,
 
 		gtk_list_store_append (list_store, &iter);
 
-		icon_pixbuf = gth_icon_cache_get_pixbuf (self->icon_cache, g_file_info_get_icon (file_info->info));
+		icon = g_file_info_get_icon (file_info->info);
 		size = g_format_size (g_file_info_get_size (file_info->info));
 		g_file_info_get_modification_time (file_info->info, &timeval);
 		datetime = g_date_time_new_from_timeval_local (&timeval);
@@ -901,7 +827,7 @@ get_folder_content_done_cb (GError   *error,
 		is_folder = (g_file_info_get_file_type (file_info->info) == G_FILE_TYPE_DIRECTORY);
 
 		gtk_list_store_set (list_store, &iter,
-				    FILE_LIST_COLUMN_ICON, icon_pixbuf,
+				    FILE_LIST_COLUMN_ICON, icon,
 				    FILE_LIST_COLUMN_NAME, g_file_info_get_display_name (file_info->info),
 				    FILE_LIST_COLUMN_SIZE, (is_folder ? "" : size),
 				    FILE_LIST_COLUMN_MODIFIED, modified,
@@ -917,7 +843,7 @@ get_folder_content_done_cb (GError   *error,
 		g_free (modified);
 		g_date_time_unref (datetime);
 		g_free (size);
-		_g_object_unref (icon_pixbuf);
+		_g_object_unref (icon);
 	}
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), sort_column_id, sort_order);
@@ -952,19 +878,19 @@ _get_folder_list (LoadData *load_data)
 	g_directory_foreach_child (load_data->folder,
 				   FALSE,
 				   TRUE,
-			           (G_FILE_ATTRIBUTE_STANDARD_TYPE ","
-			            G_FILE_ATTRIBUTE_STANDARD_NAME ","
-			            G_FILE_ATTRIBUTE_STANDARD_SIZE ","
-			            G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME ","
-			            G_FILE_ATTRIBUTE_STANDARD_ICON ","
-			            G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN ","
-			            G_FILE_ATTRIBUTE_TIME_MODIFIED ","
-			            G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC),
-			            load_data->cancellable,
-			           NULL,
-			           get_folder_content_for_each_child_cb,
-			           get_folder_content_done_cb,
-			           load_data);
+				   (G_FILE_ATTRIBUTE_STANDARD_TYPE ","
+				    G_FILE_ATTRIBUTE_STANDARD_NAME ","
+				    G_FILE_ATTRIBUTE_STANDARD_SIZE ","
+				    G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME ","
+				    G_FILE_ATTRIBUTE_STANDARD_ICON ","
+				    G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN ","
+				    G_FILE_ATTRIBUTE_TIME_MODIFIED ","
+				    G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC),
+				   load_data->cancellable,
+				   NULL,
+				   get_folder_content_for_each_child_cb,
+				   get_folder_content_done_cb,
+				   load_data);
 }
 
 
@@ -990,7 +916,6 @@ fr_file_selector_dialog_set_current_folder (FrFileSelectorDialog *self,
 					    GFile                *folder)
 {
 	g_return_if_fail (folder != NULL);
-
 	_set_current_folder (self, folder, NULL);
 }
 
@@ -1034,15 +959,15 @@ fr_file_selector_dialog_get_selected_files (FrFileSelectorDialog *self)
 		GFile    *file;
 		gboolean  is_selected;
 
-	        gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter,
-	        		    FILE_LIST_COLUMN_FILE, &file,
-	        		    FILE_LIST_COLUMN_IS_SELECTED, &is_selected,
-	                            -1);
+		gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter,
+				    FILE_LIST_COLUMN_FILE, &file,
+				    FILE_LIST_COLUMN_IS_SELECTED, &is_selected,
+				    -1);
 
-	        if (is_selected)
-	        	list = g_list_prepend (list, g_object_ref (file));
+		if (is_selected)
+			list = g_list_prepend (list, g_object_ref (file));
 
-	        g_object_unref (file);
+		g_object_unref (file);
 	}
 	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
 

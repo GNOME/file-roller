@@ -153,7 +153,7 @@ dlg_ask_password__common (FrWindow       *window,
 		label = gtk_label_new (_("Wrong password."));
 		gtk_info_bar_add_child (GTK_INFO_BAR (info_bar), label);
 		gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_ERROR);
-		_gtk_box_append_expanded (GTK_BOX (GET_WIDGET ("error_box")), info_bar);
+		_gtk_box_pack_start (GTK_BOX (GET_WIDGET ("error_box")), info_bar, TRUE, FALSE);
 		gtk_widget_show (GET_WIDGET ("error_box"));
 
 		_gtk_entry_set_locale_text (GTK_ENTRY (data->password_entry),

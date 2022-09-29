@@ -204,7 +204,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	gtk_window_set_transient_for (GTK_WINDOW (self), parent);
 	gtk_window_set_resizable (GTK_WINDOW (self), FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
+	_gtk_widget_set_margin (GTK_WIDGET (self), 5);
 
 	self->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "new-archive-dialog.ui");
 
@@ -247,7 +247,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	if (folder == NULL)
 		folder = _g_file_get_home ();
-	gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (GET_WIDGET ("parent_filechooserbutton")), folder, NULL);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (GET_WIDGET ("parent_filechooserbutton")), folder, NULL);
 
 	gtk_expander_set_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander")),
 				      g_settings_get_boolean (self->settings, PREF_NEW_EXPAND_OPTIONS));
@@ -326,9 +326,70 @@ fr_new_archive_dialog_set_files_to_add (FrNewArchiveDialog  *self,
 }
 
 
-GFile *
+/* -- fr_new_archive_dialog_get_file -- */
+
+
+typedef struct {
+	FrNewArchiveDialog *dialog;
+	FrNewArchiveDialogCallback callback;
+	GFile *file;
+	int n_format;
+	gpointer user_data;
+} OverwriteDialogData;
+
+
+static void
+overwrite_dialog_data_free (OverwriteDialogData *data)
+{
+	_g_object_unref (data->file);
+	g_free (data);
+}
+
+
+static void
+overwrite_dialog_response_cb (GtkDialog *dialog,
+			      int        response_id,
+			      gpointer   user_data)
+{
+	OverwriteDialogData *data = user_data;
+	gboolean overwrite = (response_id == GTK_RESPONSE_OK);
+
+	gtk_window_destroy (GTK_WINDOW (dialog));
+
+	if (overwrite) {
+		GError *error = NULL;
+
+		g_file_delete (data->file, NULL, &error);
+		if (error != NULL) {
+			GtkWidget *dialog = _gtk_error_dialog_new (
+				GTK_WINDOW (data->dialog),
+				GTK_DIALOG_MODAL,
+				NULL,
+				_("Could not delete the old archive."),
+				"%s",
+				error->message);
+			_gtk_dialog_run (GTK_DIALOG (dialog));
+
+			g_error_free (error);
+
+			data->callback (data->dialog, NULL, NULL, data->user_data);
+			overwrite_dialog_data_free (data);
+			return;
+		}
+	}
+
+	data->callback (data->dialog,
+			data->file,
+			mime_type_desc[data->n_format].mime_type,
+			data->user_data);
+	overwrite_dialog_data_free (data);
+}
+
+
+void
 fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
-			        const char         **mime_type)
+				FrNewArchiveDialogCallback callback,
+				gpointer user_data)
 {
 	const char *basename;
 	int         n_format;
@@ -336,85 +397,76 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 	GFile      *parent;
 	GFile      *file;
 	GError     *error = NULL;
-	const char *file_mime_type;
 	GFileInfo  *parent_info;
-	GtkWidget  *dialog;
 
 	/* Check whether the user entered a valid archive name. */
 
 	basename = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")));
 	if ((basename == NULL) || (*basename == '\0')) {
-		GtkWidget *d;
+		GtkWidget *msg_dialog = _gtk_error_dialog_new (
+			GTK_WINDOW (self),
+			GTK_DIALOG_MODAL,
+			NULL,
+			_("Could not create the archive"),
+			"%s",
+			_("You have to specify an archive name."));
+		_gtk_dialog_run (GTK_DIALOG (msg_dialog));
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (self),
-					   GTK_DIALOG_MODAL,
-					   NULL,
-					   _("Could not create the archive"),
-					   "%s",
-					   _("You have to specify an archive name."));
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_window_destroy (GTK_WINDOW (d));
-
-		return NULL;
+		callback (self, NULL, NULL, user_data);
+		return;
 	}
 
-	/* file */
+	/* File */
 
 	n_format = get_selected_format (self);
 	parent = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (GET_WIDGET ("parent_filechooserbutton")));
 	if (parent == NULL) {
-		GtkWidget *d;
+		GtkWidget *msg_dialog = _gtk_error_dialog_new (
+			GTK_WINDOW (self),
+			GTK_DIALOG_MODAL,
+			NULL,
+			_("Could not create the archive"),
+			"%s",
+			_("You have to specify an archive name."));
+		_gtk_dialog_run (GTK_DIALOG (msg_dialog));
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (self),
-					   GTK_DIALOG_MODAL,
-					   NULL,
-					   _("Could not create the archive"),
-					   "%s",
-					   _("You have to specify an archive name."));
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_window_destroy (GTK_WINDOW (d));
-
-		return NULL;
+		callback (self, NULL, NULL, user_data);
+		return;
 	}
 
 	basename_ext = g_strconcat (basename, mime_type_desc[n_format].default_ext, NULL);
 	file = g_file_get_child_for_display_name (parent, basename_ext, &error);
 
 	if (file == NULL) {
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
-						GTK_DIALOG_MODAL,
-						NULL,
-						_("Could not create the archive"),
-						"%s",
-						error->message);
-		gtk_dialog_run (GTK_DIALOG (dialog));
+		GtkWidget *msg_dialog = _gtk_error_dialog_new (
+			GTK_WINDOW (self),
+			GTK_DIALOG_MODAL,
+			NULL,
+			_("Could not create the archive"),
+			"%s",
+			error->message);
+		_gtk_dialog_run (GTK_DIALOG (msg_dialog));
 
-		gtk_window_destroy (GTK_WINDOW (dialog));
 		g_error_free (error);
 		g_free (basename_ext);
 		g_object_unref (parent);
 
-		return NULL;
+		callback (self, NULL, NULL, user_data);
+		return;
 	}
 
 	g_free (basename_ext);
 
-	/* mime type */
-
-	file_mime_type = mime_type_desc[n_format].mime_type;
-	if (mime_type != NULL)
-		*mime_type = file_mime_type;
-
-	/* check permissions */
+	/* Check permissions */
 
 	parent_info = g_file_query_info (parent,
-				         (G_FILE_ATTRIBUTE_ACCESS_CAN_READ ","
-				          G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE ","
-				          G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE","
-				          G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME),
-				         0,
-				         NULL,
-				         &error);
+					 (G_FILE_ATTRIBUTE_ACCESS_CAN_READ ","
+					  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE ","
+					  G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE","
+					  G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME),
+					 0,
+					 NULL,
+					 &error);
 
 	g_object_unref (parent);
 
@@ -425,119 +477,115 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		g_object_unref (parent_info);
 		g_object_unref (file);
 
-		return NULL;
+		callback (self, NULL, NULL, user_data);
+		return;
 	}
 
 	if (g_file_info_has_attribute (parent_info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE) &&
-				       ! g_file_info_get_attribute_boolean (parent_info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE)) {
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
-						GTK_DIALOG_MODAL,
-						NULL,
-						_("Could not create the archive"),
-						"%s",
-						_("You don’t have permission to create an archive in this folder"));
-		gtk_dialog_run (GTK_DIALOG (dialog));
+	    ! g_file_info_get_attribute_boolean (parent_info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE))
+	{
+		GtkWidget *msg_dialog = _gtk_error_dialog_new (
+			GTK_WINDOW (self),
+			GTK_DIALOG_MODAL,
+			NULL,
+			_("Could not create the archive"),
+			"%s",
+			_("You don’t have permission to create an archive in this folder"));
+		_gtk_dialog_run (GTK_DIALOG (msg_dialog));
 
-		gtk_window_destroy (GTK_WINDOW (dialog));
 		g_object_unref (parent_info);
 		g_object_unref (file);
 
-		return NULL;
+		callback (self, NULL, NULL, user_data);
+		return;
 	}
 
-	/* check whehter the file is equal to the original file */
+	/* Check whehter the file is equal to the original file */
 
 	if ((self->original_file != NULL) && (g_file_equal (file, self->original_file))) {
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
-						GTK_DIALOG_MODAL,
-						NULL,
-						_("Could not create the archive"),
-						"%s",
-						_("New name is the same as old one, please type other name."));
-		gtk_dialog_run (GTK_DIALOG (dialog));
+		GtkWidget *msg_dialog = _gtk_error_dialog_new (
+			GTK_WINDOW (self),
+			GTK_DIALOG_MODAL,
+			NULL,
+			_("Could not create the archive"),
+			"%s",
+			_("New name is the same as old one, please type other name."));
+		_gtk_dialog_run (GTK_DIALOG (msg_dialog));
 
-		gtk_window_destroy (GTK_WINDOW (dialog));
 		g_object_unref (parent_info);
 		g_object_unref (file);
 
-		return NULL;
+		callback (self, NULL, NULL, user_data);
+		return;
 	}
 
-	/* check whether the file is included in the files to add */
+	/* Check whether the file is included in the files to add. */
 
 	{
 		GList *scan;
 
 		for (scan = self->files_to_add; scan; scan = scan->next) {
 			if (_g_file_cmp_uris (G_FILE (scan->data), file) == 0) {
-				dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
-							        GTK_DIALOG_MODAL,
-								NULL,
-								_("Could not create the archive"),
-								"%s",
-								_("You can’t add an archive to itself."));
-				gtk_dialog_run (GTK_DIALOG (dialog));
+				GtkWidget *msg_dialog = _gtk_error_dialog_new (
+					GTK_WINDOW (self),
+					GTK_DIALOG_MODAL,
+					NULL,
+					_("Could not create the archive"),
+					"%s",
+					_("You can’t add an archive to itself."));
+				_gtk_dialog_run (GTK_DIALOG (msg_dialog));
 
-				gtk_window_destroy (GTK_WINDOW (dialog));
 				g_object_unref (parent_info);
 				g_object_unref (file);
 
-				return NULL;
+				callback (self, NULL, NULL, user_data);
+				return;
 			}
 		}
 	}
 
-	/* overwrite confirmation */
+	/* Overwrite confirmation. */
 
 	if (g_file_query_exists (file, NULL)) {
 		char     *filename;
 		char     *message;
 		char     *secondary_message;
-		gboolean  overwrite;
 
 		filename = _g_file_get_display_basename (file);
 		message = g_strdup_printf (_("A file named “%s” already exists.  Do you want to replace it?"), filename);
 		secondary_message = g_strdup_printf (_("The file already exists in “%s”.  Replacing it will overwrite its contents."), g_file_info_get_display_name (parent_info));
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (self),
-						  GTK_DIALOG_MODAL,
-						  message,
-						  secondary_message,
-						  _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
-						  _("_Replace"), GTK_RESPONSE_OK,
-						  NULL);
-		overwrite = gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK;
+		GtkWidget *msg_dialog = _gtk_message_dialog_new (
+			GTK_WINDOW (self),
+			GTK_DIALOG_MODAL,
+			message,
+			secondary_message,
+			_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+			_("_Replace"), GTK_RESPONSE_OK,
+			NULL);
 
-		gtk_window_destroy (GTK_WINDOW (dialog));
+		OverwriteDialogData *overwrite_data = g_new0 (OverwriteDialogData, 1);
+		overwrite_data->dialog = self;
+		overwrite_data->file = g_object_ref (file);
+		overwrite_data->n_format = n_format;
+		overwrite_data->callback = callback;
+		overwrite_data->user_data = user_data;
+		g_signal_connect (msg_dialog,
+				  "response",
+				  G_CALLBACK (overwrite_dialog_response_cb),
+				  overwrite_data);
+		gtk_widget_show (GTK_WIDGET (msg_dialog));
+
 		g_free (secondary_message);
 		g_free (message);
 		g_free (filename);
-
-		if (overwrite) {
-			g_file_delete (file, NULL, &error);
-			if (error != NULL) {
-				dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
-								GTK_DIALOG_MODAL,
-								NULL,
-								_("Could not delete the old archive."),
-								"%s",
-								error->message);
-				gtk_dialog_run (GTK_DIALOG (dialog));
-
-				gtk_window_destroy (GTK_WINDOW (dialog));
-				g_error_free (error);
-				g_object_unref (parent_info);
-				g_object_unref (file);
-
-				return NULL;
-			}
-		}
-		else
-			g_clear_object (&file);
 	}
+	else
+		callback (self,
+			  file,
+			  mime_type_desc[n_format].mime_type,
+			  user_data);
 
 	g_object_unref (parent_info);
-
-	return file;
 }
 
 

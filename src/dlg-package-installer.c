@@ -55,11 +55,7 @@ package_installer_terminated (InstallerData *idata,
 			      FrErrorType    error_type,
 			      const char    *error_message)
 {
-	GdkWindow *window;
-
-	window = gtk_widget_get_window (GTK_WIDGET (idata->window));
-	if (window != NULL)
-		gdk_window_set_cursor (window, NULL);
+	gtk_widget_set_cursor (GTK_WIDGET (idata->window), NULL);
 
 	if (error_type != FR_ERROR_NONE) {
 		fr_window_batch_stop_with_error (idata->window,
@@ -165,18 +161,9 @@ install_packages (InstallerData *idata)
 
 	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, idata->cancellable, &error);
 	if (connection != NULL) {
-		GdkWindow  *window;
 		GDBusProxy *proxy;
 
-		window = gtk_widget_get_window (GTK_WIDGET (idata->window));
-		if (window != NULL) {
-			GdkCursor *cursor;
-
-			cursor = gdk_cursor_new_from_name (gdk_display_get_default(), "wait");
-			gdk_window_set_cursor (window, cursor);
-
-			g_object_unref (cursor);
-		}
+		gtk_widget_set_cursor_from_name (GTK_WIDGET (idata->window), "wait");
 
 		proxy = g_dbus_proxy_new_sync (connection,
 					       G_DBUS_PROXY_FLAGS_NONE,
@@ -195,7 +182,7 @@ install_packages (InstallerData *idata)
 
 			names = g_strsplit (idata->packages, ",", -1);
 			real_names = get_packages_real_names (names);
-			desktop_startup_id = g_strdup_printf ("_TIME%i", gtk_get_current_event_time ());
+			desktop_startup_id = g_strdup_printf ("_TIME%i", 0 /* FIXME: delete if not needed */);
 			platform_data = g_variant_new_parsed ("{'desktop-startup-id': %v}", g_variant_new_take_string (desktop_startup_id));
 
 			g_dbus_proxy_call (proxy,

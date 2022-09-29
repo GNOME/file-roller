@@ -318,8 +318,7 @@ fr_window_activate_open (GSimpleAction *action,
 						_GTK_LABEL_OPEN, GTK_RESPONSE_OK,
 						NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
-	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window), NULL);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window), NULL);
 	_gtk_dialog_add_to_window_group (GTK_DIALOG (file_sel));
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 

@@ -420,14 +420,6 @@ void            fr_window_set_notify                   (FrWindow      *window,
 
 /**/
 
-/**
- * fr_window_file_list_drag_data_get:
- * @path_list: (element-type GtkTreeRowReference)
- */
-gboolean        fr_window_file_list_drag_data_get      (FrWindow         *window,
-						        GdkDragContext   *context,
-						        GtkSelectionData *selection_data,
-						        GList            *path_list);
 void            fr_window_update_dialog_closed         (FrWindow         *window);
 void		fr_window_dnd_extraction_finished      (FrWindow	 *window,
 							gboolean	  error);

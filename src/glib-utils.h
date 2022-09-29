@@ -52,7 +52,8 @@ void                _g_object_unref                (gpointer             object)
 void                _g_clear_object                (gpointer             p);
 GList *             _g_object_list_ref             (GList               *list);
 void                _g_object_list_unref           (GList               *list);
-
+void                _g_object_unref_on_weak_notify (gpointer             data,
+						    GObject             *where_the_object_was);
 /* enum */
 
 GEnumValue *        _g_enum_type_get_value         (GType                enum_type,
