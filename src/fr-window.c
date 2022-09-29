@@ -4874,9 +4874,9 @@ fr_window_construct (FrWindow *window)
 
 	private->list_store = gtk_list_store_new (NUMBER_OF_COLUMNS,
 						  G_TYPE_POINTER,
-						  GDK_TYPE_PIXBUF,
+						  G_TYPE_ICON,
 						  G_TYPE_STRING,
-						  GDK_TYPE_PIXBUF,
+						  G_TYPE_ICON,
 						  G_TYPE_STRING,
 						  G_TYPE_STRING,
 						  G_TYPE_STRING,
@@ -4971,7 +4971,7 @@ fr_window_construct (FrWindow *window)
 
 	private->tree_store = gtk_tree_store_new (TREE_NUMBER_OF_COLUMNS,
 						       G_TYPE_STRING,
-						       GDK_TYPE_PIXBUF,
+						       G_TYPE_ICON,
 						       G_TYPE_STRING,
 						       PANGO_TYPE_WEIGHT);
 	private->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (private->tree_store));
