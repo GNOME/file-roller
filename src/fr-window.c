@@ -1956,21 +1956,6 @@ close_progress_dialog (FrWindow *window,
 }
 
 
-static gboolean
-progress_dialog_delete_event (GtkWidget *caller,
-			      GdkEvent  *event,
-			      FrWindow  *window)
-{
-	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	if (private->stoppable) {
-		fr_window_stop (window);
-		close_progress_dialog (window, TRUE);
-	}
-
-	return TRUE;
-}
-
-
 /* -- open_folder -- */
 
 
@@ -2438,10 +2423,6 @@ create_the_progress_dialog (FrWindow *window)
 			  "response",
 			  G_CALLBACK (progress_dialog_response),
 			  window);
-	g_signal_connect (GTK_DIALOG (private->progress_dialog),
-			  "delete_event",
-			  G_CALLBACK (progress_dialog_delete_event),
-			  window);
 }
 
 
@@ -2612,31 +2593,15 @@ confirmation_dialog_response (GtkDialog *dialog,
 }
 
 
-static gboolean
-confirmation_dialog_delete_event (GtkWidget *dialog,
-				  GdkEvent  *event,
-				  FrWindow  *window)
-{
-	fr_window_close_confirmation_dialog (window, GTK_DIALOG (dialog));
-	return TRUE;
-}
-
-
 static void
 fr_window_show_confirmation_dialog (FrWindow  *window,
 				    GtkDialog *dialog)
 {
 	close_progress_dialog (window, TRUE);
-
 	g_signal_connect (dialog,
 			  "response",
 			  G_CALLBACK (confirmation_dialog_response),
 			  window);
-	g_signal_connect (dialog,
-			  "delete_event",
-			  G_CALLBACK (confirmation_dialog_delete_event),
-			  window);
-
 	gtk_widget_show (GTK_WIDGET (dialog));
 }
 
@@ -4264,16 +4229,6 @@ selection_changed_cb (GtkTreeSelection *selection,
 
 
 static gboolean
-fr_window_delete_event_cb (GtkWidget *caller,
-			   GdkEvent  *event,
-			   FrWindow  *window)
-{
-	fr_window_close (window);
-	return TRUE;
-}
-
-
-static gboolean
 is_single_click_policy (FrWindow *window)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
@@ -4844,11 +4799,6 @@ fr_window_construct (FrWindow *window)
 	gtk_widget_show (private->layout);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
-
-	g_signal_connect (window,
-			  "delete_event",
-			  G_CALLBACK (fr_window_delete_event_cb),
-			  window);
 
 	g_signal_connect (window,
 			  "show",
