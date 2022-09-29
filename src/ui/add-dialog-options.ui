@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gtk+ 3.10 -->
+  <requires lib="gtk" version="4.0"/>
   <menu id="options-menu">
     <section>
       <item>
@@ -18,219 +18,136 @@
     </section>
   </menu>
   <object class="GtkBox" id="extra_widget">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
     <property name="spacing">24</property>
     <child>
       <object class="GtkBox" id="box2">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkLabel" id="label1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Add</property>
+            <property name="label" translatable="1">Add</property>
             <attributes>
-              <attribute name="weight" value="bold"/>
+              <attribute name="weight" value="bold"></attribute>
             </attributes>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid" id="grid2">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="margin-start">12</property>
             <property name="row_spacing">6</property>
             <property name="column_spacing">6</property>
             <child>
               <object class="GtkLabel" id="label3">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">start</property>
-                <property name="label" translatable="yes">Include _files:</property>
-                <property name="use_underline">True</property>
+                <property name="label" translatable="1">Include _files:</property>
+                <property name="use_underline">1</property>
                 <property name="mnemonic_widget">include_files_entry</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="label4">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">start</property>
-                <property name="label" translatable="yes">E_xclude files:</property>
-                <property name="use_underline">True</property>
+                <property name="label" translatable="1">E_xclude files:</property>
+                <property name="use_underline">1</property>
                 <property name="mnemonic_widget">exclude_files_entry</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="label5">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">start</property>
-                <property name="label" translatable="yes">_Exclude folders:</property>
-                <property name="use_underline">True</property>
+                <property name="label" translatable="1">_Exclude folders:</property>
+                <property name="use_underline">1</property>
                 <property name="mnemonic_widget">exclude_folders_entry</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkEntry" id="include_files_entry">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">example: *.o; *.bak</property>
+                <property name="focusable">1</property>
+                <property name="tooltip_text" translatable="1">example: *.o; *.bak</property>
                 <property name="invisible_char">●</property>
                 <property name="width_chars">30</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkEntry" id="exclude_files_entry">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">example: *.o; *.bak</property>
+                <property name="focusable">1</property>
+                <property name="tooltip_text" translatable="1">example: *.o; *.bak</property>
                 <property name="invisible_char">●</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkEntry" id="exclude_folders_entry">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">example: *.o; *.bak</property>
+                <property name="focusable">1</property>
+                <property name="tooltip_text" translatable="1">example: *.o; *.bak</property>
                 <property name="invisible_char">●</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="box5">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkLabel" id="label2">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Actions</property>
+            <property name="label" translatable="1">Actions</property>
             <attributes>
-              <attribute name="weight" value="bold"/>
+              <attribute name="weight" value="bold"></attribute>
             </attributes>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="box6">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="margin-start">12</property>
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkCheckButton" id="update_checkbutton">
-                <property name="label" translatable="yes">Add only if _newer</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
+                <property name="label" translatable="1">Add only if _newer</property>
+                <property name="focusable">1</property>
+                <property name="use_underline">1</property>
                 <property name="halign">start</property>
-                <property name="draw_indicator">True</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="follow_links_checkbutton">
-                <property name="label" translatable="yes">_Follow symbolic links</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
+                <property name="label" translatable="1">_Follow symbolic links</property>
+                <property name="focusable">1</property>
+                <property name="use_underline">1</property>
                 <property name="halign">start</property>
-                <property name="draw_indicator">True</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
 </interface>

@@ -1,80 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.19.0 -->
 <interface>
-  <requires lib="gtk+" version="3.12"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="progress_dialog_content">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="border_width">15</property>
     <property name="spacing">12</property>
     <child>
       <object class="GtkBox" id="box2">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">18</property>
         <child>
           <object class="GtkLabel" id="action_label">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="wrap">True</property>
+            <property name="wrap">1</property>
             <property name="wrap_mode">word-char</property>
             <property name="halign">start</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="progress_box">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <property name="spacing">4</property>
             <child>
               <object class="GtkProgressBar" id="progress_progressbar">
+                <property name="vexpand">1</property>
                 <property name="width_request">350</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="pulse_step">0.029999999999999999</property>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="message_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="ellipsize">end</property>
                 <property name="halign">start</property>
                 <attributes>
-                  <attribute name="size" value="9000"/>
+                  <attribute name="size" value="9000"></attribute>
                 </attributes>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
   </object>
 </interface>

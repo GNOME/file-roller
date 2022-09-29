@@ -1,212 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.19.0 -->
 <interface>
-  <requires lib="gtk+" version="3.0"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="extra_widget">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="border_width">10</property>
     <property name="spacing">12</property>
     <child>
       <object class="GtkBox" id="box2">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="hexpand">1</property>
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkLabel" id="label1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes" context="Action">Extract</property>
+            <property name="label" translatable="1" context="Action">Extract</property>
             <property name="halign">start</property>
             <attributes>
-              <attribute name="weight" value="bold"/>
+              <attribute name="weight" value="bold"></attribute>
             </attributes>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="box3">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="margin-start">12</property>
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkRadioButton" id="all_files_radiobutton">
-                <property name="label" translatable="yes">_All files</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
+              <object class="GtkCheckButton" id="all_files_radiobutton">
+                <property name="label" translatable="1">_All files</property>
+                <property name="use_underline">1</property>
                 <property name="halign">start</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
+                <property name="active">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="selected_files_radiobutton">
-                <property name="label" translatable="yes">_Selected files</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
+              <object class="GtkCheckButton" id="selected_files_radiobutton">
+                <property name="label" translatable="1">_Selected files</property>
+                <property name="use_underline">1</property>
                 <property name="halign">start</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
+                <property name="active">1</property>
                 <property name="group">all_files_radiobutton</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox" id="box4">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkRadioButton" id="file_pattern_radiobutton">
-                    <property name="label" translatable="yes">_Files:</property>
-                    <property name="use_action_appearance">False</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
+                  <object class="GtkCheckButton" id="file_pattern_radiobutton">
+                    <property name="label" translatable="1">_Files:</property>
+                    <property name="use_underline">1</property>
                     <property name="halign">start</property>
-                    <property name="active">True</property>
-                    <property name="draw_indicator">True</property>
+                    <property name="active">1</property>
                     <property name="group">all_files_radiobutton</property>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkEntry" id="file_pattern_entry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">example: *.o; *.bak</property>
+                    <property name="focusable">1</property>
+                    <property name="tooltip_text" translatable="1">example: *.o; *.bak</property>
                     <property name="invisible_char">●</property>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="box5">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="hexpand">1</property>
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkLabel" id="label2">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Actions</property>
+            <property name="label" translatable="1">Actions</property>
             <property name="halign">start</property>
             <attributes>
-              <attribute name="weight" value="bold"/>
+              <attribute name="weight" value="bold"></attribute>
             </attributes>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="box6">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="margin-start">12</property>
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkCheckButton" id="keep_structure_checkbutton">
-                <property name="label" translatable="yes">_Keep directory structure</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
+                <property name="label" translatable="1">_Keep directory structure</property>
+                <property name="focusable">1</property>
+                <property name="use_underline">1</property>
                 <property name="halign">start</property>
-                <property name="draw_indicator">True</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="keep_newer_checkbutton">
-                <property name="label" translatable="yes">Do not _overwrite newer files</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
+                <property name="label" translatable="1">Do not _overwrite newer files</property>
+                <property name="focusable">1</property>
+                <property name="use_underline">1</property>
                 <property name="halign">start</property>
-                <property name="draw_indicator">True</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
 </interface>
