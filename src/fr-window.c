@@ -5091,6 +5091,9 @@ fr_window_construct (FrWindow *window)
 	/* location bar */
 
 	private->location_bar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	_gtk_widget_set_margin (private->location_bar, 10);
+
+	/* Navigation commands. */
 
 	navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_append (GTK_BOX (navigation_commands),
@@ -5104,7 +5107,7 @@ fr_window_construct (FrWindow *window)
 	gtk_box_append (GTK_BOX (private->location_bar),
 			_gtk_header_bar_create_image_button ("user-home-symbolic", _("Go to the home location"), "win.go-home"));
 
-	/* current location */
+	/* Current location */
 
 	location_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	/* Translators: after the colon there is a folder name. */
@@ -5123,8 +5126,8 @@ fr_window_construct (FrWindow *window)
 			  window);
 	gtk_widget_set_margin_start (private->location_entry, 5);
 	gtk_widget_set_margin_end (private->location_entry, 5);
-	_gtk_box_pack_start (GTK_BOX (location_box), private->location_entry, TRUE, FALSE);
-	_gtk_box_pack_start (GTK_BOX (private->location_bar), location_box, TRUE, FALSE);
+	_gtk_box_pack_end (GTK_BOX (location_box), private->location_entry, TRUE, FALSE);
+	_gtk_box_pack_end (GTK_BOX (private->location_bar), location_box, TRUE, FALSE);
 
 	gtk_widget_show (private->location_bar);
 	fr_window_attach (FR_WINDOW (window), private->location_bar, FR_WINDOW_AREA_LOCATIONBAR);
