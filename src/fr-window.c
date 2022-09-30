@@ -62,7 +62,7 @@
 
 #define HIDE_PROGRESS_TIMEOUT_MSECS 500
 #define DEFAULT_NAME_COLUMN_WIDTH 250
-#define OTHER_COLUMNS_WIDTH 100
+#define OTHER_COLUMNS_WIDTH 150
 #define RECENT_ITEM_MAX_WIDTH 25
 
 #define DEF_WIN_WIDTH 600
@@ -1722,7 +1722,7 @@ fr_window_update_dir_tree (FrWindow *window)
 
 	/**/
 
-	icon = g_content_type_get_icon (MIME_TYPE_ARCHIVE);
+	icon = g_content_type_get_symbolic_icon (MIME_TYPE_ARCHIVE);
 	{
 		GtkTreeIter  node;
 		char        *name;
@@ -1744,7 +1744,7 @@ fr_window_update_dir_tree (FrWindow *window)
 
 	/**/
 
-	icon = g_content_type_get_icon (MIME_TYPE_DIRECTORY);
+	icon = g_content_type_get_symbolic_icon (MIME_TYPE_DIRECTORY);
 	for (guint i = 0; i < dirs->len; i++) {
 		char        *dir = g_ptr_array_index (dirs, i);
 		char        *parent_dir;
@@ -3638,7 +3638,7 @@ file_motion_notify_callback (GtkWidget *widget,
 
 	gtk_tree_path_free (last_hover_path);
 
- 	return FALSE;
+	return FALSE;
 }
 
 
@@ -4297,6 +4297,11 @@ add_dir_tree_columns (FrWindow    *window,
 					     "gicon", TREE_COLUMN_ICON,
 					     NULL);
 
+	g_value_init (&value, G_TYPE_INT);
+	g_value_set_int (&value, 5);
+	g_object_set_property (G_OBJECT (renderer), "xpad", &value);
+	g_value_unset (&value);
+
 	/* name */
 
 	renderer = gtk_cell_renderer_text_new ();
@@ -4304,6 +4309,11 @@ add_dir_tree_columns (FrWindow    *window,
 	g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
 	g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
 	g_object_set_property (G_OBJECT (renderer), "ellipsize", &value);
+	g_value_unset (&value);
+
+	g_value_init (&value, G_TYPE_INT);
+	g_value_set_int (&value, 5);
+	g_object_set_property (G_OBJECT (renderer), "ypad", &value);
 	g_value_unset (&value);
 
 	gtk_tree_view_column_pack_start (column,
@@ -4325,11 +4335,13 @@ static void
 add_file_list_columns (FrWindow    *window,
 		       GtkTreeView *treeview)
 {
-	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	static char       *titles[] = {NC_("File", "Size"),
-				       NC_("File", "Type"),
-				       NC_("File", "Modified"),
-				       NC_("File", "Location")};
+	FrWindowPrivate   *private = fr_window_get_instance_private (window);
+	static char       *titles[] = {
+		NC_("File", "Size"),
+		NC_("File", "Type"),
+		NC_("File", "Modified"),
+		NC_("File", "Location")
+	};
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
 	GValue             value = { 0, };
@@ -4339,6 +4351,7 @@ add_file_list_columns (FrWindow    *window,
 
 	private->filename_column = column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_title (column, C_("File", "Name"));
+	gtk_tree_view_column_set_resizable (column, TRUE);
 
 	/* emblem */
 
@@ -4356,15 +4369,25 @@ add_file_list_columns (FrWindow    *window,
 					     "gicon", COLUMN_ICON,
 					     NULL);
 
+	g_value_init (&value, G_TYPE_INT);
+	g_value_set_int (&value, 5);
+	g_object_set_property (G_OBJECT (renderer), "xpad", &value);
+	g_value_unset (&value);
+
 	/* name */
 
-	private->single_click = is_single_click_policy (window);
+	private->single_click = FALSE;
 
 	renderer = gtk_cell_renderer_text_new ();
 
 	g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
 	g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
 	g_object_set_property (G_OBJECT (renderer), "ellipsize", &value);
+	g_value_unset (&value);
+
+	g_value_init (&value, G_TYPE_INT);
+	g_value_set_int (&value, 5);
+	g_object_set_property (G_OBJECT (renderer), "ypad", &value);
 	g_value_unset (&value);
 
 	gtk_tree_view_column_pack_start (column,
@@ -4390,23 +4413,37 @@ add_file_list_columns (FrWindow    *window,
 	/* Other columns */
 
 	for (guint j = 0, i = COLUMN_SIZE; i < NUMBER_OF_COLUMNS; i++, j++) {
-		GValue  value = { 0, };
-
 		renderer = gtk_cell_renderer_text_new ();
 		column = gtk_tree_view_column_new_with_attributes (g_dpgettext2 (NULL, "File", titles[j]),
 								   renderer,
 								   "text", i,
 								   NULL);
 
-		gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-		gtk_tree_view_column_set_fixed_width (column, OTHER_COLUMNS_WIDTH);
-		gtk_tree_view_column_set_resizable (column, TRUE);
+		if ((i == COLUMN_SIZE) || (i == COLUMN_TIME)) {
+			gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+			gtk_tree_view_column_set_resizable (column, FALSE);
+		}
+		else {
+			gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+			gtk_tree_view_column_set_min_width (column, OTHER_COLUMNS_WIDTH);
+			gtk_tree_view_column_set_resizable (column, TRUE);
+		}
 
 		gtk_tree_view_column_set_sort_column_id (column, FR_WINDOW_SORT_BY_NAME + 1 + j);
 
 		g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
 		g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
 		g_object_set_property (G_OBJECT (renderer), "ellipsize", &value);
+		g_value_unset (&value);
+
+		g_value_init (&value, G_TYPE_INT);
+		g_value_set_int (&value, 5);
+		g_object_set_property (G_OBJECT (renderer), "ypad", &value);
+		g_value_unset (&value);
+
+		g_value_init (&value, G_TYPE_INT);
+		g_value_set_int (&value, 5);
+		g_object_set_property (G_OBJECT (renderer), "xpad", &value);
 		g_value_unset (&value);
 
 		gtk_tree_view_append_column (treeview, column);
@@ -4967,6 +5004,8 @@ fr_window_construct (FrWindow *window)
 						       PANGO_TYPE_WEIGHT);
 	private->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (private->tree_store));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (private->tree_view), FALSE);
+	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (private->tree_view), FALSE);
+	gtk_tree_view_set_level_indentation (GTK_TREE_VIEW (private->tree_view), 15);
 	add_dir_tree_columns (window, GTK_TREE_VIEW (private->tree_view));
 
 	event_controller = gtk_event_controller_legacy_new ();
