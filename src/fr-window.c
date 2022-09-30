@@ -4812,6 +4812,8 @@ fr_window_construct (FrWindow *window)
 	GtkTreeSelection   *selection;
 	GtkSizeGroup       *header_bar_size_group;
 
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (window)), "devel");
+
 	/* Create the settings objects */
 
 	private->settings_listing = g_settings_new (FILE_ROLLER_SCHEMA_LISTING);
@@ -5130,7 +5132,7 @@ fr_window_construct (FrWindow *window)
 	/* location bar */
 
 	private->location_bar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-	_gtk_widget_set_margin (private->location_bar, 10);
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (private->location_bar)), "locationbar");
 
 	/* Navigation commands. */
 
