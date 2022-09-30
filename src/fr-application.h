@@ -24,8 +24,9 @@
 #define FR_APPLICATION_H
 
 #include <gtk/gtk.h>
+#include <adwaita.h>
 
-G_DECLARE_FINAL_TYPE (FrApplication, fr_application, FR, APPLICATION, GtkApplication)
+G_DECLARE_FINAL_TYPE (FrApplication, fr_application, FR, APPLICATION, AdwApplication)
 
 GtkApplication * fr_application_new           (void);
 

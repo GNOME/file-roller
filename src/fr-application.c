@@ -365,7 +365,7 @@ static const GDBusInterfaceVTable interface_vtable = {
 
 
 struct _FrApplication {
-	GtkApplication  parent_instance;
+	AdwApplication  parent_instance;
 	GDBusNodeInfo  *introspection_data;
 	guint           owner_id;
 	GSettings      *listing_settings;
@@ -373,7 +373,7 @@ struct _FrApplication {
 };
 
 
-G_DEFINE_TYPE (FrApplication, fr_application, GTK_TYPE_APPLICATION)
+G_DEFINE_TYPE (FrApplication, fr_application, ADW_TYPE_APPLICATION)
 
 
 static void
@@ -750,10 +750,11 @@ fr_application_init (FrApplication *self)
 GtkApplication *
 fr_application_new (void)
 {
-        return g_object_new (fr_application_get_type (),
-                             "application-id", "org.gnome.FileRoller",
-                             "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
-                             NULL);
+	return g_object_new (fr_application_get_type (),
+			     "application-id", "org.gnome.FileRoller",
+			     "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
+			     "resource-base-path", "/org/gnome/FileRoller/",
+			     NULL);
 }
 
 

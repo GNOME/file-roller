@@ -133,6 +133,7 @@ fr_exe = executable(
     glib_dep,
     gthread_dep,
     gtk_dep,
+    libadwaita_dep,
     use_native_appchooser ? libportal_dep : [],
     use_native_appchooser ? libportal_gtk4_dep : [],
     build_introspection ? gobject_introspection_dep : [],
