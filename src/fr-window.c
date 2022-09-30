@@ -312,7 +312,7 @@ typedef struct {
 	char             *drag_base_dir;
 	GError           *drag_error;
 	GList            *drag_file_list;        /* the list of files we are
-					 	  * dragging*/
+						  * dragging*/
 	gboolean	  dnd_extract_is_running;
 	gboolean	  dnd_extract_finished_with_error;
 
@@ -341,7 +341,7 @@ typedef struct {
 	/* batch mode data */
 
 	gboolean          batch_mode;          /* whether we are in a non interactive
-					 	* mode. */
+						* mode. */
 	GList            *batch_action_list;   /* FrBatchAction * elements */
 	GList            *batch_action;        /* current action. */
 	char             *batch_title;
@@ -587,7 +587,7 @@ fr_window_close (FrWindow *window)
 
 static void
 unset_dialog (GtkWidget *object,
-              gpointer   user_data)
+	      gpointer   user_data)
 {
 	FrWindow   *window = user_data;
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
@@ -785,29 +785,29 @@ fr_window_class_init (FrWindowClass *klass)
 		g_signal_newv ("archive-loaded",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
-		               /* class_closure = */ NULL,
+			      /* class_closure = */ NULL,
 			      NULL, NULL,
 			      fr_marshal_VOID__BOOLEAN,
 			      G_TYPE_NONE, 1,
-		              archive_loaded_types);
+			      archive_loaded_types);
 	fr_window_signals[PROGRESS] =
 		g_signal_newv ("progress",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
-		              /* class_closure = */ NULL,
+			      /* class_closure = */ NULL,
 			      NULL, NULL,
 			      fr_marshal_VOID__DOUBLE_STRING,
 			      G_TYPE_NONE, 2,
-		              progress_types);
+			      progress_types);
 	fr_window_signals[READY] =
 		g_signal_newv ("ready",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
-		              /* class_closure = */ NULL,
+			      /* class_closure = */ NULL,
 			      NULL, NULL,
 			      fr_marshal_VOID__POINTER,
 			      G_TYPE_NONE, 1,
-		              ready_types);
+			      ready_types);
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_window_finalize;
@@ -932,20 +932,20 @@ fr_window_history_add (FrWindow   *window,
 		GList *scan;
 		GList *new_current = NULL;
 
-                /* search the path in the history */
-                for (scan = private->history_current; scan; scan = scan->next) {
-                        char *path_in_history = scan->data;
+		/* search the path in the history */
+		for (scan = private->history_current; scan; scan = scan->next) {
+			char *path_in_history = scan->data;
 
-                        if (g_strcmp0 (path, path_in_history) == 0) {
-                        	new_current = scan;
-                        	break;
-                        }
-                }
+			if (g_strcmp0 (path, path_in_history) == 0) {
+				new_current = scan;
+				break;
+			}
+		}
 
-                if (new_current != NULL) {
-                	private->history_current = new_current;
-                }
-                else {
+		if (new_current != NULL) {
+			private->history_current = new_current;
+		}
+		else {
 			/* remove all the paths after the current position */
 			for (scan = private->history; scan && (scan != private->history_current); /* void */) {
 				GList *next = scan->next;
@@ -958,7 +958,7 @@ fr_window_history_add (FrWindow   *window,
 
 			private->history = g_list_prepend (private->history, g_strdup (path));
 			private->history_current = private->history;
-                }
+		}
 	}
 }
 
@@ -1447,8 +1447,8 @@ fr_window_populate_file_list (FrWindow  *window,
 					      &sort_column_id,
 					      &order);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (private->list_store),
-	 				      GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
-	 				      0);
+					      GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
+					      0);
 
 	for (guint i = 0; i < files->len; i++) {
 		FrFileData *fdata = g_ptr_array_index (files, i);
@@ -2474,8 +2474,8 @@ open_progress_dialog (FrWindow *window,
 
 static void
 fr_archive_progress_cb (FrArchive *archive,
-		        double     fraction,
-		        FrWindow  *window)
+			double     fraction,
+			FrWindow  *window)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	private->progress_pulse = (fraction < 0.0);
@@ -3126,7 +3126,7 @@ _archive_operation_started (FrWindow *window,
  */
 static GList *
 get_dir_list_from_path (FrWindow *window,
-	      		char     *path)
+			char     *path)
 {
 	char  *dirname;
 	size_t dirname_l;
@@ -3654,7 +3654,7 @@ file_leave_notify_callback (GtkWidget *widget,
 	if (private->single_click && (private->list_hover_path != NULL)) {
 		gtk_tree_model_get_iter (GTK_TREE_MODEL (private->list_store),
 					 &iter,
-		                         private->list_hover_path);
+					 private->list_hover_path);
 		gtk_tree_model_row_changed (GTK_TREE_MODEL (private->list_store),
 					    private->list_hover_path,
 					    &iter);
@@ -3698,9 +3698,9 @@ static void fr_window_paste_from_clipboard_data (FrWindow *window, FrClipboardDa
 
 gboolean
 fr_window_create_archive_and_continue (FrWindow   *window,
-			  	       GFile      *file,
-			  	       const char *mime_type,
-			  	       GtkWindow  *error_dialog_parent)
+				       GFile      *file,
+				       const char *mime_type,
+				       GtkWindow  *error_dialog_parent)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	gboolean result = FALSE;
@@ -3845,7 +3845,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 					   NULL);
 		_gtk_dialog_run (GTK_DIALOG (d));
 
- 		return;
+		return;
 	}
 
 	one_file = (list->next == NULL);
@@ -3881,8 +3881,8 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 				fr_window_archive_add_dropped_items (window, list);
 			else if (r == 1)  /* Open */
 				fr_window_archive_open (window, G_FILE (list->data), GTK_WINDOW (window));
- 		}
- 		else
+		}
+		else
 			fr_window_archive_add_dropped_items (window, list);
 	}
 	else {
@@ -4471,9 +4471,9 @@ name_column_sort_func (GtkTreeModel *model,
 		result = strcmp (fdata1->sort_key, fdata2->sort_key);
 	}
 	else {
-        	result = fr_file_data_is_dir (fdata1) ? -1 : 1;
-        	if (sort_order == GTK_SORT_DESCENDING)
-        		result = -1 * result;
+		result = fr_file_data_is_dir (fdata1) ? -1 : 1;
+		if (sort_order == GTK_SORT_DESCENDING)
+			result = -1 * result;
 	}
 
 	return result;
@@ -4498,17 +4498,17 @@ size_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
 	if (fr_file_data_is_dir (fdata1) == fr_file_data_is_dir (fdata2)) {
-        	if (fr_file_data_is_dir (fdata1))
+		if (fr_file_data_is_dir (fdata1))
 			size_difference = fdata1->dir_size - fdata2->dir_size;
-        	else
+		else
 			size_difference = fdata1->size - fdata2->size;
 		result = (size_difference > 0) - (size_difference < 0);
-        }
-        else {
-        	result = fr_file_data_is_dir (fdata1) ? -1 : 1;
-        	if (sort_order == GTK_SORT_DESCENDING)
-        		result = -1 * result;
-        }
+	}
+	else {
+		result = fr_file_data_is_dir (fdata1) ? -1 : 1;
+		if (sort_order == GTK_SORT_DESCENDING)
+			result = -1 * result;
+	}
 
 	return result;
 }
@@ -4531,26 +4531,26 @@ type_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
 	if (fr_file_data_is_dir (fdata1) == fr_file_data_is_dir (fdata2)) {
-        	if (fr_file_data_is_dir (fdata1)) {
-                	result = strcmp (fdata1->sort_key, fdata2->sort_key);
-                	if (sort_order == GTK_SORT_DESCENDING)
-                		result = -1 * result;
-        	}
-        	else {
-        		const char  *desc1, *desc2;
+		if (fr_file_data_is_dir (fdata1)) {
+			result = strcmp (fdata1->sort_key, fdata2->sort_key);
+			if (sort_order == GTK_SORT_DESCENDING)
+				result = -1 * result;
+		}
+		else {
+			const char  *desc1, *desc2;
 
-        		desc1 = g_content_type_get_description (fdata1->content_type);
-        		desc2 = g_content_type_get_description (fdata2->content_type);
-        		result = strcasecmp (desc1, desc2);
-        		if (result == 0)
-        			result = strcmp (fdata1->sort_key, fdata2->sort_key);
-        	}
-        }
-        else {
-        	result = fr_file_data_is_dir (fdata1) ? -1 : 1;
-        	if (sort_order == GTK_SORT_DESCENDING)
-        		result = -1 * result;
-        }
+			desc1 = g_content_type_get_description (fdata1->content_type);
+			desc2 = g_content_type_get_description (fdata2->content_type);
+			result = strcasecmp (desc1, desc2);
+			if (result == 0)
+				result = strcmp (fdata1->sort_key, fdata2->sort_key);
+		}
+	}
+	else {
+		result = fr_file_data_is_dir (fdata1) ? -1 : 1;
+		if (sort_order == GTK_SORT_DESCENDING)
+			result = -1 * result;
+	}
 
 	return result;
 }
@@ -4573,19 +4573,19 @@ time_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
 	if (fr_file_data_is_dir (fdata1) == fr_file_data_is_dir (fdata2)) {
-        	if (fr_file_data_is_dir (fdata1)) {
-                	result = strcmp (fdata1->sort_key, fdata2->sort_key);
-                	if (sort_order == GTK_SORT_DESCENDING)
-                		result = -1 * result;
-        	}
-        	else
-        		result = fdata1->modified - fdata2->modified;
-        }
-        else {
-        	result = fr_file_data_is_dir (fdata1) ? -1 : 1;
-        	if (sort_order == GTK_SORT_DESCENDING)
-        		result = -1 * result;
-        }
+		if (fr_file_data_is_dir (fdata1)) {
+			result = strcmp (fdata1->sort_key, fdata2->sort_key);
+			if (sort_order == GTK_SORT_DESCENDING)
+				result = -1 * result;
+		}
+		else
+			result = fdata1->modified - fdata2->modified;
+	}
+	else {
+		result = fr_file_data_is_dir (fdata1) ? -1 : 1;
+		if (sort_order == GTK_SORT_DESCENDING)
+			result = -1 * result;
+	}
 
 	return result;
 }
@@ -4793,8 +4793,8 @@ fr_window_add_accelerators (FrWindow                 *window,
 		const FrAccelerator *acc = accelerators + i;
 
 		_gtk_add_accelerator_for_action (acc->action_name,
-						        acc->accelerator,
-						        NULL);
+						 acc->accelerator,
+						 NULL);
 	}
 }
 
@@ -5074,15 +5074,15 @@ fr_window_construct (FrWindow *window)
 	fr_window_attach (FR_WINDOW (window), private->paned, FR_WINDOW_AREA_CONTENTS);
 	gtk_widget_show (private->paned);
 
-        /* ui actions */
+	/* ui actions */
 
-        g_action_map_add_action_entries (G_ACTION_MAP (window),
-                                         fr_window_actions,
-                                         G_N_ELEMENTS (fr_window_actions),
-                                         window);
-        fr_window_add_accelerators (window,
-                                    fr_window_accelerators,
-                                    G_N_ELEMENTS (fr_window_accelerators));
+	g_action_map_add_action_entries (G_ACTION_MAP (window),
+					 fr_window_actions,
+					 G_N_ELEMENTS (fr_window_actions),
+					 window);
+	fr_window_add_accelerators (window,
+				    fr_window_accelerators,
+				    G_N_ELEMENTS (fr_window_accelerators));
 
 	/* header bar */
 
@@ -5103,25 +5103,25 @@ fr_window_construct (FrWindow *window)
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_start (GTK_HEADER_BAR (private->headerbar), button);
 
-        /* gears menu button */
+	/* gears menu button */
 
-        {
-                GtkBuilder *builder;
-                GMenuModel *menu;
+	{
+		GtkBuilder *builder;
+		GMenuModel *menu;
 
-                builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "gears-menu.ui");
-                menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
-                button = _gtk_menu_button_new_for_header_bar ();
-                gtk_size_group_add_widget (header_bar_size_group, button);
-                gtk_menu_button_set_direction (GTK_MENU_BUTTON (button), GTK_ARROW_NONE);
-                gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
-                gtk_widget_show (button);
-                gtk_header_bar_pack_end (GTK_HEADER_BAR (private->headerbar), button);
+		builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "gears-menu.ui");
+		menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
+		button = _gtk_menu_button_new_for_header_bar ();
+		gtk_size_group_add_widget (header_bar_size_group, button);
+		gtk_menu_button_set_direction (GTK_MENU_BUTTON (button), GTK_ARROW_NONE);
+		gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
+		gtk_widget_show (button);
+		gtk_header_bar_pack_end (GTK_HEADER_BAR (private->headerbar), button);
 
-                _gtk_add_accelerators_from_menu (menu);
+		_gtk_add_accelerators_from_menu (menu);
 
-                g_object_unref (builder);
-        }
+		g_object_unref (builder);
+	}
 
 	button = _gtk_header_bar_create_image_toggle_button ("edit-find-symbolic", _("Find files by name"), "win.find");
 	gtk_size_group_add_widget (header_bar_size_group, button);
@@ -5347,8 +5347,8 @@ fr_window_archive_list (FrWindow *window)
 
 	_archive_operation_started (window, FR_ACTION_LISTING_CONTENT);
 	fr_archive_list (window->archive,
-	                 private->password,
-	                 private->cancellable,
+			 private->password,
+			 private->cancellable,
 			 archive_list_ready_cb,
 			 window);
 }
@@ -5406,7 +5406,7 @@ fr_window_archive_open (FrWindow   *current_window,
 					    (GFreeFunc) g_object_unref);
 
 	fr_archive_open (file,
-	                 private->cancellable,
+			 private->cancellable,
 			 archive_open_ready_cb,
 			 window);
 
@@ -6045,7 +6045,7 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 						 G_FILE_ATTRIBUTE_STANDARD_TYPE "," G_FILE_ATTRIBUTE_STANDARD_NAME "," G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
 						 G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
 						 G_PRIORITY_DEFAULT,
-			                         win_private->cancellable,
+						 win_private->cancellable,
 						 query_info_ready_for_overwrite_dialog_cb,
 						 odata);
 
@@ -6419,8 +6419,8 @@ fr_window_archive_test (FrWindow *window)
 					    NULL,
 					    NULL);
 	fr_archive_test (window->archive,
-	                 private->password,
-	                 private->cancellable,
+			 private->password,
+			 private->cancellable,
 			 archive_test_ready_cb,
 			 window);
 }
@@ -6769,7 +6769,7 @@ convert_data_new (GFile      *file,
 		  const char *mime_type,
 		  const char *password,
 		  gboolean    encrypt_header,
-	  	  guint       volume_size)
+		  guint       volume_size)
 {
 	ConvertData *cdata;
 
