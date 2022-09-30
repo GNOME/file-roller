@@ -112,5 +112,7 @@ void          _gtk_box_pack_end              (GtkBox     *box,
 					      gboolean    vexpand);
 void          _gtk_widget_set_margin         (GtkWidget  *widget,
 					      int         margin);
+void          _gtk_dialog_set_content        (GtkDialog  *dialog,
+					      GtkWidget  *content);
 
 #endif

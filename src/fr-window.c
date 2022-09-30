@@ -56,9 +56,8 @@
 #define ACTIVITY_PULSE_STEP (0.033)
 #define MAX_MESSAGE_LENGTH 50
 
-#define PROGRESS_DIALOG_DEFAULT_WIDTH 500
+#define PROGRESS_DIALOG_DEFAULT_WIDTH 600
 #define PROGRESS_TIMEOUT_MSECS 1000
-#define PROGRESS_BAR_HEIGHT 10
 #undef  LOG_PROGRESS
 
 #define HIDE_PROGRESS_TIMEOUT_MSECS 500
@@ -2380,11 +2379,11 @@ create_the_progress_dialog (FrWindow *window)
 
 	builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "progress-dialog.ui");
 	use_header_bar = _gtk_settings_get_dialogs_use_header ();
-	dialog = g_object_new (GTK_TYPE_DIALOG, "use-header-bar", use_header_bar, NULL);
-	_gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
-			     _gtk_builder_get_widget (builder, "progress_dialog_content"),
-			     TRUE,
-			     TRUE);
+	dialog = g_object_new (GTK_TYPE_DIALOG,
+			       "use-header-bar", use_header_bar,
+			       "default-width", PROGRESS_DIALOG_DEFAULT_WIDTH,
+			       NULL);
+	_gtk_dialog_set_content (GTK_DIALOG (dialog), _gtk_builder_get_widget (builder, "progress_dialog_content"));
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 	gtk_window_set_title (GTK_WINDOW (dialog), title);
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
@@ -2397,12 +2396,6 @@ create_the_progress_dialog (FrWindow *window)
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 				NULL);
-
-	if (use_header_bar) {
-		GtkWidget *header_bar = gtk_dialog_get_header_bar (GTK_DIALOG (dialog));
-		GtkWidget *cancel_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
-		gtk_header_bar_pack_end (GTK_HEADER_BAR (header_bar), cancel_button);
-	}
 
 	private->progress_dialog = dialog;
 	private->pd_action = _gtk_builder_get_widget (builder, "action_label");
