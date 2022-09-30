@@ -81,8 +81,6 @@ fr_headers = files(
   'fr-file-data.h',
   'fr-file-selector-dialog.h',
   'fr-init.h',
-  'fr-list-model.h',
-  'fr-location-bar.h',
   'fr-new-archive-dialog.h',
   'fr-process.h',
   'fr-window-actions-callbacks.h',
