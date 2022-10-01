@@ -7399,7 +7399,6 @@ fr_window_view_last_output (FrWindow   *window,
 			       NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
-	gtk_widget_set_size_request (dialog, 500, 300);
 
 	/* Add text */
 
@@ -7426,7 +7425,6 @@ fr_window_view_last_output (FrWindow   *window,
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled), text_view);
 	_gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE);
 
-	gtk_widget_show (vbox);
 	_gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), vbox, TRUE, TRUE);
 
 	/* signals */

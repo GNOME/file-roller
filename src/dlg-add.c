@@ -74,12 +74,7 @@ file_selector_response_cb (GtkDialog  *dialog,
 	const char  *exclude_folders;
 	GList       *files;
 
-	int width, height;
-	gtk_window_get_default_size (GTK_WINDOW (data->dialog), &width, &height);
-	if ((width > 0) && (height > 0)) {
-		g_settings_set_int (data->settings, PREF_ADD_DIALOG_WIDTH, width);
-		g_settings_set_int (data->settings, PREF_ADD_DIALOG_HEIGHT, height);
-	}
+	pref_util_save_window_geometry (GTK_WINDOW (data->dialog), "Add");
 
 	if (response == GTK_RESPONSE_NONE)
 		return;
@@ -249,11 +244,7 @@ dlg_add (FrWindow *window)
 			  data);
 
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
-	gtk_widget_show (data->dialog);
-
-	gtk_window_set_default_size (GTK_WINDOW (data->dialog),
-				     g_settings_get_int (data->settings, PREF_ADD_DIALOG_WIDTH),
-				     g_settings_get_int (data->settings, PREF_ADD_DIALOG_HEIGHT));
+	pref_util_restore_window_geometry (GTK_WINDOW (data->dialog), "Add");
 }
 
 

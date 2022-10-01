@@ -40,7 +40,7 @@ pref_util_save_window_geometry (GtkWindow  *window,
 	schema = g_strconcat (FILE_ROLLER_SCHEMA_DIALOGS, ".", dialog_id, NULL);
 	settings = g_settings_new (schema);
 
-	gtk_widget_get_size_request (GTK_WIDGET (window), &width, &height);
+	gtk_window_get_default_size (window, &width, &height);
 	g_settings_set_int (settings, "width", width);
 	g_settings_set_int (settings, "height", height);
 
@@ -63,9 +63,9 @@ pref_util_restore_window_geometry (GtkWindow  *window,
 
 	width = g_settings_get_int (settings, "width");
 	height = g_settings_get_int (settings, "height");
-	if ((width != -1) && (height != 1))
-		gtk_window_set_default_size (window, width, height);
 	gtk_window_present (window);
+	if ((width > 0) && (height > 0))
+		gtk_window_set_default_size (window, width, height);
 
 	g_object_unref (settings);
 	g_free (schema);
