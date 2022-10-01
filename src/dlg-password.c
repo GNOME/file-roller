@@ -59,7 +59,7 @@ response_cb (GtkDialog  *dialog,
 		gboolean   encrypt_header;
 
 		password = _gtk_entry_get_locale_text (GTK_ENTRY (GET_WIDGET ("password_entry")));
-		encrypt_header = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")));
+		encrypt_header = gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")));
 		fr_window_archive_encrypt (data->window, password, encrypt_header);
 
 		g_free (password);
@@ -89,8 +89,10 @@ dlg_password (GtkWidget *widget,
 				     "transient-for", GTK_WINDOW (window),
 				     "modal", TRUE,
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
+				     "title", _("Password"),
 				     NULL);
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
+	_gtk_widget_set_margin (content_area, 20);
 	gtk_box_append (GTK_BOX (content_area), GET_WIDGET ("password_vbox"));
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
@@ -110,8 +112,8 @@ dlg_password (GtkWidget *widget,
 	_gtk_entry_use_as_password_entry (GTK_ENTRY (GET_WIDGET ("password_entry")));
 	_gtk_entry_set_locale_text (GTK_ENTRY (GET_WIDGET ("password_entry")),
 				    fr_window_get_password (window));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
-				      fr_window_get_encrypt_header (window));
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
+				     fr_window_get_encrypt_header (window));
 
 	if (! fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_ENCRYPT_HEADER)) {
 		gtk_check_button_set_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), TRUE);
