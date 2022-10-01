@@ -221,15 +221,15 @@ extract_cb_start_extracting (DialogData *data)
 
 	fr_window_set_extract_default_dir (window, destination);
 
-	skip_newer = ! gtk_check_button_get_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton")));
-	junk_paths = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_structure_checkbutton")));
+	skip_newer = ! gtk_check_button_get_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))) && gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("keep_newer_checkbutton")));
+	junk_paths = ! gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("keep_structure_checkbutton")));
 
 	if (! gtk_check_button_get_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))))
 		g_settings_set_boolean (data->settings, PREF_EXTRACT_SKIP_NEWER, skip_newer);
 	g_settings_set_boolean (data->settings, PREF_EXTRACT_RECREATE_FOLDERS, ! junk_paths);
 
-	selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("selected_files_radiobutton")));
-	pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("file_pattern_radiobutton")));
+	selected_files = gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("selected_files_radiobutton")));
+	pattern_files = gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("file_pattern_radiobutton")));
 
 	/* create the file list. */
 
@@ -295,8 +295,8 @@ static void
 files_entry_changed_cb (GtkEditable  *widget,
 			DialogData *data)
 {
-	if (! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("file_pattern_radiobutton"))))
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("file_pattern_radiobutton")), TRUE);
+	if (! gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("file_pattern_radiobutton"))))
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("file_pattern_radiobutton")), TRUE);
 }
 
 
@@ -336,14 +336,14 @@ dlg_extract__common (FrWindow *window,
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->dialog), fr_window_get_extract_default_dir (window), NULL);
 
 	if (data->selected_files != NULL)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("selected_files_radiobutton")), TRUE);
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("selected_files_radiobutton")), TRUE);
 	else {
 		gtk_widget_set_sensitive (GET_WIDGET ("selected_files_radiobutton"), FALSE);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("all_files_radiobutton")), TRUE);
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("all_files_radiobutton")), TRUE);
 	}
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_SKIP_NEWER));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_structure_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_RECREATE_FOLDERS));
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("keep_newer_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_SKIP_NEWER));
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("keep_structure_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_RECREATE_FOLDERS));
 
 	/* Set the signals handlers. */
 
