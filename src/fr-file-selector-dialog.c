@@ -21,6 +21,7 @@
 
 #include <config.h>
 #include "fr-file-selector-dialog.h"
+#include "fr-location-bar.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
@@ -96,16 +97,16 @@ load_data_free (LoadData *load_data)
 
 
 struct _FrFileSelectorDialog {
-	GtkDialog      parent_instance;
-	GtkBuilder    *builder;
-	GtkWidget     *extra_widget;
-	GFile         *current_folder;
-	LoadData      *current_operation;
-	GSettings     *settings;
-	gboolean       show_hidden;
+	GtkDialog           parent_instance;
+	GtkBuilder         *builder;
+	GtkWidget          *extra_widget;
+	GFile              *current_folder;
+	LoadData           *current_operation;
+	GSettings          *settings;
+	gboolean            show_hidden;
 	GSimpleActionGroup *action_map;
-	GtkPopover *file_context_menu;
-
+	GtkPopover         *file_context_menu;
+	GtkWidget          *location_bar;
 };
 
 
@@ -135,8 +136,6 @@ static void
 set_current_folder (FrFileSelectorDialog *self,
 		    GFile                *folder)
 {
-	char *folder_name;
-
 	if (folder != self->current_folder) {
 		_g_object_unref (self->current_folder);
 		self->current_folder = g_object_ref (folder);
@@ -145,10 +144,7 @@ set_current_folder (FrFileSelectorDialog *self,
 	if (self->current_folder == NULL)
 		return;
 
-	folder_name = g_file_get_parse_name (folder);
-	gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("location_entry")), folder_name);
-	g_free (folder_name);
-
+	fr_location_bar_set_location (FR_LOCATION_BAR (self->location_bar), folder);
 	//gtk_places_sidebar_set_location (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")), folder);
 }
 
@@ -418,7 +414,6 @@ is_selected_cellrenderertoggle_toggled_cb (GtkCellRendererToggle *cell_renderer,
 	GtkTreeIter           iter;
 	gboolean              is_selected;
 
-
 	list_store = GTK_LIST_STORE (GET_WIDGET ("files_liststore"));
 	tree_path = gtk_tree_path_new_from_string (path);
 	if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, tree_path)) {
@@ -467,22 +462,11 @@ files_treeview_row_activated_cb (GtkTreeView       *tree_view,
 
 
 static void
-go_up_button_clicked_cb (GtkButton *button,
-			 gpointer   user_data)
+location_bar_changed_cb (FrLocationBar *location_bar,
+			 gpointer       user_data)
 {
 	FrFileSelectorDialog *self = user_data;
-	GFile                *parent;
-
-	if (self->current_folder == NULL)
-		return;
-
-	parent = g_file_get_parent (self->current_folder);
-	if (parent == NULL)
-		return;
-
-	fr_file_selector_dialog_set_current_folder (self, parent);
-
-	g_object_unref (parent);
+	fr_file_selector_dialog_set_current_folder (self, fr_location_bar_get_location (location_bar));
 }
 
 
@@ -631,6 +615,14 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_MODIFIED, files_modified_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, GTK_SORT_ASCENDING);
 
+	self->location_bar = fr_location_bar_new ();
+	gtk_widget_show (self->location_bar);
+	_gtk_box_pack_start (GTK_BOX (GET_WIDGET ("content_box")), self->location_bar, TRUE, FALSE);
+	g_signal_connect (self->location_bar,
+			  "changed",
+			  G_CALLBACK (location_bar_changed_cb),
+			  self);
+
 	g_signal_connect (GTK_CELL_RENDERER_TOGGLE (GET_WIDGET ("is_selected_cellrenderertoggle")),
 			  "toggled",
 			  G_CALLBACK (is_selected_cellrenderertoggle_toggled_cb),
@@ -638,10 +630,6 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	g_signal_connect (GTK_TREE_VIEW (GET_WIDGET ("files_treeview")),
 			  "row-activated",
 			  G_CALLBACK (files_treeview_row_activated_cb),
-			  self);
-	g_signal_connect (GTK_BUTTON (GET_WIDGET ("go_up_button")),
-			  "clicked",
-			  G_CALLBACK (go_up_button_clicked_cb),
 			  self);
 	/*g_signal_connect (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")),
 			  "open-location",
@@ -843,7 +831,6 @@ get_folder_content_done_cb (GError   *error,
 		g_free (modified);
 		g_date_time_unref (datetime);
 		g_free (size);
-		_g_object_unref (icon);
 	}
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), sort_column_id, sort_order);

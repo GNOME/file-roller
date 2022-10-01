@@ -21,7 +21,7 @@
   </menu>
   <object class="GtkListStore" id="files_liststore">
     <columns>
-      <column type="GdkPixbuf"/>
+      <column type="GIcon"/>
       <column type="gchararray"/>
       <column type="gchararray"/>
       <column type="gchararray"/>
@@ -35,7 +35,7 @@
   </object>
   <object class="GtkListStore" id="places_liststore">
     <columns>
-      <column type="GdkPixbuf"/>
+      <column type="GIcon"/>
       <column type="gchararray"/>
       <column type="GObject"/>
       <column type="gboolean"/>
@@ -47,49 +47,14 @@
     <property name="orientation">vertical</property>
     <property name="spacing">12</property>
     <child>
-      <object class="GtkBox" id="box2">
+      <object class="GtkBox" id="content_box">
         <property name="vexpand">1</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
-        <child>
-          <object class="GtkBox" id="toolbox">
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel" id="label1">
-                <property name="label" translatable="1">_Location:</property>
-                <property name="use_underline">1</property>
-                <property name="mnemonic_widget">location_entry</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkEntry" id="location_entry">
-                <property name="hexpand">1</property>
-                <property name="focusable">1</property>
-                <property name="invisible_char">●</property>
-                <property name="primary_icon_name">folder</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="go_up_button">
-                <property name="halign">center</property>
-                <property name="focusable">1</property>
-                <property name="receives_default">1</property>
-                <property name="has_tooltip">1</property>
-                <property name="tooltip_markup" translatable="1">Go up one level</property>
-                <property name="tooltip_text" translatable="1">Go up one level</property>
-                <property name="relief">none</property>
-                <child>
-                  <object class="GtkImage" id="image1">
-                    <property name="icon_name">go-up-symbolic</property>
-                    <property name="icon_size">large</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
         <child>
           <object class="GtkPaned" id="main_paned">
+            <style>
+              <class name="borders-top-bottom"/>
+            </style>
             <property name="vexpand">1</property>
             <property name="resize-start-child">0</property>
             <property name="focusable">1</property>
@@ -119,20 +84,25 @@
                         <property name="reorderable">1</property>
                         <property name="sort_column_id">1</property>
                         <child>
-                          <object class="GtkCellRendererToggle" id="is_selected_cellrenderertoggle"/>
+                          <object class="GtkCellRendererToggle" id="is_selected_cellrenderertoggle">
+                            <property name="xpad">5</property>
+                          </object>
                           <attributes>
                             <attribute name="active">9</attribute>
                           </attributes>
                         </child>
                         <child>
-                          <object class="GtkCellRendererPixbuf" id="cellrendererpixbuf2"/>
+                          <object class="GtkCellRendererPixbuf" id="cellrendererpixbuf2">
+                            <property name="xpad">5</property>
+                          </object>
                           <attributes>
-                            <attribute name="pixbuf">0</attribute>
+                            <attribute name="gicon">0</attribute>
                           </attributes>
                         </child>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext4">
                             <property name="ellipsize">end</property>
+                            <property name="ypad">5</property>
                           </object>
                           <attributes>
                             <attribute name="text">1</attribute>
@@ -142,14 +112,16 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="treeviewcolumn3">
-                        <property name="resizable">1</property>
-                        <property name="sizing">fixed</property>
-                        <property name="fixed_width">100</property>
+                        <property name="resizable">0</property>
+                        <property name="sizing">autosize</property>
                         <property name="title" translatable="1" context="File">Size</property>
                         <property name="reorderable">1</property>
                         <property name="sort_column_id">2</property>
                         <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext2"/>
+                          <object class="GtkCellRendererText" id="cellrenderertext2">
+                            <property name="xpad">5</property>
+                            <property name="ypad">5</property>
+                          </object>
                           <attributes>
                             <attribute name="text">2</attribute>
                           </attributes>
@@ -158,14 +130,16 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="treeviewcolumn4">
-                        <property name="resizable">1</property>
-                        <property name="sizing">fixed</property>
-                        <property name="fixed_width">100</property>
+                        <property name="resizable">0</property>
+                        <property name="sizing">autosize</property>
                         <property name="title" translatable="1" context="File">Modified</property>
                         <property name="reorderable">1</property>
                         <property name="sort_column_id">3</property>
                         <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext3"/>
+                          <object class="GtkCellRendererText" id="cellrenderertext3">
+                            <property name="xpad">5</property>
+                            <property name="ypad">5</property>
+                          </object>
                           <attributes>
                             <attribute name="text">3</attribute>
                           </attributes>
