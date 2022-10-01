@@ -2,9 +2,11 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="content">
-    <property name="border_width">15</property>
     <property name="orientation">vertical</property>
     <property name="spacing">24</property>
+    <style>
+      <class name="dialog-content"/>
+    </style>
     <child>
       <object class="GtkBox" id="box1">
         <property name="orientation">vertical</property>

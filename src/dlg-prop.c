@@ -50,7 +50,6 @@ dlg_prop (FrWindow *window)
 {
 	DialogData *data;
 	GtkWidget  *label;
-	GtkWidget  *table;
 	GFile      *parent;
 	char       *uri;
 	char       *markup;
@@ -64,10 +63,6 @@ dlg_prop (FrWindow *window)
 
 	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "properties.ui");
 
-	/* Get the widgets. */
-	table = _gtk_builder_get_widget (data->builder, "content");
-	_gtk_widget_set_margin (table, 20);
-
 	/* Make the dialog */
 
 	data->dialog = g_object_new (GTK_TYPE_DIALOG,
@@ -76,7 +71,8 @@ dlg_prop (FrWindow *window)
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     NULL);
 
-	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))), table);
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))),
+			_gtk_builder_get_widget (data->builder, "content"));
 
 	/* Set widgets data. */
 

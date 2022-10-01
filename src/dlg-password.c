@@ -75,7 +75,6 @@ dlg_password (GtkWidget *widget,
 {
 	FrWindow   *window = callback_data;
 	DialogData *data;
-	GtkWidget  *content_area;
 	char       *basename;
 	char       *title;
 
@@ -91,9 +90,7 @@ dlg_password (GtkWidget *widget,
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     "title", _("Password"),
 				     NULL);
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
-	_gtk_widget_set_margin (content_area, 20);
-	gtk_box_append (GTK_BOX (content_area), GET_WIDGET ("password_vbox"));
+	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))), GET_WIDGET ("password_vbox"));
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 				_GTK_LABEL_SAVE, GTK_RESPONSE_OK,

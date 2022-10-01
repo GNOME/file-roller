@@ -7426,7 +7426,7 @@ fr_window_view_last_output (FrWindow   *window,
 	/**/
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	_gtk_widget_set_margin (GTK_WIDGET (vbox), 10);
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (vbox)), "dialog-content");
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled), text_view);
 	_gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE);
 	_gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), vbox, TRUE, TRUE);
