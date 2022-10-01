@@ -145,7 +145,13 @@ fr_application_activate_quit (GSimpleAction *action,
 			      GVariant      *parameter,
 			      gpointer       user_data)
 {
-	g_application_quit (G_APPLICATION (user_data));
+	GList *windows;
+	GList *scan;
+
+	windows = g_list_copy (gtk_application_get_windows (GTK_APPLICATION (user_data)));
+	for (scan = windows; scan; scan = scan->next)
+		fr_window_close (FR_WINDOW (scan->data));
+	g_list_free (windows);
 }
 
 

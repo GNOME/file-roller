@@ -565,7 +565,7 @@ fr_window_close (FrWindow *window)
 	if (gtk_widget_get_realized (GTK_WIDGET (window))) {
 		int width, height;
 
-		gtk_widget_get_size_request (GTK_WIDGET (window), &width, &height);
+		gtk_window_get_default_size (GTK_WINDOW (window), &width, &height);
 		if ((width > 0) && (height > 0)) {
 			g_settings_set_int (private->settings_ui, PREF_UI_WINDOW_WIDTH, width);
 			g_settings_set_int (private->settings_ui, PREF_UI_WINDOW_HEIGHT, height);
@@ -2125,7 +2125,7 @@ progress_dialog_response (GtkDialog *dialog,
 		break;
 	case DIALOG_RESPONSE_OPEN_ARCHIVE:
 		new_window = fr_window_new ();
-		gtk_widget_show (new_window);
+		gtk_window_present (GTK_WINDOW (new_window));
 		fr_window_archive_open (FR_WINDOW (new_window), saved_file, GTK_WINDOW (new_window));
 		close_progress_dialog (window, TRUE);
 		break;
@@ -2568,7 +2568,7 @@ confirmation_dialog_response (GtkDialog *dialog,
 
 	case DIALOG_RESPONSE_OPEN_ARCHIVE:
 		new_window = fr_window_new ();
-		gtk_widget_show (new_window);
+		gtk_window_present (GTK_WINDOW (new_window));
 		fr_window_archive_open (FR_WINDOW (new_window), saved_file, GTK_WINDOW (new_window));
 		fr_window_close_confirmation_dialog (window, dialog);
 		break;
@@ -4619,6 +4619,15 @@ path_column_sort_func (GtkTreeModel *model,
 }
 
 
+static gboolean
+fr_window_close_request_cb (GtkWindow *window,
+			    gpointer   user_data)
+{
+	fr_window_close (FR_WINDOW (window));
+	return TRUE;
+}
+
+
 static void
 fr_window_show_cb (GtkWidget *widget,
 		   FrWindow  *window)
@@ -4831,10 +4840,13 @@ fr_window_construct (FrWindow *window)
 
 	private->layout = gtk_grid_new ();
 	gtk_window_set_child (GTK_WINDOW (window), private->layout);
-	gtk_widget_show (private->layout);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
 
+	g_signal_connect (G_OBJECT (window),
+			  "close-request",
+			  G_CALLBACK (fr_window_close_request_cb),
+			  window);
 	g_signal_connect (window,
 			  "show",
 			  G_CALLBACK (fr_window_show_cb),
@@ -5077,7 +5089,6 @@ fr_window_construct (FrWindow *window)
 			  window);*/
 
 	fr_window_attach (FR_WINDOW (window), private->paned, FR_WINDOW_AREA_CONTENTS);
-	gtk_widget_show (private->paned);
 
 	/* ui actions */
 
@@ -5092,7 +5103,6 @@ fr_window_construct (FrWindow *window)
 	/* header bar */
 
 	private->headerbar = gtk_header_bar_new ();
-	gtk_widget_show (private->headerbar);
 	gtk_header_bar_set_show_title_buttons (GTK_HEADER_BAR (private->headerbar), TRUE);
 	gtk_window_set_titlebar (GTK_WINDOW (window), private->headerbar);
 
@@ -5120,7 +5130,6 @@ fr_window_construct (FrWindow *window)
 		gtk_size_group_add_widget (header_bar_size_group, button);
 		gtk_menu_button_set_direction (GTK_MENU_BUTTON (button), GTK_ARROW_NONE);
 		gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
-		gtk_widget_show (button);
 		gtk_header_bar_pack_end (GTK_HEADER_BAR (private->headerbar), button);
 
 		_gtk_add_accelerators_from_menu (menu);
@@ -5146,7 +5155,6 @@ fr_window_construct (FrWindow *window)
 			_gtk_header_bar_create_image_button ("go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"));
 	gtk_box_append (GTK_BOX (navigation_commands),
 			_gtk_header_bar_create_image_button ("go-next-symbolic", _("Go to the next visited location"), "win.go-forward"));
-	gtk_widget_show (navigation_commands);
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
 	gtk_box_append (GTK_BOX (private->location_bar), navigation_commands);
@@ -5175,12 +5183,9 @@ fr_window_construct (FrWindow *window)
 	_gtk_box_pack_end (GTK_BOX (location_box), private->location_entry, TRUE, FALSE);
 	_gtk_box_pack_end (GTK_BOX (private->location_bar), location_box, TRUE, FALSE);
 
-	gtk_widget_show (private->location_bar);
 	fr_window_attach (FR_WINDOW (window), private->location_bar, FR_WINDOW_AREA_LOCATIONBAR);
 	if (private->list_mode == FR_WINDOW_LIST_MODE_FLAT)
 		gtk_widget_hide (private->location_bar);
-	else
-		gtk_widget_show (private->location_bar);
 
 	/* popup menus */
 	{

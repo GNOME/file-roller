@@ -109,7 +109,7 @@ action_open_archive (GSimpleAction      *action,
 
 	saved_file = g_file_new_for_path (g_variant_get_string (value, NULL));
 	new_window = fr_window_new ();
-	gtk_widget_show (new_window);
+	gtk_window_present (GTK_WINDOW (new_window));
 	fr_window_archive_open (FR_WINDOW (new_window),
 				saved_file,
 				GTK_WINDOW (new_window));
@@ -568,7 +568,7 @@ fr_application_command_line (GApplication            *application,
 
 	if (remaining_args == NULL) { /* No archive specified. */
 		if (! arg_service)
-			gtk_widget_show (fr_window_new ());
+			gtk_window_present (GTK_WINDOW (fr_window_new ()));
 		return fr_application_command_line_finished (application, EXIT_SUCCESS);
 	}
 
@@ -650,7 +650,7 @@ fr_application_command_line (GApplication            *application,
 			GFile     *file;
 
 			window = fr_window_new ();
-			gtk_widget_show (window);
+			gtk_window_present (GTK_WINDOW (window));
 
 			file = g_application_command_line_create_file_for_arg (command_line, filename);
 			fr_window_archive_open (FR_WINDOW (window), file, GTK_WINDOW (window));
