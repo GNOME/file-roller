@@ -2,13 +2,13 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkGrid" id="content">
-    <property name="row_spacing">6</property>
-    <property name="column_spacing">6</property>
+    <property name="row_spacing">10</property>
+    <property name="column_spacing">10</property>
     <child>
       <object class="GtkLabel" id="p_name_label_label">
         <property name="label" translatable="1" context="File">Name:</property>
         <property name="justify">center</property>
-        <property name="halign">start</property>
+        <property name="halign">end</property>
         <attributes>
           <attribute name="weight" value="bold"></attribute>
         </attributes>
@@ -22,7 +22,6 @@
       <object class="GtkLabel" id="p_name_label">
         <property name="selectable">1</property>
         <property name="ellipsize">end</property>
-        <property name="width_chars">30</property>
         <property name="halign">start</property>
         <layout>
           <property name="column">1</property>
@@ -34,7 +33,7 @@
       <object class="GtkLabel" id="p_path_label_label">
         <property name="label" translatable="1" comments="after the colon there is a folder name.">Location:</property>
         <property name="justify">center</property>
-        <property name="halign">start</property>
+        <property name="halign">end</property>
         <attributes>
           <attribute name="weight" value="bold"></attribute>
         </attributes>
@@ -59,7 +58,7 @@
       <object class="GtkLabel" id="p_mime_type_label_label">
         <property name="label" translatable="1" comments="after the colon there is a file type.">Type:</property>
         <property name="justify">center</property>
-        <property name="halign">start</property>
+        <property name="halign">end</property>
         <attributes>
           <attribute name="weight" value="bold"></attribute>
         </attributes>
@@ -84,7 +83,7 @@
       <object class="GtkLabel" id="p_date_label_label">
         <property name="label" translatable="1">Last modified:</property>
         <property name="justify">center</property>
-        <property name="halign">start</property>
+        <property name="halign">end</property>
         <attributes>
           <attribute name="weight" value="bold"></attribute>
         </attributes>
@@ -108,7 +107,7 @@
       <object class="GtkLabel" id="p_size_label_label">
         <property name="label" translatable="1">Archive size:</property>
         <property name="justify">center</property>
-        <property name="halign">start</property>
+        <property name="halign">end</property>
         <attributes>
           <attribute name="weight" value="bold"></attribute>
         </attributes>
@@ -131,7 +130,7 @@
     <child>
       <object class="GtkLabel" id="p_uncomp_size_label_label">
         <property name="label" translatable="1">Content size:</property>
-        <property name="halign">start</property>
+        <property name="halign">end</property>
         <attributes>
           <attribute name="weight" value="bold"></attribute>
         </attributes>
@@ -154,7 +153,7 @@
     <child>
       <object class="GtkLabel" id="p_cratio_label_label">
         <property name="label" translatable="1">Compression ratio:</property>
-        <property name="halign">start</property>
+        <property name="halign">end</property>
         <attributes>
           <attribute name="weight" value="bold"></attribute>
         </attributes>
@@ -178,7 +177,7 @@
       <object class="GtkLabel" id="p_files_label_label">
         <property name="label" translatable="1">Number of files:</property>
         <property name="justify">center</property>
-        <property name="halign">start</property>
+        <property name="halign">end</property>
         <attributes>
           <attribute name="weight" value="bold"></attribute>
         </attributes>

@@ -66,7 +66,7 @@ dlg_prop (FrWindow *window)
 
 	/* Get the widgets. */
 	table = _gtk_builder_get_widget (data->builder, "content");
-
+	_gtk_widget_set_margin (table, 20);
 
 	/* Make the dialog */
 
