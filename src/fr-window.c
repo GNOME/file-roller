@@ -4719,8 +4719,11 @@ static void
 filter_entry_search_changed_cb (GtkSearchEntry *entry,
 				FrWindow *window)
 {
-	fr_window_activate_filter (window);
+	FrWindowPrivate *private = fr_window_get_instance_private (window);
+	if (private->filter_mode)
+		fr_window_activate_filter (window);
 }
+
 
 static void
 filter_entry_stop_search_cb (GtkSearchEntry *entry,
@@ -4728,6 +4731,7 @@ filter_entry_stop_search_cb (GtkSearchEntry *entry,
 {
 	fr_window_deactivate_filter (window);
 }
+
 
 static void
 fr_window_attach (FrWindow      *window,
@@ -4806,7 +4810,6 @@ fr_window_construct (FrWindow *window)
 	GtkWidget          *list_scrolled_window;
 	GtkWidget          *navigation_commands;
 	GtkWidget          *location_box;
-	GtkWidget          *filter_box;
 	GtkWidget          *tree_scrolled_window;
 	GtkWidget          *button;
 	GtkTreeSelection   *selection;
@@ -4979,9 +4982,12 @@ fr_window_construct (FrWindow *window)
 
 	/* filter bar */
 
-	private->filter_bar = gtk_search_bar_new ();
-	filter_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	private->filter_bar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (private->filter_bar)), "locationbar");
+
 	private->filter_entry = gtk_search_entry_new ();
+	gtk_widget_set_hexpand (private->filter_entry, TRUE);
+	gtk_widget_set_halign (private->filter_entry, GTK_ALIGN_CENTER);
 	gtk_editable_set_width_chars (GTK_EDITABLE (private->filter_entry), 40);
 	g_signal_connect (GTK_SEARCH_ENTRY (private->filter_entry),
 			  "search-changed",
@@ -4991,10 +4997,7 @@ fr_window_construct (FrWindow *window)
 			  "stop-search",
 			  G_CALLBACK (filter_entry_stop_search_cb),
 			  window);
-	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (private->filter_bar), GTK_EDITABLE (private->filter_entry));
-	gtk_search_bar_set_child (GTK_SEARCH_BAR (private->filter_bar), filter_box);
-	_gtk_box_pack_start (GTK_BOX (filter_box), private->filter_entry, TRUE, FALSE);
-	gtk_widget_show (private->filter_bar);
+	gtk_box_append (GTK_BOX (private->filter_bar), private->filter_entry);
 	fr_window_attach (FR_WINDOW (window), private->filter_bar, FR_WINDOW_AREA_FILTERBAR);
 
 	/* tree view */
@@ -6675,11 +6678,12 @@ fr_window_find (FrWindow *window,
 		gboolean  active)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (private->filter_bar), active);
+
 	if (active) {
 		private->filter_mode = TRUE;
 		gtk_widget_show (private->filter_bar);
 		gtk_widget_hide (private->location_bar);
+		gtk_widget_grab_focus (private->filter_entry);
 	}
 	else {
 		private->filter_mode = FALSE;
