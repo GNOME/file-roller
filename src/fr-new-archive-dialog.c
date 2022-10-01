@@ -86,7 +86,7 @@ fr_new_archive_dialog_unmap (GtkWidget *widget)
 
 	self = FR_NEW_ARCHIVE_DIALOG (widget);
 
-	g_settings_set_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton"))));
+	g_settings_set_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER, gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton"))));
 	g_settings_set_boolean (self->settings, PREF_NEW_EXPAND_OPTIONS, gtk_expander_get_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander"))));
 	g_settings_set_int (self->settings, PREF_NEW_VOLUME_SIZE, gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton"))) * MEGABYTE);
 
@@ -128,7 +128,7 @@ _fr_new_archive_dialog_update_sensitivity (FrNewArchiveDialog *self)
 	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), ! _g_utf8_all_spaces (gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")))));
 	gtk_check_button_set_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), ! self->can_encrypt_header);
 	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->can_encrypt_header);
-	gtk_widget_set_sensitive (GET_WIDGET ("volume_spinbutton"), ! self->can_create_volumes || gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("volume_checkbutton"))));
+	gtk_widget_set_sensitive (GET_WIDGET ("volume_spinbutton"), ! self->can_create_volumes || gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("volume_checkbutton"))));
 }
 
 
@@ -141,8 +141,8 @@ entry_changed_cb (GtkEditable *editable,
 
 
 static void
-volume_toggled_cb (GtkToggleButton *toggle_button,
-		   gpointer         user_data)
+volume_toggled_cb (GtkCheckButton *check_button,
+		   gpointer        user_data)
 {
 	_fr_new_archive_dialog_update_sensitivity (FR_NEW_ARCHIVE_DIALOG (user_data));
 }
@@ -252,8 +252,8 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	gtk_expander_set_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander")),
 				      g_settings_get_boolean (self->settings, PREF_NEW_EXPAND_OPTIONS));
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
-				      g_settings_get_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER));
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
+				     g_settings_get_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER));
 
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton")),
 				   (double) g_settings_get_int (self->settings, PREF_NEW_VOLUME_SIZE) / MEGABYTE);
@@ -617,7 +617,7 @@ fr_new_archive_dialog_get_encrypt_header (FrNewArchiveDialog *self)
 		if (password != NULL) {
 			if (strcmp (password, "") != 0) {
 				if (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER)
-					encrypt_header = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")));
+					encrypt_header = gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")));
 			}
 		}
 	}
@@ -635,7 +635,7 @@ fr_new_archive_dialog_get_volume_size (FrNewArchiveDialog *self)
 	n_format = get_selected_format (self);
 
 	if ((mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES)
-	    && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("volume_checkbutton"))))
+	    && gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("volume_checkbutton"))))
 	{
 		double value;
 
