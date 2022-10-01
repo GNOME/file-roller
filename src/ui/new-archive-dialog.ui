@@ -10,7 +10,7 @@
     <child>
       <object class="GtkBox" id="box1">
         <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
+        <property name="spacing">24</property>
         <child>
           <object class="GtkBox" id="box7">
             <property name="orientation">vertical</property>
@@ -52,12 +52,11 @@
               <object class="GtkLabel" id="location_label">
                 <property name="label" translatable="1">_Location:</property>
                 <property name="use_underline">1</property>
-                <property name="mnemonic_widget">parent_filechooserbutton</property>
                 <property name="halign">start</property>
               </object>
             </child>
             <child>
-              <object class="GtkBox" id="parent_filechooserbutton">
+              <object class="GtkBox" id="parent_filechooserbutton_container">
               </object>
             </child>
           </object>
@@ -73,7 +72,7 @@
           <object class="GtkBox" id="box4">
             <property name="margin_top">6</property>
             <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
+            <property name="spacing">12</property>
             <child>
               <object class="GtkBox" id="box5">
                 <property name="margin_top">12</property>
@@ -97,41 +96,47 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="encrypt_header_checkbutton">
-                <property name="label" translatable="1">_Encrypt the file list too</property>
-                <property name="focusable">1</property>
-                <property name="use_underline">1</property>
-                <property name="halign">start</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox" id="volume_box">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkCheckButton" id="volume_checkbutton">
-                    <property name="label" translatable="1" comments="this is part of a sentence, for example &quot;split into volumes of 10.0 MB&quot;, where MB stands for megabyte.">Split into _volumes of</property>
+                  <object class="GtkCheckButton" id="encrypt_header_checkbutton">
+                    <property name="label" translatable="1">_Encrypt the file list too</property>
                     <property name="focusable">1</property>
                     <property name="use_underline">1</property>
-                    <property name="halign">center</property>
+                    <property name="halign">start</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkSpinButton" id="volume_spinbutton">
-                    <property name="halign">center</property>
-                    <property name="focusable">1</property>
-                    <property name="width_chars">4</property>
-                    <property name="text" translatable="1">10,0</property>
-                    <property name="adjustment">volume_adjustment</property>
-                    <property name="climb_rate">1</property>
-                    <property name="digits">1</property>
-                    <property name="numeric">1</property>
-                    <property name="value">10</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label50">
-                    <property name="halign">center</property>
-                    <property name="label" translatable="1" comments="MB means megabytes">MB</property>
+                  <object class="GtkBox" id="volume_box">
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkCheckButton" id="volume_checkbutton">
+                        <property name="label" translatable="1" comments="this is part of a sentence, for example &quot;split into volumes of 10.0 MB&quot;, where MB stands for megabyte.">Split into _volumes of</property>
+                        <property name="focusable">1</property>
+                        <property name="use_underline">1</property>
+                        <property name="halign">center</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="volume_spinbutton">
+                        <property name="halign">center</property>
+                        <property name="focusable">1</property>
+                        <property name="width_chars">4</property>
+                        <property name="text" translatable="1">10,0</property>
+                        <property name="adjustment">volume_adjustment</property>
+                        <property name="climb_rate">1</property>
+                        <property name="digits">1</property>
+                        <property name="numeric">1</property>
+                        <property name="value">10</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label50">
+                        <property name="halign">center</property>
+                        <property name="label" translatable="1" comments="MB means megabytes">MB</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

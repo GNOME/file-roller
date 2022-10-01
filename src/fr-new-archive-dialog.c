@@ -26,6 +26,7 @@
 #include <gio/gio.h>
 #include "file-utils.h"
 #include "fr-init.h"
+#include "fr-location-button.h"
 #include "fr-new-archive-dialog.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
@@ -48,6 +49,7 @@ struct _FrNewArchiveDialog {
 	gboolean    can_create_volumes;
 	GFile      *original_file;
 	GList      *files_to_add;
+	GtkWidget  *location_button;
 };
 
 
@@ -211,6 +213,9 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	_g_object_unref (self->original_file);
 	self->original_file = _g_object_ref (original_file);
 
+	self->location_button = fr_location_button_new (_("Location"));
+	gtk_box_append (GTK_BOX (GET_WIDGET ("parent_filechooserbutton_container")), self->location_button);
+	gtk_label_set_mnemonic_widget (GTK_LABEL (GET_WIDGET ("location_label")), self->location_button);
 	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
 
 	gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
@@ -247,7 +252,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	if (folder == NULL)
 		folder = _g_file_get_home ();
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (GET_WIDGET ("parent_filechooserbutton")), folder, NULL);
+	fr_location_button_set_location (FR_LOCATION_BUTTON (self->location_button), folder);
 
 	gtk_expander_set_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander")),
 				      g_settings_get_boolean (self->settings, PREF_NEW_EXPAND_OPTIONS));
@@ -419,7 +424,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 	/* File */
 
 	n_format = get_selected_format (self);
-	parent = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (GET_WIDGET ("parent_filechooserbutton")));
+	parent = fr_location_button_get_location (FR_LOCATION_BUTTON (self->location_button));
 	if (parent == NULL) {
 		GtkWidget *msg_dialog = _gtk_error_dialog_new (
 			GTK_WINDOW (self),
