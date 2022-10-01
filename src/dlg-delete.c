@@ -63,8 +63,8 @@ response_cb (GtkDialog  *widget,
 
 	switch (response_id) {
 	case GTK_RESPONSE_OK:
-		selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio));
-		pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_files_radio));
+		selected_files = gtk_check_button_get_active (GTK_CHECK_BUTTON (data->d_selected_files_radio));
+		pattern_files = gtk_check_button_get_active (GTK_CHECK_BUTTON (data->d_files_radio));
 
 		/* create the file list. */
 
@@ -99,8 +99,8 @@ static void
 entry_changed_cb (GtkEditable *widget,
 		  DialogData *data)
 {
-	if (! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_files_radio)))
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->d_files_radio), TRUE);
+	if (! gtk_check_button_get_active (GTK_CHECK_BUTTON (data->d_files_radio)))
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (data->d_files_radio), TRUE);
 }
 
 
@@ -124,7 +124,9 @@ dlg_delete__common (FrWindow *window,
 				     "transient-for", GTK_WINDOW (window),
 				     "modal", TRUE,
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
+				     "title", _("Delete"),
 				     NULL);
+	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 500, -1);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
@@ -146,10 +148,10 @@ dlg_delete__common (FrWindow *window,
 	/* Set widgets data. */
 
 	if (data->selected_files != NULL)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio), TRUE);
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (data->d_selected_files_radio), TRUE);
 	else {
 		gtk_widget_set_sensitive (data->d_selected_files_radio, FALSE);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->d_all_files_radio), TRUE);
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (data->d_all_files_radio), TRUE);
 	}
 
 	/* Set the signals handlers. */
