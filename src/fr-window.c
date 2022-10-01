@@ -7410,21 +7410,25 @@ fr_window_view_last_output (FrWindow   *window,
 
 	text_buffer = gtk_text_buffer_new (NULL);
 	gtk_text_buffer_create_tag (text_buffer, "monospace",
-				    "family", "monospace", NULL);
+				    "family", "monospace",
+				    "size-points", 12.0,
+				    NULL);
 
 	text_view = gtk_text_view_new_with_buffer (text_buffer);
 	g_object_unref (text_buffer);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
 	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (text_view), FALSE);
+	gtk_text_view_set_right_margin (GTK_TEXT_VIEW (text_view), 10);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW (text_view), 10);
+	gtk_text_view_set_top_margin (GTK_TEXT_VIEW (text_view), 10);
+	gtk_text_view_set_bottom_margin (GTK_TEXT_VIEW (text_view), 10);
 
 	/**/
 
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-	_gtk_widget_set_margin (GTK_WIDGET (vbox), 5);
-
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	_gtk_widget_set_margin (GTK_WIDGET (vbox), 10);
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled), text_view);
 	_gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE);
-
 	_gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), vbox, TRUE, TRUE);
 
 	/* signals */
