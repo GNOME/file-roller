@@ -315,10 +315,11 @@ dlg_update (FrWindow *window)
 							    NULL);
 
 	data->update_files_dialog = g_object_new (GTK_TYPE_DIALOG,
-						  "title", _("Update Files"),
+						  "title", C_("Window title", "Update Files"),
 						  "transient-for", GTK_WINDOW (window),
 						  "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 						  NULL);
+	gtk_window_set_default_size (GTK_WINDOW (data->update_files_dialog), 700, 500);
 	content = _gtk_builder_get_widget (data->builder, "update_files_dialog_content");
 	gtk_widget_set_vexpand (content, TRUE);
 	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->update_files_dialog))), content);
