@@ -275,6 +275,7 @@ typedef struct {
 	GtkSortType      sort_type;
 
 	char *           last_location;
+	char *           location_before_filter;
 
 	gboolean         view_sidebar;
 	FrWindowListMode list_mode;
@@ -527,6 +528,7 @@ fr_window_free_private_data (FrWindow *window)
 	private->drag_file_list = NULL;
 
 	g_free (private->last_location);
+	g_free (private->location_before_filter);
 
 	fr_window_free_batch_data (window);
 	g_free (private->batch_title);
@@ -6680,6 +6682,8 @@ fr_window_find (FrWindow *window,
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 
 	if (active) {
+		g_free (private->location_before_filter);
+		private->location_before_filter = g_strdup (gtk_editable_get_text (GTK_EDITABLE (private->location_entry)));
 		private->filter_mode = TRUE;
 		gtk_widget_show (private->filter_bar);
 		gtk_widget_hide (private->location_bar);
@@ -6698,7 +6702,10 @@ fr_window_find (FrWindow *window,
 		fr_window_update_file_list (window, TRUE);
 		fr_window_update_dir_tree (window);
 		fr_window_update_current_location (window);
-		fr_window_go_to_location (window, gtk_editable_get_text (GTK_EDITABLE (private->location_entry)), FALSE);
+		fr_window_go_to_location (window, private->location_before_filter, FALSE);
+
+		g_free (private->location_before_filter);
+		private->location_before_filter = NULL;
 	}
 }
 
