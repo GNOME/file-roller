@@ -113,6 +113,7 @@ dlg_ask_password__common (FrWindow       *window,
 				     "transient-for", GTK_WINDOW (window),
 				     "modal", TRUE,
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
+				     "title", C_("Window title", "Password"),
 				     NULL);
 	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))),
 			GET_WIDGET ("password_vbox"));
