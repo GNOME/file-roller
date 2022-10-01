@@ -31,7 +31,6 @@
                   <object class="GtkEntry" id="filename_entry">
                     <property name="hexpand">1</property>
                     <property name="focusable">1</property>
-                    <property name="invisible_char">●</property>
                     <property name="activates_default">1</property>
                     <property name="width_chars">35</property>
                   </object>
@@ -92,7 +91,6 @@
                   <object class="GtkEntry" id="password_entry">
                     <property name="focusable">1</property>
                     <property name="visibility">0</property>
-                    <property name="invisible_char">●</property>
                     <property name="activates_default">1</property>
                   </object>
                 </child>
@@ -101,7 +99,6 @@
             <child>
               <object class="GtkCheckButton" id="encrypt_header_checkbutton">
                 <property name="label" translatable="1">_Encrypt the file list too</property>
-                <property name="use_action_appearance">False</property>
                 <property name="focusable">1</property>
                 <property name="use_underline">1</property>
                 <property name="halign">start</property>
@@ -113,7 +110,6 @@
                 <child>
                   <object class="GtkCheckButton" id="volume_checkbutton">
                     <property name="label" translatable="1" comments="this is part of a sentence, for example &quot;split into volumes of 10.0 MB&quot;, where MB stands for megabyte.">Split into _volumes of</property>
-                    <property name="use_action_appearance">False</property>
                     <property name="focusable">1</property>
                     <property name="use_underline">1</property>
                     <property name="halign">center</property>
@@ -123,7 +119,6 @@
                   <object class="GtkSpinButton" id="volume_spinbutton">
                     <property name="halign">center</property>
                     <property name="focusable">1</property>
-                    <property name="invisible_char">●</property>
                     <property name="width_chars">4</property>
                     <property name="text" translatable="1">10,0</property>
                     <property name="adjustment">volume_adjustment</property>
