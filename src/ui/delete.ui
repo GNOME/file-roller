@@ -2,9 +2,11 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="delete_box">
-    <property name="border_width">15</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
+    <style>
+      <class name="dialog-content"/>
+    </style>
     <child>
       <object class="GtkCheckButton" id="d_all_files_radio">
         <property name="label" translatable="1">_All files</property>
