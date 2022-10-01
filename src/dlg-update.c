@@ -315,7 +315,7 @@ dlg_update (FrWindow *window)
 							    NULL);
 
 	data->update_files_dialog = g_object_new (GTK_TYPE_DIALOG,
-						  "title", C_("Window title", "Update Files"),
+						  "title", C_("Window title", "Update"),
 						  "transient-for", GTK_WINDOW (window),
 						  "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 						  NULL);

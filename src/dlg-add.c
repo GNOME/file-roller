@@ -184,7 +184,7 @@ dlg_add (FrWindow *window)
 	data = g_new0 (DialogData, 1);
 	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_ADD);
 	data->window = window;
-	data->dialog = fr_file_selector_dialog_new (C_("Window title", "Add Files"), GTK_WINDOW (data->window));
+	data->dialog = fr_file_selector_dialog_new (C_("Window title", "Add"), GTK_WINDOW (data->window));
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
 	g_object_get (data->dialog, "use-header-bar", &use_header, NULL);
