@@ -690,18 +690,3 @@ _gtk_widget_set_margin (GtkWidget *widget, int margin)
 	gtk_widget_set_margin_top (widget, margin);
 	gtk_widget_set_margin_bottom (widget, margin);
 }
-
-
-#define DIALOG_CONTENT_MARGIN 15
-
-
-void
-_gtk_dialog_set_content (GtkDialog  *dialog,
-			 GtkWidget  *content)
-{
-	_gtk_widget_set_margin (content, DIALOG_CONTENT_MARGIN);
-	_gtk_box_pack_end (GTK_BOX (gtk_dialog_get_content_area (dialog)),
-			   content,
-			   TRUE,
-			   FALSE);
-}

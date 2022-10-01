@@ -2385,7 +2385,10 @@ create_the_progress_dialog (FrWindow *window)
 			       "use-header-bar", use_header_bar,
 			       "default-width", PROGRESS_DIALOG_DEFAULT_WIDTH,
 			       NULL);
-	_gtk_dialog_set_content (GTK_DIALOG (dialog), _gtk_builder_get_widget (builder, "progress_dialog_content"));
+	_gtk_box_pack_end (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
+			   _gtk_builder_get_widget (builder, "progress_dialog_content"),
+			   TRUE,
+			   TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 	gtk_window_set_title (GTK_WINDOW (dialog), title);
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);

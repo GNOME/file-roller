@@ -607,7 +607,6 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	self->action_map = g_simple_action_group_new ();
 	self->file_context_menu = GTK_POPOVER (gtk_popover_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (self->builder, "file_list_context_menu_model"))));
 
-	_gtk_widget_set_margin (GTK_WIDGET (self), 5);
 	_gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"), TRUE, TRUE);
 
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, files_name_column_sort_func, self, NULL);

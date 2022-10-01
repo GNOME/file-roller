@@ -206,7 +206,6 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	gtk_window_set_transient_for (GTK_WINDOW (self), parent);
 	gtk_window_set_resizable (GTK_WINDOW (self), FALSE);
-	_gtk_widget_set_margin (GTK_WIDGET (self), 5);
 
 	self->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "new-archive-dialog.ui");
 
