@@ -616,7 +616,6 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, GTK_SORT_ASCENDING);
 
 	self->location_bar = fr_location_bar_new ();
-	gtk_widget_show (self->location_bar);
 	_gtk_box_pack_start (GTK_BOX (GET_WIDGET ("content_box")), self->location_bar, TRUE, FALSE);
 	g_signal_connect (self->location_bar,
 			  "changed",

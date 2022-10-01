@@ -62,9 +62,9 @@ static void dlg_add_folder_save_last_options (DialogData *data);
 
 
 static void
-file_selector_response_cb (GtkDialog *dialog,
-			   int           response,
-			   DialogData   *data)
+file_selector_response_cb (GtkDialog  *dialog,
+			   int         response,
+			   DialogData *data)
 {
 	FrWindow    *window = data->window;
 	GFile       *current_folder;
@@ -73,6 +73,13 @@ file_selector_response_cb (GtkDialog *dialog,
 	const char  *exclude_files;
 	const char  *exclude_folders;
 	GList       *files;
+
+	int width, height;
+	gtk_window_get_default_size (GTK_WINDOW (data->dialog), &width, &height);
+	if ((width > 0) && (height > 0)) {
+		g_settings_set_int (data->settings, PREF_ADD_DIALOG_WIDTH, width);
+		g_settings_set_int (data->settings, PREF_ADD_DIALOG_HEIGHT, height);
+	}
 
 	if (response == GTK_RESPONSE_NONE)
 		return;
@@ -86,7 +93,7 @@ file_selector_response_cb (GtkDialog *dialog,
 
 	current_folder = fr_file_selector_dialog_get_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog));
 
-	/* check folder permissions. */
+	/* Check folder permissions. */
 
 	if (! _g_file_check_permissions (current_folder, R_OK)) {
 		GtkWidget *d;
@@ -106,8 +113,8 @@ file_selector_response_cb (GtkDialog *dialog,
 		return;
 	}
 
-	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")));
-	follow_links = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")));
+	update = gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("update_checkbutton")));
+	follow_links = gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("follow_links_checkbutton")));
 
 	include_files = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("include_files_entry")));
 	if (_g_utf8_all_spaces (include_files))
@@ -193,9 +200,8 @@ dlg_add (FrWindow *window)
 	/* options menu button */
 
 	options_button = gtk_menu_button_new ();
-	gtk_button_set_label (GTK_BUTTON (options_button), _("_Options"));
-	gtk_button_set_use_underline (GTK_BUTTON (options_button), TRUE);
-	gtk_widget_show (options_button);
+	gtk_menu_button_set_icon_name (GTK_MENU_BUTTON (options_button), "document-properties-symbolic");
+	gtk_menu_button_set_use_underline (GTK_MENU_BUTTON (options_button), TRUE);
 
 	/* load options */
 
@@ -225,7 +231,7 @@ dlg_add (FrWindow *window)
 
 	if (use_header)
 		gtk_header_bar_pack_end (GTK_HEADER_BAR (gtk_dialog_get_header_bar (GTK_DIALOG (data->dialog))),
-				         options_button);
+					 options_button);
 
 	/* set data */
 
@@ -244,6 +250,10 @@ dlg_add (FrWindow *window)
 
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
 	gtk_widget_show (data->dialog);
+
+	gtk_window_set_default_size (GTK_WINDOW (data->dialog),
+				     g_settings_get_int (data->settings, PREF_ADD_DIALOG_WIDTH),
+				     g_settings_get_int (data->settings, PREF_ADD_DIALOG_HEIGHT));
 }
 
 
@@ -252,7 +262,7 @@ dlg_add (FrWindow *window)
 
 static void
 dlg_add_folder_save_last_used_options (DialogData *data,
-			               const char *options_path)
+				       const char *options_path)
 {
 	g_free (data->last_options);
 	data->last_options = g_strdup (_g_path_get_basename (options_path));
@@ -287,12 +297,12 @@ sync_widgets_with_options (DialogData *data,
 		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("exclude_files_entry")), exclude_files);
 	if (exclude_folders != NULL)
 		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("exclude_folders_entry")), exclude_folders);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")), update);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("update_checkbutton")), update);
 
 	if ((data->window->archive != NULL) && data->window->archive->propAddCanStoreLinks) {
 		gtk_widget_set_sensitive (GET_WIDGET ("follow_links_checkbutton"), TRUE);
 		gtk_check_button_set_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("follow_links_checkbutton")), FALSE);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")), ! no_follow_symlinks);
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("follow_links_checkbutton")), ! no_follow_symlinks);
 	}
 	else {
 		gtk_widget_set_sensitive (GET_WIDGET ("follow_links_checkbutton"), FALSE);
@@ -376,11 +386,11 @@ dlg_add_folder_load_options (DialogData *data,
 	sync_widgets_with_options (data,
 				   folder,
 				   files,
-			   	   include_files,
-			   	   exclude_files,
-			   	   exclude_folders,
-			   	   update,
-			   	   no_symlinks);
+				   include_files,
+				   exclude_files,
+				   exclude_folders,
+				   update,
+				   no_symlinks);
 
 	dlg_add_folder_save_last_used_options (data, file_path);
 
@@ -431,12 +441,12 @@ dlg_add_folder_load_last_options (DialogData *data)
 
 	sync_widgets_with_options (data,
 				   folder,
-			   	   files,
-			   	   include_files,
-			   	   exclude_files,
-			   	   exclude_folders,
-			   	   update,
-			   	   no_follow_symlinks);
+				   files,
+				   include_files,
+				   exclude_files,
+				   exclude_folders,
+				   update,
+				   no_follow_symlinks);
 
 	_g_object_unref (folder);
 	g_strfreev (uris);
@@ -473,8 +483,8 @@ get_options_from_widgets (DialogData   *data,
 	*file_uris = uris;
 	_g_object_list_unref (files);
 
-	*update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")));
-	*no_symlinks = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")));
+	*update = gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("update_checkbutton")));
+	*no_symlinks = ! gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("follow_links_checkbutton")));
 
 	*include_files = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("include_files_entry")));
 	if (_g_utf8_all_spaces (*include_files))

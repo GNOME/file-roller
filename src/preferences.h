@@ -65,6 +65,8 @@
 #define PREF_ADD_UPDATE                   "update"
 #define PREF_ADD_RECURSIVE                "recursive"
 #define PREF_ADD_NO_FOLLOW_SYMLINKS       "no-symlinks"
+#define PREF_ADD_DIALOG_WIDTH             "dialog-width"
+#define PREF_ADD_DIALOG_HEIGHT            "dialog-height"
 
 #define PREF_NEW_DEFAULT_EXTENSION        "default-extension"
 #define PREF_NEW_ENCRYPT_HEADER           "encrypt-header"

@@ -18,28 +18,22 @@
     </section>
   </menu>
   <object class="GtkBox" id="extra_widget">
+    <style>
+      <class name="extra-widget"/>
+    </style>
     <property name="spacing">24</property>
     <child>
       <object class="GtkBox" id="box2">
         <property name="orientation">vertical</property>
-        <property name="spacing">6</property>
-        <child>
-          <object class="GtkLabel" id="label1">
-            <property name="halign">start</property>
-            <property name="label" translatable="1">Add</property>
-            <attributes>
-              <attribute name="weight" value="bold"></attribute>
-            </attributes>
-          </object>
-        </child>
+        <property name="spacing">10</property>
         <child>
           <object class="GtkGrid" id="grid2">
-            <property name="margin-start">12</property>
+            <property name="margin-start">0</property>
             <property name="row_spacing">6</property>
             <property name="column_spacing">6</property>
             <child>
               <object class="GtkLabel" id="label3">
-                <property name="halign">start</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="1">Include _files:</property>
                 <property name="use_underline">1</property>
                 <property name="mnemonic_widget">include_files_entry</property>
@@ -51,7 +45,7 @@
             </child>
             <child>
               <object class="GtkLabel" id="label4">
-                <property name="halign">start</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="1">E_xclude files:</property>
                 <property name="use_underline">1</property>
                 <property name="mnemonic_widget">exclude_files_entry</property>
@@ -63,7 +57,7 @@
             </child>
             <child>
               <object class="GtkLabel" id="label5">
-                <property name="halign">start</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="1">_Exclude folders:</property>
                 <property name="use_underline">1</property>
                 <property name="mnemonic_widget">exclude_folders_entry</property>
@@ -114,11 +108,11 @@
     <child>
       <object class="GtkBox" id="box5">
         <property name="orientation">vertical</property>
-        <property name="spacing">6</property>
+        <property name="spacing">10</property>
         <child>
           <object class="GtkLabel" id="label2">
             <property name="halign">start</property>
-            <property name="label" translatable="1">Actions</property>
+            <property name="label" translatable="1">Options</property>
             <attributes>
               <attribute name="weight" value="bold"></attribute>
             </attributes>
@@ -126,7 +120,7 @@
         </child>
         <child>
           <object class="GtkBox" id="box6">
-            <property name="margin-start">12</property>
+            <property name="margin-start">0</property>
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
