@@ -187,6 +187,11 @@ clicked_cb (GtkButton *button,
 	gtk_native_dialog_set_modal (GTK_NATIVE_DIALOG (private->chooser), TRUE);
 	if (private->location != NULL)
 		gtk_file_chooser_set_file (GTK_FILE_CHOOSER (private->chooser), private->location, NULL);
+
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_add_mime_type (filter, "inode/directory");
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (private->chooser), filter);
+
 	g_signal_connect (private->chooser,
 			  "response",
 			  G_CALLBACK (file_chooser_response_cb),
