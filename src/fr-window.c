@@ -4829,7 +4829,9 @@ fr_window_construct (FrWindow *window)
 	GtkTreeSelection   *selection;
 	GtkSizeGroup       *header_bar_size_group;
 
+#ifdef DEVELOPMENT_VERSION
 	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (window)), "devel");
+#endif
 
 	/* Create the settings objects */
 
