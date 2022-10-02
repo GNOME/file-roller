@@ -20,6 +20,7 @@
  */
 
 #include <config.h>
+#include "fr-enum-types.h"
 #include "fr-file-selector-dialog.h"
 #include "fr-location-bar.h"
 #include "gio-utils.h"
@@ -35,6 +36,10 @@
 #define FILE_LIST_CHARS 60
 #define SIDEBAR_CHARS   12
 
+enum {
+	PROP_0,
+	PROP_SELECTION_MODE,
+};
 
 enum {
 	FILE_LIST_COLUMN_ICON,
@@ -107,10 +112,62 @@ struct _FrFileSelectorDialog {
 	GSimpleActionGroup *action_map;
 	GtkPopover         *file_context_menu;
 	GtkWidget          *location_bar;
+	FrFileSelectorMode  selection_mode;
 };
 
 
 G_DEFINE_TYPE (FrFileSelectorDialog, fr_file_selector_dialog, GTK_TYPE_DIALOG)
+
+
+static void
+set_selection_mode (FrFileSelectorDialog *self,
+		    FrFileSelectorMode    mode)
+{
+	self->selection_mode = mode;
+	gtk_cell_renderer_set_visible (GTK_CELL_RENDERER (GET_WIDGET ("is_selected_cellrenderertoggle")),
+				       (self->selection_mode == FR_FILE_SELECTOR_MODE_FILES));
+	gtk_tree_view_column_set_visible (GTK_TREE_VIEW_COLUMN (GET_WIDGET ("treeviewcolumn_size")),
+					  (self->selection_mode == FR_FILE_SELECTOR_MODE_FILES));
+}
+
+
+static void
+fr_file_selector_set_property (GObject      *object,
+			       guint         property_id,
+			       const GValue *value,
+			       GParamSpec   *pspec)
+{
+	FrFileSelectorDialog *self = FR_FILE_SELECTOR_DIALOG (object);
+
+	switch (property_id) {
+	case PROP_SELECTION_MODE:
+		set_selection_mode (self, g_value_get_enum (value));
+		break;
+
+	default:
+		break;
+	}
+}
+
+
+static void
+fr_file_selector_get_property (GObject    *object,
+			       guint       property_id,
+			       GValue     *value,
+			       GParamSpec *pspec)
+{
+	FrFileSelectorDialog *self = FR_FILE_SELECTOR_DIALOG (object);
+
+	switch (property_id) {
+	case PROP_SELECTION_MODE:
+		g_value_set_enum (value, self->selection_mode);
+		break;
+
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+}
 
 
 static void
@@ -234,11 +291,22 @@ fr_file_selector_dialog_class_init (FrFileSelectorDialogClass *klass)
 	GtkWidgetClass *widget_class;
 
 	object_class = (GObjectClass*) klass;
+	object_class->set_property = fr_file_selector_set_property;
+	object_class->get_property = fr_file_selector_get_property;
 	object_class->finalize = fr_file_selector_dialog_finalize;
 
 	widget_class = (GtkWidgetClass *) klass;
 	widget_class->realize = fr_file_selector_dialog_realize;
 	widget_class->unmap = fr_file_selector_dialog_unmap;
+
+	g_object_class_install_property (object_class,
+					 PROP_SELECTION_MODE,
+					 g_param_spec_enum ("selection-mode",
+							    "Selection mode",
+							    "The selection mode",
+							    FR_TYPE_FILE_SELECTOR_MODE,
+							    FR_FILE_SELECTOR_MODE_FILES,
+							    G_PARAM_CONSTRUCT | G_PARAM_READWRITE));
 }
 
 
@@ -370,7 +438,7 @@ files_modified_column_sort_func (GtkTreeModel *model,
 
 
 static gboolean
-_fr_file_selector_dialog_is_file_selected (FrFileSelectorDialog *self)
+_fr_file_selector_dialog_is_file_checked (FrFileSelectorDialog *self)
 {
 	GtkListStore *list_store;
 	GtkTreeIter   iter;
@@ -391,6 +459,16 @@ _fr_file_selector_dialog_is_file_selected (FrFileSelectorDialog *self)
 	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
 
 	return FALSE;
+}
+
+
+static gboolean
+_fr_file_selector_dialog_is_file_selected (FrFileSelectorDialog *self)
+{
+	if (self->selection_mode == FR_FILE_SELECTOR_MODE_FILES)
+		return _fr_file_selector_dialog_is_file_checked (self);
+	else
+		return self->current_folder != NULL;
 }
 
 
@@ -431,6 +509,19 @@ is_selected_cellrenderertoggle_toggled_cb (GtkCellRendererToggle *cell_renderer,
 	_update_sensitivity (self);
 
 	gtk_tree_path_free (tree_path);
+}
+
+
+static void
+files_treeview_selection_changed_cb (GtkTreeView *tree_view,
+				     gpointer     user_data)
+{
+	FrFileSelectorDialog *self = user_data;
+
+	if (self->selection_mode != FR_FILE_SELECTOR_MODE_FOLDER)
+		return;
+
+	_update_sensitivity (self);
 }
 
 
@@ -629,6 +720,10 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  "row-activated",
 			  G_CALLBACK (files_treeview_row_activated_cb),
 			  self);
+	g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (GET_WIDGET ("files_treeview"))),
+			  "changed",
+			  G_CALLBACK (files_treeview_selection_changed_cb),
+			  self);
 	/*g_signal_connect (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")),
 			  "open-location",
 			  G_CALLBACK (places_sidebar_open_location_cb),
@@ -654,10 +749,12 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 
 
 GtkWidget *
-fr_file_selector_dialog_new (const char *title,
-			     GtkWindow  *parent)
+fr_file_selector_dialog_new (FrFileSelectorMode  mode,
+			     const char         *title,
+			     GtkWindow          *parent)
 {
 	return (GtkWidget *) g_object_new (fr_file_selector_dialog_get_type (),
+					   "selection-mode", mode,
 					   "title", title,
 					   "transient-for", parent,
 					   "use-header-bar", _gtk_settings_get_dialogs_use_header (),
@@ -852,6 +949,10 @@ get_folder_content_for_each_child_cb (GFile     *file,
 	LoadData *load_data = user_data;
 	FileInfo *file_info;
 
+	if (load_data->dialog->selection_mode == FR_FILE_SELECTOR_MODE_FOLDER)
+		if (g_file_info_get_file_type (info) != G_FILE_TYPE_DIRECTORY)
+			return;
+
 	file_info = file_info_new (file, info);
 	load_data->files = g_list_prepend (load_data->files, file_info);
 }
@@ -868,6 +969,7 @@ _get_folder_list (LoadData *load_data)
 				    G_FILE_ATTRIBUTE_STANDARD_SIZE ","
 				    G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME ","
 				    G_FILE_ATTRIBUTE_STANDARD_ICON ","
+				    G_FILE_ATTRIBUTE_STANDARD_SYMBOLIC_ICON ","
 				    G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN ","
 				    G_FILE_ATTRIBUTE_TIME_MODIFIED ","
 				    G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC),

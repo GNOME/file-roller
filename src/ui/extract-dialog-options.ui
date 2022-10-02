@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="extra_widget">
-    <property name="spacing">12</property>
+    <property name="spacing">10</property>
     <style>
       <class name="extra-widget"/>
     </style>
@@ -12,30 +12,28 @@
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
-          <object class="GtkLabel" id="label1">
-            <property name="label" translatable="1" context="Action">Extract</property>
+          <object class="GtkCheckButton" id="all_files_radiobutton">
+            <property name="label" translatable="1">_All files</property>
+            <property name="use_underline">1</property>
             <property name="halign">start</property>
-            <attributes>
-              <attribute name="weight" value="bold"></attribute>
-            </attributes>
+            <property name="active">1</property>
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="box3">
-            <property name="margin-start">12</property>
-            <property name="orientation">vertical</property>
+          <object class="GtkCheckButton" id="selected_files_radiobutton">
+            <property name="label" translatable="1">_Selected files</property>
+            <property name="use_underline">1</property>
+            <property name="halign">start</property>
+            <property name="active">1</property>
+            <property name="group">all_files_radiobutton</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="box4">
             <property name="spacing">6</property>
             <child>
-              <object class="GtkCheckButton" id="all_files_radiobutton">
-                <property name="label" translatable="1">_All files</property>
-                <property name="use_underline">1</property>
-                <property name="halign">start</property>
-                <property name="active">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="selected_files_radiobutton">
-                <property name="label" translatable="1">_Selected files</property>
+              <object class="GtkCheckButton" id="file_pattern_radiobutton">
+                <property name="label" translatable="1">_Files:</property>
                 <property name="use_underline">1</property>
                 <property name="halign">start</property>
                 <property name="active">1</property>
@@ -43,24 +41,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox" id="box4">
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkCheckButton" id="file_pattern_radiobutton">
-                    <property name="label" translatable="1">_Files:</property>
-                    <property name="use_underline">1</property>
-                    <property name="halign">start</property>
-                    <property name="active">1</property>
-                    <property name="group">all_files_radiobutton</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="file_pattern_entry">
-                    <property name="focusable">1</property>
-                    <property name="placeholder_text" translatable="1">*.o; *.bak</property>
-                    <property name="invisible_char">●</property>
-                  </object>
-                </child>
+              <object class="GtkEntry" id="file_pattern_entry">
+                <property name="focusable">1</property>
+                <property name="placeholder_text" translatable="1">*.o; *.bak</property>
+                <property name="max_width_chars">20</property>
               </object>
             </child>
           </object>
@@ -73,35 +57,19 @@
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
-          <object class="GtkLabel" id="label2">
-            <property name="label" translatable="1">Actions</property>
+          <object class="GtkCheckButton" id="keep_structure_checkbutton">
+            <property name="label" translatable="1">_Keep directory structure</property>
+            <property name="focusable">1</property>
+            <property name="use_underline">1</property>
             <property name="halign">start</property>
-            <attributes>
-              <attribute name="weight" value="bold"></attribute>
-            </attributes>
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="box6">
-            <property name="margin-start">12</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkCheckButton" id="keep_structure_checkbutton">
-                <property name="label" translatable="1">_Keep directory structure</property>
-                <property name="focusable">1</property>
-                <property name="use_underline">1</property>
-                <property name="halign">start</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="keep_newer_checkbutton">
-                <property name="label" translatable="1">Do not _overwrite newer files</property>
-                <property name="focusable">1</property>
-                <property name="use_underline">1</property>
-                <property name="halign">start</property>
-              </object>
-            </child>
+          <object class="GtkCheckButton" id="keep_newer_checkbutton">
+            <property name="label" translatable="1">Do not _overwrite newer files</property>
+            <property name="focusable">1</property>
+            <property name="use_underline">1</property>
+            <property name="halign">start</property>
           </object>
         </child>
       </object>

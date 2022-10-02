@@ -97,4 +97,9 @@ typedef struct {
 	const char *mime_type;
 } FrExtensionType;
 
+typedef enum {
+	FR_FILE_SELECTOR_MODE_FILES,
+	FR_FILE_SELECTOR_MODE_FOLDER
+} FrFileSelectorMode;
+
 #endif /* TYPEDEFS_H */

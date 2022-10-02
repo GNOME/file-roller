@@ -23,10 +23,12 @@
 #define FR_FILE_SELECTOR_DIALOG_H
 
 #include <gtk/gtk.h>
+#include "typedefs.h"
 
 G_DECLARE_FINAL_TYPE (FrFileSelectorDialog, fr_file_selector_dialog, FR, FILE_SELECTOR_DIALOG, GtkDialog)
 
-GtkWidget *     fr_file_selector_dialog_new                 (const char             *title,
+GtkWidget *     fr_file_selector_dialog_new                 (FrFileSelectorMode      mode,
+							     const char             *title,
 							     GtkWindow              *parent);
 void            fr_file_selector_dialog_set_extra_widget    (FrFileSelectorDialog   *dialog,
 							     GtkWidget              *extra_widget);

@@ -207,7 +207,6 @@ fr_location_bar_init (FrLocationBar *self)
 	GtkWidget *navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
-	gtk_box_append (GTK_BOX (self), navigation_commands);
 
 	GtkWidget *button;
 
@@ -229,14 +228,12 @@ fr_location_bar_init (FrLocationBar *self)
 
 	private->parent_location_button = button = gtk_button_new_from_icon_name ("go-up-symbolic");
 	gtk_widget_set_tooltip_text (button, _("Open the parent location"));
-	gtk_box_append (GTK_BOX (self), button);
 	g_signal_connect (button,
 			  "clicked",
 			  G_CALLBACK (parent_location_button_clicked_cb),
 			  self);
 
 	GtkWidget *location_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	_gtk_box_pack_end (GTK_BOX (self), location_box, TRUE, FALSE);
 
 	/* Translators: after the colon there is a folder name. */
 	GtkWidget *location_label = gtk_label_new_with_mnemonic (_("_Location:"));
@@ -255,6 +252,12 @@ fr_location_bar_init (FrLocationBar *self)
 	gtk_widget_set_margin_start (private->location_entry, 5);
 	gtk_widget_set_margin_end (private->location_entry, 5);
 	_gtk_box_pack_end (GTK_BOX (location_box), private->location_entry, TRUE, FALSE);
+
+	/* Pack widgets */
+
+	_gtk_box_pack_end (GTK_BOX (self), location_box, TRUE, FALSE);
+	gtk_box_append (GTK_BOX (self), navigation_commands);
+	gtk_box_append (GTK_BOX (self), private->parent_location_button);
 }
 
 

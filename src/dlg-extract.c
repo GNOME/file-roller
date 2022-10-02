@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include "file-utils.h"
 #include "fr-init.h"
+#include "fr-file-selector-dialog.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
@@ -77,7 +78,7 @@ extract_cb (GtkDialog   *dialog,
 
 	/* collect extraction options. */
 
-	data->destination = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (data->dialog));
+	data->destination = fr_file_selector_dialog_get_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog));
 
 	/* check directory existence. */
 
@@ -283,6 +284,8 @@ file_selector_response_cb (GtkDialog    *dialog,
 		      int           response,
 		      DialogData   *data)
 {
+	pref_util_save_window_geometry (GTK_WINDOW (data->dialog), "Extract");
+
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_window_destroy (GTK_WINDOW (data->dialog));
 	} else if (response == GTK_RESPONSE_OK) {
@@ -316,24 +319,23 @@ dlg_extract__common (FrWindow *window,
 	data->do_not_extract = FALSE;
 	data->destination = NULL;
 
-	data->dialog = gtk_file_chooser_dialog_new (C_("Window title", "Extract"),
-						    GTK_WINDOW (data->window),
-						    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-						    _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
-						    _GTK_LABEL_EXTRACT, GTK_RESPONSE_OK,
-						    NULL);
+	data->dialog = fr_file_selector_dialog_new (FR_FILE_SELECTOR_MODE_FOLDER,
+						    C_("Window title", "Extract"),
+						    GTK_WINDOW (data->window));
+
+	gtk_dialog_add_button (GTK_DIALOG (data->dialog), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
+	GtkWidget *button = gtk_dialog_add_button (GTK_DIALOG (data->dialog), _GTK_LABEL_EXTRACT, GTK_RESPONSE_OK);
+	gtk_style_context_add_class (gtk_widget_get_style_context (button), "suggested-action");
 
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 510);
-	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (data->dialog), FALSE);
-	gtk_file_chooser_set_create_folders (GTK_FILE_CHOOSER (data->dialog), TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
 	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "extract-dialog-options.ui");
-	//gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (data->dialog), GET_WIDGET ("extra_widget"));
+	fr_file_selector_dialog_set_extra_widget (FR_FILE_SELECTOR_DIALOG (data->dialog), GET_WIDGET ("extra_widget"));
 
 	/* Set widgets data. */
 
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->dialog), fr_window_get_extract_default_dir (window), NULL);
+	fr_file_selector_dialog_set_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog), fr_window_get_extract_default_dir (window));
 
 	if (data->selected_files != NULL)
 		gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("selected_files_radiobutton")), TRUE);
@@ -363,7 +365,7 @@ dlg_extract__common (FrWindow *window,
 	/* Run dialog. */
 
 	gtk_window_set_modal (GTK_WINDOW (data->dialog),TRUE);
-	gtk_widget_show (data->dialog);
+	pref_util_restore_window_geometry (GTK_WINDOW (data->dialog), "Extract");
 }
 
 
