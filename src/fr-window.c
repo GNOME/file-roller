@@ -62,7 +62,9 @@
 
 #define HIDE_PROGRESS_TIMEOUT_MSECS 500
 #define DEFAULT_NAME_COLUMN_WIDTH 250
-#define OTHER_COLUMNS_WIDTH 150
+#define SIZE_COLUMN_WIDTH 150
+#define TIME_COLUMN_WIDTH 250
+#define OTHER_COLUMN_WIDTH 150
 #define RECENT_ITEM_MAX_WIDTH 25
 
 #define DEF_WIN_WIDTH 600
@@ -4350,7 +4352,6 @@ add_file_list_columns (FrWindow    *window,
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
 	GValue             value = { 0, };
-	int                w;
 
 	/* First column. */
 
@@ -4402,12 +4403,8 @@ add_file_list_columns (FrWindow    *window,
 					     "text", COLUMN_NAME,
 					     NULL);
 
-	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-	w = g_settings_get_int (private->settings_listing, PREF_LISTING_NAME_COLUMN_WIDTH);
-	if (w <= 0)
-		w = DEFAULT_NAME_COLUMN_WIDTH;
-	gtk_tree_view_column_set_fixed_width (column, w);
 	gtk_tree_view_column_set_resizable (column, TRUE);
+	gtk_tree_view_column_set_expand (column, TRUE);
 	gtk_tree_view_column_set_sort_column_id (column, FR_WINDOW_SORT_BY_NAME);
 	gtk_tree_view_column_set_cell_data_func (column, renderer,
 						 (GtkTreeCellDataFunc) filename_cell_data_func,
@@ -4424,16 +4421,16 @@ add_file_list_columns (FrWindow    *window,
 								   "text", i,
 								   NULL);
 
-		if ((i == COLUMN_SIZE) || (i == COLUMN_TIME)) {
-			gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-			gtk_tree_view_column_set_resizable (column, FALSE);
-		}
-		else {
-			gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-			gtk_tree_view_column_set_min_width (column, OTHER_COLUMNS_WIDTH);
-			gtk_tree_view_column_set_resizable (column, TRUE);
-		}
-
+		gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+		gtk_tree_view_column_set_resizable (column, TRUE);
+		if (i == COLUMN_SIZE)
+			gtk_tree_view_column_set_fixed_width (column, SIZE_COLUMN_WIDTH);
+		else if (i == COLUMN_TIME)
+			gtk_tree_view_column_set_fixed_width (column, TIME_COLUMN_WIDTH);
+		else
+			gtk_tree_view_column_set_fixed_width (column, OTHER_COLUMN_WIDTH);
+		if (i == COLUMN_PATH)
+			gtk_tree_view_column_set_expand (column, TRUE);
 		gtk_tree_view_column_set_sort_column_id (column, FR_WINDOW_SORT_BY_NAME + 1 + j);
 
 		g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
