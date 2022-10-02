@@ -176,11 +176,12 @@ static const FrAccelerator fr_window_accelerators[] = {
 	{ "win.find", "<Control>f" },
 	{ "win.reload", "<Control>r" },
 	{ "win.rename", "F2" },
-	{ "win.save-as", "<Shift><Control>s" },	
+	{ "win.save-as", "<Shift><Control>s" },
 	{ "win.select-all", "<control>a" },
 	{ "win.view-properties", "<alt>Return" },
 	{ "win.view-sidebar", "F9" },
-	{ "win.focus-location", "<Control>l" }
+	{ "win.focus-location", "<Control>l" },
+	{ "win.add-files", "<Control>plus" },
 };
 
 
