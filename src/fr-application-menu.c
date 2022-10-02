@@ -127,7 +127,7 @@ fr_application_activate_about (GSimpleAction *action,
 
 	gtk_show_about_dialog (GTK_WINDOW (_gtk_application_get_current_window (G_APPLICATION (user_data))),
 			       "version", PACKAGE_VERSION,
-			       "copyright", _("Copyright \xc2\xa9 2001–2014 Free Software Foundation, Inc."),
+			       "copyright", _("Copyright \xc2\xa9 2001–2022 Free Software Foundation, Inc."),
 			       "comments", _("An archive manager for GNOME."),
 			       "authors", authors,
 			       "documenters", documenters,
