@@ -484,3 +484,12 @@ fr_window_activate_view_sidebar (GSimpleAction *action,
 
 	g_object_unref (settings);
 }
+
+
+void
+fr_window_activate_focus_location (GSimpleAction *action,
+				   GVariant      *state,
+				   gpointer       user_data)
+{
+	fr_window_focus_location (FR_WINDOW (user_data));
+}

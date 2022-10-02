@@ -9422,3 +9422,12 @@ fr_window_extract_archive_and_continue (FrWindow      *window,
 					   junk_paths,
 					   _fr_window_get_ask_to_open_destination (window));
 }
+
+
+void
+fr_window_focus_location (FrWindow *window)
+{
+	FrWindowPrivate *private = fr_window_get_instance_private (window);
+	if (private->list_mode == FR_WINDOW_LIST_MODE_AS_DIR)
+		gtk_widget_grab_focus (private->location_entry);
+}

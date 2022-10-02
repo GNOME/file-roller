@@ -436,4 +436,6 @@ void            fr_window_extract_archive_and_continue (FrWindow   *window,
 							FrOverwrite overwrite,
 							gboolean    junk_paths);
 
+void            fr_window_focus_location               (FrWindow   *window);
+
 #endif /* FR_WINDOW_H */

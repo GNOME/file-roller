@@ -161,6 +161,10 @@ static const GActionEntry fr_window_actions[] = {
 		.state = "false",
 		.change_state = fr_window_activate_view_sidebar,
 	},
+	{
+		.name = "focus-location",
+		.activate = fr_window_activate_focus_location,
+	},
 };
 
 
@@ -175,7 +179,8 @@ static const FrAccelerator fr_window_accelerators[] = {
 	{ "win.save-as", "<Shift><Control>s" },	
 	{ "win.select-all", "<control>a" },
 	{ "win.view-properties", "<alt>Return" },
-	{ "win.view-sidebar", "F9" }
+	{ "win.view-sidebar", "F9" },
+	{ "win.focus-location", "<Control>l" }
 };
 
 

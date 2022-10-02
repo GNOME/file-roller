@@ -62,5 +62,6 @@ DEF_ACTION_CALLBACK (fr_window_activate_test_archive)
 DEF_ACTION_CALLBACK (fr_window_activate_view_properties)
 DEF_ACTION_CALLBACK (fr_window_activate_view_selection)
 DEF_ACTION_CALLBACK (fr_window_activate_view_sidebar)
+DEF_ACTION_CALLBACK (fr_window_activate_focus_location)
 
 #endif /* FR_WINDOW_ACTION_CALLBACKS_H */
