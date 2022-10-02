@@ -75,7 +75,6 @@
                       <object class="GtkTreeViewColumn" id="treeviewcolumn2">
                         <property name="resizable">1</property>
                         <property name="sizing">fixed</property>
-                        <property name="fixed_width">200</property>
                         <property name="title" translatable="1" context="File">Name</property>
                         <property name="expand">1</property>
                         <property name="reorderable">1</property>
@@ -109,8 +108,9 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="treeviewcolumn_size">
-                        <property name="resizable">0</property>
-                        <property name="sizing">autosize</property>
+                        <property name="resizable">1</property>
+                        <property name="sizing">fixed</property>
+                        <property name="fixed-width">150</property>
                         <property name="title" translatable="1" context="File">Size</property>
                         <property name="reorderable">1</property>
                         <property name="sort_column_id">2</property>
@@ -127,8 +127,9 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="treeviewcolumn4">
-                        <property name="resizable">0</property>
-                        <property name="sizing">autosize</property>
+                        <property name="resizable">1</property>
+                        <property name="sizing">fixed</property>
+                        <property name="fixed-width">150</property>
                         <property name="title" translatable="1" context="File">Modified</property>
                         <property name="reorderable">1</property>
                         <property name="sort_column_id">3</property>
