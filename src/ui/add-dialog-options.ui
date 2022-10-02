@@ -24,6 +24,7 @@
     <property name="spacing">24</property>
     <child>
       <object class="GtkBox" id="box2">
+        <property name="hexpand">1</property>
         <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
@@ -71,8 +72,7 @@
               <object class="GtkEntry" id="include_files_entry">
                 <property name="focusable">1</property>
                 <property name="placeholder_text" translatable="1">*.o; *.bak</property>
-                <property name="invisible_char">●</property>
-                <property name="width_chars">30</property>
+                <property name="max_width_chars">25</property>
                 <layout>
                   <property name="column">1</property>
                   <property name="row">0</property>
@@ -83,7 +83,6 @@
               <object class="GtkEntry" id="exclude_files_entry">
                 <property name="focusable">1</property>
                 <property name="placeholder_text" translatable="1">*.o; *.bak</property>
-                <property name="invisible_char">●</property>
                 <layout>
                   <property name="column">1</property>
                   <property name="row">1</property>
@@ -94,7 +93,6 @@
               <object class="GtkEntry" id="exclude_folders_entry">
                 <property name="focusable">1</property>
                 <property name="placeholder_text" translatable="1">*.o; *.bak</property>
-                <property name="invisible_char">●</property>
                 <layout>
                   <property name="column">1</property>
                   <property name="row">2</property>
@@ -107,38 +105,23 @@
     </child>
     <child>
       <object class="GtkBox" id="box5">
+        <property name="hexpand">1</property>
         <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
-          <object class="GtkLabel" id="label2">
+          <object class="GtkCheckButton" id="update_checkbutton">
+            <property name="label" translatable="1">Add only if _newer</property>
+            <property name="focusable">1</property>
+            <property name="use_underline">1</property>
             <property name="halign">start</property>
-            <property name="label" translatable="1">Options</property>
-            <attributes>
-              <attribute name="weight" value="bold"></attribute>
-            </attributes>
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="box6">
-            <property name="margin-start">0</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkCheckButton" id="update_checkbutton">
-                <property name="label" translatable="1">Add only if _newer</property>
-                <property name="focusable">1</property>
-                <property name="use_underline">1</property>
-                <property name="halign">start</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="follow_links_checkbutton">
-                <property name="label" translatable="1">_Follow symbolic links</property>
-                <property name="focusable">1</property>
-                <property name="use_underline">1</property>
-                <property name="halign">start</property>
-              </object>
-            </child>
+          <object class="GtkCheckButton" id="follow_links_checkbutton">
+            <property name="label" translatable="1">_Follow symbolic links</property>
+            <property name="focusable">1</property>
+            <property name="use_underline">1</property>
+            <property name="halign">start</property>
           </object>
         </child>
       </object>
