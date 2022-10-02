@@ -8,8 +8,8 @@ baseURLs = [
   ["GLib", "https://docs.gtk.org/glib/"],
   ["Gio", "https://docs.gtk.org/gio/"],
   ["GObject", "https://docs.gtk.org/gobject/"],
-  ["Gdk", "https://docs.gtk.org/gdk3/"],
+  ["Gdk", "https://docs.gtk.org/gdk4/"],
   ["GdkPixbuf", "https://docs.gtk.org/gdk-pixbuf/"],
-  ["Gtk", "https://docs.gtk.org/gtk3/"],
+  ["Gtk", "https://docs.gtk.org/gtk4/"],
   ["Pango", "https://docs.gtk.org/Pango/"]
 ];
