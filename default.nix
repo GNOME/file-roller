@@ -109,11 +109,11 @@ makeDerivation rec {
     file
     glib
     gnome.adwaita-icon-theme
-    gtk3
+    gtk4
     json-glib
     libarchive
-    libhandy
-    libportal-gtk3
+    libadwaita
+    libportal-gtk4
   ];
 
   mesonFlags = [
