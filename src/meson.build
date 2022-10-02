@@ -166,7 +166,7 @@ if build_introspection
     includes: [
       'Gio-2.0',
       'GObject-2.0',
-      'Gtk-3.0',
+      'Gtk-4.0',
     ],
   )
 endif
