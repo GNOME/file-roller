@@ -730,42 +730,51 @@ load_options_activate_cb (GSimpleAction *action,
 			  GVariant *parameter,
 			  gpointer user_data)
 {
+	DialogData            *data = user_data;
 	LoadOptionsDialogData *aod_data;
 	GtkWidget             *ok_button;
 	GtkWidget             *cancel_button;
 	GtkWidget             *remove_button;
 	GtkCellRenderer       *renderer;
 	GtkTreeViewColumn     *column;
-	DialogData *data = user_data;
 
 	aod_data = g_new0 (LoadOptionsDialogData, 1);
-
 	aod_data->data = data;
 	aod_data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "add-options.ui");
 
 	/* Get the widgets. */
 
 	aod_data->dialog = g_object_new (GTK_TYPE_DIALOG,
-					 "title", C_("Window title", "Load Options"),
+					 "title", C_("Window title", "Options"),
 					 "modal", TRUE,
 					 "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 					 NULL);
-	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (aod_data->dialog))),
-			   _gtk_builder_get_widget (aod_data->builder, "add_options_dialog"));
+	_gtk_box_pack_end (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (aod_data->dialog))),
+			   _gtk_builder_get_widget (aod_data->builder, "add_options_dialog"),
+			   TRUE,
+			   TRUE);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (aod_data->dialog),
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 				_("_Apply"), GTK_RESPONSE_OK,
-				_("_Delete"), RESPONSE_DELETE_OPTIONS,
 				NULL);
+
+	gboolean use_header;
+	g_object_get (data->dialog, "use-header-bar", &use_header, NULL);
+
+	remove_button = gtk_button_new_from_icon_name ("user-trash-symbolic");
+	if (! use_header)
+		gtk_dialog_add_action_widget (GTK_DIALOG (aod_data->dialog), remove_button, RESPONSE_DELETE_OPTIONS);
+	else
+		gtk_header_bar_pack_end (GTK_HEADER_BAR (gtk_dialog_get_header_bar (GTK_DIALOG (aod_data->dialog))),
+					 remove_button);
+	gtk_style_context_add_class (gtk_widget_get_style_context (remove_button), "destructive-action");
 
 	aod_data->aod_treeview = _gtk_builder_get_widget (aod_data->builder, "aod_treeview");
 
 	ok_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (aod_data->dialog), GTK_RESPONSE_OK);
 	gtk_style_context_add_class (gtk_widget_get_style_context (ok_button), "suggested-action");
 	cancel_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (aod_data->dialog), GTK_RESPONSE_CANCEL);
-	remove_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (aod_data->dialog), RESPONSE_DELETE_OPTIONS);
-	gtk_style_context_add_class (gtk_widget_get_style_context (remove_button), "destructive-action");
 
 	/* Set the signals handlers. */
 
@@ -821,7 +830,8 @@ load_options_activate_cb (GSimpleAction *action,
 				      GTK_WINDOW (data->dialog));
 	gtk_window_set_modal (GTK_WINDOW (aod_data->dialog), TRUE);
 	_gtk_dialog_add_to_window_group (GTK_DIALOG (aod_data->dialog));
-	gtk_widget_show (aod_data->dialog);
+	gtk_window_set_default_size (GTK_WINDOW (aod_data->dialog), 600, 200);
+	gtk_window_present (GTK_WINDOW (aod_data->dialog));
 }
 
 
