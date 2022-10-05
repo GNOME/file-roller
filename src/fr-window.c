@@ -5014,6 +5014,7 @@ fr_window_construct (FrWindow *window)
 
 	GtkGesture *gesture_click = gtk_gesture_click_new ();
 	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (gesture_click), 0);
+	gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (gesture_click), GTK_PHASE_CAPTURE);
 	g_signal_connect (gesture_click,
 			  "pressed",
 			  G_CALLBACK (list_view_button_pressed_cb),
@@ -5070,6 +5071,7 @@ fr_window_construct (FrWindow *window)
 
 	gesture_click = gtk_gesture_click_new ();
 	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (gesture_click), 0);
+	gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (gesture_click), GTK_PHASE_CAPTURE);
 	g_signal_connect (gesture_click,
 			  "pressed",
 			  G_CALLBACK (dir_tree_button_pressed_cb),
