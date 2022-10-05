@@ -3399,21 +3399,55 @@ fr_window_get_n_selected_files (FrWindow *window)
 /**/
 
 
-static gboolean
-dir_tree_events_cb (GtkEventControllerLegacy *self,
-		    GdkEvent                 *event,
-		    gpointer                  user_data)
+static void
+dir_tree_button_pressed_cb (GtkGestureClick *gesture,
+			    gint             n_press,
+			    gdouble          x,
+			    gdouble          y,
+			    gpointer         user_data)
 {
-	FrWindow        *window = user_data;
-	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	double           x, y;
+	FrWindow         *window = user_data;
+	FrWindowPrivate  *private = fr_window_get_instance_private (window);
+	GtkTreeSelection *selection;
+	int               button = gtk_gesture_single_get_current_button (GTK_GESTURE_SINGLE (gesture));
 
-	if (gdk_event_triggers_context_menu (event) && gdk_event_get_position (event, &x, &y)) {
-		_gtk_popover_popup_at_position (GTK_POPOVER (private->sidebar_folder_popup_menu), x, y);
-		return TRUE;
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (private->tree_view));
+	if (selection == NULL)
+		return;
+
+	if ((n_press == 1) && (button == GDK_BUTTON_SECONDARY)) {
+		GtkTreePath *path;
+		GtkTreeIter  iter;
+		int	     bx, by;
+
+		gtk_tree_view_convert_widget_to_bin_window_coords (GTK_TREE_VIEW (private->tree_view), x, y, &bx, &by);
+
+		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (private->tree_view),
+						   bx, by,
+						   &path, NULL, NULL, NULL))
+		{
+			if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (private->tree_store), &iter, path)) {
+				gtk_tree_path_free (path);
+				return;
+			}
+			gtk_tree_path_free (path);
+
+			if (! gtk_tree_selection_iter_is_selected (selection, &iter)) {
+				gtk_tree_selection_unselect_all (selection);
+				gtk_tree_selection_select_iter (selection, &iter);
+			}
+
+			_gtk_popover_popup_at_position (GTK_POPOVER (private->sidebar_folder_popup_menu), x, y);
+		}
+		else
+			gtk_tree_selection_unselect_all (selection);
 	}
-
-	return FALSE;
+	else if ((n_press == 1) && (button == 8)) {
+		fr_window_go_back (window);
+	}
+	else if ((n_press == 1) && (button == 9)) {
+		fr_window_go_forward (window);
+	}
 }
 
 
@@ -3543,48 +3577,60 @@ row_activated_cb (GtkTreeView       *tree_view,
 }
 
 
-static gboolean
-list_view_button_pressed_cb (GtkGestureClick *self,
+static void
+list_view_button_pressed_cb (GtkGestureClick *gesture,
 			     gint             n_press,
 			     gdouble          x,
 			     gdouble          y,
 			     gpointer         user_data)
 {
-	FrWindow *window = user_data;
-	int       button = gtk_gesture_single_get_current_button (GTK_GESTURE_SINGLE (self));
+	FrWindow         *window = user_data;
+	FrWindowPrivate  *private = fr_window_get_instance_private (window);
+	GtkTreeSelection *selection;
+	int               button = gtk_gesture_single_get_current_button (GTK_GESTURE_SINGLE (gesture));
 
-	if ((n_press == 1) && (button == 8)) {
-		fr_window_go_back (window);
-		return TRUE;
-	}
-	else if ((n_press == 1) && (button == 9)) {
-		fr_window_go_forward (window);
-		return TRUE;
-	}
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (private->list_view));
+	if (selection == NULL)
+		return;
 
-	return FALSE;
-}
+	if ((n_press == 1) && (button == GDK_BUTTON_SECONDARY)) {
+		GtkTreePath *path;
+		GtkTreeIter  iter;
+		int	     n_selected;
+		int          bx, by;
 
+		gtk_tree_view_convert_widget_to_bin_window_coords (GTK_TREE_VIEW (private->list_view), x, y, &bx, &by);
 
-static gboolean
-list_view_events_cb (GtkEventControllerLegacy *self,
-		     GdkEvent                 *event,
-		     gpointer                  user_data)
-{
-	FrWindow        *window = user_data;
-	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	double           x, y;
+		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (private->list_view),
+						   bx, by,
+						   &path, NULL, NULL, NULL))
+		{
+			if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (private->list_store), &iter, path)) {
+				gtk_tree_path_free (path);
+				return;
+			}
+			gtk_tree_path_free (path);
 
-	if (gdk_event_triggers_context_menu (event) && gdk_event_get_position (event, &x, &y)) {
-		int n_selected = fr_window_get_n_selected_files (window);
+			if (! gtk_tree_selection_iter_is_selected (selection, &iter)) {
+				gtk_tree_selection_unselect_all (selection);
+				gtk_tree_selection_select_iter (selection, &iter);
+			}
+		}
+		else
+			gtk_tree_selection_unselect_all (selection);
+
+		n_selected = fr_window_get_n_selected_files (window);
 		if ((n_selected == 1) && selection_has_a_dir (window))
 			_gtk_popover_popup_at_position (GTK_POPOVER (private->folder_popup_menu), x, y);
 		else
 			_gtk_popover_popup_at_position (GTK_POPOVER (private->file_popup_menu), x, y);
-		return TRUE;
 	}
-
-	return FALSE;
+	else if ((n_press == 1) && (button == 8)) {
+		fr_window_go_back (window);
+	}
+	else if ((n_press == 1) && (button == 9)) {
+		fr_window_go_forward (window);
+	}
 }
 
 
@@ -4974,13 +5020,6 @@ fr_window_construct (FrWindow *window)
 			  window);
 	gtk_widget_add_controller (GTK_WIDGET (private->list_view), GTK_EVENT_CONTROLLER (gesture_click));
 
-	GtkEventController *event_controller = gtk_event_controller_legacy_new ();
-	g_signal_connect (event_controller,
-			  "event",
-			  G_CALLBACK (list_view_events_cb),
-			  window);
-	gtk_widget_add_controller (GTK_WIDGET (private->list_view), event_controller);
-
 	/*g_signal_connect (GTK_TREE_VIEW (private->list_view),
 			  "motion_notify_event",
 			  G_CALLBACK (file_motion_notify_callback),
@@ -5029,12 +5068,13 @@ fr_window_construct (FrWindow *window)
 	gtk_tree_view_set_level_indentation (GTK_TREE_VIEW (private->tree_view), 15);
 	add_dir_tree_columns (window, GTK_TREE_VIEW (private->tree_view));
 
-	event_controller = gtk_event_controller_legacy_new ();
-	g_signal_connect (event_controller,
-			  "event",
-			  G_CALLBACK (dir_tree_events_cb),
+	gesture_click = gtk_gesture_click_new ();
+	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (gesture_click), 0);
+	g_signal_connect (gesture_click,
+			  "pressed",
+			  G_CALLBACK (dir_tree_button_pressed_cb),
 			  window);
-	gtk_widget_add_controller (GTK_WIDGET (private->tree_view), GTK_EVENT_CONTROLLER (event_controller));
+	gtk_widget_add_controller (GTK_WIDGET (private->tree_view), GTK_EVENT_CONTROLLER (gesture_click));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (private->tree_view));
 	g_signal_connect (selection,
@@ -5070,11 +5110,14 @@ fr_window_construct (FrWindow *window)
 	private->sidepane = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	_gtk_box_pack_start (GTK_BOX (private->sidepane), tree_scrolled_window, TRUE, TRUE);
 
+	GtkWidget *listpane = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	_gtk_box_pack_start (GTK_BOX (listpane), list_scrolled_window, TRUE, TRUE);
+
 	/* main content */
 
 	private->paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_paned_set_start_child (GTK_PANED (private->paned), private->sidepane);
-	gtk_paned_set_end_child (GTK_PANED (private->paned), list_scrolled_window);
+	gtk_paned_set_end_child (GTK_PANED (private->paned), listpane);
 	gtk_paned_set_position (GTK_PANED (private->paned), g_settings_get_int (private->settings_ui, PREF_UI_SIDEBAR_WIDTH));
 	/*gtk_drag_dest_set (GTK_WIDGET (private->paned),
 			   GTK_DEST_DEFAULT_ALL,
@@ -5198,6 +5241,14 @@ fr_window_construct (FrWindow *window)
 		private->file_popup_menu = gtk_popover_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (builder, "file-popup")));
 		private->folder_popup_menu = gtk_popover_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (builder, "folder-popup")));
 		private->sidebar_folder_popup_menu = gtk_popover_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (builder, "sidebar-popup")));
+
+		gtk_popover_set_offset (GTK_POPOVER (private->file_popup_menu), 0, 30);
+		gtk_popover_set_offset (GTK_POPOVER (private->folder_popup_menu), 0, 30);
+		gtk_popover_set_offset (GTK_POPOVER (private->sidebar_folder_popup_menu), 0, 30);
+
+		gtk_box_prepend (GTK_BOX (listpane), private->file_popup_menu);
+		gtk_box_prepend (GTK_BOX (listpane), private->folder_popup_menu);
+		gtk_box_prepend (GTK_BOX (private->sidepane), private->sidebar_folder_popup_menu);
 
 		g_object_unref (builder);
 	}
