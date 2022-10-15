@@ -36,6 +36,7 @@ static guint fr_places_sidebar_signals[LAST_SIGNAL] = { 0 };
 
 typedef struct {
 	GtkWidget *list_box;
+	GCancellable *cancellable;
 } FrPlacesSidebarPrivate;
 
 
@@ -45,7 +46,14 @@ G_DEFINE_TYPE_WITH_PRIVATE (FrPlacesSidebar, fr_places_sidebar, GTK_TYPE_BOX)
 static void
 fr_places_sidebar_finalize (GObject *object)
 {
-	//FrPlacesSidebar *self = FR_PLACES_SIDEBAR (object);
+	FrPlacesSidebar *self = FR_PLACES_SIDEBAR (object);
+	FrPlacesSidebarPrivate *private = fr_places_sidebar_get_instance_private (self);
+
+	if (private->cancellable != NULL) {
+		g_cancellable_cancel (private->cancellable);
+		private->cancellable = NULL;
+	}
+
 	G_OBJECT_CLASS (fr_places_sidebar_parent_class)->finalize (object);
 }
 
@@ -123,11 +131,106 @@ row_activated_cb (GtkListBox    *list_box,
 }
 
 
+/* Load bookmarks */
+
+
+typedef struct {
+	FrPlacesSidebar *self;
+	GHashTable *locations;
+} LoadContext;
+
+
+static void load_context_free (LoadContext *ctx)
+{
+	g_object_unref (ctx->self);
+	g_hash_table_unref (ctx->locations);
+	g_free (ctx);
+}
+
+
+static void load_context_finish (LoadContext *ctx)
+{
+	FrPlacesSidebarPrivate *private = fr_places_sidebar_get_instance_private (ctx->self);
+	if (private->cancellable != NULL) {
+		g_object_unref (private->cancellable);
+		private->cancellable = NULL;
+	}
+	load_context_free (ctx);
+}
+
+
+static void
+load_context_add_root (LoadContext *ctx)
+{
+	FrPlacesSidebarPrivate *private = fr_places_sidebar_get_instance_private (ctx->self);
+	GFile *location = g_file_new_for_path ("/");
+	GtkWidget *row = row_box_for_file (location, NULL);
+	if (row != NULL) {
+		gtk_list_box_append (GTK_LIST_BOX (private->list_box), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
+		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
+	}
+	g_object_unref (location);
+
+	load_context_finish (ctx);
+}
+
+
+static void
+bookmark_file_ready_cb (GObject      *source_object,
+			GAsyncResult *result,
+			gpointer      user_data)
+{
+	LoadContext *ctx = user_data;
+	FrPlacesSidebarPrivate *private = fr_places_sidebar_get_instance_private (ctx->self);
+	char *content;
+	gsize content_size;
+
+	if (! _g_file_load_buffer_finish (G_FILE (source_object), result, &content, &content_size, NULL)) {
+		load_context_add_root (ctx);
+		return;
+	}
+
+	gboolean first_bookmark = TRUE;
+	char **lines = g_strsplit (content, "\n", -1);
+	for (int i = 0; lines[i] != NULL; i++) {
+		char **line = g_strsplit (lines[i], " ", 2);
+		char *uri = line[0];
+		if (uri == NULL) {
+			g_strfreev (line);
+			continue;
+		}
+
+		GFile *file = g_file_new_for_uri (uri);
+		if (!g_hash_table_contains (ctx->locations, file)) {
+			GtkWidget *row = row_box_for_file (file, NULL);
+			if (row != NULL) {
+				if (first_bookmark) {
+					gtk_list_box_append (GTK_LIST_BOX (private->list_box), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
+					first_bookmark = FALSE;
+				}
+				gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
+				g_hash_table_add (ctx->locations, g_object_ref (file));
+			}
+		}
+
+		g_object_unref (file);
+		g_strfreev (line);
+	}
+
+	g_strfreev (lines);
+
+	load_context_add_root (ctx);
+}
+
+
 static void
 fr_places_sidebar_init (FrPlacesSidebar *self)
 {
 	FrPlacesSidebarPrivate *private = fr_places_sidebar_get_instance_private (self);
 	GtkWidget *scrolled_window;
+
+	private->cancellable = g_cancellable_new ();
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (self), GTK_ORIENTATION_VERTICAL);
 
@@ -141,7 +244,9 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled_window), private->list_box);
 	g_signal_connect (private->list_box, "row-activated", G_CALLBACK (row_activated_cb), self);
 
-	GHashTable *locations = g_hash_table_new (g_file_hash, (GEqualFunc) g_file_equal);
+	LoadContext *ctx = g_new0 (LoadContext, 1);
+	ctx->self = g_object_ref (self);
+	ctx->locations = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, (GDestroyNotify) g_object_unref, NULL);
 
 	/* Home */
 
@@ -152,7 +257,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	row = row_box_for_file (location, NULL);
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
 	}
 	g_object_unref (location);
 
@@ -160,7 +265,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	row = row_box_for_file (location, NULL);
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
 	}
 	g_object_unref (location);
 
@@ -169,7 +274,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	row = row_box_for_file (location, _("Home"));
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
 	}
 
 	/* Special directories. */
@@ -178,7 +283,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	row = row_box_for_file (location, NULL);
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
 	}
 	g_object_unref (location);
 
@@ -186,7 +291,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	row = row_box_for_file (location, NULL);
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
 	}
 	g_object_unref (location);
 
@@ -194,7 +299,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	row = row_box_for_file (location, NULL);
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
 	}
 	g_object_unref (location);
 
@@ -202,7 +307,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	row = row_box_for_file (location, NULL);
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
 	}
 	g_object_unref (location);
 
@@ -210,27 +315,22 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	row = row_box_for_file (location, NULL);
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
+		g_hash_table_add (ctx->locations, g_object_ref (location));
 	}
 	g_object_unref (location);
 
 	/* Bookmarks */
 
-	//gtk_list_box_append (GTK_LIST_BOX (private->list_box), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
+	char *path = g_strdup_printf ("%s/gtk-3.0/bookmarks", g_get_user_config_dir ());
+	GFile *bookmark_file = g_file_new_for_path (path);
+	_g_file_load_buffer_async (bookmark_file,
+				   -1,
+				   private->cancellable,
+				   bookmark_file_ready_cb,
+				   ctx);
 
-	/* Root */
-
-	gtk_list_box_append (GTK_LIST_BOX (private->list_box), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
-
-	location = g_file_new_for_path ("/");
-	row = row_box_for_file (location, NULL);
-	if (row != NULL) {
-		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (locations, location);
-	}
-	g_object_unref (location);
-
-	g_hash_table_unref (locations);
+	g_object_unref (bookmark_file);
+	g_free (path);
 }
 
 
