@@ -23,6 +23,7 @@
 #include "fr-enum-types.h"
 #include "fr-file-selector-dialog.h"
 #include "fr-location-bar.h"
+#include "fr-places-sidebar.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
@@ -113,6 +114,7 @@ struct _FrFileSelectorDialog {
 	GtkPopover         *file_context_menu;
 	GtkWidget          *location_bar;
 	FrFileSelectorMode  selection_mode;
+	GtkWidget          *places_sidebar;
 };
 
 
@@ -202,7 +204,7 @@ set_current_folder (FrFileSelectorDialog *self,
 		return;
 
 	fr_location_bar_set_location (FR_LOCATION_BAR (self->location_bar), folder);
-	//gtk_places_sidebar_set_location (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")), folder);
+	fr_places_sidebar_set_location (FR_PLACES_SIDEBAR (self->places_sidebar), folder);
 }
 
 
@@ -561,16 +563,14 @@ location_bar_changed_cb (FrLocationBar *location_bar,
 }
 
 
-/*static void
-places_sidebar_open_location_cb (GtkPlacesSidebar  *sidebar,
-				 GFile             *location,
-				 GtkPlacesOpenFlags open_flags,
-				 gpointer           user_data)
+static void
+places_sidebar_open_cb (FrPlacesSidebar *sidebar,
+			GFile           *location,
+			gpointer         user_data)
 {
 	FrFileSelectorDialog *self = user_data;
-
 	fr_file_selector_dialog_set_current_folder (self, location);
-	}*/
+}
 
 
 static gboolean
@@ -712,6 +712,13 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  G_CALLBACK (location_bar_changed_cb),
 			  self);
 
+	self->places_sidebar = fr_places_sidebar_new ();
+	_gtk_box_pack_start (GTK_BOX (GET_WIDGET ("places_sidebar")), self->places_sidebar, TRUE, TRUE);
+	g_signal_connect (self->places_sidebar,
+			  "open",
+			  G_CALLBACK (places_sidebar_open_cb),
+			  self);
+
 	g_signal_connect (GTK_CELL_RENDERER_TOGGLE (GET_WIDGET ("is_selected_cellrenderertoggle")),
 			  "toggled",
 			  G_CALLBACK (is_selected_cellrenderertoggle_toggled_cb),
@@ -724,10 +731,6 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  "changed",
 			  G_CALLBACK (files_treeview_selection_changed_cb),
 			  self);
-	/*g_signal_connect (GTK_PLACES_SIDEBAR (GET_WIDGET ("places_sidebar")),
-			  "open-location",
-			  G_CALLBACK (places_sidebar_open_location_cb),
-			  self);*/
 
 	GtkEventController *event_controller = gtk_event_controller_legacy_new ();
 	g_signal_connect (event_controller,
