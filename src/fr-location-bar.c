@@ -227,7 +227,7 @@ fr_location_bar_init (FrLocationBar *self)
 			  self);
 
 	private->parent_location_button = button = gtk_button_new_from_icon_name ("go-up-symbolic");
-	gtk_widget_set_tooltip_text (button, _("Open the parent location"));
+	gtk_widget_set_tooltip_text (button, _("Go to the parent location"));
 	g_signal_connect (button,
 			  "clicked",
 			  G_CALLBACK (parent_location_button_clicked_cb),
