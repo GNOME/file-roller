@@ -181,6 +181,14 @@ fr_window_activate_go_home (GSimpleAction *action,
 
 
 void
+fr_window_activate_go_up_one_level (GSimpleAction *action,
+				    GVariant      *parameter,
+				    gpointer       user_data)
+{
+	fr_window_go_up_one_level (FR_WINDOW (user_data));
+}
+
+void
 fr_window_activate_open_folder (GSimpleAction *action,
 				GVariant      *parameter,
 				gpointer       user_data)

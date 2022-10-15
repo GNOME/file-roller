@@ -1626,6 +1626,7 @@ fr_window_update_current_location (FrWindow *window)
 	fr_window_enable_action (window, "go-back", private->archive_present && (current_dir != NULL) && (private->history_current != NULL) && (private->history_current->next != NULL));
 	fr_window_enable_action (window, "go-forward", private->archive_present && (current_dir != NULL) && (private->history_current != NULL) && (private->history_current->prev != NULL));
 	fr_window_enable_action (window, "go-home", private->archive_present);
+	fr_window_enable_action (window, "go-up-one-level", private->archive_present && (current_dir != NULL) && (g_strcmp0 (current_dir, "/") != 0));
 
 	gtk_widget_set_sensitive (private->location_entry, private->archive_present);
 	gtk_widget_set_sensitive (private->location_label, private->archive_present);
@@ -5205,6 +5206,8 @@ fr_window_construct (FrWindow *window)
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
 	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
 	gtk_box_append (GTK_BOX (private->location_bar), navigation_commands);
+	gtk_box_append (GTK_BOX (private->location_bar),
+			_gtk_header_bar_create_image_button ("go-up-symbolic", _("Go to the parent location"), "win.go-up-one-level"));
 	gtk_box_append (GTK_BOX (private->location_bar),
 			_gtk_header_bar_create_image_button ("user-home-symbolic", _("Go to the home location"), "win.go-home"));
 

@@ -83,6 +83,10 @@ static const GActionEntry fr_window_actions[] = {
 		.activate = fr_window_activate_go_home,
 	},
 	{
+		.name = "go-up-one-level",
+		.activate = fr_window_activate_go_up_one_level,
+	},
+	{
 		.name = "navigate-to",
 		.activate = fr_window_activate_navigate_to,
 	},
