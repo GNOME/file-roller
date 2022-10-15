@@ -165,6 +165,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	g_object_unref (location);
 
 	location = _g_file_get_home ();
+	/* Translators: this is the name of the home directory. */
 	row = row_box_for_file (location, _("Home"));
 	if (row != NULL) {
 		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
