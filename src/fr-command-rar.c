@@ -757,6 +757,7 @@ fr_command_rar_handle_error (FrCommand *comm,
 
 const char *rar_mime_type[] = { "application/x-cbr",
 				"application/x-rar",
+				"application/vnd.rar",
 				NULL };
 
 

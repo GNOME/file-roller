@@ -102,6 +102,7 @@ const char *libarchiver_mime_types[] = {
 	"application/epub+zip",
 	"application/vnd.debian.binary-package",
 	"application/vnd.ms-cab-compressed",
+	"application/vnd.rar",
 	"application/x-7z-compressed",
 	"application/x-ar",
 	"application/x-bzip-compressed-tar",
@@ -184,7 +185,8 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 	}
 
 	/* give priority to utilities that support RAR files better. */
-	if ((strcmp (mime_type, "application/x-rar") == 0)
+	if ((strcmp (mime_type, "application/vnd.rar") == 0)
+	    || (strcmp (mime_type, "application/x-rar") == 0)
 	    || (strcmp (mime_type, "application/x-cbr") == 0))
 	{
 		if (_g_program_is_available ("rar", TRUE)
@@ -204,6 +206,7 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 
 	/* read-only formats */
 	if ((strcmp (mime_type, "application/vnd.ms-cab-compressed") == 0)
+	    || (strcmp (mime_type, "application/vnd.rar") == 0)
 	    || (strcmp (mime_type, "application/x-cbr") == 0)
 	    || (strcmp (mime_type, "application/x-deb") == 0)
 	    || (strcmp (mime_type, "application/vnd.debian.binary-package") == 0)

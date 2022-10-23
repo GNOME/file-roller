@@ -579,6 +579,7 @@ const char *sevenz_mime_types[] = {
 	"application/x-apple-diskimage",
 	"application/x-arj",
 	"application/vnd.ms-cab-compressed",
+	"application/vnd.rar",
 	"application/x-cd-image",
 	"application/x-chrome-extension",
 	/*"application/x-cbr",*/
@@ -694,6 +695,7 @@ fr_command_7z_get_capabilities (FrArchive  *archive,
 	}
 	else if (available_formats_full) {
 		if (_g_mime_type_matches (mime_type, "application/x-rar")
+		    || _g_mime_type_matches (mime_type, "application/vnd.rar")
 		    || _g_mime_type_matches (mime_type, "application/x-cbr"))
 		{
 			/* give priority to rar and unrar that supports RAR files better. */
@@ -736,7 +738,7 @@ static const char *
 fr_command_7z_get_packages (FrArchive  *archive,
 			    const char *mime_type)
 {
-	if (_g_mime_type_matches (mime_type, "application/x-rar"))
+	if (_g_mime_type_matches (mime_type, "application/vnd.rar") || _g_mime_type_matches (mime_type, "application/x-rar"))
 		return FR_PACKAGES ("7zip,7zip-rar");
 	else if (_g_mime_type_matches (mime_type, "application/zip") || _g_mime_type_matches (mime_type, "application/vnd.ms-cab-compressed"))
 		return FR_PACKAGES ("7zip,7zip-full");
