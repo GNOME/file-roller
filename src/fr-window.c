@@ -127,6 +127,7 @@ typedef enum {
 	DIALOG_RESPONSE_NONE = 1,
 	DIALOG_RESPONSE_OPEN_ARCHIVE,
 	DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER,
+	DIALOG_RESPONSE_ADD_TO_ARCHIVE,
 } DialogResponse;
 
 
@@ -3840,6 +3841,188 @@ new_archive_dialog_response_cb (GtkDialog *dialog,
 }
 
 
+/* Dropped files */
+
+
+typedef struct {
+	FrWindow *window;
+	GList    *file_list;
+} DroppedData;
+
+
+static DroppedData*
+dropped_data_new (FrWindow *window, GList *file_list)
+{
+	DroppedData *data = g_new0 (DroppedData, 1);
+	data->window = g_object_ref (window);
+	data->file_list = _g_object_list_ref (file_list);
+	return data;
+}
+
+
+static void
+dropped_data_free (DroppedData *data)
+{
+	_g_object_unref (data->window);
+	_g_object_list_unref (data->file_list);
+	g_free (data);
+}
+
+
+static void
+dropped_one_archive_dialog_response (GtkDialog *dialog,
+				     int        response_id,
+				     gpointer   user_data)
+{
+	DroppedData *data = user_data;
+
+	if (response_id == DIALOG_RESPONSE_ADD_TO_ARCHIVE)
+		fr_window_archive_add_dropped_items (data->window, data->file_list);
+	else if (response_id == DIALOG_RESPONSE_OPEN_ARCHIVE)
+		fr_window_archive_open (data->window, G_FILE (data->file_list->data), GTK_WINDOW (data->window));
+
+	gtk_window_destroy (GTK_WINDOW (dialog));
+	dropped_data_free (data);
+}
+
+
+static void
+dropped_files_create_archive_dialog_response (GtkDialog *dialog,
+					      int        response_id,
+					      gpointer   user_data)
+{
+	DroppedData *data = user_data;
+	FrWindow    *window = data->window;
+	GList       *list = data->file_list;
+	GFile       *first_file;
+	GFile       *folder;
+	char        *archive_name;
+	GtkWidget   *new_archive_dialog;
+
+	gtk_window_destroy (GTK_WINDOW (dialog));
+	if (response_id != GTK_RESPONSE_YES) {
+		dropped_data_free (data);
+		return;
+	}
+
+	fr_window_free_batch_data (window);
+	fr_window_batch_append_action (window,
+				       FR_BATCH_ACTION_ADD,
+				       _g_object_list_ref (list),
+				       (GFreeFunc) _g_object_list_unref);
+
+	first_file = G_FILE (list->data);
+	folder = g_file_get_parent (first_file);
+	if (folder != NULL)
+		fr_window_set_open_default_dir (window, folder);
+
+	if ((list->next != NULL) && (folder != NULL))
+		archive_name = g_file_get_basename (folder);
+	else
+		archive_name = g_file_get_basename (first_file);
+
+	new_archive_dialog = fr_new_archive_dialog_new (_("New Archive"),
+							GTK_WINDOW (window),
+							FR_NEW_ARCHIVE_ACTION_SAVE_AS,
+							fr_window_get_open_default_dir (window),
+							archive_name,
+							NULL);
+	gtk_window_set_modal (GTK_WINDOW (new_archive_dialog), TRUE);
+	g_signal_connect (GTK_DIALOG (new_archive_dialog),
+			  "response",
+			  G_CALLBACK (new_archive_dialog_response_cb),
+			  window);
+	gtk_window_present (GTK_WINDOW (new_archive_dialog));
+
+	g_free (archive_name);
+	_g_object_unref (folder);
+
+	dropped_data_free (data);
+}
+
+
+static void
+fr_window_on_dropped_files (FrWindow *window,
+			    GList    *list /* GFile list */)
+{
+	FrWindowPrivate *private = fr_window_get_instance_private (window);
+	gboolean one_file = (list->next == NULL);
+	gboolean is_an_archive = one_file ? _g_file_is_archive (G_FILE (list->data)) : FALSE;
+
+	if (private->archive_present
+	    && (window->archive != NULL)
+	    && ! window->archive->read_only
+	    && fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_STORE_MANY_FILES))
+	{
+		if (one_file && is_an_archive) {
+			GtkWidget *dialog;
+
+			dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
+							  GTK_DIALOG_MODAL,
+							  _("Do you want to add this file to the current archive or open it as a new archive?"),
+							  NULL,
+							  _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+							  _GTK_LABEL_ADD, DIALOG_RESPONSE_ADD_TO_ARCHIVE,
+							  _GTK_LABEL_OPEN, DIALOG_RESPONSE_OPEN_ARCHIVE,
+							  NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (dialog), DIALOG_RESPONSE_OPEN_ARCHIVE);
+			g_signal_connect (GTK_DIALOG (dialog),
+					  "response",
+					  G_CALLBACK (dropped_one_archive_dialog_response),
+					  dropped_data_new (window, list));
+			gtk_widget_show (GTK_WIDGET (dialog));
+		}
+		else
+			fr_window_archive_add_dropped_items (window, list);
+	}
+	else {
+		if (one_file && is_an_archive)
+			fr_window_archive_open (window, G_FILE (list->data), GTK_WINDOW (window));
+		else {
+			GtkWidget *dialog;
+
+			dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
+							  GTK_DIALOG_MODAL,
+							  _("Do you want to create a new archive with these files?"),
+							  NULL,
+							  _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+							  _("Create _Archive"), GTK_RESPONSE_YES,
+							  NULL);
+
+			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
+			g_signal_connect (GTK_DIALOG (dialog),
+					  "response",
+					  G_CALLBACK (dropped_files_create_archive_dialog_response),
+					  dropped_data_new (window, list));
+			gtk_widget_show (GTK_WIDGET (dialog));
+		}
+	}
+}
+
+
+static gboolean
+fr_window_on_drop (GtkDropTarget *target,
+		   const GValue  *value,
+		   double         x,
+		   double         y,
+		   gpointer       data)
+{
+	FrWindow *window = data;
+
+	if (!G_VALUE_HOLDS (value, G_TYPE_FILE))
+		return FALSE;
+
+	// FIXME: support multiple files.
+	GFile *file = g_value_get_object (value);
+	GList *list = g_list_append (NULL, file);
+	fr_window_on_dropped_files (window, list);
+
+	g_list_free (list);
+
+	return TRUE;
+}
+
+
 #if 0
 static void
 fr_window_drag_data_received  (GtkWidget          *widget,
@@ -5137,6 +5320,13 @@ fr_window_construct (FrWindow *window)
 			  window);*/
 
 	fr_window_attach (FR_WINDOW (window), private->paned, FR_WINDOW_AREA_CONTENTS);
+
+	/* Drop target */
+
+	GtkDropTarget *target = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY);
+	gtk_drop_target_set_gtypes (target, (GType[2]) { G_TYPE_FILE, }, 1);
+	g_signal_connect (target, "drop", G_CALLBACK (fr_window_on_drop), window);
+	gtk_widget_add_controller (GTK_WIDGET (window), GTK_EVENT_CONTROLLER (target));
 
 	/* ui actions */
 
