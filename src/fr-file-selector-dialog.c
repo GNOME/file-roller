@@ -130,6 +130,8 @@ set_selection_mode (FrFileSelectorDialog *self,
 				       (self->selection_mode == FR_FILE_SELECTOR_MODE_FILES));
 	gtk_tree_view_column_set_visible (GTK_TREE_VIEW_COLUMN (GET_WIDGET ("treeviewcolumn_size")),
 					  (self->selection_mode == FR_FILE_SELECTOR_MODE_FILES));
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (self->action_map), "select-all")), (self->selection_mode == FR_FILE_SELECTOR_MODE_FILES));
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (self->action_map), "deselect-all")), (self->selection_mode == FR_FILE_SELECTOR_MODE_FILES));
 }
 
 
@@ -573,20 +575,16 @@ places_sidebar_open_cb (FrPlacesSidebar *sidebar,
 }
 
 
-static gboolean
-files_treeview_events_cb (GtkEventControllerLegacy *controller,
-			  GdkEvent                 *event,
-			  gpointer                  user_data)
+static void
+files_treeview_button_pressed_cb (GtkGestureClick *gesture,
+				  gint             n_press,
+				  gdouble          x,
+				  gdouble          y,
+				  gpointer         user_data)
 {
 	FrFileSelectorDialog *self = user_data;
-	double                x, y;
-
-	if (gdk_event_triggers_context_menu (event) && gdk_event_get_position (event, &x, &y)) {
+	if (n_press == 1)
 		_gtk_popover_popup_at_position (self->file_context_menu, x, y);
-		return TRUE;
-	}
-
-	return FALSE;
 }
 
 
@@ -698,6 +696,9 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	self->action_map = g_simple_action_group_new ();
 	self->file_context_menu = GTK_POPOVER (gtk_popover_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (self->builder, "file_list_context_menu_model"))));
 
+	gtk_popover_set_offset (GTK_POPOVER (self->file_context_menu), 0, 30);
+	gtk_box_prepend (GTK_BOX (GET_WIDGET ("file_list_container")), GTK_WIDGET (self->file_context_menu));
+
 	_gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"), TRUE, TRUE);
 
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, files_name_column_sort_func, self, NULL);
@@ -732,12 +733,13 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  G_CALLBACK (files_treeview_selection_changed_cb),
 			  self);
 
-	GtkEventController *event_controller = gtk_event_controller_legacy_new ();
-	g_signal_connect (event_controller,
-			  "event",
-			  G_CALLBACK (files_treeview_events_cb),
+	GtkGesture *gesture_click = gtk_gesture_click_new ();
+	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (gesture_click), GDK_BUTTON_SECONDARY);
+	g_signal_connect (gesture_click,
+			  "pressed",
+			  G_CALLBACK (files_treeview_button_pressed_cb),
 			  self);
-	gtk_widget_add_controller (GET_WIDGET ("files_treeview"), GTK_EVENT_CONTROLLER (event_controller));
+	gtk_widget_add_controller (GET_WIDGET ("files_treeview"), GTK_EVENT_CONTROLLER (gesture_click));
 
 	g_action_map_add_action_entries (G_ACTION_MAP (self->action_map),
 			dlg_entries, G_N_ELEMENTS (dlg_entries),
