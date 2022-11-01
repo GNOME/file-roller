@@ -694,7 +694,7 @@ fr_application_local_command_line (GApplication   *application,
 	}
 
 	if (arg_version) {
-		g_printf ("%s %s, Copyright © 2001-2012 Free Software Foundation, Inc.\n", PACKAGE_NAME, PACKAGE_VERSION);
+		g_printf ("%s %s, Copyright © 2001-2022 Free Software Foundation, Inc.\n", PACKAGE_NAME, PACKAGE_VERSION);
 		handled_locally = TRUE;
 	}
 
