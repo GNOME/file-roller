@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2022-10-03 07:54+0000\n"
+"POT-Creation-Date: 2022-10-31 10:17+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
 "Language-Team: Abkhazian <daniel.abzakh@gmail.com>\n"
 "Language: ab\n"
@@ -58,6 +58,140 @@ msgstr ""
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.FileRoller.desktop.in.in:6
 msgid "zip;tar;extract;unpack;"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:58
+msgid "How to sort files"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:59
+msgid ""
+"What criteria must be used to arrange files. Possible values: name, size, "
+"type, time, path."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:63
+msgid "Sort type"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:64
+msgid ""
+"Whether to sort in ascending or descending direction. Possible values: "
+"ascending, descending."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:68
+msgid "List Mode"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:69
+msgid ""
+"Use “all-files” to view all the files in the archive in a single list, use "
+"“as-folder” to navigate the archive as a folder."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:73
+msgid "Display type"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:74
+msgid "Display the type column in the main window."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:78
+msgid "Display size"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:79
+msgid "Display the size column in the main window."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:83
+msgid "Display time"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:84
+msgid "Display the time column in the main window."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:88
+msgid "Display path"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:89
+msgid "Display the path column in the main window."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:93
+msgid "Name column width"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:94
+msgid "The default width of the name column in the file list."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:110
+msgid "View the sidebar"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:111
+msgid "Whether to display the sidebar."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:130
+msgid "Editors"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:131
+msgid ""
+"List of applications entered in the “Open File” dialog and not associated "
+"with the file type."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:135
+msgid "Compression level"
+msgstr "Хахьҟа ҩаӡарак аиасра"
+
+#: data/org.gnome.FileRoller.gschema.xml:136
+msgid ""
+"Compression level used when adding files to an archive. Possible values: "
+"very-fast, fast, normal, maximum."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:140
+#: data/org.gnome.FileRoller.gschema.xml:172
+msgid "Encrypt the archive header"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:141
+#: data/org.gnome.FileRoller.gschema.xml:173
+msgid ""
+"Whether to encrypt the archive header. If the header is encrypted the "
+"password will be required to list the archive content as well."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:155
+msgid "Do not overwrite newer files"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:159
+msgid "Recreate the folders stored in the archive"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:177
+msgid "Show/hide the extra options"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:178
+msgid "Whether to show other options. If set the extra options will be shown."
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:182
+msgid "Default volume size"
+msgstr ""
+
+#: data/org.gnome.FileRoller.gschema.xml:183
+msgid "The default size for volumes."
 msgstr ""
 
 #: nautilus/nautilus-fileroller.c:255
@@ -616,7 +750,7 @@ msgstr ""
 
 #: src/fr-window.c:5035
 msgid "Folders"
-msgstr ""
+msgstr "Аҭаӡқәа "
 
 #: src/fr-window.c:5074 src/ui/file-selector.ui:206
 msgctxt "File"
@@ -871,7 +1005,7 @@ msgstr ""
 
 #: src/ui/add-dialog-options.ui:169 src/ui/extract-dialog-options.ui:144
 msgid "Actions"
-msgstr ""
+msgstr "Аҟаҵарақәа"
 
 #: src/ui/add-dialog-options.ui:189
 msgid "Add only if _newer"
@@ -1184,11 +1318,11 @@ msgstr ""
 
 #: src/ui/menus.ui:32 src/ui/menus.ui:68 src/ui/menus.ui:104
 msgid "Copy"
-msgstr ""
+msgstr "Ахкьыҧхьаара"
 
 #: src/ui/menus.ui:36 src/ui/menus.ui:72 src/ui/menus.ui:108
 msgid "Paste"
-msgstr ""
+msgstr "Абжьаргылара"
 
 #: src/ui/menus.ui:44 src/ui/menus.ui:80 src/ui/menus.ui:116
 msgid "Delete"
@@ -1266,837 +1400,3 @@ msgstr ""
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr ""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
