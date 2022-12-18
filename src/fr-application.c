@@ -475,6 +475,7 @@ fr_application_startup (GApplication *application)
 
 	g_set_application_name (_("Archive Manager"));
 	gtk_window_set_default_icon_name ("org.gnome.ArchiveManager");
+	g_application_set_resource_base_path (application, "/org/gnome/FileRoller");
 	fr_application_register_archive_manager_service (FR_APPLICATION (application));
 	fr_initialize_data ();
 
@@ -493,15 +494,6 @@ fr_application_startup (GApplication *application)
 
 	g_action_map_add_action_entries (G_ACTION_MAP (application), entries,
 					 G_N_ELEMENTS (entries), NULL);
-
-	/* CSS styles for widgets. */
-
-	GtkCssProvider *css_provider = gtk_css_provider_new ();
-	gtk_css_provider_load_from_resource (css_provider, "/org/gnome/FileRoller/ui/app.css");
-	gtk_style_context_add_provider_for_display (
-		gdk_display_get_default (),
-		GTK_STYLE_PROVIDER (css_provider),
-		GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
 
