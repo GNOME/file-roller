@@ -321,7 +321,7 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 
 	/* Bookmarks */
 
-	char *path = g_strdup_printf ("%s/gtk-3.0/bookmarks", g_get_user_config_dir ());
+	char *path = g_build_filename (g_get_user_config_dir (), "gtk-3.0", "bookmarks", NULL);
 	GFile *bookmark_file = g_file_new_for_path (path);
 	_g_file_load_buffer_async (bookmark_file,
 				   -1,
