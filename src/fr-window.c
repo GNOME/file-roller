@@ -4647,7 +4647,6 @@ fr_window_construct (FrWindow *window)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	GtkWidget          *list_scrolled_window;
-	GtkWidget          *navigation_commands;
 	GtkWidget          *location_box;
 	GtkWidget          *tree_scrolled_window;
 	GtkWidget          *button;
@@ -4968,18 +4967,15 @@ fr_window_construct (FrWindow *window)
 	/* location bar */
 
 	private->location_bar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (private->location_bar)), "toolbar");
 	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (private->location_bar)), "locationbar");
 
 	/* Navigation commands. */
 
-	navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_box_append (GTK_BOX (navigation_commands),
+	gtk_box_append (GTK_BOX (private->location_bar),
 			_gtk_header_bar_create_image_button ("go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"));
-	gtk_box_append (GTK_BOX (navigation_commands),
+	gtk_box_append (GTK_BOX (private->location_bar),
 			_gtk_header_bar_create_image_button ("go-next-symbolic", _("Go to the next visited location"), "win.go-forward"));
-	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
-	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
-	gtk_box_append (GTK_BOX (private->location_bar), navigation_commands);
 	gtk_box_append (GTK_BOX (private->location_bar),
 			_gtk_header_bar_create_image_button ("go-up-symbolic", _("Go to the parent location"), "win.go-up-one-level"));
 	gtk_box_append (GTK_BOX (private->location_bar),

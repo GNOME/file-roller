@@ -202,12 +202,10 @@ fr_location_bar_init (FrLocationBar *self)
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (self), GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_set_spacing (GTK_BOX (self), 6);
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "toolbar");
 	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "locationbar");
 
-	GtkWidget *navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
-	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
-
+	GtkWidget *navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	GtkWidget *button;
 
 	private->previous_location_button = button = gtk_button_new_from_icon_name ("go-previous-symbolic");
@@ -228,6 +226,7 @@ fr_location_bar_init (FrLocationBar *self)
 
 	private->parent_location_button = button = gtk_button_new_from_icon_name ("go-up-symbolic");
 	gtk_widget_set_tooltip_text (button, _("Go to the parent location"));
+	gtk_box_append (GTK_BOX (navigation_commands), button);
 	g_signal_connect (button,
 			  "clicked",
 			  G_CALLBACK (parent_location_button_clicked_cb),
@@ -257,7 +256,6 @@ fr_location_bar_init (FrLocationBar *self)
 
 	_gtk_box_pack_end (GTK_BOX (self), location_box, TRUE, FALSE);
 	gtk_box_append (GTK_BOX (self), navigation_commands);
-	gtk_box_append (GTK_BOX (self), private->parent_location_button);
 }
 
 
