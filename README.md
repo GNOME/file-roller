@@ -86,14 +86,37 @@ you need the following libraries (including their development files):
 
 Alternately, with [Nix package manager](https://nixos.org/nix/), you can just run `nix-shell` in the project directory, and it will drop you into a shell with all the required dependencies.
 
-## Install
+## Building locally
+
+1. Clone this repository and enter the project directory:
+
+    ```bash
+    git clone git@ssh.gitlab.gnome.org:GNOME/file-roller.git
+    cd file-roller
+    ```
+
+2. Configure the build. You can set the prefix, relative to which file-roller would be installed, as well as other build flags described in `meson_options.txt` file:
+
+    ```bash
+    meson setup _build --prefix=/usr/local
+    ```
+
+3. Build the program:
+
+    ```bash
+    ninja -C _build
+    ```
+
+Then you can either start the built program from the build directory:
 
 ```bash
-mkdir build
-cd build
-meson ..
-ninja
-ninja install
+meson devenv -C _build/ file-roller
+```
+
+or install it to the previously configured prefix:
+
+```bash
+meson install -C _build
 ```
 
 ## Licensing
