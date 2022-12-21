@@ -5,6 +5,12 @@ install_data(
   install_dir: join_paths(datadir, 'glib-2.0', 'schemas'),
 )
 
+gnome.compile_schemas(
+  depend_files: [
+    'org.gnome.FileRoller.gschema.xml',
+  ],
+)
+
 install_data(
   'packages.match',
   install_dir: join_paths(datadir, meson.project_name()),
