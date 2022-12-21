@@ -61,12 +61,6 @@ like tar and zip. The supported file types are:
 * Donate: https://www.gnome.org/friends/
 * Translate: https://wiki.gnome.org/TranslationProject
 
-## Licensing
-
-This program is released under the terms of the GNU General Public
-License (GNU GPL) version 2 or greater.
-You can find a copy of the license in the file COPYING.
-
 ## Dependencies
 
 In order to build this program from the source code you need a working
@@ -94,3 +88,9 @@ meson ..
 ninja
 ninja install
 ```
+
+## Licensing
+
+This program is released under the terms of the GNU General Public
+License (GNU GPL) version 2 or greater.
+You can find a copy of the license in the file COPYING.
