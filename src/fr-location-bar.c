@@ -205,7 +205,7 @@ fr_location_bar_init (FrLocationBar *self)
 	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "toolbar");
 	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "locationbar");
 
-	GtkWidget *navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	GtkWidget *navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	GtkWidget *button;
 
 	private->previous_location_button = button = gtk_button_new_from_icon_name ("go-previous-symbolic");
