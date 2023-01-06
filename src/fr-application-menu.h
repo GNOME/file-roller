@@ -27,6 +27,5 @@
 #include <gio/gio.h>
 
 void fr_initialize_app_menu (GApplication *application);
-void fr_initialize_app_menubar (GApplication *application);
 
 #endif /* APP_MENU_H */

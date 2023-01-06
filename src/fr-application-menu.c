@@ -259,39 +259,3 @@ fr_initialize_app_menu (GApplication *application)
 			  G_CALLBACK (pref_list_mode_changed),
 			  application);
 }
-
-
-void
-fr_initialize_app_menubar (GApplication *application)
-{
-	GtkBuilder *builder;
-	GSettings  *settings;
-
-	g_action_map_add_action_entries (G_ACTION_MAP (application),
-					 app_menu_entries,
-					 G_N_ELEMENTS (app_menu_entries),
-					 application);
-
-	builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "app-menubar.ui");
-	gtk_application_set_menubar (GTK_APPLICATION (application),
-				     G_MENU_MODEL (gtk_builder_get_object (builder, "app-menubar")));
-	g_object_unref (builder);
-
-	settings = fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_UI);
-	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_SIDEBAR),
-				   g_variant_new_boolean (g_settings_get_boolean (settings, PREF_UI_VIEW_SIDEBAR)));
-
-	settings = fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_LISTING);
-	g_simple_action_set_state (GET_ACTION (PREF_LISTING_LIST_MODE),
-				   g_variant_new_string (_g_enum_type_get_value (FR_TYPE_WINDOW_LIST_MODE,
-						   	 g_settings_get_enum (settings, PREF_LISTING_LIST_MODE))->value_nick));
-
-	g_signal_connect (fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_UI),
-			  "changed::" PREF_UI_VIEW_SIDEBAR,
-			  G_CALLBACK (pref_view_sidebar_changed),
-			  application);
-	g_signal_connect (fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_LISTING),
-			  "changed::" PREF_LISTING_LIST_MODE,
-			  G_CALLBACK (pref_list_mode_changed),
-			  application);
-}

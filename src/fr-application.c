@@ -468,9 +468,6 @@ fr_application_register_archive_manager_service (FrApplication *self)
 static void
 fr_application_startup (GApplication *application)
 {
-	GtkSettings *gtk_settings;
-	gboolean     shell_shows_menubar;
-
 	G_APPLICATION_CLASS (fr_application_parent_class)->startup (application);
 
 	g_set_application_name (_("File Roller"));
@@ -479,16 +476,7 @@ fr_application_startup (GApplication *application)
 	fr_application_register_archive_manager_service (FR_APPLICATION (application));
 	fr_initialize_data ();
 
-	/* Use the menubar only when the shell shows the menu bar. */
-
-	gtk_settings = gtk_settings_get_default ();
-	g_object_get (G_OBJECT (gtk_settings),
-		      "gtk-shell-shows-menubar", &shell_shows_menubar,
-		      NULL);
-	if (shell_shows_menubar)
-		fr_initialize_app_menubar (application);
-	else
-		fr_initialize_app_menu (application);
+	fr_initialize_app_menu (application);
 
 	/* Setup actions. */
 
