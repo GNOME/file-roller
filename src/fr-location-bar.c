@@ -202,8 +202,6 @@ fr_location_bar_init (FrLocationBar *self)
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (self), GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_set_spacing (GTK_BOX (self), 6);
-	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "toolbar");
-	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "locationbar");
 
 	GtkWidget *navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	GtkWidget *button;
