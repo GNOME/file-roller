@@ -566,6 +566,87 @@ location_bar_changed_cb (FrLocationBar *location_bar,
 
 
 static void
+_set_current_folder (FrFileSelectorDialog *self,
+		     GFile                *folder,
+		     GList                *files);
+
+
+static void
+new_folder_dialog_response_cb (GtkDialog *dialog,
+			       int        response_id,
+			       gpointer   user_data)
+{
+	FrFileSelectorDialog *self = user_data;
+
+	if (response_id != GTK_RESPONSE_YES) {
+		gtk_window_destroy (GTK_WINDOW (dialog));
+		return;
+	}
+
+	char *filename = _gth_request_dialog_get_text (dialog);
+	if (filename == NULL)
+		return;
+
+	char *reason = NULL;
+	if (!_g_basename_is_valid (filename, NULL, &reason)) {
+		GtkWidget *dlg;
+
+		dlg = _gtk_error_dialog_new (GTK_WINDOW (dialog),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     NULL,
+					     _("Could not create the folder"),
+					     "%s",
+					     reason);
+		_gtk_dialog_run (GTK_DIALOG (dlg));
+
+		g_free (reason);
+		g_free (filename);
+		return;
+	}
+
+	GFile  *new_folder = g_file_get_child_for_display_name (self->current_folder, filename, NULL);
+	GError *error = NULL;
+	if (!g_file_make_directory (new_folder, NULL, &error)) {
+		_gtk_error_dialog_run (GTK_WINDOW (dialog), _("Could not create the folder"), "%s", error->message);
+		g_error_free (error);
+	}
+	else {
+		gtk_window_destroy (GTK_WINDOW (dialog));
+
+		GList *selected_files = fr_file_selector_dialog_get_selected_files (self);
+		_set_current_folder (self, new_folder, selected_files);
+		_g_object_list_unref (selected_files);
+	}
+
+	g_object_unref (new_folder);
+	g_free (filename);
+}
+
+
+static void
+new_folder_button_clicked_cb (GtkButton *button,
+			      gpointer   user_data)
+{
+	FrFileSelectorDialog *self = user_data;
+	GtkWidget            *dialog;
+
+	dialog = _gtk_request_dialog_new (GTK_WINDOW (self),
+					  GTK_DIALOG_MODAL,
+					  C_("Window title", "New Folder"),
+					  _("_Name:"),
+					  "",
+					  1024,
+					  _GTK_LABEL_CANCEL,
+					  _GTK_LABEL_CREATE_ARCHIVE);
+	g_signal_connect (dialog,
+			  "response",
+			  G_CALLBACK (new_folder_dialog_response_cb),
+			  self);
+	gtk_widget_show (dialog);
+}
+
+
+static void
 places_sidebar_open_cb (FrPlacesSidebar *sidebar,
 			GFile           *location,
 			gpointer         user_data)
@@ -626,12 +707,6 @@ unselect_all_activate_cb (GSimpleAction *action,
 {
 	select_all_files (FR_FILE_SELECTOR_DIALOG (user_data), FALSE);
 }
-
-
-static void
-_set_current_folder (FrFileSelectorDialog *self,
-		     GFile                *folder,
-		     GList                *files);
 
 
 static void
@@ -706,12 +781,25 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_MODIFIED, files_modified_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, GTK_SORT_ASCENDING);
 
+	GtkWidget *location_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (location_box)), "toolbar");
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (location_box)), "locationbar");
+	_gtk_box_pack_start (GTK_BOX (GET_WIDGET ("content_box")), location_box, TRUE, FALSE);
+
 	self->location_bar = fr_location_bar_new ();
-	_gtk_box_pack_start (GTK_BOX (GET_WIDGET ("content_box")), self->location_bar, TRUE, FALSE);
 	g_signal_connect (self->location_bar,
 			  "changed",
 			  G_CALLBACK (location_bar_changed_cb),
 			  self);
+	_gtk_box_pack_start (GTK_BOX (location_box), self->location_bar, TRUE, FALSE);
+
+	GtkWidget *new_folder_button = gtk_button_new_from_icon_name ("folder-new-symbolic");
+	gtk_widget_set_tooltip_text (new_folder_button, _("New Folder"));
+	g_signal_connect (new_folder_button,
+			  "clicked",
+			  G_CALLBACK (new_folder_button_clicked_cb),
+			  self);
+	_gtk_box_pack_end (GTK_BOX (location_box), new_folder_button, FALSE, FALSE);
 
 	self->places_sidebar = fr_places_sidebar_new ();
 	_gtk_box_pack_start (GTK_BOX (GET_WIDGET ("places_sidebar")), self->places_sidebar, TRUE, TRUE);
