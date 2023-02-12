@@ -147,6 +147,9 @@ gboolean            _g_mime_type_matches           (const char          *type,
 						    const char          *pattern);
 const char *        _g_mime_type_get_from_content  (char                *buffer,
 		  	  	  	  	    gsize                buffer_size);
+gboolean            _g_basename_is_valid           (const char          *new_name,
+						    const char          *old_name,
+						    char               **reason);
 
 /* GFile */
 

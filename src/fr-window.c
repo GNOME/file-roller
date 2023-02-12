@@ -71,8 +71,6 @@
 #define DEF_WIN_HEIGHT 480
 #define DEF_SIDEBAR_WIDTH 200
 
-#define BAD_CHARS "/\\*"
-
 
 typedef struct {
 	FrBatchActionType type;
@@ -7433,39 +7431,6 @@ rename_selection (FrWindow   *window,
 
 
 static gboolean
-valid_name (const char  *new_name,
-	    const char  *old_name,
-	    char       **reason)
-{
-	char     *utf8_new_name;
-	gboolean  retval = TRUE;
-
-	new_name = _g_str_eat_spaces (new_name);
-	utf8_new_name = g_filename_display_name (new_name);
-
-	if (*new_name == '\0') {
-		/* Translators: the name references to a filename.  This message can appear when renaming a file. */
-		*reason = g_strdup (_("New name is void, please type a name."));
-		retval = FALSE;
-	}
-	else if (strcmp (new_name, old_name) == 0) {
-		/* Translators: the name references to a filename.  This message can appear when renaming a file. */
-		*reason = g_strdup (_("New name is the same as old one, please type other name."));
-		retval = FALSE;
-	}
-	else if (_g_strchrs (new_name, BAD_CHARS)) {
-		/* Translators: the %s references to a filename.  This message can appear when renaming a file. */
-		*reason = g_strdup_printf (_("Name “%s” is not valid because it contains at least one of the following characters: %s, please type other name."), utf8_new_name, BAD_CHARS);
-		retval = FALSE;
-	}
-
-	g_free (utf8_new_name);
-
-	return retval;
-}
-
-
-static gboolean
 name_is_present (FrWindow    *window,
 		 const char  *current_dir,
 		 const char  *new_name,
@@ -7558,7 +7523,7 @@ rename_dialog_response_cb (GtkDialog *dialog,
 	g_free (utf8_new_name);
 
 	reason = NULL;
-	if (! valid_name (new_name, rename_data->old_name, &reason)) {
+	if (!_g_basename_is_valid (new_name, rename_data->old_name, &reason)) {
 		GtkWidget *dlg;
 
 		dlg = _gtk_error_dialog_new (GTK_WINDOW (dialog),
