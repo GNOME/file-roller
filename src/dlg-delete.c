@@ -178,7 +178,7 @@ dlg_delete__common (FrWindow *window,
 			  data);
 
 	/* Run dialog. */
-	gtk_widget_show (data->dialog);
+	gtk_window_present (GTK_WINDOW (data->dialog));
 }
 
 

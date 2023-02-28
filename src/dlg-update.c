@@ -218,11 +218,11 @@ update_file_list (DialogData *data)
 
 	if (n_files == 1) {
 		/*gtk_window_set_modal (GTK_WINDOW (data->update_file_dialog), TRUE);*/
-		gtk_widget_show (data->update_file_dialog);
+		gtk_window_present (GTK_WINDOW (data->update_file_dialog));
 	}
 	else if (n_files > 1) {
 		/*gtk_window_set_modal (GTK_WINDOW (data->update_files_dialog), TRUE);*/
-		gtk_widget_show (data->update_files_dialog);
+		gtk_window_present (GTK_WINDOW (data->update_files_dialog));
 	}
 }
 

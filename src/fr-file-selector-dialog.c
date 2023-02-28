@@ -642,7 +642,7 @@ new_folder_button_clicked_cb (GtkButton *button,
 			  "response",
 			  G_CALLBACK (new_folder_dialog_response_cb),
 			  self);
-	gtk_widget_show (dialog);
+	gtk_window_present (GTK_WINDOW (dialog));
 }
 
 

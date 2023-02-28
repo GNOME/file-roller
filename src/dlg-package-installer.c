@@ -307,7 +307,7 @@ file_buffer_ready_cb (GObject      *source_object,
 						  _("_Search Command"), GTK_RESPONSE_YES,
 						  NULL);
 		g_signal_connect (GTK_MESSAGE_DIALOG (dialog), "response", G_CALLBACK (confirm_search_dialog_response_cb), idata);
-		gtk_widget_show (dialog);
+		gtk_window_present (GTK_WINDOW (dialog));
 
 		g_free (secondary_text);
 	}

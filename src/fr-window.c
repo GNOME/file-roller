@@ -2582,7 +2582,7 @@ fr_window_show_confirmation_dialog (FrWindow  *window,
 			  "response",
 			  G_CALLBACK (confirmation_dialog_response),
 			  window);
-	gtk_widget_show (GTK_WIDGET (dialog));
+	gtk_window_present (GTK_WINDOW (dialog));
 }
 
 
@@ -2731,7 +2731,7 @@ fr_window_show_error_dialog (FrWindow   *window,
 			  window);
 	if (dialog_parent != NULL)
 		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-	gtk_widget_show (dialog);
+	gtk_window_present (GTK_WINDOW (dialog));
 
 	private->showing_error_dialog = TRUE;
 }
@@ -3841,7 +3841,7 @@ fr_window_on_dropped_files (FrWindow *window,
 					  "response",
 					  G_CALLBACK (dropped_one_archive_dialog_response),
 					  dropped_data_new (window, list));
-			gtk_widget_show (GTK_WIDGET (dialog));
+			gtk_window_present (GTK_WINDOW (dialog));
 		}
 		else
 			fr_window_archive_add_dropped_items (window, list);
@@ -3865,7 +3865,7 @@ fr_window_on_dropped_files (FrWindow *window,
 					  "response",
 					  G_CALLBACK (dropped_files_create_archive_dialog_response),
 					  dropped_data_new (window, list));
-			gtk_widget_show (GTK_WIDGET (dialog));
+			gtk_window_present (GTK_WINDOW (dialog));
 		}
 	}
 }
@@ -6023,7 +6023,7 @@ _fr_window_archive_extract_from_edata_maybe (FrWindow    *window,
 					  "response",
 					  G_CALLBACK (confirm_create_folder_on_extract_dialog_response),
 					  edata);
-			gtk_widget_show (GTK_WIDGET (msg_dialog));
+			gtk_window_present (GTK_WINDOW (msg_dialog));
 
 			g_free (msg);
 			g_free (folder_name);
@@ -7642,7 +7642,7 @@ fr_window_rename_selection (FrWindow *window,
 			  "response",
 			  G_CALLBACK (rename_dialog_response_cb),
 			  rename_data);
-	gtk_widget_show (rename_dialog);
+	gtk_window_present (GTK_WINDOW (rename_dialog));
 
 	g_free (utf8_old_name);
 }
@@ -8108,7 +8108,7 @@ fr_window_paste_selection (FrWindow *window,
 			  "response",
 			  G_CALLBACK (paste_destination_dialog_response_cb),
 			  window);
-	gtk_widget_show (destination_dialog);
+	gtk_window_present (GTK_WINDOW (destination_dialog));
 
 	g_free (utf8_old_path);
 }

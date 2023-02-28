@@ -889,5 +889,5 @@ save_options_activate_cb (GSimpleAction *action,
 			  "response",
 			  G_CALLBACK (options_name_dialog_response_cb),
 			  data);
-	gtk_widget_show (dialog);
+	gtk_window_present (GTK_WINDOW (dialog));
 }

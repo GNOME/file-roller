@@ -131,5 +131,5 @@ dlg_password (GtkWidget *widget,
 	/* Run dialog. */
 
 	gtk_widget_grab_focus (GET_WIDGET ("password_entry"));
-	gtk_widget_show (data->dialog);
+	gtk_window_present (GTK_WINDOW (data->dialog));
 }

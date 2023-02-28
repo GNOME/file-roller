@@ -577,7 +577,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 				  "response",
 				  G_CALLBACK (overwrite_dialog_response_cb),
 				  overwrite_data);
-		gtk_widget_show (GTK_WIDGET (msg_dialog));
+		gtk_window_present (GTK_WINDOW (msg_dialog));
 
 		g_free (secondary_message);
 		g_free (message);

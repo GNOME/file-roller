@@ -183,7 +183,7 @@ dlg_ask_password__common (FrWindow       *window,
 	else
 		gtk_window_set_title (GTK_WINDOW (data->dialog),
 				      fr_window_batch_get_title (window));
-	gtk_widget_show (data->dialog);
+	gtk_window_present (GTK_WINDOW (data->dialog));
 
 	g_free (message);
 	g_free (filename);
