@@ -462,7 +462,7 @@ _gtk_header_bar_create_image_toggle_button (const char       *icon_name,
 	g_return_val_if_fail (action_name != NULL, NULL);
 
 	button = gtk_toggle_button_new ();
-	gtk_button_set_child (GTK_BUTTON (button), gtk_image_new_from_icon_name (icon_name));
+	gtk_button_set_icon_name (GTK_BUTTON (button), icon_name);
 	_gtk_menu_button_set_style_for_header_bar (button);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
 	if (tooltip != NULL)
