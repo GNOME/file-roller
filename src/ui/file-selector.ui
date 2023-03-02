@@ -48,23 +48,23 @@
     <property name="spacing">0</property>
     <child>
       <object class="GtkBox" id="content_box">
-        <property name="vexpand">1</property>
+        <property name="vexpand">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkPaned" id="main_paned">
-            <property name="vexpand">1</property>
-            <property name="resize-start-child">0</property>
+            <property name="vexpand">True</property>
+            <property name="resize-start-child">False</property>
             <child>
               <object class="GtkBox" id="places_sidebar">
               </object>
             </child>
             <child>
               <object class="GtkBox" id="file_list_container">
-                <property name="hexpand">1</property>
+                <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow" id="scrolledwindow2">
-                    <property name="vexpand">1</property>
+                    <property name="vexpand">True</property>
                     <property name="child">
                       <object class="GtkTreeView" id="files_treeview">
                         <property name="model">files_liststore</property>
@@ -75,11 +75,11 @@
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeviewcolumn2">
-                            <property name="resizable">1</property>
+                            <property name="resizable">True</property>
                             <property name="sizing">fixed</property>
                             <property name="title" translatable="yes" context="File">Name</property>
-                            <property name="expand">1</property>
-                            <property name="reorderable">1</property>
+                            <property name="expand">True</property>
+                            <property name="reorderable">True</property>
                             <property name="sort_column_id">1</property>
                             <child>
                               <object class="GtkCellRendererToggle" id="is_selected_cellrenderertoggle">
@@ -110,11 +110,11 @@
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeviewcolumn_size">
-                            <property name="resizable">1</property>
+                            <property name="resizable">True</property>
                             <property name="sizing">fixed</property>
                             <property name="fixed-width">150</property>
                             <property name="title" translatable="yes" context="File">Size</property>
-                            <property name="reorderable">1</property>
+                            <property name="reorderable">True</property>
                             <property name="sort_column_id">2</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext2">
@@ -129,11 +129,11 @@
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeviewcolumn4">
-                            <property name="resizable">1</property>
+                            <property name="resizable">True</property>
                             <property name="sizing">fixed</property>
                             <property name="fixed-width">150</property>
                             <property name="title" translatable="yes" context="File">Modified</property>
-                            <property name="reorderable">1</property>
+                            <property name="reorderable">True</property>
                             <property name="sort_column_id">3</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext3">

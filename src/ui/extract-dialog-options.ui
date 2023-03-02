@@ -8,20 +8,20 @@
     </style>
     <child>
       <object class="GtkBox" id="box2">
-        <property name="hexpand">1</property>
+        <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkCheckButton" id="all_files_radiobutton">
             <property name="label" translatable="yes">_All files</property>
-            <property name="use_underline">1</property>
+            <property name="use_underline">True</property>
             <property name="halign">start</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="selected_files_radiobutton">
             <property name="label" translatable="yes">_Selected files</property>
-            <property name="use_underline">1</property>
+            <property name="use_underline">True</property>
             <property name="halign">start</property>
             <property name="group">all_files_radiobutton</property>
           </object>
@@ -32,9 +32,9 @@
             <child>
               <object class="GtkCheckButton" id="file_pattern_radiobutton">
                 <property name="label" translatable="yes">_Files:</property>
-                <property name="use_underline">1</property>
+                <property name="use_underline">True</property>
                 <property name="halign">start</property>
-                <property name="active">1</property>
+                <property name="active">True</property>
                 <property name="group">all_files_radiobutton</property>
               </object>
             </child>
@@ -50,20 +50,20 @@
     </child>
     <child>
       <object class="GtkBox" id="box5">
-        <property name="hexpand">1</property>
+        <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkCheckButton" id="keep_structure_checkbutton">
             <property name="label" translatable="yes">_Keep directory structure</property>
-            <property name="use_underline">1</property>
+            <property name="use_underline">True</property>
             <property name="halign">start</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="keep_newer_checkbutton">
             <property name="label" translatable="yes">Do not _overwrite newer files</property>
-            <property name="use_underline">1</property>
+            <property name="use_underline">True</property>
             <property name="halign">start</property>
           </object>
         </child>
