@@ -20,6 +20,7 @@
  */
 
 #include <config.h>
+#include <adwaita.h>
 #include <math.h>
 #include <string.h>
 #include <glib/gi18n.h>
@@ -70,6 +71,9 @@
 #define DEF_WIN_WIDTH 600
 #define DEF_WIN_HEIGHT 480
 #define DEF_SIDEBAR_WIDTH 200
+
+#define EMPTY_STATUS "empty-status"
+#define ARCHIVE_CONTENT "archive-content"
 
 
 typedef struct {
@@ -204,7 +208,6 @@ static guint fr_window_signals[LAST_SIGNAL] = { 0 };
 
 typedef struct {
 	GtkWidget         *layout;
-	GtkWidget         *contents;
 	GtkWidget         *list_view;
 	GtkListStore      *list_store;
 	GtkWidget         *tree_view;
@@ -217,6 +220,7 @@ typedef struct {
 	GtkWidget         *filter_entry;
 	GtkWidget         *paned;
 	GtkWidget         *sidepane;
+	GtkWidget         *content_stack;
 	GtkTreePath       *list_hover_path;
 	GtkTreeViewColumn *filename_column;
 	GtkWindowGroup    *window_group;
@@ -823,7 +827,6 @@ fr_window_init (FrWindow *window)
 
 	window->archive = NULL;
 }
-
 
 
 /* -- window history -- */
@@ -2913,6 +2916,15 @@ static void fr_window_archive_list (FrWindow *window);
 
 
 static void
+fr_window_update_stack_content (FrWindow *window)
+{
+	FrWindowPrivate *private = fr_window_get_instance_private (window);
+	gboolean no_archive = (window->archive == NULL) || ! private->archive_present;
+	gtk_stack_set_visible_child_name (GTK_STACK (private->content_stack), no_archive ? EMPTY_STATUS : ARCHIVE_CONTENT);
+}
+
+
+static void
 _archive_operation_completed (FrWindow *window,
 			      FrAction  action,
 			      GError   *error)
@@ -2946,6 +2958,7 @@ _archive_operation_completed (FrWindow *window,
 			fr_window_update_title (window);
 			fr_window_update_sensitivity (window);
 		}
+		fr_window_update_stack_content (window);
 		break;
 
 	case FR_ACTION_LOADING_ARCHIVE:
@@ -3004,6 +3017,7 @@ _archive_operation_completed (FrWindow *window,
 		fr_window_update_title (window);
 		fr_window_go_to_location (window, fr_window_get_current_location (window), TRUE);
 		fr_window_update_dir_tree (window);
+		fr_window_update_stack_content (window);
 
 		if (! private->batch_mode)
 			gtk_window_present (GTK_WINDOW (window));
@@ -4595,9 +4609,6 @@ fr_window_attach (FrWindow      *window,
 		break;
 	case FR_WINDOW_AREA_CONTENTS:
 		position = 4;
-		if (private->contents != NULL)
-			g_object_unref (private->contents);
-		private->contents = child;
 		gtk_widget_set_vexpand (child, TRUE);
 		break;
 	case FR_WINDOW_AREA_STATUSBAR:
@@ -4910,11 +4921,20 @@ fr_window_construct (FrWindow *window)
 
 	/* main content */
 
+	GtkWidget *status_page = adw_status_page_new ();
+	adw_status_page_set_icon_name (ADW_STATUS_PAGE (status_page), "package-x-generic-symbolic");
+	adw_status_page_set_title (ADW_STATUS_PAGE (status_page), _("No Archive"));
+
 	private->paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_paned_set_start_child (GTK_PANED (private->paned), private->sidepane);
 	gtk_paned_set_end_child (GTK_PANED (private->paned), listpane);
 	gtk_paned_set_position (GTK_PANED (private->paned), g_settings_get_int (private->settings_ui, PREF_UI_SIDEBAR_WIDTH));
-	fr_window_attach (FR_WINDOW (window), private->paned, FR_WINDOW_AREA_CONTENTS);
+
+	private->content_stack = gtk_stack_new ();
+	gtk_stack_add_named (GTK_STACK (private->content_stack), status_page, EMPTY_STATUS);
+	gtk_stack_add_named (GTK_STACK (private->content_stack), private->paned, ARCHIVE_CONTENT);
+	gtk_stack_set_visible_child_name (GTK_STACK (private->content_stack), EMPTY_STATUS);
+	fr_window_attach (FR_WINDOW (window), private->content_stack, FR_WINDOW_AREA_CONTENTS);
 
 	/* Drop target */
 
@@ -5289,6 +5309,7 @@ fr_window_archive_close (FrWindow *window)
 	fr_window_update_file_list (window, FALSE);
 	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
+	fr_window_update_stack_content (window);
 }
 
 
