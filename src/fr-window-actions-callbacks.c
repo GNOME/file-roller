@@ -351,7 +351,7 @@ fr_window_activate_open (GSimpleAction *action,
 			  G_CALLBACK (open_file_response_cb),
 			  file_sel);
 
-	gtk_widget_show (file_sel);
+	gtk_window_present (GTK_WINDOW (file_sel));
 }
 
 
