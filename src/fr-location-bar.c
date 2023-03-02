@@ -207,7 +207,7 @@ fr_location_bar_init (FrLocationBar *self)
 	GtkWidget *button;
 
 	private->previous_location_button = button = gtk_button_new_from_icon_name ("go-previous-symbolic");
-	gtk_widget_set_tooltip_text (button, _("Go to the previous visited location"));
+	gtk_widget_set_tooltip_text (button, _("Previous visited location"));
 	gtk_box_append (GTK_BOX (navigation_commands), button);
 	g_signal_connect (button,
 			  "clicked",
@@ -215,7 +215,7 @@ fr_location_bar_init (FrLocationBar *self)
 			  self);
 
 	private->next_location_button = button = gtk_button_new_from_icon_name ("go-next-symbolic");
-	gtk_widget_set_tooltip_text (button, _("Go to the next visited location"));
+	gtk_widget_set_tooltip_text (button, _("Next visited location"));
 	gtk_box_append (GTK_BOX (navigation_commands), button);
 	g_signal_connect (button,
 			  "clicked",
@@ -223,7 +223,7 @@ fr_location_bar_init (FrLocationBar *self)
 			  self);
 
 	private->parent_location_button = button = gtk_button_new_from_icon_name ("go-up-symbolic");
-	gtk_widget_set_tooltip_text (button, _("Go to the parent location"));
+	gtk_widget_set_tooltip_text (button, _("Parent location"));
 	gtk_box_append (GTK_BOX (navigation_commands), button);
 	g_signal_connect (button,
 			  "clicked",

@@ -4973,13 +4973,13 @@ fr_window_construct (FrWindow *window)
 	/* Navigation commands. */
 
 	gtk_box_append (GTK_BOX (private->location_bar),
-			_gtk_header_bar_create_image_button ("go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"));
+			_gtk_header_bar_create_image_button ("go-previous-symbolic", _("Previous visited location"), "win.go-back"));
 	gtk_box_append (GTK_BOX (private->location_bar),
-			_gtk_header_bar_create_image_button ("go-next-symbolic", _("Go to the next visited location"), "win.go-forward"));
+			_gtk_header_bar_create_image_button ("go-next-symbolic", _("Next visited location"), "win.go-forward"));
 	gtk_box_append (GTK_BOX (private->location_bar),
-			_gtk_header_bar_create_image_button ("go-up-symbolic", _("Go to the parent location"), "win.go-up-one-level"));
+			_gtk_header_bar_create_image_button ("go-up-symbolic", _("Parent location"), "win.go-up-one-level"));
 	gtk_box_append (GTK_BOX (private->location_bar),
-			_gtk_header_bar_create_image_button ("user-home-symbolic", _("Go to the home location"), "win.go-home"));
+			_gtk_header_bar_create_image_button ("user-home-symbolic", _("Home location"), "win.go-home"));
 
 	/* Current location */
 
