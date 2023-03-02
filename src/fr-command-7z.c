@@ -556,6 +556,9 @@ fr_command_7z_handle_error (FrCommand *command,
 		/* ignore warnings */
 		fr_error_clear_gerror (error);
 	}
+	if (error->status == 255) {
+		fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
+	}
 	else {
 		GList *scan;
 

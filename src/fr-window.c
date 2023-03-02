@@ -2882,6 +2882,7 @@ _handle_archive_operation_error (FrWindow  *window,
 			details = _("Command not found.");
 			break;
 		case FR_ERROR_EXITED_ABNORMALLY:
+		case FR_ERROR_COMMAND_ERROR:
 			details = _("Command exited abnormally.");
 			break;
 		case FR_ERROR_SPAWN:

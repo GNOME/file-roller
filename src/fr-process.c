@@ -838,7 +838,7 @@ check_child (gpointer data)
 			{
 				GList *scan;
 
-				g_print ("** ERROR **\n");
+				g_print ("** ERROR [1] **\n");
 				g_print ("%s\n", exec_data->error->gerror->message);
 				for (scan = process->err.raw; scan; scan = scan->next)
 					g_print ("%s\n", (char *)scan->data);
@@ -849,10 +849,11 @@ check_child (gpointer data)
 	}
 	else if (exec_data->error == NULL) {
 		if (WIFEXITED (status)) {
-			if (WEXITSTATUS (status) == 255) {
+			/*if (WEXITSTATUS (status) == 255) {
 				exec_data->error = fr_error_new (FR_ERROR_COMMAND_NOT_FOUND, 0, NULL);
 			}
-			else if (WEXITSTATUS (status) != 0) {
+			else*/
+			if (WEXITSTATUS (status) != 0) {
 				exec_data->error = fr_error_new (FR_ERROR_COMMAND_ERROR, WEXITSTATUS (status), NULL);
 			}
 		}
@@ -903,7 +904,7 @@ check_child (gpointer data)
 			{
 				GList *scan;
 
-				g_print ("** ERROR **\n");
+				g_print ("** ERROR [2] : (status: %d) (type: %d) **\n", exec_data->error->status, exec_data->error->type);
 				for (scan = process->err.raw; scan; scan = scan->next)
 					g_print ("%s\n", (char *)scan->data);
 			}
