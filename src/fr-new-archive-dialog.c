@@ -24,10 +24,12 @@
 #include <math.h>
 #include <unistd.h>
 #include <gio/gio.h>
+#include <adwaita.h>
 #include "file-utils.h"
 #include "fr-init.h"
 #include "fr-location-button.h"
 #include "fr-new-archive-dialog.h"
+#include "gio-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
@@ -36,6 +38,12 @@
 #define GET_WIDGET(x)		(_gtk_builder_get_widget (self->builder, (x)))
 #define MEGABYTE		(1024 * 1024)
 #define ARCHIVE_ICON_SIZE	48
+
+
+typedef enum {
+	STATE_FILENAME,
+	STATE_OPTIONS,
+} State;
 
 
 struct _FrNewArchiveDialog {
@@ -50,6 +58,9 @@ struct _FrNewArchiveDialog {
 	GFile      *original_file;
 	GList      *files_to_add;
 	GtkWidget  *location_button;
+	char       *filename;
+	GFile      *folder;
+	State       state;
 };
 
 
@@ -65,6 +76,8 @@ fr_new_archive_dialog_finalize (GObject *object)
 
 	_g_object_list_unref (self->files_to_add);
 	_g_object_unref (self->original_file);
+	g_free (self->filename);
+	_g_object_unref (self->folder);
 	g_object_unref (self->settings);
 	g_object_unref (self->builder);
 	g_hash_table_unref (self->supported_ext);
@@ -76,7 +89,8 @@ fr_new_archive_dialog_finalize (GObject *object)
 static int
 get_selected_format (FrNewArchiveDialog *self)
 {
-	return self->supported_types[gtk_combo_box_get_active (GTK_COMBO_BOX (GET_WIDGET ("extension_comboboxtext")))];
+	guint idx = adw_combo_row_get_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")));
+	return (idx != GTK_INVALID_LIST_POSITION) ? self->supported_types[idx] : -1;
 }
 
 
@@ -84,18 +98,42 @@ static void
 fr_new_archive_dialog_unmap (GtkWidget *widget)
 {
 	FrNewArchiveDialog *self;
-	int                 n_format;
 
 	self = FR_NEW_ARCHIVE_DIALOG (widget);
 
-	g_settings_set_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER, gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton"))));
-	g_settings_set_boolean (self->settings, PREF_NEW_EXPAND_OPTIONS, gtk_expander_get_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander"))));
+	g_settings_set_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER, gtk_switch_get_state (GTK_SWITCH (GET_WIDGET ("encrypt_header_switch"))));
 	g_settings_set_int (self->settings, PREF_NEW_VOLUME_SIZE, gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton"))) * MEGABYTE);
 
-	n_format = get_selected_format (self);
-	g_settings_set_string (self->settings, PREF_NEW_DEFAULT_EXTENSION, mime_type_desc[n_format].default_ext);
+	int n_format = get_selected_format (self);
+	if (n_format >= 0)
+		g_settings_set_string (self->settings, PREF_NEW_DEFAULT_EXTENSION, mime_type_desc[n_format].default_ext);
 
 	GTK_WIDGET_CLASS (fr_new_archive_dialog_parent_class)->unmap (widget);
+}
+
+
+static void choose_file (FrNewArchiveDialog *self);
+
+
+static gboolean
+autoactivate_file_button (gpointer user_data)
+{
+	choose_file (FR_NEW_ARCHIVE_DIALOG (user_data));
+	return G_SOURCE_REMOVE;
+}
+
+
+static void
+fr_new_archive_dialog_show (GtkWidget *widget)
+{
+	GTK_WIDGET_CLASS (fr_new_archive_dialog_parent_class)->show (widget);
+
+	FrNewArchiveDialog *self = FR_NEW_ARCHIVE_DIALOG (widget);
+	if (self->state == STATE_FILENAME)
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE,
+			autoactivate_file_button,
+			g_object_ref (self),
+			g_object_unref);
 }
 
 
@@ -110,6 +148,7 @@ fr_new_archive_dialog_class_init (FrNewArchiveDialogClass *klass)
 
 	widget_class = GTK_WIDGET_CLASS (klass);
 	widget_class->unmap = fr_new_archive_dialog_unmap;
+	widget_class->show = fr_new_archive_dialog_show;
 }
 
 
@@ -121,55 +160,26 @@ fr_new_archive_dialog_init (FrNewArchiveDialog *self)
 	self->supported_ext = g_hash_table_new (g_str_hash, g_str_equal);
 	self->original_file = NULL;
 	self->files_to_add = NULL;
+	self->filename = NULL;
+	self->folder = NULL;
+	self->state = STATE_FILENAME;
 }
 
 
 static void
 _fr_new_archive_dialog_update_sensitivity (FrNewArchiveDialog *self)
 {
-	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), ! _g_utf8_all_spaces (gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")))));
-	gtk_check_button_set_inconsistent (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), ! self->can_encrypt_header);
-	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->can_encrypt_header);
-	gtk_widget_set_sensitive (GET_WIDGET ("volume_spinbutton"), ! self->can_create_volumes || gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("volume_checkbutton"))));
-}
-
-
-static void
-entry_changed_cb (GtkEditable *editable,
-		  gpointer     user_data)
-{
-	_fr_new_archive_dialog_update_sensitivity (FR_NEW_ARCHIVE_DIALOG (user_data));
-}
-
-
-static void
-volume_toggled_cb (GtkCheckButton *check_button,
-		   gpointer        user_data)
-{
-	_fr_new_archive_dialog_update_sensitivity (FR_NEW_ARCHIVE_DIALOG (user_data));
-}
-
-
-static void
-extension_comboboxtext_changed_cb (GtkComboBox *combo_box,
-				   gpointer     user_data)
-{
-	FrNewArchiveDialog *self = user_data;
-	int                 n_format;
-
-	n_format = get_selected_format (self);
-
-	self->can_encrypt = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT;
-	gtk_widget_set_sensitive (GET_WIDGET ("password_entry"), self->can_encrypt);
-	gtk_widget_set_sensitive (GET_WIDGET ("password_label"), self->can_encrypt);
-
-	self->can_encrypt_header = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER;
-	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->can_encrypt_header);
-
-	self->can_create_volumes = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES;
-	gtk_widget_set_sensitive (GET_WIDGET ("volume_box"), self->can_create_volumes);
-
-	_fr_new_archive_dialog_update_sensitivity (self);
+	if (!self->can_encrypt)
+		adw_expander_row_set_enable_expansion (ADW_EXPANDER_ROW (GET_WIDGET ("encrypt_archive_expander_row")), FALSE);
+	if (!self->can_create_volumes)
+		adw_expander_row_set_enable_expansion (ADW_EXPANDER_ROW (GET_WIDGET ("split_in_volumes_expander_row")), FALSE);
+	if (!self->can_encrypt_header)
+		gtk_switch_set_state (GTK_SWITCH (GET_WIDGET ("encrypt_header_switch")), FALSE);
+	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_archive_expander_row"), self->can_encrypt);
+	gtk_widget_set_sensitive (GET_WIDGET ("password_entry_row"), self->can_encrypt);
+	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_row"), self->can_encrypt_header);
+	gtk_widget_set_sensitive (GET_WIDGET ("volume_group"), self->can_create_volumes);
+	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), self->filename != NULL);
 }
 
 
@@ -193,6 +203,209 @@ _g_path_remove_extension_if_archive (const char *filename)
 
 
 static void
+update_filename_label (FrNewArchiveDialog *self)
+{
+	if (self->filename != NULL)
+		adw_action_row_set_subtitle (ADW_ACTION_ROW (GET_WIDGET ("filename_row")), self->filename);
+	else
+		adw_action_row_set_subtitle (ADW_ACTION_ROW (GET_WIDGET ("filename_row")), "");
+}
+
+
+static void
+update_folder_label (FrNewArchiveDialog *self)
+{
+	char *location_name = _g_file_get_display_name (self->folder);
+	if (location_name != NULL) {
+		gtk_label_set_text (GTK_LABEL (GET_WIDGET ("location_name")), location_name);
+		g_free (location_name);
+	}
+	else {
+		gtk_label_set_text (GTK_LABEL (GET_WIDGET ("location_name")), "");
+	}
+}
+
+
+static void update_from_selected_format (FrNewArchiveDialog *self, int n_format);
+
+
+static gboolean
+set_file (FrNewArchiveDialog *self, GFile *file, GError **error)
+{
+	gboolean result = TRUE;
+
+	int active_extension_idx = -1;
+	char *name = _g_file_get_display_basename (file);
+	if (name != NULL) {
+		const char *ext = _g_filename_get_extension (name);
+		if (ext == NULL) {
+			/* If the extension is not specified use the last selected extension. */
+			int n_format = get_selected_format (self);
+			if (n_format >= 0) {
+				ext = mime_type_desc[n_format].default_ext;
+
+				char *tmp = g_strconcat (name, ext, NULL);
+				g_free (name);
+				name = tmp;
+			}
+		}
+		if (ext != NULL) {
+			for (int i = 0; self->supported_types[i] != -1; i++) {
+				if (strcmp (ext, mime_type_desc[self->supported_types[i]].default_ext) == 0) {
+					active_extension_idx = i;
+					break;
+				}
+			}
+		}
+	}
+
+	if (active_extension_idx == -1) {
+		result = FALSE;
+		*error = g_error_new_literal (FR_ERROR,
+					      FR_ERROR_UNSUPPORTED_FORMAT,
+					      _("Archive type not supported."));
+	}
+	else {
+		result = TRUE;
+
+		_g_object_unref (self->folder);
+		self->folder = g_file_get_parent (file);
+
+		g_free (self->filename);
+		self->filename = g_strdup (name);
+
+		adw_combo_row_set_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")), active_extension_idx);
+		update_filename_label (self);
+		update_folder_label (self);
+		update_from_selected_format (self, self->supported_types[active_extension_idx]);
+	}
+
+	g_free (name);
+
+	return result;
+}
+
+
+static gboolean
+format_has_other_options (FrNewArchiveDialog *self)
+{
+	int n_format = get_selected_format (self);
+	return (n_format >= 0) && ((mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT) ||
+		(mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES));
+}
+
+
+static void
+file_chooser_response_cb (GtkDialog *dialog,
+			  int        response,
+			  gpointer   user_data)
+{
+	FrNewArchiveDialog *self = user_data;
+	gboolean choosing_file = self->state == STATE_FILENAME;
+
+	self->state = STATE_OPTIONS;
+
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
+		gtk_window_destroy (GTK_WINDOW (dialog));
+		if (choosing_file)
+			gtk_dialog_response (GTK_DIALOG (self), GTK_RESPONSE_CANCEL);
+		return;
+	}
+
+	GFile *file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
+	if (file == NULL)
+		return;
+
+	GError *error = NULL;
+	if (!set_file (self, file, &error)) {
+		_gtk_error_dialog_run (GTK_WINDOW (dialog),
+				       _("Could not perform the operation"),
+				       "%s",
+				       error->message);
+		g_error_free (error);
+	}
+	else {
+		gtk_window_destroy (GTK_WINDOW (dialog));
+		if (choosing_file && !format_has_other_options (self))
+			gtk_dialog_response (GTK_DIALOG (self), GTK_RESPONSE_OK);
+	}
+
+	g_object_unref (file);
+}
+
+
+static void
+choose_file (FrNewArchiveDialog *self)
+{
+	GtkWidget *file_sel = gtk_file_chooser_dialog_new (
+		C_("Window title", "New Archive"),
+		gtk_window_get_transient_for (GTK_WINDOW (self)),
+		GTK_FILE_CHOOSER_ACTION_SAVE,
+		_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+		_GTK_LABEL_CREATE_ARCHIVE, GTK_RESPONSE_OK,
+		NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel), self->folder, NULL);
+	if (self->filename != NULL)
+		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), self->filename);
+	_gtk_dialog_add_to_window_group (GTK_DIALOG (file_sel));
+	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
+	g_signal_connect (GTK_FILE_CHOOSER_DIALOG (file_sel),
+			  "response",
+			  G_CALLBACK (file_chooser_response_cb),
+			  self);
+	gtk_window_present (GTK_WINDOW (file_sel));
+}
+
+
+static void
+update_from_selected_format (FrNewArchiveDialog *self, int n_format)
+{
+	if (n_format < 0)
+		n_format = get_selected_format (self);
+	if (n_format < 0)
+		return;
+	self->can_encrypt = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT;
+	self->can_encrypt_header = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER;
+	self->can_create_volumes = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES;
+	_fr_new_archive_dialog_update_sensitivity (self);
+}
+
+
+static void
+combo_box_selected_notify_cb (GObject    *gobject,
+			      GParamSpec *pspec,
+			      gpointer    user_data)
+{
+	FrNewArchiveDialog *self = FR_NEW_ARCHIVE_DIALOG (user_data);
+
+	if (self->filename != NULL) {
+		int n_format = get_selected_format (self);
+		if (n_format >= 0) {
+			bool changed = FALSE;
+			const char *ext = _g_filename_get_extension (self->filename);
+			if (ext == NULL) {
+				char *tmp = g_strconcat (self->filename, ext, NULL);
+				g_free (self->filename);
+				self->filename = tmp;
+				changed = TRUE;
+			}
+			else if (g_strcmp0 (ext, mime_type_desc[n_format].default_ext) != 0) {
+				char *filename_no_ext = _g_path_remove_extension_if_archive (self->filename);
+				char *tmp = g_strconcat (filename_no_ext, mime_type_desc[n_format].default_ext, NULL);
+				g_free (filename_no_ext);
+				g_free (self->filename);
+				self->filename = tmp;
+				changed = TRUE;
+			}
+			if (changed)
+				update_filename_label (self);
+		}
+	}
+}
+
+
+static void
 _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 				  GtkWindow          *parent,
 				  FrNewArchiveAction  action,
@@ -200,21 +413,11 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 				  const char         *default_name,
 				  GFile              *original_file)
 {
-	char *active_extension;
-	int   active_extension_idx;
-	int   i;
-
 	gtk_window_set_transient_for (GTK_WINDOW (self), parent);
 	gtk_window_set_resizable (GTK_WINDOW (self), FALSE);
+	gtk_window_set_default_size (GTK_WINDOW (self), 500, -1);
 
 	self->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "new-archive-dialog.ui");
-
-	_g_object_unref (self->original_file);
-	self->original_file = _g_object_ref (original_file);
-
-	self->location_button = fr_location_button_new (_("Location"));
-	gtk_box_append (GTK_BOX (GET_WIDGET ("parent_filechooserbutton_container")), self->location_button);
-	gtk_label_set_mnemonic_widget (GTK_LABEL (GET_WIDGET ("location_label")), self->location_button);
 	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
 
 	gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
@@ -236,68 +439,58 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	fr_sort_mime_types_by_extension (self->supported_types);
 
+	_g_object_unref (self->original_file);
+	self->original_file = _g_object_ref (original_file);
+
 	/* Set widgets data. */
 
-	if (default_name != NULL) {
-		char *default_name_no_ext;
+	/* Filename */
 
-		default_name_no_ext = _g_path_remove_extension_if_archive (default_name);
-		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")), default_name_no_ext);
+	if (default_name != NULL)
+		self->filename = g_strdup (default_name);
+	update_filename_label (self);
 
-		g_free (default_name_no_ext);
+	/* Folder */
+
+	self->folder = (folder != NULL) ? g_object_ref (folder) : _g_file_get_home ();
+	update_folder_label (self);
+
+	/* Extension */
+
+	GtkStringList *extension_list = (GtkStringList *) gtk_builder_get_object (self->builder, "extension_list");
+	char *active_extension = g_settings_get_string (self->settings, PREF_NEW_DEFAULT_EXTENSION);
+	int active_extension_idx = 0;
+	for (int i = 0; self->supported_types[i] != -1; i++) {
+		if (strcmp (active_extension, mime_type_desc[self->supported_types[i]].default_ext) == 0)
+			active_extension_idx = i;
+		gtk_string_list_append (extension_list, mime_type_desc[self->supported_types[i]].default_ext);
 	}
-	gtk_widget_grab_focus (GET_WIDGET ("filename_entry"));
-	gtk_editable_select_region (GTK_EDITABLE (GET_WIDGET ("filename_entry")), 0, -1);
+	adw_combo_row_set_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")), active_extension_idx);
+	g_free (active_extension);
 
-	if (folder == NULL)
-		folder = _g_file_get_home ();
-	fr_location_button_set_location (FR_LOCATION_BUTTON (self->location_button), folder);
+	/* Encrypt */
 
-	gtk_expander_set_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander")),
-				      g_settings_get_boolean (self->settings, PREF_NEW_EXPAND_OPTIONS));
+	adw_expander_row_set_enable_expansion (ADW_EXPANDER_ROW (GET_WIDGET ("encrypt_archive_expander_row")), FALSE);
+	gtk_switch_set_state (GTK_SWITCH (GET_WIDGET ("encrypt_header_switch")), g_settings_get_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER));
 
-	gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
-				     g_settings_get_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER));
+	/* Volumes */
 
+	adw_expander_row_set_enable_expansion (ADW_EXPANDER_ROW (GET_WIDGET ("split_in_volumes_expander_row")), FALSE);
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton")),
 				   (double) g_settings_get_int (self->settings, PREF_NEW_VOLUME_SIZE) / MEGABYTE);
 
-	active_extension = g_settings_get_string (self->settings, PREF_NEW_DEFAULT_EXTENSION);
-	active_extension_idx = 0;
-	for (i = 0; self->supported_types[i] != -1; i++) {
-		if (strcmp (active_extension, mime_type_desc[self->supported_types[i]].default_ext) == 0)
-			active_extension_idx = i;
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (GET_WIDGET ("extension_comboboxtext")),
-					        mime_type_desc[self->supported_types[i]].default_ext);
-	}
-	gtk_combo_box_set_active (GTK_COMBO_BOX (GET_WIDGET ("extension_comboboxtext")), active_extension_idx);
-	g_free (active_extension);
+	/* Signals */
 
-	gtk_widget_set_vexpand (GET_WIDGET ("other_options_expander"), FALSE);
-
-	_fr_new_archive_dialog_update_sensitivity (self);
-	extension_comboboxtext_changed_cb (GTK_COMBO_BOX (GET_WIDGET ("extension_comboboxtext")), self);
-
-	_gtk_entry_use_as_password_entry (GTK_ENTRY (GET_WIDGET ("password_entry")));
-
-	/* Set the signals handlers. */
-
-	g_signal_connect (GTK_ENTRY (GET_WIDGET ("filename_entry")),
-			  "changed",
-			  G_CALLBACK (entry_changed_cb),
+	g_signal_connect (GET_WIDGET ("extension_combo_row"),
+			  "notify::selected",
+			  G_CALLBACK (combo_box_selected_notify_cb),
 			  self);
-	g_signal_connect (GTK_ENTRY (GET_WIDGET ("password_entry")),
-			  "changed",
-			  G_CALLBACK (entry_changed_cb),
-			  self);
-	g_signal_connect (GTK_CHECK_BUTTON (GET_WIDGET ("volume_checkbutton")),
-			  "toggled",
-			  G_CALLBACK (volume_toggled_cb),
-			  self);
-	g_signal_connect (GTK_COMBO_BOX_TEXT (GET_WIDGET ("extension_comboboxtext")),
-			  "changed",
-			  G_CALLBACK (extension_comboboxtext_changed_cb),
-			  self);
+	g_signal_connect_swapped (GET_WIDGET ("filename_row"),
+				  "activated",
+				  G_CALLBACK (choose_file),
+				  self);
+
+	update_from_selected_format (self, -1);
 }
 
 
@@ -395,18 +588,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 				FrNewArchiveDialogCallback callback,
 				gpointer user_data)
 {
-	const char *basename;
-	int         n_format;
-	char       *basename_ext;
-	GFile      *parent;
-	GFile      *file;
-	GError     *error = NULL;
-	GFileInfo  *parent_info;
-
-	/* Check whether the user entered a valid archive name. */
-
-	basename = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("filename_entry")));
-	if ((basename == NULL) || (*basename == '\0')) {
+	if (self->filename == NULL) {
 		GtkWidget *msg_dialog = _gtk_error_dialog_new (
 			GTK_WINDOW (self),
 			GTK_DIALOG_MODAL,
@@ -420,27 +602,8 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		return;
 	}
 
-	/* File */
-
-	n_format = get_selected_format (self);
-	parent = fr_location_button_get_location (FR_LOCATION_BUTTON (self->location_button));
-	if (parent == NULL) {
-		GtkWidget *msg_dialog = _gtk_error_dialog_new (
-			GTK_WINDOW (self),
-			GTK_DIALOG_MODAL,
-			NULL,
-			_("Could not create the archive"),
-			"%s",
-			_("You have to specify an archive name."));
-		_gtk_dialog_run (GTK_DIALOG (msg_dialog));
-
-		callback (self, NULL, NULL, user_data);
-		return;
-	}
-
-	basename_ext = g_strconcat (basename, mime_type_desc[n_format].default_ext, NULL);
-	file = g_file_get_child_for_display_name (parent, basename_ext, &error);
-
+	GError *error = NULL;
+	GFile *file = g_file_get_child_for_display_name (self->folder, self->filename, &error);
 	if (file == NULL) {
 		GtkWidget *msg_dialog = _gtk_error_dialog_new (
 			GTK_WINDOW (self),
@@ -452,27 +615,21 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		_gtk_dialog_run (GTK_DIALOG (msg_dialog));
 
 		g_error_free (error);
-		g_free (basename_ext);
-		g_object_unref (parent);
 
 		callback (self, NULL, NULL, user_data);
 		return;
 	}
 
-	g_free (basename_ext);
-
 	/* Check permissions */
 
-	parent_info = g_file_query_info (parent,
-					 (G_FILE_ATTRIBUTE_ACCESS_CAN_READ ","
-					  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE ","
-					  G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE","
-					  G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME),
-					 0,
-					 NULL,
-					 &error);
-
-	g_object_unref (parent);
+	GFileInfo *parent_info = g_file_query_info (self->folder,
+		(G_FILE_ATTRIBUTE_ACCESS_CAN_READ ","
+		 G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE ","
+		 G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE","
+		 G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME),
+		0,
+		NULL,
+		&error);
 
 	if (error != NULL) {
 		g_warning ("Failed to get permission for extraction dir: %s", error->message);
@@ -550,6 +707,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 
 	/* Overwrite confirmation. */
 
+	int n_format = get_selected_format (self);
 	if (g_file_query_exists (file, NULL)) {
 		char     *filename;
 		char     *message;
@@ -600,9 +758,8 @@ fr_new_archive_dialog_get_password (FrNewArchiveDialog *self)
 	int         n_format;
 
 	n_format = get_selected_format (self);
-
-	if (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT)
-		password = (char*) gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("password_entry")));
+	if ((n_format >= 0) && (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT))
+		password = (char*) gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("password_entry_row")));
 
 	return password;
 }
@@ -612,17 +769,13 @@ gboolean
 fr_new_archive_dialog_get_encrypt_header (FrNewArchiveDialog *self)
 {
 	gboolean encrypt_header = FALSE;
-	int      n_format;
 
-	n_format = get_selected_format (self);
-
-	if (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT) {
-		const char *password = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("password_entry")));
-		if (password != NULL) {
-			if (strcmp (password, "") != 0) {
-				if (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER)
-					encrypt_header = gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")));
-			}
+	int n_format = get_selected_format (self);
+	if ((n_format >= 0) && (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT)) {
+		const char *password = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("password_entry_row")));
+		if ((password != NULL) && (strcmp (password, "") != 0)) {
+			if (mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER)
+				encrypt_header = gtk_switch_get_state (GTK_SWITCH (GET_WIDGET ("encrypt_header_switch")));
 		}
 	}
 
@@ -634,18 +787,14 @@ int
 fr_new_archive_dialog_get_volume_size (FrNewArchiveDialog *self)
 {
 	guint volume_size = 0;
-	int   n_format;
 
-	n_format = get_selected_format (self);
-
-	if ((mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES)
-	    && gtk_check_button_get_active (GTK_CHECK_BUTTON (GET_WIDGET ("volume_checkbutton"))))
+	int n_format = get_selected_format (self);
+	if ((n_format >= 0) &&
+		(mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES) &&
+		adw_expander_row_get_enable_expansion (ADW_EXPANDER_ROW (GET_WIDGET ("split_in_volumes_expander_row"))))
 	{
-		double value;
-
-		value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton")));
+		double value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton")));
 		volume_size = floor (value * MEGABYTE);
-
 	}
 
 	return volume_size;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
   <object class="GtkBox" id="content">
     <property name="orientation">vertical</property>
     <property name="spacing">24</property>
@@ -8,54 +9,36 @@
       <class name="dialog-content"/>
     </style>
     <child>
-      <object class="GtkBox" id="box1">
-        <property name="orientation">vertical</property>
-        <property name="spacing">24</property>
+      <object class="AdwPreferencesGroup">
         <child>
-          <object class="GtkBox" id="box7">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
+          <object class="AdwActionRow" id="filename_row">
+            <property name="title" translatable="yes">File</property>
+            <property name="activatable">True</property>
             <child>
-              <object class="GtkLabel" id="archive_label">
-                <property name="label" translatable="yes">_Filename:</property>
-                <property name="use_underline">1</property>
-                <property name="justify">center</property>
-                <property name="mnemonic_widget">filename_entry</property>
-                <property name="halign">start</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox" id="box2">
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkEntry" id="filename_entry">
-                    <property name="hexpand">1</property>
-                    <property name="activates_default">True</property>
-                    <property name="width_chars">35</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="extension_comboboxtext">
-                    <property name="hexpand">1</property>
-                  </object>
-                </child>
+              <object class="GtkImage">
+                <property name="icon-name">go-next-symbolic</property>
               </object>
             </child>
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="box8">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkLabel" id="location_label">
-                <property name="label" translatable="yes">_Location:</property>
-                <property name="use_underline">1</property>
-                <property name="halign">start</property>
+          <object class="AdwComboRow" id="extension_combo_row">
+            <property name="title" translatable="yes">Extension</property>
+            <property name="model">
+              <object id="extension_list" class="GtkStringList">
               </object>
-            </child>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow" id="location_row">
+            <property name="title">Location</property>
+            <property name="subtitle"></property>
             <child>
-              <object class="GtkBox" id="parent_filechooserbutton_container">
+              <object class="GtkLabel" id="location_name">
+                <style>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
           </object>
@@ -63,93 +46,71 @@
       </object>
     </child>
     <child>
-      <object class="GtkExpander" id="other_options_expander">
-        <property name="valign">center</property>
-        <property name="expanded">1</property>
+      <object class="AdwPreferencesGroup">
         <child>
-          <object class="GtkBox" id="box4">
-            <property name="margin_top">6</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">12</property>
+          <object class="AdwExpanderRow" id="encrypt_archive_expander_row">
+            <property name="expanded">False</property>
+            <property name="show_enable_switch">True</property>
+            <property name="title" translatable="yes">Encrypt</property>
+            <property name="subtitle" translatable="yes">Ask a password to extract the files</property>
             <child>
-              <object class="GtkBox" id="box5">
-                <property name="margin_top">12</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">6</property>
+              <object class="AdwPasswordEntryRow" id="password_entry_row">
+                <property name="title" translatable="yes">Password</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow" id="encrypt_header_row">
+                <property name="title" translatable="yes">Encrypt File List</property>
+                <property name="subtitle" translatable="yes">Ask the password to see the file list</property>
+                <property name="activatable-widget">encrypt_header_switch</property>
                 <child>
-                  <object class="GtkLabel" id="password_label">
-                    <property name="label" translatable="yes">_Password:</property>
-                    <property name="use_underline">1</property>
-                    <property name="mnemonic_widget">password_entry</property>
-                    <property name="halign">start</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="password_entry">
-                    <property name="visibility">0</property>
-                    <property name="activates_default">True</property>
+                  <object class="GtkSwitch" id="encrypt_header_switch">
+                    <property name="valign">center</property>
+                    <property name="state">False</property>
                   </object>
                 </child>
               </object>
             </child>
-            <child>
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkCheckButton" id="encrypt_header_checkbutton">
-                    <property name="label" translatable="yes">_Encrypt the file list too</property>
-                    <property name="use_underline">1</property>
-                    <property name="halign">start</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox" id="volume_box">
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkCheckButton" id="volume_checkbutton">
-                        <property name="label" translatable="yes" comments="this is part of a sentence, for example &quot;split into volumes of 10.0 MB&quot;, where MB stands for megabyte.">Split into _volumes of</property>
-                        <property name="use_underline">1</property>
-                        <property name="halign">center</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSpinButton" id="volume_spinbutton">
-                        <property name="halign">center</property>
-                        <property name="width_chars">4</property>
-                        <property name="text">10,0</property>
-                        <property name="adjustment">volume_adjustment</property>
-                        <property name="climb_rate">1</property>
-                        <property name="digits">1</property>
-                        <property name="numeric">1</property>
-                        <property name="value">10</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="label50">
-                        <property name="halign">center</property>
-                        <property name="label" translatable="yes" comments="MB means megabytes">MB</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child type="label">
-          <object class="GtkLabel" id="label48">
-            <property name="label" translatable="yes">_Other Options</property>
-            <property name="use_underline">1</property>
           </object>
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkAdjustment" id="volume_adjustment">
-    <property name="lower">0.10000000000000001</property>
-    <property name="upper">10000000000</property>
-    <property name="step_increment">0.10000000000000001</property>
-    <property name="page_increment">10</property>
+    <child>
+      <object class="AdwPreferencesGroup" id="volume_group">
+        <child>
+          <object class="AdwExpanderRow" id="split_in_volumes_expander_row">
+            <property name="expanded">False</property>
+            <property name="show_enable_switch">True</property>
+            <property name="title" translatable="yes">Split in Volumes</property>
+            <property name="subtitle" translatable="yes">Split the archive in smaller files</property>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes" comments="File size">Size</property>
+                <child>
+                  <object class="GtkSpinButton" id="volume_spinbutton">
+                    <property name="valign">center</property>
+                    <property name="numeric">True</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">0.1</property>
+                        <property name="upper">10000</property>
+                        <property name="value">10</property>
+                        <property name="page-increment">10</property>
+                        <property name="step-increment">10</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="location">
+                    <property name="label" translatable="yes" comments="Short for Megabytes">MB</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
   </object>
 </interface>
