@@ -1647,9 +1647,8 @@ fr_window_update_dir_tree (FrWindow *window)
 	if (! gtk_widget_get_realized (GTK_WIDGET (window)))
 		return;
 
-	gtk_tree_store_clear (private->tree_store);
-
-	if (! private->view_sidebar
+	if (private->filter_mode
+	    || ! private->view_sidebar
 	    || ! private->archive_present
 	    || (private->list_mode == FR_WINDOW_LIST_MODE_FLAT))
 	{
@@ -1658,6 +1657,7 @@ fr_window_update_dir_tree (FrWindow *window)
 		return;
 	}
 	else {
+		gtk_tree_store_clear (private->tree_store);
 		gtk_widget_set_sensitive (private->tree_view, TRUE);
 		if (! gtk_widget_get_visible (private->sidepane))
 			gtk_widget_show (private->sidepane);
@@ -4464,10 +4464,6 @@ fr_window_show_cb (GtkWidget *widget,
 
 	private->view_sidebar = g_settings_get_boolean (private->settings_ui, PREF_UI_VIEW_SIDEBAR);
 	fr_window_set_action_state (window, "view-sidebar", private->view_sidebar);
-
-	gtk_widget_hide (private->filter_bar);
-
-	return;
 }
 
 
@@ -4539,7 +4535,7 @@ fr_window_activate_filter (FrWindow *window)
 	GtkTreeView       *tree_view = GTK_TREE_VIEW (private->list_view);
 	GtkTreeViewColumn *column;
 
-	gtk_widget_show (private->filter_bar);
+	gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (private->filter_bar), TRUE);
 	private->list_mode = FR_WINDOW_LIST_MODE_FLAT;
 
 	gtk_list_store_clear (private->list_store);
@@ -4638,6 +4634,17 @@ fr_window_add_accelerators (FrWindow                 *window,
 						 acc->accelerator,
 						 NULL);
 	}
+}
+
+
+static void
+filter_bar_search_mode_enabled_cb (GObject    *gobject,
+				   GParamSpec *pspec,
+				   gpointer    user_data)
+{
+	FrWindow *window = FR_WINDOW (user_data);
+	FrWindowPrivate *private = fr_window_get_instance_private (window);
+	fr_window_find (window, gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (private->filter_bar)));
 }
 
 
@@ -4818,8 +4825,13 @@ fr_window_construct (FrWindow *window)
 
 	/* filter bar */
 
-	private->filter_bar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (private->filter_bar)), "locationbar");
+	private->filter_bar = gtk_search_bar_new ();
+	gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR (private->filter_bar), TRUE);
+	//gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (private->filter_bar)), "locationbar");
+	g_signal_connect (private->filter_bar,
+			  "notify::search-mode-enabled",
+			  G_CALLBACK (filter_bar_search_mode_enabled_cb),
+			  window);
 
 	private->filter_entry = gtk_search_entry_new ();
 	gtk_widget_set_hexpand (private->filter_entry, TRUE);
@@ -4833,7 +4845,8 @@ fr_window_construct (FrWindow *window)
 			  "stop-search",
 			  G_CALLBACK (filter_entry_stop_search_cb),
 			  window);
-	gtk_box_append (GTK_BOX (private->filter_bar), private->filter_entry);
+	gtk_search_bar_set_child (GTK_SEARCH_BAR (private->filter_bar), private->filter_entry);
+	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (private->filter_bar), GTK_EDITABLE (private->filter_entry));
 	fr_window_attach (FR_WINDOW (window), private->filter_bar, FR_WINDOW_AREA_FILTERBAR);
 
 	/* tree view */
@@ -6518,8 +6531,9 @@ fr_window_find (FrWindow *window,
 		g_free (private->location_before_filter);
 		private->location_before_filter = g_strdup (gtk_editable_get_text (GTK_EDITABLE (private->location_entry)));
 		private->filter_mode = TRUE;
-		gtk_widget_show (private->filter_bar);
+		gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (private->filter_bar), TRUE);
 		gtk_widget_hide (private->location_bar);
+		fr_window_update_dir_tree (window);
 		gtk_widget_grab_focus (private->filter_entry);
 	}
 	else {
@@ -6527,7 +6541,7 @@ fr_window_find (FrWindow *window,
 		private->list_mode = private->last_list_mode;
 
 		gtk_editable_set_text (GTK_EDITABLE (private->filter_entry), "");
-		gtk_widget_hide (private->filter_bar);
+		gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (private->filter_bar), FALSE);
 
 		gtk_list_store_clear (private->list_store);
 
@@ -6535,7 +6549,8 @@ fr_window_find (FrWindow *window,
 		fr_window_update_file_list (window, TRUE);
 		fr_window_update_dir_tree (window);
 		fr_window_update_current_location (window);
-		fr_window_go_to_location (window, private->location_before_filter, FALSE);
+		if (private->location_before_filter != NULL)
+			fr_window_go_to_location (window, private->location_before_filter, FALSE);
 
 		g_free (private->location_before_filter);
 		private->location_before_filter = NULL;
