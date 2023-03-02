@@ -21,6 +21,7 @@
 
 
 #include <config.h>
+#include <adwaita.h>
 #include "fr-application.h"
 #include "fr-application-menu.h"
 #include "fr-enum-types.h"
@@ -122,21 +123,23 @@ fr_application_activate_about (GSimpleAction *action,
 			       GVariant      *parameter,
 			       gpointer       user_data)
 {
-	const char *authors[] = { "Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL	};
+	const char *developers[] = { "Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL };
 	const char *documenters [] = { "Alexander Kirillov", "Breda McColgan", NULL };
 
-	gtk_show_about_dialog (GTK_WINDOW (_gtk_application_get_current_window (G_APPLICATION (user_data))),
-			       "version", PACKAGE_VERSION,
-			       "copyright", _("Copyright \xc2\xa9 2001–2022 Free Software Foundation, Inc."),
-			       "comments", _("An archive manager for GNOME."),
-			       "authors", authors,
-			       "documenters", documenters,
-			       "translator-credits", _("translator-credits"),
-			       "logo-icon-name", "org.gnome.FileRoller",
-			       "license-type", GTK_LICENSE_GPL_2_0,
-			       "website", "https://wiki.gnome.org/Apps/FileRoller",
-			       "wrap-license", TRUE,
-			       NULL);
+	adw_show_about_window (
+		gtk_application_get_active_window (GTK_APPLICATION (user_data)),
+		"application-name", _("Archive Manager"),
+		"application-icon", "org.gnome.FileRoller",
+		"version", PACKAGE_VERSION,
+		"copyright", _("Copyright \xc2\xa9 2001–2023 Free Software Foundation, Inc."),
+		"comments", _("An archive manager for GNOME."),
+		"website", "https://wiki.gnome.org/Apps/FileRoller",
+		"issue-url", "https://gitlab.gnome.org/GNOME/file-roller/-/issues/new",
+		"license-type", GTK_LICENSE_GPL_2_0,
+		"developers", developers,
+		"documenters", documenters,
+		"translator-credits", _("translator-credits"),
+		NULL);
 }
 
 
