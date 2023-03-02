@@ -6580,7 +6580,7 @@ fr_window_action_new_archive (FrWindow *window)
 					    fr_window_get_open_default_dir (window),
 					    NULL,
 					    NULL);
-	if ((fr_window_archive_is_present (window) && ! fr_window_is_batch_mode (window) ? NULL : GTK_WINDOW (window)))
+	if (! fr_window_is_batch_mode (window))
 		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 	g_signal_connect (FR_NEW_ARCHIVE_DIALOG (dialog),
 			  "response",
