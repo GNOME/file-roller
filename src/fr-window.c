@@ -4837,7 +4837,7 @@ fr_window_construct (FrWindow *window)
 	/* filter bar */
 
 	private->filter_bar = gtk_search_bar_new ();
-	gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR (private->filter_bar), TRUE);
+	gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR (private->filter_bar), FALSE);
 	//gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (private->filter_bar)), "locationbar");
 	g_signal_connect (private->filter_bar,
 			  "notify::search-mode-enabled",
