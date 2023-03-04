@@ -4923,7 +4923,8 @@ fr_window_construct (FrWindow *window)
 
 	GtkWidget *status_page = adw_status_page_new ();
 	adw_status_page_set_icon_name (ADW_STATUS_PAGE (status_page), "package-x-generic-symbolic");
-	adw_status_page_set_title (ADW_STATUS_PAGE (status_page), _("No Archive"));
+	adw_status_page_set_title (ADW_STATUS_PAGE (status_page), _("No Archive Opened"));
+	adw_status_page_set_description (ADW_STATUS_PAGE (status_page), _("Open an archive or create a new one."));
 
 	private->paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_paned_set_start_child (GTK_PANED (private->paned), private->sidepane);
