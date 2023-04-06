@@ -174,9 +174,10 @@ fr_clipboard_data_dup (FrClipboardData *other)
 	FrClipboardData *data;
 
 	data = fr_clipboard_data_new ();
+	data->file = _g_object_ref (other->file);
 	data->files = _g_string_list_dup (other->files);
 	data->op = other->op;
-	data->base_dir = other->base_dir;
+	data->base_dir = g_strdup (other->base_dir);
 
 	return data;
 }
@@ -7741,6 +7742,7 @@ fr_window_copy_or_cut_selection (FrWindow      *window,
 				 FrClipboardOp  op,
 				 gboolean       from_sidebar)
 {
+	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	GList *files;
 	char  *base_dir;
 
@@ -7749,6 +7751,7 @@ fr_window_copy_or_cut_selection (FrWindow      *window,
 	if (app_clipboard != NULL)
 		fr_clipboard_data_unref (app_clipboard);
 	app_clipboard = fr_clipboard_data_new ();
+	app_clipboard->file = g_object_ref (private->archive_file);
 	app_clipboard->files = files;
 	app_clipboard->op = op;
 	app_clipboard->base_dir = base_dir;
