@@ -8024,6 +8024,16 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 		private->clipboard_data = data;
 	}
 
+	if (g_file_equal (data->file, private->archive_file) && (g_strcmp0 (data->current_dir, data->base_dir) == 0)) {
+		_gtk_error_dialog_run (GTK_WINDOW (window),
+				       _("Could not perform the operation"),
+				       "%s",
+				       _("Source and destination are the same."));
+		fr_clipboard_data_unref (private->clipboard_data);
+		private->clipboard_data = NULL;
+		return;
+	}
+
 	fr_window_set_current_action (window,
 				      FR_BATCH_ACTION_PASTE,
 				      fr_clipboard_data_ref (data),
