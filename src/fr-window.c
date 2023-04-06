@@ -4922,7 +4922,7 @@ fr_window_construct (FrWindow *window)
 	/* main content */
 
 	GtkWidget *status_page = adw_status_page_new ();
-	adw_status_page_set_icon_name (ADW_STATUS_PAGE (status_page), "package-x-generic-symbolic");
+	adw_status_page_set_icon_name (ADW_STATUS_PAGE (status_page), "org.gnome.FileRoller");
 	adw_status_page_set_title (ADW_STATUS_PAGE (status_page), _("No Archive Opened"));
 	adw_status_page_set_description (ADW_STATUS_PAGE (status_page), _("Open an archive or create a new one."));
 
