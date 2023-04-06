@@ -409,29 +409,6 @@ _gtk_image_button_new_for_header_bar (const char *icon_name)
 
 
 GtkWidget *
-_gtk_header_bar_create_text_button (const char       *label,
-				    const char       *tooltip,
-				    const char       *action_name)
-{
-	GtkWidget *button;
-
-	g_return_val_if_fail (label != NULL, NULL);
-	g_return_val_if_fail (action_name != NULL, NULL);
-
-	button = gtk_button_new_with_mnemonic (label);
-	gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
-	gtk_style_context_add_class (gtk_widget_get_style_context (button), "text-button");
-	gtk_style_context_remove_class (gtk_widget_get_style_context (button), "image-button");
-	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
-	if (tooltip != NULL)
-		gtk_widget_set_tooltip_text (button, tooltip);
-	gtk_widget_show (button);
-
-	return button;
-}
-
-
-GtkWidget *
 _gtk_header_bar_create_image_button (const char       *icon_name,
 				     const char       *tooltip,
 				     const char       *action_name)

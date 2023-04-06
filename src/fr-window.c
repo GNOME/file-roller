@@ -4667,6 +4667,7 @@ fr_window_construct (FrWindow *window)
 	GtkWidget          *location_box;
 	GtkWidget          *tree_scrolled_window;
 	GtkWidget          *button;
+	GtkWidget          *content;
 	GtkTreeSelection   *selection;
 	GtkSizeGroup       *header_bar_size_group;
 
@@ -4964,7 +4965,13 @@ fr_window_construct (FrWindow *window)
 
 	header_bar_size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
 
-	button = _gtk_header_bar_create_text_button (C_("Action", "_Extract"), NULL, "win.extract-files");
+	button = gtk_button_new ();
+	content = adw_button_content_new();
+	adw_button_content_set_label (ADW_BUTTON_CONTENT (content), C_("Action", "_Extract"));
+	adw_button_content_set_icon_name (ADW_BUTTON_CONTENT (content), "archive-extract-symbolic");
+	adw_button_content_set_use_underline (ADW_BUTTON_CONTENT (content), true);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), "win.extract-files");
+	gtk_button_set_child (GTK_BUTTON (button), content);
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_start (GTK_HEADER_BAR (private->headerbar), button);
 

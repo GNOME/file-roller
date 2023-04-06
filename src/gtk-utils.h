@@ -77,9 +77,6 @@ GtkWidget *   _gtk_builder_get_widget              (GtkBuilder       *builder,
 void          _gtk_entry_use_as_password_entry     (GtkEntry         *entry);
 GtkWidget *   _gtk_menu_button_new_for_header_bar  (void);
 GtkWidget *   _gtk_image_button_new_for_header_bar (const char       *icon_name);
-GtkWidget *   _gtk_header_bar_create_text_button   (const char       *icon_name,
-						    const char       *tooltip,
-						    const char       *action_name);
 GtkWidget *   _gtk_header_bar_create_image_button  (const char       *icon_name,
 						    const char       *tooltip,
 						    const char       *action_name);
