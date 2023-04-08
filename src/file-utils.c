@@ -48,7 +48,7 @@
 /* path */
 
 
-static const char *try_folder[] = { "cache", "~", "tmp", NULL };
+static const char *try_folder[] = {"tmp", "cache", "~",  NULL };
 
 
 static const char *
