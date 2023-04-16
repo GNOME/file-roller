@@ -51,13 +51,11 @@ struct _FrNewArchiveDialog {
 	GSettings  *settings;
 	GtkBuilder *builder;
 	int        *supported_types;
-	GHashTable *supported_ext;
 	gboolean    can_encrypt;
 	gboolean    can_encrypt_header;
 	gboolean    can_create_volumes;
 	GFile      *original_file;
 	GList      *files_to_add;
-	GtkWidget  *location_button;
 	char       *filename;
 	GFile      *folder;
 	State       state;
@@ -80,7 +78,6 @@ fr_new_archive_dialog_finalize (GObject *object)
 	_g_object_unref (self->folder);
 	g_object_unref (self->settings);
 	g_object_unref (self->builder);
-	g_hash_table_unref (self->supported_ext);
 
 	G_OBJECT_CLASS (fr_new_archive_dialog_parent_class)->finalize (object);
 }
@@ -157,7 +154,6 @@ fr_new_archive_dialog_init (FrNewArchiveDialog *self)
 {
 	self->settings = g_settings_new (FILE_ROLLER_SCHEMA_NEW);
 	self->builder = NULL;
-	self->supported_ext = g_hash_table_new (g_str_hash, g_str_equal);
 	self->original_file = NULL;
 	self->files_to_add = NULL;
 	self->filename = NULL;
