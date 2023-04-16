@@ -113,6 +113,7 @@ config_inc = include_directories('.')
 
 c_args = ['-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38']
 if get_option('buildtype').contains('debug')
+  warn_deprecated = get_option('warn-deprecated')
   test_args = [
     '-Wall',
     '-Wextra',
@@ -124,8 +125,11 @@ if get_option('buildtype').contains('debug')
     '-Wno-unused-parameter',
   ]
 else
-  c_args += ['-Wno-deprecated-declarations']
+  warn_deprecated = false
   test_args = ['-Wall']
+endif
+if not(warn_deprecated)
+  test_args += [ '-Wno-deprecated-declarations' ]
 endif
 c_args += c_comp.get_supported_arguments(test_args)
 
@@ -151,6 +155,7 @@ gnome.post_install(
 summary(
   {
     'prefix': prefix,
+    'warn deprecated': warn_deprecated,
     'nautilus actions': build_nautilus_actions,
     'packagekit': get_option('packagekit'),
     'libarchive': use_libarchive,
