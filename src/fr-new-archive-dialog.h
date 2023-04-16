@@ -43,8 +43,7 @@ GtkWidget *     fr_new_archive_dialog_new                 (const char          *
 							   GFile               *folder,
 							   const char          *default_name,
 							   GFile               *original_file);
-
-void		fr_new_archive_dialog_run                 (FrNewArchiveDialog  *dialog);
+void		fr_new_archive_dialog_show                (FrNewArchiveDialog  *dialog);
 
 /**
  * fr_new_archive_dialog_set_files_to_add:

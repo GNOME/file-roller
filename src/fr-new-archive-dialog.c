@@ -112,28 +112,6 @@ fr_new_archive_dialog_unmap (GtkWidget *widget)
 static void choose_file (FrNewArchiveDialog *self);
 
 
-static gboolean
-autoactivate_file_button (gpointer user_data)
-{
-	choose_file (FR_NEW_ARCHIVE_DIALOG (user_data));
-	return G_SOURCE_REMOVE;
-}
-
-
-static void
-fr_new_archive_dialog_show (GtkWidget *widget)
-{
-	GTK_WIDGET_CLASS (fr_new_archive_dialog_parent_class)->show (widget);
-
-	FrNewArchiveDialog *self = FR_NEW_ARCHIVE_DIALOG (widget);
-	if (self->state == STATE_FILENAME)
-		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE,
-			autoactivate_file_button,
-			g_object_ref (self),
-			g_object_unref);
-}
-
-
 static void
 fr_new_archive_dialog_class_init (FrNewArchiveDialogClass *klass)
 {
@@ -145,7 +123,6 @@ fr_new_archive_dialog_class_init (FrNewArchiveDialogClass *klass)
 
 	widget_class = GTK_WIDGET_CLASS (klass);
 	widget_class->unmap = fr_new_archive_dialog_unmap;
-	widget_class->show = fr_new_archive_dialog_show;
 }
 
 
@@ -324,6 +301,8 @@ file_chooser_response_cb (GtkDialog *dialog,
 		gtk_window_destroy (GTK_WINDOW (dialog));
 		if (choosing_file && !format_has_other_options (self))
 			gtk_dialog_response (GTK_DIALOG (self), GTK_RESPONSE_OK);
+		else
+			gtk_window_present (GTK_WINDOW (self));
 	}
 
 	g_object_unref (file);
@@ -380,13 +359,7 @@ combo_box_selected_notify_cb (GObject    *gobject,
 		if (n_format >= 0) {
 			bool changed = FALSE;
 			const char *ext = _g_filename_get_extension (self->filename);
-			if (ext == NULL) {
-				char *tmp = g_strconcat (self->filename, ext, NULL);
-				g_free (self->filename);
-				self->filename = tmp;
-				changed = TRUE;
-			}
-			else if (g_strcmp0 (ext, mime_type_desc[n_format].default_ext) != 0) {
+			if (g_strcmp0 (ext, mime_type_desc[n_format].default_ext) != 0) {
 				char *filename_no_ext = _g_path_remove_extension_if_archive (self->filename);
 				char *tmp = g_strconcat (filename_no_ext, mime_type_desc[n_format].default_ext, NULL);
 				g_free (filename_no_ext);
@@ -394,8 +367,10 @@ combo_box_selected_notify_cb (GObject    *gobject,
 				self->filename = tmp;
 				changed = TRUE;
 			}
-			if (changed)
+			if (changed) {
 				update_filename_label (self);
+				update_from_selected_format (self, n_format);
+			}
 		}
 	}
 }
@@ -576,6 +551,16 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 			mime_type_desc[data->n_format].mime_type,
 			data->user_data);
 	overwrite_dialog_data_free (data);
+}
+
+
+void
+fr_new_archive_dialog_show (FrNewArchiveDialog *self)
+{
+	if (self->state == STATE_FILENAME)
+		choose_file (self);
+	else
+		gtk_window_present (GTK_WINDOW (self));
 }
 
 
