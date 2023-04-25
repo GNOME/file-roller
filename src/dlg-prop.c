@@ -22,14 +22,17 @@
 #include <config.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include <adwaita.h>
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
 #include "dlg-prop.h"
 
+#define GET_WIDGET(x) (_gtk_builder_get_widget (data->builder, (x)))
 
 typedef struct {
+	FrWindow *window;
 	GtkBuilder *builder;
 	GtkWidget *dialog;
 } DialogData;
@@ -45,125 +48,105 @@ destroy_cb (GtkWidget  *widget,
 }
 
 
+static void
+open_location_clicked_cb (GtkButton *button,
+			  DialogData *data)
+{
+	_gtk_show_file_in_container (GTK_WINDOW (data->dialog), fr_window_get_archive_file (data->window));
+}
+
+
 void
 dlg_prop (FrWindow *window)
 {
 	DialogData *data;
-	GtkWidget  *label;
-	GFile      *parent;
-	char       *uri;
-	char       *markup;
-	char       *s;
-	goffset     size, uncompressed_size;
-	char       *utf8_name;
-	char       *title_txt;
-	double      ratio;
 
 	data = g_new (DialogData, 1);
-
 	data->builder = gtk_builder_new_from_resource (FILE_ROLLER_RESOURCE_UI_PATH "properties.ui");
+	data->window = window;
 
 	/* Make the dialog */
 
 	data->dialog = g_object_new (GTK_TYPE_DIALOG,
+				     "title", _("Properties"),
 				     "transient-for", GTK_WINDOW (window),
 				     "modal", TRUE,
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     NULL);
-
+	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 500, -1);
 	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))),
 			_gtk_builder_get_widget (data->builder, "content"));
 
 	/* Set widgets data. */
 
-	label = _gtk_builder_get_widget (data->builder, "p_path_label");
-	parent = g_file_get_parent (fr_window_get_archive_file (window));
-	uri = g_file_get_uri (parent);
-	utf8_name = g_file_get_parse_name (parent);
-	markup = g_strdup_printf ("<a href=\"%s\">%s</a>", uri, utf8_name);
-	gtk_label_set_markup (GTK_LABEL (label), markup);
+	/* Name */
 
-	g_free (markup);
-	g_free (utf8_name);
+	char *utf8_text = _g_file_get_display_basename (fr_window_get_archive_file (window));
+	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("filename_label")), utf8_text);
+
+	g_free (utf8_text);
+
+	/* Location. */
+
+	GFile *parent = g_file_get_parent (fr_window_get_archive_file (window));
+	char *uri = g_file_get_uri (parent);
+	utf8_text = g_file_get_parse_name (parent);
+	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("location_label")), utf8_text);
+
+	g_free (utf8_text);
 	g_free (uri);
 	g_object_unref (parent);
 
-	/**/
+	/* Mime type. */
 
-	label = _gtk_builder_get_widget (data->builder, "p_name_label");
-	utf8_name = _g_file_get_display_basename (fr_window_get_archive_file (window));
-	gtk_label_set_text (GTK_LABEL (label), utf8_name);
+	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("mime_type_label")), window->archive->mime_type);
 
-	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);
-	gtk_window_set_title (GTK_WINDOW (data->dialog), title_txt);
-	g_free (title_txt);
-
-	g_free (utf8_name);
-
-	/**/
-
-	label = _gtk_builder_get_widget (data->builder, "p_mime_type_label");
-	gtk_label_set_text (GTK_LABEL (label), window->archive->mime_type);
-
-	/**/
+	/* Date. */
 
 	{
 		g_autoptr (GDateTime) date_time;
-
-		label = _gtk_builder_get_widget (data->builder, "p_date_label");
 		date_time = g_date_time_new_from_unix_local (_g_file_get_file_mtime (fr_window_get_archive_file (window)));
-		s = g_date_time_format (date_time, _("%d %B %Y, %H:%M"));
-		gtk_label_set_text (GTK_LABEL (label), s);
-		g_free (s);
+		utf8_text = g_date_time_format (date_time, _("%d %B %Y, %H:%M"));
+		gtk_label_set_text (GTK_LABEL (GET_WIDGET ("date_label")), utf8_text);
+		g_free (utf8_text);
 	}
 
-	/**/
+	/* Size */
 
-	label = _gtk_builder_get_widget (data->builder, "p_size_label");
-	size = _g_file_get_file_size (fr_window_get_archive_file (window));
-	s = g_format_size_full (size, G_FORMAT_SIZE_LONG_FORMAT);
-	gtk_label_set_text (GTK_LABEL (label), s);
-	g_free (s);
+	goffset size = _g_file_get_file_size (fr_window_get_archive_file (window));
+	utf8_text = g_format_size_full (size, G_FORMAT_SIZE_LONG_FORMAT);
+	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("size_label")), utf8_text);
+	g_free (utf8_text);
 
-	/**/
+	/* Uncompressed size. */
 
-	uncompressed_size = 0;
+	goffset uncompressed_size = 0;
 	if (fr_window_archive_is_present (window)) {
 		for (guint i = 0; i < window->archive->files->len; i++) {
 			FrFileData *fd = g_ptr_array_index (window->archive->files, i);
 			uncompressed_size += fd->size;
 		}
 	}
+	utf8_text = g_format_size_full (uncompressed_size, G_FORMAT_SIZE_LONG_FORMAT);
+	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("uncompressed_size_label")), utf8_text);
+	g_free (utf8_text);
 
-	label = _gtk_builder_get_widget (data->builder, "p_uncomp_size_label");
-	s = g_format_size_full (uncompressed_size, G_FORMAT_SIZE_LONG_FORMAT);
-	gtk_label_set_text (GTK_LABEL (label), s);
-	g_free (s);
+	/* Compression ratio. */
 
-	/**/
-
-	label = _gtk_builder_get_widget (data->builder, "p_cratio_label");
-
-	if (uncompressed_size != 0)
-		ratio = (double) uncompressed_size / size;
-	else
-		ratio = 0.0;
-	s = g_strdup_printf ("%0.2f", ratio);
-	gtk_label_set_text (GTK_LABEL (label), s);
-	g_free (s);
-
-	/**/
-
-	label = _gtk_builder_get_widget (data->builder, "p_files_label");
-	s = g_strdup_printf ("%d", window->archive->n_regular_files);
-	gtk_label_set_text (GTK_LABEL (label), s);
-	g_free (s);
+	double ratio = (uncompressed_size != 0) ? (double) uncompressed_size / size : 0.0;
+	utf8_text = g_strdup_printf ("%0.2f", ratio);
+	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("compression_ratio_label")), utf8_text);
+	g_free (utf8_text);
 
 	/* Set the signals handlers. */
 
 	g_signal_connect (data->dialog,
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
+			  data);
+	g_signal_connect (GET_WIDGET ("open_location_button"),
+			  "clicked",
+			  G_CALLBACK (open_location_clicked_cb),
 			  data);
 
 	/* Run dialog. */

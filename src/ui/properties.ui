@@ -1,203 +1,225 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkGrid" id="content">
-    <property name="row_spacing">10</property>
-    <property name="column_spacing">10</property>
+  <requires lib="libadwaita" version="1.0"/>
+  <object class="GtkBox" id="content">
+    <property name="orientation">vertical</property>
+    <property name="spacing">24</property>
     <style>
       <class name="dialog-content"/>
     </style>
     <child>
-      <object class="GtkLabel" id="p_name_label_label">
-        <property name="label" translatable="yes" context="File">Name:</property>
-        <property name="justify">center</property>
-        <property name="halign">end</property>
-        <style>
-          <class name="title-4"/>
-        </style>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">0</property>
-        </layout>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
+        <property name="margin-start">20</property>
+        <property name="margin-end">20</property>
+        <child>
+          <object class="GtkLabel" id="filename_label">
+            <style>
+              <class name="title-3"/>
+            </style>
+            <property name="halign">fill</property>
+            <property name="justify">center</property>
+            <property name="selectable">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap_mode">word-char</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
-      <object class="GtkLabel" id="p_name_label">
-        <property name="selectable">True</property>
-        <property name="ellipsize">end</property>
-        <property name="halign">start</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">0</property>
-        </layout>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="AdwActionRow">
+            <child type="prefix">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">3</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkLabel">
+                    <style>
+                      <class name="dim-label"/>
+                      <class name="caption"/>
+                    </style>
+                    <property name="label" translatable="yes">Location</property>
+                    <property name="halign">start</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="location_label">
+                    <property name="halign">start</property>
+                    <property name="ellipsize">end</property>
+                    <property name="selectable">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="open_location_button">
+                <style>
+                  <class name="flat"/>
+                  <class name="image-button"/>
+                </style>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">folder-open-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
     <child>
-      <object class="GtkLabel" id="p_path_label_label">
-        <property name="label" translatable="yes" comments="after the colon there is a folder name.">Location:</property>
-        <property name="justify">center</property>
-        <property name="halign">end</property>
-        <style>
-          <class name="title-4"/>
-        </style>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">1</property>
-        </layout>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="AdwActionRow">
+            <child type="prefix">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">3</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkLabel">
+                    <style>
+                      <class name="dim-label"/>
+                      <class name="caption"/>
+                    </style>
+                    <property name="label" translatable="yes">Last Modified</property>
+                    <property name="halign">start</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="date_label">
+                    <property name="halign">start</property>
+                    <property name="ellipsize">end</property>
+                    <property name="selectable">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <child type="prefix">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">3</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkLabel">
+                    <style>
+                      <class name="dim-label"/>
+                      <class name="caption"/>
+                    </style>
+                    <property name="label" translatable="yes">Type</property>
+                    <property name="halign">start</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="mime_type_label">
+                    <property name="halign">start</property>
+                    <property name="ellipsize">end</property>
+                    <property name="selectable">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
     <child>
-      <object class="GtkLabel" id="p_path_label">
-        <property name="selectable">True</property>
-        <property name="ellipsize">start</property>
-        <property name="halign">start</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">1</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_mime_type_label_label">
-        <property name="label" translatable="yes" comments="after the colon there is a file type.">Type:</property>
-        <property name="justify">center</property>
-        <property name="halign">end</property>
-        <style>
-          <class name="title-4"/>
-        </style>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">2</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_mime_type_label">
-        <property name="selectable">True</property>
-        <property name="ellipsize">start</property>
-        <property name="halign">start</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">2</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_date_label_label">
-        <property name="label" translatable="yes">Last modified:</property>
-        <property name="justify">center</property>
-        <property name="halign">end</property>
-        <style>
-          <class name="title-4"/>
-        </style>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">3</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_date_label">
-        <property name="selectable">True</property>
-        <property name="halign">start</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">3</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_size_label_label">
-        <property name="label" translatable="yes">Archive size:</property>
-        <property name="justify">center</property>
-        <property name="halign">end</property>
-        <style>
-          <class name="title-4"/>
-        </style>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">4</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_size_label">
-        <property name="selectable">True</property>
-        <property name="halign">start</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">4</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_uncomp_size_label_label">
-        <property name="label" translatable="yes">Content size:</property>
-        <property name="halign">end</property>
-        <style>
-          <class name="title-4"/>
-        </style>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">5</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_uncomp_size_label">
-        <property name="selectable">True</property>
-        <property name="halign">start</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">5</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_cratio_label_label">
-        <property name="label" translatable="yes">Compression ratio:</property>
-        <property name="halign">end</property>
-        <style>
-          <class name="title-4"/>
-        </style>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">6</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_cratio_label">
-        <property name="selectable">True</property>
-        <property name="halign">start</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">6</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_files_label_label">
-        <property name="label" translatable="yes">Number of files:</property>
-        <property name="justify">center</property>
-        <property name="halign">end</property>
-        <style>
-          <class name="title-4"/>
-        </style>
-        <layout>
-          <property name="column">0</property>
-          <property name="row">7</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_files_label">
-        <property name="selectable">True</property>
-        <property name="halign">start</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">7</property>
-        </layout>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="AdwActionRow">
+            <child type="prefix">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">3</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkLabel">
+                    <style>
+                      <class name="dim-label"/>
+                      <class name="caption"/>
+                    </style>
+                    <property name="label" translatable="yes">Compressed Size</property>
+                    <property name="halign">start</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="size_label">
+                    <property name="halign">start</property>
+                    <property name="ellipsize">end</property>
+                    <property name="selectable">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <child type="prefix">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">3</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkLabel">
+                    <style>
+                      <class name="dim-label"/>
+                      <class name="caption"/>
+                    </style>
+                    <property name="label" translatable="yes">Uncrompressed Size</property>
+                    <property name="halign">start</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="uncompressed_size_label">
+                    <property name="halign">start</property>
+                    <property name="ellipsize">end</property>
+                    <property name="selectable">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <child type="prefix">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">3</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkLabel">
+                    <style>
+                      <class name="dim-label"/>
+                      <class name="caption"/>
+                    </style>
+                    <property name="label" translatable="yes">Compression Ratio</property>
+                    <property name="halign">start</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="compression_ratio_label">
+                    <property name="halign">start</property>
+                    <property name="ellipsize">end</property>
+                    <property name="selectable">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
   </object>
