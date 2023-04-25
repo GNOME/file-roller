@@ -44,6 +44,9 @@ main (int argc, char **argv)
 	}
 #endif
 
+	// We need to run gtk_init() before GtkApplication startup,
+	// otherwise non-ASCII CLI arguments will trip up the parser.
+	gtk_init ();
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
