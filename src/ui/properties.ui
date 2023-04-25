@@ -220,6 +220,34 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="AdwActionRow">
+            <child type="prefix">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">3</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkLabel">
+                    <style>
+                      <class name="dim-label"/>
+                      <class name="caption"/>
+                    </style>
+                    <property name="label" translatable="yes" context="properties dialog" comments="Followed by the number of files">Files</property>
+                    <property name="halign">start</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="n_files_label">
+                    <property name="halign">start</property>
+                    <property name="ellipsize">end</property>
+                    <property name="selectable">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
   </object>

@@ -138,6 +138,12 @@ dlg_prop (FrWindow *window)
 	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("compression_ratio_label")), utf8_text);
 	g_free (utf8_text);
 
+	/* Number of files. */
+
+	utf8_text = g_strdup_printf ("%d", window->archive->n_regular_files);
+	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("n_files_label")), utf8_text);
+	g_free (utf8_text);
+
 	/* Set the signals handlers. */
 
 	g_signal_connect (data->dialog,
