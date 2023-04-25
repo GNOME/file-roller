@@ -667,3 +667,127 @@ _gtk_widget_set_margin (GtkWidget *widget, int margin)
 	gtk_widget_set_margin_top (widget, margin);
 	gtk_widget_set_margin_bottom (widget, margin);
 }
+
+
+void
+_gtk_show_folder (GtkWindow *parent_window,
+		  GFile     *folder)
+{
+	char *uri = g_file_get_uri (folder);
+	gtk_show_uri (parent_window, uri, GDK_CURRENT_TIME);
+	g_free (uri);
+}
+
+
+typedef struct {
+	GtkWindow *window;
+	GFile     *folder;
+} OpenFolderData;
+
+
+static OpenFolderData *
+open_folder_data_new (GtkWindow *window,
+		      GFile     *folder)
+{
+	OpenFolderData *data;
+
+	data = g_new (OpenFolderData, 1);
+	data->window = g_object_ref (window);
+	data->folder = g_object_ref (folder);
+
+	return data;
+}
+
+
+static void
+open_folder_data_free (OpenFolderData *data)
+{
+	g_object_unref (data->window);
+	g_object_unref (data->folder);
+	g_free (data);
+}
+
+
+static void
+file_manager_show_items_cb (GObject      *source_object,
+			    GAsyncResult *res,
+			    gpointer      user_data)
+{
+	OpenFolderData *data = user_data;
+	GDBusProxy     *proxy;
+	GVariant       *values;
+	GError         *error = NULL;
+
+	proxy = G_DBUS_PROXY (source_object);
+	values = g_dbus_proxy_call_finish (proxy, res, &error);
+	if (values == NULL) {
+		_gtk_show_folder (data->window, data->folder);
+		g_clear_error (&error);
+	}
+
+	if (values != NULL)
+		g_variant_unref (values);
+	g_object_unref (proxy);
+	open_folder_data_free (data);
+}
+
+
+void
+_gtk_show_file_in_container (GtkWindow *parent_window,
+			     GFile     *file)
+{
+	GFile           *parent;
+	GDBusConnection *connection;
+	GError          *error = NULL;
+
+	parent = g_file_get_parent (file);
+	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
+	if (connection != NULL) {
+		GDBusProxy *proxy;
+
+		proxy = g_dbus_proxy_new_sync (connection,
+					       G_DBUS_PROXY_FLAGS_NONE,
+					       NULL,
+					       "org.freedesktop.FileManager1",
+					       "/org/freedesktop/FileManager1",
+					       "org.freedesktop.FileManager1",
+					       NULL,
+					       &error);
+
+		if (proxy != NULL) {
+			static int   sequence = 0;
+			char       **uris;
+			char        *startup_id;
+
+			uris = g_new (char *, 2);
+			uris[0] = g_file_get_uri (file);
+			uris[1] = NULL;
+
+			startup_id = g_strdup_printf ("%s-%lu-%s-%s-%d_TIME%lu",
+						      g_get_prgname (),
+						      (unsigned long) getpid (),
+						      g_get_host_name (),
+						      "org.freedesktop.FileManager1",
+						      sequence++,
+						      (unsigned long) g_get_real_time ());
+
+			g_dbus_proxy_call (proxy,
+					   "ShowItems",
+					   g_variant_new ("(^ass)", uris, startup_id),
+					   G_DBUS_CALL_FLAGS_NONE,
+					   G_MAXINT,
+					   NULL,
+					   file_manager_show_items_cb,
+					   open_folder_data_new (parent_window, parent));
+
+			g_free (startup_id);
+			g_strfreev (uris);
+
+			return;
+		}
+	}
+
+	_gtk_show_folder (parent_window, parent);
+
+	g_object_unref (parent);
+}

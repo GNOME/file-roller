@@ -109,5 +109,9 @@ void          _gtk_box_pack_end              (GtkBox     *box,
 					      gboolean    vexpand);
 void          _gtk_widget_set_margin         (GtkWidget  *widget,
 					      int         margin);
+void          _gtk_show_folder               (GtkWindow  *parent_window,
+					      GFile      *folder);
+void          _gtk_show_file_in_container    (GtkWindow  *window,
+					      GFile      *file);
 
 #endif
