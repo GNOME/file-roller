@@ -276,8 +276,6 @@ file_chooser_response_cb (GtkDialog *dialog,
 	FrNewArchiveDialog *self = user_data;
 	gboolean choosing_file = self->state == STATE_FILENAME;
 
-	self->state = STATE_OPTIONS;
-
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_window_destroy (GTK_WINDOW (dialog));
 		if (choosing_file)
@@ -298,6 +296,7 @@ file_chooser_response_cb (GtkDialog *dialog,
 		g_error_free (error);
 	}
 	else {
+		self->state = STATE_OPTIONS;
 		gtk_window_destroy (GTK_WINDOW (dialog));
 		if (choosing_file && !format_has_other_options (self))
 			gtk_dialog_response (GTK_DIALOG (self), GTK_RESPONSE_OK);
