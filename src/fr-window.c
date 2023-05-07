@@ -4853,11 +4853,12 @@ fr_window_construct (FrWindow *window)
 
 	button = gtk_button_new ();
 	content = adw_button_content_new();
-	adw_button_content_set_label (ADW_BUTTON_CONTENT (content), C_("Action", "_Extract"));
+	adw_button_content_set_label (ADW_BUTTON_CONTENT (content), C_("Action", "_Extract…"));
 	adw_button_content_set_icon_name (ADW_BUTTON_CONTENT (content), "archive-extract-symbolic");
 	adw_button_content_set_use_underline (ADW_BUTTON_CONTENT (content), true);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), "win.extract-files");
 	gtk_button_set_child (GTK_BUTTON (button), content);
+	gtk_widget_set_tooltip_text (GTK_BUTTON (button), _("Extract Files"));
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_start (GTK_HEADER_BAR (private->headerbar), button);
 
@@ -4886,7 +4887,7 @@ fr_window_construct (FrWindow *window)
 		g_object_unref (builder);
 	}
 
-	button = _gtk_header_bar_create_image_toggle_button ("edit-find-symbolic", _("Find files by name"), "win.find");
+	button = _gtk_header_bar_create_image_toggle_button ("edit-find-symbolic", _("Search"), "win.find");
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_end (GTK_HEADER_BAR (private->headerbar), button);
 
@@ -4901,13 +4902,13 @@ fr_window_construct (FrWindow *window)
 	/* Navigation commands. */
 
 	gtk_box_append (GTK_BOX (private->location_bar),
-			_gtk_header_bar_create_image_button ("go-previous-symbolic", _("Previous visited location"), "win.go-back"));
+			_gtk_header_bar_create_image_button ("go-previous-symbolic", _("Back"), "win.go-back"));
 	gtk_box_append (GTK_BOX (private->location_bar),
-			_gtk_header_bar_create_image_button ("go-next-symbolic", _("Next visited location"), "win.go-forward"));
+			_gtk_header_bar_create_image_button ("go-next-symbolic", _("Forward"), "win.go-forward"));
 	gtk_box_append (GTK_BOX (private->location_bar),
-			_gtk_header_bar_create_image_button ("go-up-symbolic", _("Parent location"), "win.go-up-one-level"));
+			_gtk_header_bar_create_image_button ("go-up-symbolic", _("Up"), "win.go-up-one-level"));
 	gtk_box_append (GTK_BOX (private->location_bar),
-			_gtk_header_bar_create_image_button ("user-home-symbolic", _("Home location"), "win.go-home"));
+			_gtk_header_bar_create_image_button ("user-home-symbolic", _("Home"), "win.go-home"));
 
 	/* Current location */
 
