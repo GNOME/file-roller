@@ -4733,8 +4733,8 @@ fr_window_construct (FrWindow *window)
 
 	private->filter_entry = gtk_search_entry_new ();
 	gtk_widget_set_hexpand (private->filter_entry, TRUE);
-	gtk_widget_set_halign (private->filter_entry, GTK_ALIGN_CENTER);
-	gtk_editable_set_width_chars (GTK_EDITABLE (private->filter_entry), 40);
+	AdwClamp *filter_entry_limiter = adw_clamp_new ();
+	adw_clamp_set_child (filter_entry_limiter, private->filter_entry);
 	g_signal_connect (GTK_SEARCH_ENTRY (private->filter_entry),
 			  "search-changed",
 			  G_CALLBACK (filter_entry_search_changed_cb),
@@ -4743,7 +4743,7 @@ fr_window_construct (FrWindow *window)
 			  "stop-search",
 			  G_CALLBACK (filter_entry_stop_search_cb),
 			  window);
-	gtk_search_bar_set_child (GTK_SEARCH_BAR (private->filter_bar), private->filter_entry);
+	gtk_search_bar_set_child (GTK_SEARCH_BAR (private->filter_bar), filter_entry_limiter);
 	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (private->filter_bar), GTK_EDITABLE (private->filter_entry));
 	fr_window_attach (FR_WINDOW (window), private->filter_bar, FR_WINDOW_AREA_FILTERBAR);
 
