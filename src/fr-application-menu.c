@@ -128,7 +128,7 @@ fr_application_activate_about (GSimpleAction *action,
 
 	adw_show_about_window (
 		gtk_application_get_active_window (GTK_APPLICATION (user_data)),
-		"application-name", _("Archive Manager"),
+		"application-name", _("File Roller"),
 		"application-icon", "org.gnome.FileRoller",
 		"version", PACKAGE_VERSION,
 		"copyright", _("Copyright \xc2\xa9 2001–2023 Free Software Foundation, Inc."),

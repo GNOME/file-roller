@@ -1863,7 +1863,7 @@ fr_window_update_title (FrWindow *window)
 	char *name;
 
 	if (! private->archive_present) {
-		gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
+		gtk_window_set_title (GTK_WINDOW (window), _("File Roller"));
 		return;
 	}
 
@@ -4574,7 +4574,7 @@ fr_window_construct (FrWindow *window)
 	private->layout = gtk_grid_new ();
 	gtk_window_set_child (GTK_WINDOW (window), private->layout);
 
-	gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
+	gtk_window_set_title (GTK_WINDOW (window), _("File Roller"));
 
 	g_signal_connect (G_OBJECT (window),
 			  "close-request",

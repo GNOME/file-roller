@@ -473,7 +473,7 @@ fr_application_startup (GApplication *application)
 
 	G_APPLICATION_CLASS (fr_application_parent_class)->startup (application);
 
-	g_set_application_name (_("Archive Manager"));
+	g_set_application_name (_("File Roller"));
 	gtk_window_set_default_icon_name ("org.gnome.ArchiveManager");
 	g_application_set_resource_base_path (application, "/org/gnome/FileRoller");
 	fr_application_register_archive_manager_service (FR_APPLICATION (application));
