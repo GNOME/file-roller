@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-17 13:42+0000\n"
-"PO-Revision-Date: 2023-05-18 06:17+0200\n"
+"POT-Creation-Date: 2023-05-18 14:52+0000\n"
+"PO-Revision-Date: 2023-05-19 05:33+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -183,7 +183,7 @@ msgstr "უფრო ახალ ფაილებზე არ გადა�
 
 #: data/org.gnome.FileRoller.gschema.xml:159
 msgid "Recreate the folders stored in the archive"
-msgstr ""
+msgstr "არქივში დამახსოვრებული საქაღალდეების თავიდან შექმნა"
 
 #: data/org.gnome.FileRoller.gschema.xml:183
 msgid "Show/hide the extra options"
@@ -208,7 +208,7 @@ msgstr "აქ გაშლა"
 #. Translators: the current position is the current folder
 #: nautilus/nautilus-fileroller.c:257
 msgid "Extract the selected archive to the current position"
-msgstr ""
+msgstr "მონიშნული არქივის მიმდინარე მდებარეობაზე გაშლა"
 
 #: nautilus/nautilus-fileroller.c:274
 msgid "Extract To…"
@@ -304,7 +304,7 @@ msgstr "გაშლა არ შესრულებულა"
 #: src/dlg-extract.c:140 src/fr-window.c:5969
 #, c-format
 msgid "Could not create the destination folder: %s."
-msgstr ""
+msgstr "სამიზნე საქაღალდის შექმნის შეცდომა: %s."
 
 #: src/dlg-extract.c:201
 #, c-format
@@ -386,7 +386,7 @@ msgstr[1] ""
 #: src/dlg-update.c:199
 #, c-format
 msgid "Update the files in the archive “%s”?"
-msgstr ""
+msgstr "განვაახლო ფაილები არქივში '%s'?"
 
 #: src/dlg-update.c:314 src/dlg-update.c:328
 msgid "_Update"
@@ -403,7 +403,7 @@ msgstr "© 2001–2023 Free Software Foundation, Inc., ყველა უფლ
 
 #: src/fr-application-menu.c:135
 msgid "An archive manager for GNOME."
-msgstr ""
+msgstr "არქივების მმართველი GNOME-სთვის."
 
 #: src/fr-application-menu.c:141
 msgid "translator-credits"
@@ -574,7 +574,7 @@ msgstr "არქივის სახელის მითითება ა
 
 #: src/fr-new-archive-dialog.c:634
 msgid "You don’t have permission to create an archive in this folder"
-msgstr ""
+msgstr "ამ საქაღალდეში არქივის შექმნის წვდომა არ გაგაჩნიათ"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: src/fr-new-archive-dialog.c:653 src/glib-utils.c:1182
@@ -649,7 +649,7 @@ msgstr "%s-ის წაკითხვა"
 #: src/fr-window.c:2044
 #, c-format
 msgid "Deleting the files from “%s”"
-msgstr ""
+msgstr "ფაილების წაშლა %s-დან"
 
 #. Translators: %s is a filename
 #: src/fr-window.c:2048
@@ -665,7 +665,7 @@ msgstr "ფაილების სიის მიღება"
 #: src/fr-window.c:2055
 #, c-format
 msgid "Copying the files to add to “%s”"
-msgstr ""
+msgstr "ფაილების კოპირება '%s'-ში ჩასამატებლად"
 
 #. Translators: %s is a filename
 #: src/fr-window.c:2059
@@ -693,13 +693,13 @@ msgstr "'%s'-ის შენახვა"
 #: src/fr-window.c:2082
 #, c-format
 msgid "Renaming the files in “%s”"
-msgstr ""
+msgstr "'%s'-ში ფაილების სახელის გადარქმევა"
 
 #. Translators: %s is a filename
 #: src/fr-window.c:2086
 #, c-format
 msgid "Updating the files in “%s”"
-msgstr ""
+msgstr "ფაილების განახლება '%s'-ში"
 
 #: src/fr-window.c:2377
 #, c-format
@@ -836,7 +836,7 @@ msgstr "არქივი არ გახსნილა"
 
 #: src/fr-window.c:4814
 msgid "Open an archive or create a new one."
-msgstr ""
+msgstr "გახსენით არქივი ან ახალი შექმენით."
 
 #: src/fr-window.c:4856
 msgctxt "Action"
@@ -919,6 +919,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"საქაღალდე სახელით '%s' უკვე არსებობს.\n"
+"\n"
+"%s"
 
 #: src/fr-window.c:7392 src/fr-window.c:7394
 msgid "Please use a different name."
@@ -1440,15 +1443,18 @@ msgstr "შეუკუმშავი ზომა"
 msgid "Compression Ratio"
 msgstr "შეკუმშვის დონე"
 
-#. Followed by the number of files
 #: src/ui/properties.ui:236
 msgctxt "properties dialog"
-msgid "Files"
-msgstr "ფაილები"
+msgid "Number of Files"
+msgstr "ფაილების რაოდენობა"
 
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "_აირჩიეთ ფაილები, რომლებიც გნებავთ, განაახლოთ:"
+
+#~ msgctxt "properties dialog"
+#~ msgid "Files"
+#~ msgstr "ფაილები"
 
 #~ msgctxt "Action"
 #~ msgid "_Extract"
@@ -1522,6 +1528,3 @@ msgstr "_აირჩიეთ ფაილები, რომლებიც �
 
 #~ msgid "Content size:"
 #~ msgstr "შემცველობის ზომა:"
-
-#~ msgid "Number of files:"
-#~ msgstr "ფაილების რაოდენობა:"
