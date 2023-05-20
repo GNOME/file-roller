@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-18 14:52+0000\n"
-"PO-Revision-Date: 2023-05-19 05:33+0200\n"
+"POT-Creation-Date: 2023-05-19 12:21+0000\n"
+"PO-Revision-Date: 2023-05-20 05:16+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -19,6 +19,8 @@ msgstr ""
 "X-Generator: Poedit 3.3.1\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
+#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -28,14 +30,16 @@ msgstr "გახსენით, შეცვალეთ და შექმ�
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"Archive Manager (also known as File Roller) is the default GNOME application "
-"for opening, creating, and modifying archive and compressed archive files."
+"File Roller is the default GNOME application for opening, creating, and "
+"modifying archive and compressed archive files."
 msgstr ""
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
-"Archive Manager supports a wide range of different archive files, including:"
+"File Roller supports a wide range of different archive files, including:"
 msgstr ""
+"File Roller-ს არქივის ფორმატების ფართო არჩევანის მხარდაჭერა გააჩნია. მათ "
+"შორის:"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:20
 msgid "gzip archives (.tar.gz, .tgz)"
@@ -53,17 +57,16 @@ msgstr "zip არქივები (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "xz არქივები (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: data/org.gnome.FileRoller.desktop.in.in:4
 msgid "Archive Manager"
 msgstr "არქივის მმართველი"
 
-#: data/org.gnome.FileRoller.desktop.in.in:4
+#: data/org.gnome.FileRoller.desktop.in.in:5
 msgid "Create and modify an archive"
 msgstr "შექმენით და შეცვალეთ არქივები"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.FileRoller.desktop.in.in:6
+#: data/org.gnome.FileRoller.desktop.in.in:7
 msgid "zip;tar;extract;unpack;"
 msgstr "zip;tar;extract;unpack;"
 
@@ -76,6 +79,8 @@ msgid ""
 "What criteria must be used to arrange files. Possible values: name, size, "
 "type, time, path."
 msgstr ""
+"ფაილების დალაგების პირობა. შესაძლო მნიშვნელობებია: სახელი, ზომა, ტიპი, დრო "
+"და ბილიკი."
 
 #: data/org.gnome.FileRoller.gschema.xml:63
 msgid "Sort type"
@@ -461,7 +466,7 @@ msgstr "ვერსიის ჩვენება"
 
 #: src/fr-application.c:505
 msgid "— Create and modify an archive"
-msgstr ""
+msgstr "— შექმენით და შეცვალეთ არქივი"
 
 #: src/fr-archive.c:1866
 msgid "You don’t have the right permissions."
@@ -579,7 +584,7 @@ msgstr "ამ საქაღალდეში არქივის შექ
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: src/fr-new-archive-dialog.c:653 src/glib-utils.c:1182
 msgid "New name is the same as old one, please type other name."
-msgstr ""
+msgstr "ახალი სახელი იგივეა, რაც ძველი. შეიყვანეთ სხვა სახელი."
 
 #: src/fr-new-archive-dialog.c:697
 #, c-format
@@ -792,6 +797,7 @@ msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
+"გნებავთ დაამატოთ ეს ფაილი მიმდიანრე არქივს, თუ როგორც ახალს, ისე გახსნით?"
 
 #: src/fr-window.c:3758
 msgid "Do you want to create a new archive with these files?"
@@ -1221,8 +1227,8 @@ msgid "_Keyboard Shortcuts"
 msgstr "კლავიატურის მალსახმობები"
 
 #: src/ui/gears-menu.ui:61
-msgid "_About Archive Manager"
-msgstr "არქივის მმართველის შესახებ"
+msgid "_About File Roller"
+msgstr "File Roller-ის _შესახებ"
 
 #: src/ui/help-overlay.ui:12
 msgctxt "shortcut window"
@@ -1451,6 +1457,9 @@ msgstr "ფაილების რაოდენობა"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "_აირჩიეთ ფაილები, რომლებიც გნებავთ, განაახლოთ:"
+
+#~ msgid "_About Archive Manager"
+#~ msgstr "არქივის მმართველის შესახებ"
 
 #~ msgctxt "properties dialog"
 #~ msgid "Files"
