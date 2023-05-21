@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-18 14:52+0000\n"
-"PO-Revision-Date: 2023-05-18 22:09+0300\n"
+"POT-Creation-Date: 2023-05-19 12:21+0000\n"
+"PO-Revision-Date: 2023-05-21 09:21+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -23,6 +23,8 @@ msgstr ""
 "X-Project-Style: gnome\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
+#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "Архіватор файлів"
 
@@ -31,18 +33,26 @@ msgid "Open, modify and create compressed archive files"
 msgstr "Відкриття, редагування та створення архівів"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
+#| msgid ""
+#| "Archive Manager (also known as File Roller) is the default GNOME "
+#| "application for opening, creating, and modifying archive and compressed "
+#| "archive files."
 msgid ""
-"Archive Manager (also known as File Roller) is the default GNOME application "
-"for opening, creating, and modifying archive and compressed archive files."
+"File Roller is the default GNOME application for opening, creating, and "
+"modifying archive and compressed archive files."
 msgstr ""
-"Менеджер архівів (ще відомий як File Roller) — типова програма GNOME для "
+"File Roller — типова програма GNOME для "
 "відкривання, створення та редагування архівів і архівованих файлів."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
+#| msgid ""
+#| "Archive Manager supports a wide range of different archive files, "
+#| "including:"
 msgid ""
-"Archive Manager supports a wide range of different archive files, including:"
+"File Roller supports a wide range of different archive files, including:"
 msgstr ""
-"Менеджер архівів підтримує широкий діапазон різних архівованих файлів, "
+"У File Roller передбачено підтримку широкого діапазону різних архівованих"
+" файлів, "
 "зокрема:"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:20
@@ -61,17 +71,16 @@ msgstr "Архіви zip (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "Архіви xz (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: data/org.gnome.FileRoller.desktop.in.in:4
 msgid "Archive Manager"
 msgstr "Менеджер архівів"
 
-#: data/org.gnome.FileRoller.desktop.in.in:4
+#: data/org.gnome.FileRoller.desktop.in.in:5
 msgid "Create and modify an archive"
 msgstr "Програма створення та зміни архівів"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.FileRoller.desktop.in.in:6
+#: data/org.gnome.FileRoller.desktop.in.in:7
 msgid "zip;tar;extract;unpack;"
 msgstr "zip;tar;архів;розпакувати;"
 
@@ -1260,8 +1269,9 @@ msgid "_Keyboard Shortcuts"
 msgstr "_Клавіатурні скорочення"
 
 #: src/ui/gears-menu.ui:61
-msgid "_About Archive Manager"
-msgstr "_Про менеджер архівів"
+#| msgid "File Roller"
+msgid "_About File Roller"
+msgstr "_Про File Roller"
 
 #: src/ui/help-overlay.ui:12
 msgctxt "shortcut window"
@@ -1483,7 +1493,6 @@ msgid "Compression Ratio"
 msgstr "Рівень стискання"
 
 #: src/ui/properties.ui:236
-#| msgid "Number of files:"
 msgctxt "properties dialog"
 msgid "Number of Files"
 msgstr "Кількість файлів"
@@ -1491,6 +1500,9 @@ msgstr "Кількість файлів"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "_Виберіть файли, які треба оновити:"
+
+#~ msgid "_About Archive Manager"
+#~ msgstr "_Про менеджер архівів"
 
 #~ msgctxt "properties dialog"
 #~ msgid "Files"
