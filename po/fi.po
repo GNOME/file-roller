@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-18 14:52+0000\n"
-"PO-Revision-Date: 2023-05-18 20:54+0300\n"
+"POT-Creation-Date: 2023-05-26 08:47+0000\n"
+"PO-Revision-Date: 2023-05-31 20:50+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -22,10 +22,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 "X-POT-Import-Date: 2012-03-05 14:50:08+0000\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
+#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "Pakettienkäsittely"
 
@@ -35,17 +37,16 @@ msgstr "Avaa, muokkaa ja luo pakattuja arkistotiedostoja"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"Archive Manager (also known as File Roller) is the default GNOME application "
-"for opening, creating, and modifying archive and compressed archive files."
+"File Roller is the default GNOME application for opening, creating, and "
+"modifying archive and compressed archive files."
 msgstr ""
-"Arkistonhallinta (tuttavallisemmin Pakettienkäsittely) on Gnomen "
-"oletussovellus pakattujen arkistotiedostojen avaamiseen, luomiseen ja "
-"muokkaamiseen."
+"Pakettienkäsittely on Gnomen oletussovellus pakattujen arkistotiedostojen "
+"avaamiseen, luomiseen ja muokkaamiseen."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
-"Archive Manager supports a wide range of different archive files, including:"
-msgstr "Arkistonhallinta tukee lukuisia eri arkistotiedostoja, muun muassa:"
+"File Roller supports a wide range of different archive files, including:"
+msgstr "Pakettienkäsittely tukee lukuisia eri arkistotiedostoja, muun muassa:"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:20
 msgid "gzip archives (.tar.gz, .tgz)"
@@ -63,17 +64,16 @@ msgstr "zip-arkistot (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "xz-arkistot (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: data/org.gnome.FileRoller.desktop.in.in:4
 msgid "Archive Manager"
 msgstr "Pakettienkäsittely"
 
-#: data/org.gnome.FileRoller.desktop.in.in:4
+#: data/org.gnome.FileRoller.desktop.in.in:5
 msgid "Create and modify an archive"
 msgstr "Luo arkisto tai muokkaa arkistoa"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.FileRoller.desktop.in.in:6
+#: data/org.gnome.FileRoller.desktop.in.in:7
 msgid "zip;tar;extract;unpack;"
 msgstr "zip;tar;extract;unpack;pura;pakkaa;"
 
@@ -1264,7 +1264,7 @@ msgid "_Keyboard Shortcuts"
 msgstr "_Pikanäppäimet"
 
 #: src/ui/gears-menu.ui:61
-msgid "_About Archive Manager"
+msgid "_About File Roller"
 msgstr "_Tietoja - Pakettienkäsittely"
 
 #: src/ui/help-overlay.ui:12
@@ -1494,6 +1494,9 @@ msgstr "Tiedostojen määrä"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "_Valitse päivitettävät tiedostot:"
+
+#~ msgid "_About Archive Manager"
+#~ msgstr "_Tietoja - Pakettienkäsittely"
 
 #~ msgctxt "Window title"
 #~ msgid "Add Files"
