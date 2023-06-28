@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-19 12:21+0000\n"
-"PO-Revision-Date: 2023-05-21 09:21+0300\n"
+"POT-Creation-Date: 2023-06-28 14:03+0000\n"
+"PO-Revision-Date: 2023-06-28 22:20+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -24,7 +24,7 @@ msgstr ""
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "Архіватор файлів"
 
@@ -34,26 +34,21 @@ msgstr "Відкриття, редагування та створення ар�
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 #| msgid ""
-#| "Archive Manager (also known as File Roller) is the default GNOME "
-#| "application for opening, creating, and modifying archive and compressed "
-#| "archive files."
+#| "File Roller is the default GNOME application for opening, creating, and "
+#| "modifying archive and compressed archive files."
 msgid ""
-"File Roller is the default GNOME application for opening, creating, and "
-"modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
-"File Roller — типова програма GNOME для "
-"відкривання, створення та редагування архівів і архівованих файлів."
+"File Roller — програма GNOME для відкривання, створення та "
+"редагування архівів і архівованих файлів."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
-#| msgid ""
-#| "Archive Manager supports a wide range of different archive files, "
-#| "including:"
 msgid ""
 "File Roller supports a wide range of different archive files, including:"
 msgstr ""
-"У File Roller передбачено підтримку широкого діапазону різних архівованих"
-" файлів, "
-"зокрема:"
+"У File Roller передбачено підтримку широкого діапазону різних архівованих "
+"файлів, зокрема:"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:20
 msgid "gzip archives (.tar.gz, .tgz)"
@@ -300,7 +295,7 @@ msgid "Wrong password."
 msgstr "Хибний пароль."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "Стиснення"
 
@@ -346,7 +341,7 @@ msgid ""
 msgstr "У вас недостатньо прав для розпаковування архівів до теки «%s»"
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Розпакувати"
@@ -393,7 +388,7 @@ msgstr "Пароль"
 msgid "Enter a password for “%s”"
 msgstr "Вкажіть пароль до «%s»"
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "Властивості"
 
@@ -505,7 +500,7 @@ msgstr "Запустити як службу"
 msgid "Show version"
 msgstr "Показати версію"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "– Створити або змінити архів"
 
@@ -1032,7 +1027,7 @@ msgstr "Вставити виділене"
 msgid "_Destination folder:"
 msgstr "_Цільова тека:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "Вст_авити"
 
@@ -1067,7 +1062,7 @@ msgstr "Д_одати"
 msgid "_Cancel"
 msgstr "_Скасувати"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "_Закрити"
 
@@ -1119,103 +1114,6 @@ msgstr "Додавати лише о_новлені файли"
 msgid "_Follow symbolic links"
 msgstr "_Переходити за символічними посиланнями"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_Файл"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "_Створити архів…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "_Відкрити…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "_Розпакувати файли…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "Зберегти _як…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "Перевірити _цілісність"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "З_міни"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "Вирі_зати"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "_Копіювати"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "_Додати файли…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "Пере_йменувати…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "В_илучити файли…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "Ви_брати все"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "_Нічого не вибирати"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "З_найти"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "Вказати паро_ль…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "П_ерегляд"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "Бічна панель"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "Показувати список _файлів"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "Показувати як _теку"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "_Довідка"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "Зміст"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "Клавіатурні скорочення"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "_Про програму"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_Пароль:"
@@ -1240,6 +1138,10 @@ msgstr "_Зберегти структуру каталогу"
 msgid "Do not _overwrite newer files"
 msgstr "Не п_ерезаписувати новіші файли"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "Ви_брати все"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "_Зняти виділення"
@@ -1247,6 +1149,14 @@ msgstr "_Зняти виділення"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "Показати приховані файли"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "_Створити архів…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "_Відкрити…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1256,9 +1166,21 @@ msgstr "Зберегти _як…"
 msgid "Pass_word…"
 msgstr "Паро_ль…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "Перевірити _цілісність"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "В_ластивості"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "Показувати список _файлів"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "Показувати як _теку"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1268,8 +1190,11 @@ msgstr "_Бічна панель"
 msgid "_Keyboard Shortcuts"
 msgstr "_Клавіатурні скорочення"
 
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "_Довідка"
+
 #: src/ui/gears-menu.ui:61
-#| msgid "File Roller"
 msgid "_About File Roller"
 msgstr "_Про File Roller"
 
@@ -1422,6 +1347,10 @@ msgstr "_Копіювати"
 msgid "Paste"
 msgstr "Вставити"
 
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "Пере_йменувати…"
+
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
 msgstr "Файл"
@@ -1500,6 +1429,54 @@ msgstr "Кількість файлів"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "_Виберіть файли, які треба оновити:"
+
+#~ msgid "_File"
+#~ msgstr "_Файл"
+
+#~ msgid "_Extract Files…"
+#~ msgstr "_Розпакувати файли…"
+
+#~ msgid "Save _As…"
+#~ msgstr "Зберегти _як…"
+
+#~ msgid "_Edit"
+#~ msgstr "З_міни"
+
+#~ msgid "Cu_t"
+#~ msgstr "Вирі_зати"
+
+#~ msgid "_Copy"
+#~ msgstr "_Копіювати"
+
+#~ msgid "_Add Files…"
+#~ msgstr "_Додати файли…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "В_илучити файли…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "_Нічого не вибирати"
+
+#~ msgid "_Find"
+#~ msgstr "З_найти"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "Вказати паро_ль…"
+
+#~ msgid "_View"
+#~ msgstr "П_ерегляд"
+
+#~ msgid "Sidebar"
+#~ msgstr "Бічна панель"
+
+#~ msgid "Contents"
+#~ msgstr "Зміст"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "Клавіатурні скорочення"
+
+#~ msgid "_About"
+#~ msgstr "_Про програму"
 
 #~ msgid "_About Archive Manager"
 #~ msgstr "_Про менеджер архівів"
