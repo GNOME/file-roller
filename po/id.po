@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-26 08:47+0000\n"
-"PO-Revision-Date: 2023-06-05 10:36+0700\n"
+"POT-Creation-Date: 2023-06-28 14:03+0000\n"
+"PO-Revision-Date: 2023-07-09 17:47+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -25,7 +25,7 @@ msgstr ""
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "Penggulung Berkas"
 
@@ -35,11 +35,11 @@ msgstr "Buka, ubah, dan buat berkas arsip terkompresi"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"File Roller is the default GNOME application for opening, creating, and "
-"modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
-"Penggulung Berkas adalah aplikasi GNOME bawaan untuk membuka, membuat, dan "
-"mengubah arsip dan berkas arsip terkompresi."
+"Penggulung Berkas adalah aplikasi GNOME untuk membuka, membuat, dan mengubah "
+"arsip dan berkas arsip terkompresi."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
@@ -292,7 +292,7 @@ msgid "Wrong password."
 msgstr "Sandi salah."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "Kompres"
 
@@ -339,7 +339,7 @@ msgstr ""
 "Anda tidak memiliki hak akses untuk mengekstrak arsip di dalam folder \"%s\""
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Ekstrak"
@@ -386,7 +386,7 @@ msgstr "Kata Sandi"
 msgid "Enter a password for “%s”"
 msgstr "Ketik sandi untuk \"%s\""
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "Properti"
 
@@ -501,7 +501,7 @@ msgstr "Menjalankan aplikasi sebagai layanan"
 msgid "Show version"
 msgstr "Menampilkan versi"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "— Membuat dan memodifikasi arsip"
 
@@ -1029,7 +1029,7 @@ msgstr "Tempel Seleksi"
 msgid "_Destination folder:"
 msgstr "Fol_der tujuan:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "Tem_pel"
 
@@ -1064,7 +1064,7 @@ msgstr "T_ambah"
 msgid "_Cancel"
 msgstr "Bata_l"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "T_utup"
 
@@ -1116,103 +1116,6 @@ msgstr "Tambahkan ha_nya jika lebih baru"
 msgid "_Follow symbolic links"
 msgstr "Ikuti taut _simbolik"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_Berkas"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "Arsip _Baru…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "_Buka…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "_Ekstrak Berkas…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "Simp_an Sebagai…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "Periksa In_tegritas"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "Sunt_ing"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "Po_tong"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "_Salin"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "T_ambah Berkas…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "_Ubah Nama…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "_Hapus Berkas…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "Pilih _Semua"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "Pilih T_ak Satupun"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "_Cari"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "Atur _Sandi…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "_Tilik"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "Bilah sisi"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "Tampilkan Semua _Berkas"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "Tampilkan sebagai F_older"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "Ba_ntuan"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "Isi"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "Pintasan Papan Tik"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "Tent_ang"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_Sandi:"
@@ -1237,6 +1140,10 @@ msgstr "Pertahan_kan struktur direktori"
 msgid "Do not _overwrite newer files"
 msgstr "_Jangan timpa berkas yang lebih baru"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "Pilih _Semua"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "Tak Memi_lih Semua"
@@ -1244,6 +1151,14 @@ msgstr "Tak Memi_lih Semua"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "Tampilkan Berkas Tersembunyi"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "Arsip _Baru…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "_Buka…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1253,9 +1168,21 @@ msgstr "_Simpan Sebagai…"
 msgid "Pass_word…"
 msgstr "Kata _Sandi…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "Periksa In_tegritas"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "_Properti"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "Tampilkan Semua _Berkas"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "Tampilkan sebagai F_older"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1264,6 +1191,10 @@ msgstr "_Bilah sisi"
 #: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "Pintasan Papan Ti_k"
+
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "Ba_ntuan"
 
 #: src/ui/gears-menu.ui:61
 msgid "_About File Roller"
@@ -1418,6 +1349,10 @@ msgstr "Salin"
 msgid "Paste"
 msgstr "Tempel"
 
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "_Ubah Nama…"
+
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
 msgstr "Berkas"
@@ -1496,6 +1431,54 @@ msgstr "Jumlah Berkas"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "Pilih b_erkas yang hendak diperbaharui:"
+
+#~ msgid "_File"
+#~ msgstr "_Berkas"
+
+#~ msgid "_Extract Files…"
+#~ msgstr "_Ekstrak Berkas…"
+
+#~ msgid "Save _As…"
+#~ msgstr "Simp_an Sebagai…"
+
+#~ msgid "_Edit"
+#~ msgstr "Sunt_ing"
+
+#~ msgid "Cu_t"
+#~ msgstr "Po_tong"
+
+#~ msgid "_Copy"
+#~ msgstr "_Salin"
+
+#~ msgid "_Add Files…"
+#~ msgstr "T_ambah Berkas…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "_Hapus Berkas…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "Pilih T_ak Satupun"
+
+#~ msgid "_Find"
+#~ msgstr "_Cari"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "Atur _Sandi…"
+
+#~ msgid "_View"
+#~ msgstr "_Tilik"
+
+#~ msgid "Sidebar"
+#~ msgstr "Bilah sisi"
+
+#~ msgid "Contents"
+#~ msgstr "Isi"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "Pintasan Papan Tik"
+
+#~ msgid "_About"
+#~ msgstr "Tent_ang"
 
 #~ msgid "_About Archive Manager"
 #~ msgstr "Tent_ang Manajer Arsip"
