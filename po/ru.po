@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.master.ru.reducted.po\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-19 12:21+0000\n"
-"PO-Revision-Date: 2023-05-20 00:33+1000\n"
+"POT-Creation-Date: 2023-06-28 14:03+0000\n"
+"PO-Revision-Date: 2023-07-07 20:10+1000\n"
 "Last-Translator: Ser82-png <asvmail.as@gmail.com>\n"
 "Language-Team: Русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -35,7 +35,7 @@ msgstr ""
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -45,11 +45,11 @@ msgstr "Открытие, изменение и создание архивов"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"File Roller is the default GNOME application for opening, creating, and "
-"modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
-"File Roller — это стандартное приложение среды GNOME для открытия, создания "
-"и изменения архивов."
+"File Roller — это приложение среды GNOME для открытия, создания и изменения "
+"архивов."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
@@ -302,7 +302,7 @@ msgid "Wrong password."
 msgstr "Неверный пароль."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "Сжать"
 
@@ -348,7 +348,7 @@ msgid ""
 msgstr "Недостаточно прав для извлечения архивов в папку «%s»"
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Извлечь"
@@ -395,7 +395,7 @@ msgstr "Пароль"
 msgid "Enter a password for “%s”"
 msgstr "Введите пароль для «%s»"
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "Свойства"
 
@@ -508,7 +508,7 @@ msgstr "Запустить как службу"
 msgid "Show version"
 msgstr "Показать версию"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "— создать или изменить архив"
 
@@ -1037,7 +1037,7 @@ msgstr "Вставить выделенные элементы"
 msgid "_Destination folder:"
 msgstr "_Целевая папка:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "_Вставить"
 
@@ -1072,7 +1072,7 @@ msgstr "Д_обавить"
 msgid "_Cancel"
 msgstr "_Отмена"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "_Закрыть"
 
@@ -1124,103 +1124,6 @@ msgstr "Добавлять только об_новлённые файлы"
 msgid "_Follow symbolic links"
 msgstr "_Использовать символические ссылки"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_Файл"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "_Создать архив…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "_Открыть…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "_Извлечь файлы…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "Сохранить _как…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "_Проверить целостность"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "_Правка"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "В_ырезать"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "_Копировать"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "Добавить _файлы…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "Пере_именовать…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "_Удалить файлы…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "_Выделить всё"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "Снять в_ыделение"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "_Найти"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "Установить _пароль…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "_Вид"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "Боковая панель"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "Показывать _всё содержимое"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "Показывать тек_ущую папку"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "_Справка"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "Содержимое"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "Комбинации клавиш"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "_О приложении"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_Пароль:"
@@ -1245,6 +1148,10 @@ msgstr "_Сохранять структуру папок"
 msgid "Do not _overwrite newer files"
 msgstr "Не _перезаписывать более новые файлы"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "_Выделить всё"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "Снять вы_деление"
@@ -1252,6 +1159,14 @@ msgstr "Снять вы_деление"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "Показывать скрытые файлы"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "_Создать архив…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "_Открыть…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1261,9 +1176,21 @@ msgstr "Сохранить _как…"
 msgid "Pass_word…"
 msgstr "Па_роль…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "_Проверить целостность"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "С_войства"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "Показывать _всё содержимое"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "Показывать тек_ущую папку"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1272,6 +1199,10 @@ msgstr "_Боковая панель"
 #: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "_Комбинации клавиш"
+
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "_Справка"
 
 #: src/ui/gears-menu.ui:61
 msgid "_About File Roller"
@@ -1426,6 +1357,10 @@ msgstr "Копировать"
 msgid "Paste"
 msgstr "Вставить"
 
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "Пере_именовать…"
+
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
 msgstr "Файл"
@@ -1504,6 +1439,54 @@ msgstr "Количество файлов"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "В_ыберите файлы для обновления:"
+
+#~ msgid "_File"
+#~ msgstr "_Файл"
+
+#~ msgid "_Extract Files…"
+#~ msgstr "_Извлечь файлы…"
+
+#~ msgid "Save _As…"
+#~ msgstr "Сохранить _как…"
+
+#~ msgid "_Edit"
+#~ msgstr "_Правка"
+
+#~ msgid "Cu_t"
+#~ msgstr "В_ырезать"
+
+#~ msgid "_Copy"
+#~ msgstr "_Копировать"
+
+#~ msgid "_Add Files…"
+#~ msgstr "Добавить _файлы…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "_Удалить файлы…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "Снять в_ыделение"
+
+#~ msgid "_Find"
+#~ msgstr "_Найти"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "Установить _пароль…"
+
+#~ msgid "_View"
+#~ msgstr "_Вид"
+
+#~ msgid "Sidebar"
+#~ msgstr "Боковая панель"
+
+#~ msgid "Contents"
+#~ msgstr "Содержимое"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "Комбинации клавиш"
+
+#~ msgid "_About"
+#~ msgstr "_О приложении"
 
 #~ msgid "_About Archive Manager"
 #~ msgstr "_О приложении"
