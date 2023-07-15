@@ -1,10 +1,10 @@
 {
-    "app-id" : "org.gnome.FileRoller",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
-    "sdk" : "org.gnome.Sdk",
-    "command" : "file-roller",
-    "finish-args" : [
+    "app-id": "org.gnome.FileRoller",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "master",
+    "sdk": "org.gnome.Sdk",
+    "command": "file-roller",
+    "finish-args": [
         "--device=dri",
         "--share=ipc",
         "--socket=fallback-x11",
@@ -13,10 +13,10 @@
         "--metadata=X-DConf=migrate-path=/org/gnome/file-roller/",
         "--own-name=org.gnome.ArchiveManager1"
     ],
-    "cleanup" : [
+    "cleanup": [
         "/share/man"
     ],
-    "modules" : [
+    "modules": [
         {
             "name": "p7zip",
             "no-autogen": true,
@@ -156,7 +156,7 @@
                 "-Dbackend-gtk3=disabled",
                 "-Dbackend-gtk4=enabled"
             ],
-            "sources" : [
+            "sources": [
                 {
                     "type": "git",
                     "url": "https://github.com/flatpak/libportal.git",
@@ -165,13 +165,13 @@
             ]
         },
         {
-            "name" : "file-roller",
-            "buildsystem" : "meson",
+            "name": "file-roller",
+            "buildsystem": "meson",
             "cleanup": [
                 "org.gnome.FileRoller.ArchiveManager1.service"
             ],
-            "builddir" : true,
-            "sources" : [
+            "builddir": true,
+            "sources": [
                 {
                     "type": "dir",
                     "path": "../"
