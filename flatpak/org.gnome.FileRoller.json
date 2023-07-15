@@ -30,7 +30,13 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/p7zip-project/p7zip/archive/refs/tags/v17.04.tar.gz",
-                    "sha256": "ea029a2e21d2d6ad0a156f6679bd66836204aa78148a4c5e498fe682e77127ef"
+                    "sha256": "ea029a2e21d2d6ad0a156f6679bd66836204aa78148a4c5e498fe682e77127ef",
+                    "x-checker-data": {
+                        "type": "json",
+                        "url": "https://api.github.com/repos/p7zip-project/p7zip/releases/latest",
+                        "version-query": ".tag_name | sub(\"^v\"; \"\")",
+                        "url-query": "\"https://github.com/p7zip-project/p7zip/archive/refs/tags/v\" + $version + \".tar.gz\""
+                    }
                 }
             ]
         },
@@ -45,7 +51,13 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/gnustep/tools-make/releases/download/make-2_9_0/gnustep-make-2.9.0.tar.gz",
-                    "sha256": "a0b066c11257879c7c85311dea69c67f6dc741ef339db6514f85b64992c40d2a"
+                    "sha256": "a0b066c11257879c7c85311dea69c67f6dc741ef339db6514f85b64992c40d2a",
+                    "x-checker-data": {
+                        "type": "json",
+                        "url": "https://api.github.com/repos/gnustep/tools-make/releases/latest",
+                        "version-query": ".tag_name | sub(\"^make-\"; \"\") | gsub(\"_\"; \".\")",
+                        "url-query": ".assets[] | select(.name==\"gnustep-make-\" + $version + \".tar.gz\") | .browser_download_url"
+                    }
                 }
             ]
         },
@@ -61,7 +73,13 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/gnustep/libs-base/releases/download/base-1_28_0/gnustep-base-1.28.0.tar.gz",
-                    "sha256": "c7d7c6e64ac5f5d0a4d5c4369170fc24ed503209e91935eb0e2979d1601039ed"
+                    "sha256": "c7d7c6e64ac5f5d0a4d5c4369170fc24ed503209e91935eb0e2979d1601039ed",
+                    "x-checker-data": {
+                        "type": "json",
+                        "url": "https://api.github.com/repos/gnustep/libs-base/releases/latest",
+                        "version-query": ".tag_name | sub(\"^base-\"; \"\") | gsub(\"_\"; \".\")",
+                        "url-query": ".assets[] | select(.name==\"gnustep-base-\" + $version + \".tar.gz\") | .browser_download_url"
+                    }
                 }
             ]
         },
@@ -77,7 +95,13 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/MacPaw/unar/archive/v1.10.7.tar.gz",
-                    "sha256": "6ab8f01f7db8bc88e6e8e08a1d79fb7ef8e9fb1d940c748d0a329a2d6d331016"
+                    "sha256": "6ab8f01f7db8bc88e6e8e08a1d79fb7ef8e9fb1d940c748d0a329a2d6d331016",
+                    "x-checker-data": {
+                        "type": "json",
+                        "url": "https://api.github.com/repos/MacPaw/unar/releases/latest",
+                        "version-query": ".tag_name | sub(\"^v\"; \"\")",
+                        "url-query": "\"https://github.com/MacPaw/unar/archive/v\" + $version + \".tar.gz\""
+                    }
                 }
             ]
         },
@@ -89,7 +113,13 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/facebook/zstd/releases/download/v1.4.8/zstd-1.4.8.tar.gz",
-                    "sha256": "32478297ca1500211008d596276f5367c54198495cf677e9439f4791a4c69f24"
+                    "sha256": "32478297ca1500211008d596276f5367c54198495cf677e9439f4791a4c69f24",
+                    "x-checker-data": {
+                        "type": "json",
+                        "url": "https://api.github.com/repos/facebook/zstd/releases/latest",
+                        "version-query": ".tag_name | sub(\"^v\"; \"\")",
+                        "url-query": ".assets[] | select(.name==\"zstd-\" + $version + \".tar.gz\") | .browser_download_url"
+                    }
                 }
             ]
         },
@@ -103,7 +133,13 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/ruda/rpm2cpio/archive/2017.tar.gz",
-                    "sha256": "d266a4f49e65b5d05956502549ceb1d5671f927375ff71299069e6d92363297a"
+                    "sha256": "d266a4f49e65b5d05956502549ceb1d5671f927375ff71299069e6d92363297a",
+                    "x-checker-data": {
+                        "type": "json",
+                        "url": "https://api.github.com/repos/ruda/rpm2cpio/releases/latest",
+                        "version-query": ".tag_name",
+                        "url-query": "\"https://github.com/ruda/rpm2cpio/archive/\" + $version + \".tar.gz\""
+                    }
                 },
                 {
                     "type": "patch",
