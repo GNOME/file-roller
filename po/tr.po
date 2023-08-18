@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-19 12:21+0000\n"
-"PO-Revision-Date: 2023-05-19 17:00+0300\n"
+"POT-Creation-Date: 2023-06-28 14:03+0000\n"
+"PO-Revision-Date: 2023-08-06 18:09+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
 "Language: tr\n"
@@ -29,7 +29,7 @@ msgstr ""
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -39,11 +39,11 @@ msgstr "Sıkıştırılmış arşiv dosyalarını aç, değiştir ve oluştur"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"File Roller is the default GNOME application for opening, creating, and "
-"modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
 "File Roller arşiv ve sıkıştırılmış arşiv dosyalarını açmak, oluşturmak ve "
-"değiştirmek için öntanımlı GNOME uygulamasıdır."
+"değiştirmek için bir GNOME uygulamasıdır."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
@@ -296,7 +296,7 @@ msgid "Wrong password."
 msgstr "Yanlış parola."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "Sıkıştır"
 
@@ -342,7 +342,7 @@ msgid ""
 msgstr "Dosyaları “%s” klasörüne çıkarmak için yeterli izniniz yok"
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Çıkar"
@@ -389,7 +389,7 @@ msgstr "Parola"
 msgid "Enter a password for “%s”"
 msgstr "“%s” için parola gir"
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "Özellikler"
 
@@ -495,7 +495,7 @@ msgstr "Hizmet olarak başlat"
 msgid "Show version"
 msgstr "Sürümü göster"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "— Arşiv oluştur ve değiştir"
 
@@ -1024,7 +1024,7 @@ msgstr "Seçimi Yapıştır"
 msgid "_Destination folder:"
 msgstr "_Hedef klasör:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "_Yapıştır"
 
@@ -1059,7 +1059,7 @@ msgstr "_Ekle"
 msgid "_Cancel"
 msgstr "_İptal"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "_Kapat"
 
@@ -1111,103 +1111,6 @@ msgstr "_Yalnızca yeniyse ekle"
 msgid "_Follow symbolic links"
 msgstr "Simgesel bağlantıları _izle"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_Dosya"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "_Yeni Arşiv…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "_Aç…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "Dosyaları _Çıkar…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "_Farklı Kaydet…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "Tümlüğü _Sına"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "D_üzenle"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "Ke_s"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "_Kopyala"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "Dosyaları _Ekle…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "_Yeniden Adlandır…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "Dosyaları _Sil…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "Tümünü _Seç"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "_Tüm Seçimi Kaldır"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "_Bul"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "_Parola Belirle…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "_Görüntüle"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "Kenar Çubuğu"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "Tü_m Dosyaları Görüntüle"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "Klas_ör Olarak Görüntüle"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "_Yardım"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "İçindekiler"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "Klavye Kısayolları"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "_Hakkında"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_Parola:"
@@ -1232,6 +1135,10 @@ msgstr "Dizin yapısını _koru"
 msgid "Do not _overwrite newer files"
 msgstr "Yeni dosyaların _üzerine yazma"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "Tümünü _Seç"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "_Seçimi Kaldır"
@@ -1239,6 +1146,14 @@ msgstr "_Seçimi Kaldır"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "Gizli Dosyaları Göster"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "_Yeni Arşiv…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "_Aç…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1248,9 +1163,21 @@ msgstr "_Farklı Kaydet…"
 msgid "Pass_word…"
 msgstr "Paro_la…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "Tümlüğü _Sına"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "_Özellikler"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "Tü_m Dosyaları Görüntüle"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "Klas_ör Olarak Görüntüle"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1259,6 +1186,10 @@ msgstr "Kenar _Çubuğu"
 #: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "_Klavye Kısayolları"
+
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "_Yardım"
 
 #: src/ui/gears-menu.ui:61
 msgid "_About File Roller"
@@ -1412,6 +1343,10 @@ msgstr "Kopyala"
 #: src/ui/menus.ui:36 src/ui/menus.ui:72 src/ui/menus.ui:108
 msgid "Paste"
 msgstr "Yapıştır"
+
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "_Yeniden Adlandır…"
 
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
