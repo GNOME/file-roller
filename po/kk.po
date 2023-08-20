@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fileroller 3.4\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2022-09-03 07:25+0000\n"
-"PO-Revision-Date: 2022-09-18 12:38+0600\n"
+"POT-Creation-Date: 2023-08-13 18:31+0000\n"
+"PO-Revision-Date: 2023-08-20 18:44+0600\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -16,9 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -28,19 +30,18 @@ msgstr "Сығылған архивтер файлдарын ашу, түзет�
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"Archive Manager (also known as File Roller) is the default GNOME application "
-"for opening, creating, and modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
-"Архивтерді басқарушысы (тағы File Roller ретінде белгілі) - бұл архивтер "
-"және сығылған архивтер файлдарын ашу, жасау және түзету үшін арналған GNOME "
-"қолданбасы."
+"File Roller  - бұл архивтер және сығылған архивтер файлдарын ашу, жасау және "
+"түзету үшін арналған GNOME қолданбасы."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
-"Archive Manager supports a wide range of different archive files, including:"
+"File Roller supports a wide range of different archive files, including:"
 msgstr ""
-"Архивтер басқарушысы әр түрлі архивтер файлдарының біршама пішімдерін "
-"қолдайды, соның ішінде:"
+"File Roller әр түрлі архивтер файлдарының біршама пішімдерін қолдайды, соның "
+"ішінде:"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:20
 msgid "gzip archives (.tar.gz, .tgz)"
@@ -58,17 +59,16 @@ msgstr "zip архивтері (.zip)"
 msgid "xz archives (.tar.xz)"
 msgstr "xz архивтері (.tar.xz)"
 
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:477
-#: src/fr-window.c:2001 src/fr-window.c:5568
+#: data/org.gnome.FileRoller.desktop.in.in:4
 msgid "Archive Manager"
 msgstr "Архивтер басқарушысы"
 
-#: data/org.gnome.FileRoller.desktop.in.in:4
+#: data/org.gnome.FileRoller.desktop.in.in:5
 msgid "Create and modify an archive"
 msgstr "Архивті жасау және түзету"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.FileRoller.desktop.in.in:6
+#: data/org.gnome.FileRoller.desktop.in.in:7
 msgid "zip;tar;extract;unpack;"
 msgstr "zip;tar;тарқату;"
 
@@ -180,12 +180,12 @@ msgstr ""
 "very-fast, fast, normal, maximum."
 
 #: data/org.gnome.FileRoller.gschema.xml:140
-#: data/org.gnome.FileRoller.gschema.xml:172
+#: data/org.gnome.FileRoller.gschema.xml:178
 msgid "Encrypt the archive header"
 msgstr "Архив тақырыптамасын шифрлеу"
 
 #: data/org.gnome.FileRoller.gschema.xml:141
-#: data/org.gnome.FileRoller.gschema.xml:173
+#: data/org.gnome.FileRoller.gschema.xml:179
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
@@ -201,20 +201,20 @@ msgstr "Жаңалау файлдарды үстінен жазбау"
 msgid "Recreate the folders stored in the archive"
 msgstr "Архивте сақталған бумаларды қайта жасау"
 
-#: data/org.gnome.FileRoller.gschema.xml:177
+#: data/org.gnome.FileRoller.gschema.xml:183
 msgid "Show/hide the extra options"
 msgstr "Қосымша опцияларды көрсету/жасыру"
 
-#: data/org.gnome.FileRoller.gschema.xml:178
+#: data/org.gnome.FileRoller.gschema.xml:184
 msgid "Whether to show other options. If set the extra options will be shown."
 msgstr ""
 "Басқа опцияларды көрсету керек пе. Орнатылса, қосымша опциялар көрсетіледі."
 
-#: data/org.gnome.FileRoller.gschema.xml:182
+#: data/org.gnome.FileRoller.gschema.xml:188
 msgid "Default volume size"
 msgstr "Томның бастапқы өлшемі"
 
-#: data/org.gnome.FileRoller.gschema.xml:183
+#: data/org.gnome.FileRoller.gschema.xml:189
 msgid "The default size for volumes."
 msgstr "Томдар үшін бастапқы өлшем."
 
@@ -235,66 +235,72 @@ msgstr "Қайда тарқату…"
 msgid "Extract the selected archive"
 msgstr "Таңдалған архивті тарқату"
 
-#: src/dlg-add.c:101
+#: src/dlg-add.c:103
 msgid "Could not add the files to the archive"
 msgstr "Файлдарды архивке қосу мүмкін емес"
 
-#: src/dlg-add.c:102
+#: src/dlg-add.c:104
 #, c-format
 msgid "You don’t have the right permissions to read files from folder “%s”"
 msgstr "Сізде \"%s\" бумасынан файлдарды оқу үшін керек құқығыңыз жоқ"
 
-#: src/dlg-add.c:185
+#: src/dlg-add.c:187
 msgctxt "Window title"
-msgid "Add Files"
-msgstr "Файлдарды қосу"
+msgid "Add"
+msgstr "Қосу"
 
-#: src/dlg-add.c:196
-msgid "_Options"
-msgstr "Опция_лар"
-
-#: src/dlg-add.c:749
+#: src/dlg-add.c:748
 msgctxt "Window title"
-msgid "Load Options"
-msgstr "Жүктеу опциялары"
+msgid "Options"
+msgstr "Опциялар"
 
-#: src/dlg-add.c:758
+#: src/dlg-add.c:759
 msgid "_Apply"
 msgstr "Іске _асыру"
 
-#: src/dlg-add.c:759 src/dlg-delete.c:132
-msgid "_Delete"
-msgstr "Ө_шіру"
-
-#: src/dlg-add.c:843
+#: src/dlg-add.c:882
 msgctxt "Window title"
 msgid "Save Options"
 msgstr "Сақтау опциялары"
 
-#: src/dlg-add.c:844
+#: src/dlg-add.c:883
 msgid "_Options Name:"
 msgstr "Опц_иялар аты:"
 
-#: src/dlg-ask-password.c:121
+#: src/dlg-ask-password.c:116
+msgctxt "Window title"
+msgid "Password"
+msgstr "Пароль"
+
+#: src/dlg-ask-password.c:122
 msgid "_OK"
 msgstr "_ОК"
 
 #. Translators: %s is a filename
-#: src/dlg-ask-password.c:144
+#: src/dlg-ask-password.c:145
 #, c-format
 msgid "Password required for “%s”"
 msgstr "\"%s\" үшін пароль керек"
 
-#: src/dlg-ask-password.c:153
+#: src/dlg-ask-password.c:154
 msgid "Wrong password."
 msgstr "Пароль қате."
 
-#: src/dlg-batch-add.c:88 src/fr-application.c:250 src/fr-application.c:286
-#: src/fr-application.c:608
+#: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "Сығу"
 
-#: src/dlg-extract.c:91 src/fr-window.c:6911
+#: src/dlg-delete.c:127 src/ui/menus.ui:44 src/ui/menus.ui:80
+#: src/ui/menus.ui:116
+msgid "Delete"
+msgstr "Өшіру"
+
+#: src/dlg-delete.c:133
+msgid "_Delete"
+msgstr "Ө_шіру"
+
+#: src/dlg-extract.c:92 src/fr-window.c:5944
 #, c-format
 msgid ""
 "Destination folder “%s” does not exist.\n"
@@ -305,48 +311,50 @@ msgstr ""
 "\n"
 "Оны жасауды қалайсыз ба?"
 
-#: src/dlg-extract.c:98 src/fr-window.c:6919
+#: src/dlg-extract.c:99 src/fr-window.c:5951
 msgid "Create _Folder"
 msgstr "Буманы _жасау"
 
-#: src/dlg-extract.c:138 src/dlg-extract.c:170 src/dlg-extract.c:199
-#: src/fr-window.c:4441 src/fr-window.c:6836 src/fr-window.c:6841
-#: src/fr-window.c:6940 src/fr-window.c:6959 src/fr-window.c:6964
+#: src/dlg-extract.c:139 src/dlg-extract.c:171 src/dlg-extract.c:200
+#: src/fr-window.c:5849 src/fr-window.c:5854 src/fr-window.c:5974
+#: src/fr-window.c:5992 src/fr-window.c:5997
 msgid "Extraction not performed"
 msgstr "Тарқату орындалған жоқ"
 
-#: src/dlg-extract.c:139 src/fr-window.c:6936
+#: src/dlg-extract.c:140 src/fr-window.c:5969
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Мақсат бумасын жасау мүмкін емес: %s."
 
-#: src/dlg-extract.c:200 src/fr-window.c:4672 src/fr-window.c:4775
+#: src/dlg-extract.c:201
 #, c-format
 msgid ""
 "You don’t have the right permissions to extract archives in the folder “%s”"
 msgstr "Сізде \"%s\" бумасында архивтерді тарқатуға құқығыңыз жоқ"
 
-#: src/dlg-extract.c:319
+#: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Тарқату"
 
-#: src/dlg-open-with.c:57 src/fr-window.c:4231 src/fr-window.c:9037
-#: src/fr-window.c:9072 src/fr-window.c:9318 src/fr-window.c:9391
+#: src/dlg-open-with.c:57 src/fr-new-archive-dialog.c:293 src/fr-window.c:7915
+#: src/fr-window.c:8077 src/fr-window.c:8111 src/fr-window.c:8423
 msgid "Could not perform the operation"
 msgstr "Әрекетті орындау мүмкін емес"
 
-#: src/dlg-package-installer.c:111 src/dlg-package-installer.c:223
+#: src/dlg-package-installer.c:107 src/dlg-package-installer.c:210
 msgid "There was an internal error trying to search for applications:"
 msgstr "Қолданбаларды іздеу кезінде ішкі қате орын алды:"
 
-#: src/dlg-package-installer.c:292 src/dlg-package-installer.c:301
-#: src/dlg-package-installer.c:330 src/fr-archive.c:756 src/fr-window.c:4104
-#: src/fr-window.c:7666 src/fr-window.c:8028 src/fr-window.c:9614
+#: src/dlg-package-installer.c:279 src/dlg-package-installer.c:288
+#: src/dlg-package-installer.c:317 src/fr-archive.c:756
+#: src/fr-new-archive-dialog.c:239 src/fr-window.c:3545 src/fr-window.c:6706
+#: src/fr-window.c:7072 src/fr-window.c:8646
 msgid "Archive type not supported."
 msgstr "Архив түріне қолдау жоқ."
 
-#: src/dlg-package-installer.c:313
+#: src/dlg-package-installer.c:300
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -355,35 +363,38 @@ msgstr ""
 "%s файлдары үшін команда орнатылмаған.\n"
 "Бұл файлды ашу үшін команданы іздеуді қалайсыз ба?"
 
-#: src/dlg-package-installer.c:317
+#: src/dlg-package-installer.c:304
 msgid "Could not open this file type"
 msgstr "Файлдың бұл түрін ашу мүмкін емес"
 
-#: src/dlg-package-installer.c:320
+#: src/dlg-package-installer.c:307
 msgid "_Search Command"
 msgstr "К_оманда іздеу"
 
-#: src/dlg-password.c:105
+#: src/dlg-password.c:91 src/ui/new-archive-dialog.ui:58
+msgid "Password"
+msgstr "Пароль"
+
+#: src/dlg-password.c:103
 #, c-format
 msgid "Enter a password for “%s”"
 msgstr "\"%s\" үшін парольді енгізіңіз"
 
-#: src/dlg-prop.c:103
-#, c-format
-msgid "%s Properties"
-msgstr "%s қасиеттері"
+#: src/dlg-prop.c:71
+msgid "Properties"
+msgstr "Қасиеттері"
 
-#: src/dlg-prop.c:121 src/fr-window.c:1603 src/fr-window.c:1631
+#: src/dlg-prop.c:109 src/fr-window.c:1477 src/fr-window.c:1505
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
-#: src/dlg-update.c:162
+#: src/dlg-update.c:171
 #, c-format
 msgid "Update the file “%s” in the archive “%s”?"
 msgstr "\"%s\" файлын \"%s\" архив ішінде жаңарту керек пе?"
 
 #. secondary text
-#: src/dlg-update.c:174 src/dlg-update.c:200
+#: src/dlg-update.c:183 src/dlg-update.c:209
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don’t update "
@@ -395,87 +406,84 @@ msgstr[0] ""
 "Сыртқы бағдарламамен түзетілген %d файл бар. Ол файл(дар)ды архивте "
 "жаңартпасаңыз, өзгерістер жоғалады."
 
-#: src/dlg-update.c:190
+#: src/dlg-update.c:199
 #, c-format
 msgid "Update the files in the archive “%s”?"
 msgstr "\"%s\" архиві ішінде файлдарды жаңарту керек пе?"
 
-#: src/dlg-update.c:315 src/dlg-update.c:328
+#: src/dlg-update.c:314 src/dlg-update.c:328
 msgid "_Update"
 msgstr "_Жаңарту"
 
-#: src/dlg-update.c:319
-msgid "Update Files"
-msgstr "Файлдарды жаңарту"
+#: src/dlg-update.c:318
+msgctxt "Window title"
+msgid "Update"
+msgstr "Жаңарту"
 
-#: src/fr-application-menu.c:130
-msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
-msgstr "Copyright © 2001–2014 Free Software Foundation, Inc."
+#: src/fr-application-menu.c:134
+#| msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
+msgid "Copyright © 2001–2023 Free Software Foundation, Inc."
+msgstr "Copyright © 2001–2023 Free Software Foundation, Inc."
 
-#: src/fr-application-menu.c:131
+#: src/fr-application-menu.c:135
 msgid "An archive manager for GNOME."
 msgstr "GNOME үшін архивтер басқарушысы."
 
-#: src/fr-application-menu.c:134
+#: src/fr-application-menu.c:141
 msgid "translator-credits"
 msgstr "Baurzhan Muftakhidinov <baurthefirst@gmail.com>"
 
-#: src/fr-application.c:59
+#: src/fr-application.c:58
 msgid "Add files to the specified archive and quit the program"
 msgstr "Көрсетілген архивке файлдарды қосу мен бағдарламадан шығу"
 
-#: src/fr-application.c:60
+#: src/fr-application.c:59
 msgid "ARCHIVE"
 msgstr "АРХИВ"
 
-#: src/fr-application.c:63
+#: src/fr-application.c:62
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Атын сұрап, архивке файлдарды қосу мен бағдарламадан шығу"
 
-#: src/fr-application.c:67
+#: src/fr-application.c:66
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Көрсетілген бумаға файлдарды тарқату мен бағдарламадан шығу"
 
-#: src/fr-application.c:68 src/fr-application.c:80
+#: src/fr-application.c:67 src/fr-application.c:79
 msgid "FOLDER"
 msgstr "БУМА"
 
-#: src/fr-application.c:71
+#: src/fr-application.c:70
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Атын сұрап, бумаға файлдарды тарқату мен бағдарламадан шығу"
 
-#: src/fr-application.c:75
+#: src/fr-application.c:74
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "Архивтер құрамасын архив бумасына тарқату мен қолданбадан шығу"
 
-#: src/fr-application.c:79
+#: src/fr-application.c:78
 msgid "Default folder to use for the “--add” and “--extract” commands"
 msgstr "\"--add\" және \"--extract\" командалары қолданатын бума"
 
-#: src/fr-application.c:83
+#: src/fr-application.c:82
 msgid "Create destination folder without asking confirmation"
 msgstr "Мақсат бумасын растауды сұрамай жасау"
 
-#: src/fr-application.c:87
+#: src/fr-application.c:86
 msgid "Use the notification system to notify the operation completion"
 msgstr "Әрекеттің аяқталғаны жөнінде хабарлау үшін хабарлама жүйесін қолдану"
 
-#: src/fr-application.c:90
+#: src/fr-application.c:89
 msgid "Start as a service"
 msgstr "Қызмет түрінде іске қосу"
 
-#: src/fr-application.c:93
+#: src/fr-application.c:92
 msgid "Show version"
 msgstr "Нұсқасын көрсету"
 
-#: src/fr-application.c:322 src/fr-application.c:348 src/fr-application.c:631
-msgctxt "Window title"
-msgid "Extract archive"
-msgstr "Архивті тарқату"
-
-#: src/fr-application.c:511
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "- Архивті жасау немесе түзету"
 
@@ -487,7 +495,7 @@ msgstr "Сізде керек құқығыңыз жоқ."
 msgid "This archive type cannot be modified"
 msgstr "Архив түрін өзгертуге болмайды"
 
-#: src/fr-archive.c:1880 src/fr-new-archive-dialog.c:478
+#: src/fr-archive.c:1880 src/fr-new-archive-dialog.c:676
 msgid "You can’t add an archive to itself."
 msgstr "Сіз архивті оның өзіне қоса алмайсыз."
 
@@ -531,36 +539,78 @@ msgstr "Архивті тарқату"
 msgid "Archive not found"
 msgstr "Архив табылмады"
 
-#: src/fr-file-selector-dialog.c:813 src/fr-file-selector-dialog.c:858
+#: src/fr-file-selector-dialog.c:597 src/fr-file-selector-dialog.c:610
+msgid "Could not create the folder"
+msgstr "Буманы жасау мүмкін емес"
+
+#: src/fr-file-selector-dialog.c:635
+msgctxt "Window title"
+msgid "New Folder"
+msgstr "Жаңа бума"
+
+#: src/fr-file-selector-dialog.c:636
+msgid "_Name:"
+msgstr "_Аты:"
+
+#: src/fr-file-selector-dialog.c:797
+msgid "New Folder"
+msgstr "Жаңа бума"
+
+#: src/fr-file-selector-dialog.c:915 src/fr-file-selector-dialog.c:960
 msgid "Could not load the location"
 msgstr "Орналасуды жүктеу мүмкін емес"
 
-#: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
-#: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
-#: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
-#: src/fr-window.c:3035
+#: src/fr-location-bar.c:210
+msgid "Previous visited location"
+msgstr "Алдыңғы қаралған жер"
+
+#: src/fr-location-bar.c:218
+msgid "Next visited location"
+msgstr "Келесі қаралған жер"
+
+#: src/fr-location-bar.c:226
+msgid "Parent location"
+msgstr "Аталық бума орналасуы"
+
+#. Translators: after the colon there is a folder name.
+#: src/fr-location-bar.c:236 src/fr-window.c:4917
+msgid "_Location:"
+msgstr "Орна_ласуы:"
+
+#: src/fr-new-archive-dialog.c:315
+msgctxt "Window title"
+msgid "New Archive"
+msgstr "Жаңа архив"
+
+#: src/fr-new-archive-dialog.c:535
+msgid "Could not delete the old archive."
+msgstr "Ескі архивті өшіру мүмкін емес."
+
+#: src/fr-new-archive-dialog.c:576 src/fr-new-archive-dialog.c:592
+#: src/fr-new-archive-dialog.c:632 src/fr-new-archive-dialog.c:651
+#: src/fr-new-archive-dialog.c:674 src/fr-window.c:2718
 msgid "Could not create the archive"
 msgstr "Архивті жасау мүмкін емес"
 
-#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:578
 msgid "You have to specify an archive name."
 msgstr "Сізге архив атын көрсету керек."
 
-#: src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:634
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Сізде бұл бумада архивті жасауға құқығыңыз жоқ"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8343
+#: src/fr-new-archive-dialog.c:653 src/glib-utils.c:1182
 msgid "New name is the same as old one, please type other name."
 msgstr "Жаңа аты ескі атына сәйкес, басқасын көрсетіңіз."
 
-#: src/fr-new-archive-dialog.c:499
+#: src/fr-new-archive-dialog.c:697
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "\"%s\" деп аталатын файл бар болып тұр. Оны алмастыруды қалайсыз ба?"
 
-#: src/fr-new-archive-dialog.c:500
+#: src/fr-new-archive-dialog.c:698
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
@@ -568,335 +618,326 @@ msgstr ""
 "Файл \"%s\" ішінде бар болып тұр.  Оны алмастырсаңыз, құрамасы үстінен "
 "жазылады."
 
-#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6755
+#: src/fr-new-archive-dialog.c:705 src/fr-window.c:5768
 msgid "_Replace"
 msgstr "Ал_мастыру"
 
-#: src/fr-new-archive-dialog.c:521
-msgid "Could not delete the old archive."
-msgstr "Ескі архивті өшіру мүмкін емес."
+#. Translators: this is the name of the home directory.
+#: src/fr-places-sidebar.c:274 src/fr-window.c:4911
+msgid "Home"
+msgstr "Үйге"
 
-#: src/fr-window-actions-callbacks.c:314
+#: src/fr-window-actions-callbacks.c:322
 msgctxt "Window title"
 msgid "Open"
 msgstr "Ашу"
 
-#: src/fr-window-actions-callbacks.c:327
+#: src/fr-window-actions-callbacks.c:334
 msgid "All archives"
 msgstr "Барлық архивтер"
 
-#: src/fr-window-actions-callbacks.c:334
+#: src/fr-window-actions-callbacks.c:341
 msgid "All files"
 msgstr "Барлық файлдар"
 
-#: src/fr-window.c:1192
+#: src/fr-window.c:1106
 msgid "Operation completed"
 msgstr "Әрекет аяқталды"
 
-#: src/fr-window.c:1611
+#: src/fr-window.c:1485
 msgid "Folder"
 msgstr "Бума"
 
-#: src/fr-window.c:2008
+#: src/fr-window.c:1873
 msgid "[read only]"
 msgstr "[тек оқу]"
 
-#: src/fr-window.c:2151
-#, c-format
-msgid "Could not display the folder “%s”"
-msgstr "\"%s\" бумасын көрсету мүмкін емес"
-
 #. Translators: %s is a filename
-#: src/fr-window.c:2327 src/fr-window.c:2365
+#: src/fr-window.c:2032 src/fr-window.c:2070
 #, c-format
 msgid "Creating “%s”"
 msgstr "\"%s\" жасау"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2331
+#: src/fr-window.c:2036
 #, c-format
 msgid "Loading “%s”"
 msgstr "\"%s\" жүктеу"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2335
+#: src/fr-window.c:2040
 #, c-format
 msgid "Reading “%s”"
 msgstr "\"%s\" оқу"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2339
+#: src/fr-window.c:2044
 #, c-format
 msgid "Deleting the files from “%s”"
 msgstr "\"%s\" ішінен файлдарды өшіру"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2343
+#: src/fr-window.c:2048
 #, c-format
 msgid "Testing “%s”"
 msgstr "\"%s\" сынау"
 
-#: src/fr-window.c:2346
+#: src/fr-window.c:2051
 msgid "Getting the file list"
 msgstr "Файлдар тізімін алу"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2350
+#: src/fr-window.c:2055
 #, c-format
 msgid "Copying the files to add to “%s”"
 msgstr "\"%s\" ішіне қосу үшін файларды көшіру"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2354
+#: src/fr-window.c:2059
 #, c-format
 msgid "Adding the files to “%s”"
 msgstr "\"%s\" ішіне файлдарды қосу"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2358
+#: src/fr-window.c:2063
 #, c-format
 msgid "Extracting the files from “%s”"
 msgstr "\"%s\" ішінен файлдарды тарқату"
 
-#: src/fr-window.c:2361
+#: src/fr-window.c:2066
 msgid "Copying the extracted files to the destination"
 msgstr "Тарқатылған файлдарды мақсат бумасына көшіру"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2370
+#: src/fr-window.c:2075
 #, c-format
 msgid "Saving “%s”"
 msgstr "\"%s\" сақтау"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2377
+#: src/fr-window.c:2082
 #, c-format
 msgid "Renaming the files in “%s”"
 msgstr "\"%s\" ішінде файлдар аттарын ауыстыру"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2381
+#: src/fr-window.c:2086
 #, c-format
 msgid "Updating the files in “%s”"
 msgstr "\"%s\" ішінде файлдарды жаңарту"
 
-#: src/fr-window.c:2678
+#: src/fr-window.c:2377
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "%d файл қалды"
 
-#: src/fr-window.c:2682 src/fr-window.c:3314
+#: src/fr-window.c:2381 src/fr-window.c:3004
 msgid "Please wait…"
 msgstr "Күте тұрыңыз…"
 
-#: src/fr-window.c:2800
+#: src/fr-window.c:2483
 msgid "Extraction completed successfully"
 msgstr "Тарқату сәтті аяқталды"
 
-#: src/fr-window.c:2803
+#: src/fr-window.c:2486
 msgid "_Show the Files"
 msgstr "Ф_айлдарды көрсету"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2821 src/fr-window.c:6259
+#: src/fr-window.c:2504 src/fr-window.c:5272
 #, c-format
 msgid "“%s” created successfully"
 msgstr "\"%s\" сәтті жасалды"
 
-#: src/fr-window.c:2828
+#: src/fr-window.c:2511
 msgid "_Open the Archive"
 msgstr "_Архивті ашу"
 
-#: src/fr-window.c:2918 src/fr-window.c:3091
+#: src/fr-window.c:2601 src/fr-window.c:2775
 msgid "Command exited abnormally."
 msgstr "Команды дұрыс аяқталмады."
 
-#: src/fr-window.c:3040
+#: src/fr-window.c:2723
 msgid "An error occurred while extracting files."
 msgstr "Файлдарды тарқату кезінде қате кетті."
 
-#: src/fr-window.c:3046
+#: src/fr-window.c:2729
 #, c-format
 msgid "Could not open “%s”"
 msgstr "\"%s\" ашу мүмкін емес"
 
-#: src/fr-window.c:3051
+#: src/fr-window.c:2734
 msgid "An error occurred while loading the archive."
 msgstr "Архивті жүктеу кезінде қате кетті."
 
-#: src/fr-window.c:3055
+#: src/fr-window.c:2738
 msgid "An error occurred while deleting files from the archive."
 msgstr "Архивтен файлдарды өшіру кезінде қате кетті."
 
-#: src/fr-window.c:3061
+#: src/fr-window.c:2744
 msgid "An error occurred while adding files to the archive."
 msgstr "Архивке файлдарды қосу кезінде қате кетті."
 
-#: src/fr-window.c:3065
+#: src/fr-window.c:2748
 msgid "An error occurred while testing archive."
 msgstr "Архивті сынау кезінде қате кетті."
 
-#: src/fr-window.c:3070
+#: src/fr-window.c:2753
 msgid "An error occurred while saving the archive."
 msgstr "Архивті сақтау кезінде қате кетті."
 
-#: src/fr-window.c:3074
+#: src/fr-window.c:2757
 msgid "An error occurred while renaming the files."
 msgstr "Файлдар аттарын ауыстыру кезінде қате кетті."
 
-#: src/fr-window.c:3078
+#: src/fr-window.c:2761
 msgid "An error occurred while updating the files."
 msgstr "Файлдарды жаңарту кезінде қате кетті."
 
-#: src/fr-window.c:3082
+#: src/fr-window.c:2765
 msgid "An error occurred."
 msgstr "Қате кетті."
 
-#: src/fr-window.c:3088
+#: src/fr-window.c:2771
 msgid "Command not found."
 msgstr "Команда табылмады."
 
-#: src/fr-window.c:3245
+#: src/fr-window.c:2940
 msgid "Test Result"
 msgstr "Нәтижені тексеру"
 
-#: src/fr-window.c:4256
+#: src/fr-window.c:3696 src/fr-window.c:6511
+msgid "New Archive"
+msgstr "Жаңа архив"
+
+#: src/fr-window.c:3734
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
 "Осы файлды ағымдағы архивке қосу, не оны жаңа архив ретінде ашу керек пе?"
 
-#: src/fr-window.c:4285
+#: src/fr-window.c:3758
 msgid "Do you want to create a new archive with these files?"
 msgstr "Осы файлдардан жаңа архивті жасауды қалайсыз ба?"
 
-#: src/fr-window.c:4288
+#: src/fr-window.c:3761
 msgid "Create _Archive"
 msgstr "_Архивті жасау"
 
-#: src/fr-window.c:4317 src/fr-window.c:7471
-msgid "New Archive"
-msgstr "Жаңа архив"
-
-#: src/fr-window.c:5040
+#: src/fr-window.c:4024
 msgid "Folders"
 msgstr "Бумалар"
 
-#: src/fr-window.c:5079 src/ui/file-selector.ui:206
+#: src/fr-window.c:4074 src/ui/file-selector.ui:116
 msgctxt "File"
 msgid "Size"
 msgstr "Өлшемі"
 
-#: src/fr-window.c:5080
+#: src/fr-window.c:4075
 msgctxt "File"
 msgid "Type"
 msgstr "Түрі"
 
-#: src/fr-window.c:5081 src/ui/file-selector.ui:222
+#: src/fr-window.c:4076 src/ui/file-selector.ui:135
 msgctxt "File"
 msgid "Modified"
 msgstr "Өзгертілген"
 
-#: src/fr-window.c:5082
+#: src/fr-window.c:4077
 msgctxt "File"
 msgid "Location"
 msgstr "Орналасуы"
 
-#: src/fr-window.c:5091 src/ui/file-selector.ui:175
+#: src/fr-window.c:4086 src/ui/file-selector.ui:80
 msgctxt "File"
 msgid "Name"
 msgstr "Аты"
 
-#: src/fr-window.c:5844
-msgctxt "Action"
-msgid "_Extract"
-msgstr "_Тарқату"
+#: src/fr-window.c:4813
+msgid "No Archive Opened"
+msgstr "Ешбір архив ашылмаған"
 
-#: src/fr-window.c:5848
+#: src/fr-window.c:4814
+msgid "Open an archive or create a new one."
+msgstr "Архивті ашу немесе жаңа архивті жасау."
+
+#: src/fr-window.c:4856
+msgctxt "Action"
+msgid "_Extract…"
+msgstr "_Тарқату…"
+
+#: src/fr-window.c:4861
+msgid "Extract Files"
+msgstr "Файлдарды тарқату"
+
+#: src/fr-window.c:4865
 msgctxt "Action"
 msgid "Add Files"
 msgstr "Файлдарды қосу"
 
-#: src/fr-window.c:5872
-msgid "Find files by name"
-msgstr "Файлдарды аттары бойынша табу"
+#: src/fr-window.c:4882
+msgid "Main Menu"
+msgstr "Басты мәзір"
 
-#: src/fr-window.c:5888
-msgid "Go to the previous visited location"
-msgstr "Алдыңғы жерге өту"
+#: src/fr-window.c:4890
+msgid "Search"
+msgstr "Іздеу"
 
-#: src/fr-window.c:5893
-msgid "Go to the next visited location"
-msgstr "Келесі жерге өту"
+#: src/fr-window.c:4905
+msgid "Back"
+msgstr "Артқа"
 
-#: src/fr-window.c:5903
-msgid "Go to the home location"
-msgstr "Үй бумасына өту"
+#: src/fr-window.c:4907
+msgid "Forward"
+msgstr "Алға"
 
-#. Translators: after the colon there is a folder name.
-#: src/fr-window.c:5912 src/ui/file-selector.ui:83
-#: src/ui/new-archive-dialog.ui:93
-msgid "_Location:"
-msgstr "Орна_ласуы:"
+#: src/fr-window.c:4909
+msgid "Up"
+msgstr "Жоғары"
 
-#: src/fr-window.c:6264 src/ui/menus.ui:7 src/ui/menus.ui:52 src/ui/menus.ui:88
+#: src/fr-window.c:5277 src/ui/menus.ui:7 src/ui/menus.ui:52 src/ui/menus.ui:88
 msgctxt "Action"
 msgid "Open"
 msgstr "Ашу"
 
-#: src/fr-window.c:6743
+#: src/fr-window.c:5756
 #, c-format
 msgid "Replace file “%s”?"
 msgstr "\"%s\" файлын алмастыру керек пе?"
 
-#: src/fr-window.c:6746
+#: src/fr-window.c:5759
 #, c-format
 msgid "Another file with the same name already exists in “%s”."
 msgstr "\"%s\" ішінде аттас файл бар болып тұр."
 
-#: src/fr-window.c:6752
+#: src/fr-window.c:5765
 msgid "Replace _All"
 msgstr "Б_арлығын алмастыру"
 
-#: src/fr-window.c:6753
+#: src/fr-window.c:5766
 msgid "Replace _Nothing"
 msgstr "Еш_нәрсені алмастырмау"
 
-#: src/fr-window.c:6754
+#: src/fr-window.c:5767
 msgid "_Skip"
 msgstr "Атта_п кету"
 
-#: src/fr-window.c:7658 src/fr-window.c:8020
+#: src/fr-window.c:6698 src/fr-window.c:7064
 #, c-format
 msgid "Could not save the archive “%s”"
 msgstr "\"%s\" архивін сақтау мүмкін емес"
 
-#: src/fr-window.c:7786
+#: src/fr-window.c:6830
 msgid "Save"
 msgstr "Сақтау"
 
-#: src/fr-window.c:8114
+#: src/fr-window.c:7157
 msgid "Last Output"
 msgstr "Соңғы шығару"
 
-#. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8338
-msgid "New name is void, please type a name."
-msgstr "Көрсетілген аты бос, басқасын көрсетіңіз."
-
-#. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: src/fr-window.c:8348
-#, c-format
-msgid ""
-"Name “%s” is not valid because it contains at least one of the following "
-"characters: %s, please type other name."
-msgstr ""
-"\"%s\" аты қате, өйткені оның құрамында келесі таңбалардың кем дегенде "
-"біреуі бар: %s, басқа атын көрсетіңіз."
-
-#: src/fr-window.c:8383
+#: src/fr-window.c:7392
 #, c-format
 msgid ""
 "A folder named “%s” already exists.\n"
@@ -907,11 +948,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8383 src/fr-window.c:8385
+#: src/fr-window.c:7392 src/fr-window.c:7394
 msgid "Please use a different name."
 msgstr "Басқа атауды қолданыңыз."
 
-#: src/fr-window.c:8385
+#: src/fr-window.c:7394
 #, c-format
 msgid ""
 "A file named “%s” already exists.\n"
@@ -922,63 +963,78 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:8455
-msgid "Rename"
-msgstr "Атын өзгерту"
-
-#: src/fr-window.c:8456
-msgid "_New folder name:"
-msgstr "Жаңа бу_ма аты:"
-
-#: src/fr-window.c:8456
-msgid "_New file name:"
-msgstr "Жаңа фа_йл аты:"
-
-#: src/fr-window.c:8460
-msgid "_Rename"
-msgstr "Атын ауысты_ру"
-
-#: src/fr-window.c:8477 src/fr-window.c:8495
+#: src/fr-window.c:7466 src/fr-window.c:7481
 msgid "Could not rename the folder"
 msgstr "Бума атын ауыстыру мүмкін емес"
 
-#: src/fr-window.c:8477 src/fr-window.c:8495
+#: src/fr-window.c:7466 src/fr-window.c:7481
 msgid "Could not rename the file"
 msgstr "Файл атын ауыстыру мүмкін емес"
 
+#: src/fr-window.c:7569
+msgid "Rename"
+msgstr "Атын өзгерту"
+
+#: src/fr-window.c:7570
+msgid "_New folder name:"
+msgstr "Жаңа бу_ма аты:"
+
+#: src/fr-window.c:7570
+msgid "_New file name:"
+msgstr "Жаңа фа_йл аты:"
+
+#: src/fr-window.c:7574
+msgid "_Rename"
+msgstr "Атын ауысты_ру"
+
+#: src/fr-window.c:7917
+msgid "Source and destination are the same."
+msgstr "Қайнар көз бен мақсат бірдей болып тұр."
+
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8943
+#: src/fr-window.c:7966
 #, c-format
 msgid "Moving the files from “%s” to “%s”"
 msgstr "Файлдарды \"%s\" ішінен \"%s\" ішіне жылжыту"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8946
+#: src/fr-window.c:7969
 #, c-format
 msgid "Copying the files from “%s” to “%s”"
 msgstr "Файлдарды \"%s\" ішінен \"%s\" ішіне көшіру"
 
-#: src/fr-window.c:8998
+#: src/fr-window.c:8047
 msgid "Paste Selection"
 msgstr "Ерекшеленгенді кірістіру"
 
-#: src/fr-window.c:8999
+#: src/fr-window.c:8048
 msgid "_Destination folder:"
 msgstr "Мақ_сат бумасы:"
 
-#: src/fr-window.c:9003 src/ui/app-menubar.ui:61
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "_Кірістіру"
 
-#: src/gtk-utils.c:208
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
+#: src/glib-utils.c:1177
+msgid "New name is void, please type a name."
+msgstr "Көрсетілген аты бос, басқасын көрсетіңіз."
+
+#. Translators: the %s references to a filename.  This message can appear when renaming a file.
+#: src/glib-utils.c:1187
+#, c-format
+msgid ""
+"Name “%s” is not valid because it contains at least one of the following "
+"characters: %s, please type other name."
+msgstr ""
+"\"%s\" аты қате, өйткені оның құрамында келесі таңбалардың кем дегенде "
+"біреуі бар: %s, басқа атын көрсетіңіз."
+
+#: src/gtk-utils.c:211
 msgid "C_ommand Line Output:"
 msgstr "Командалық жо_лдың шығысы:"
 
-#: src/gtk-utils.c:369
-msgid "Could not display help"
-msgstr "Көмекті көрсету мүмкін емес"
-
-#: src/gtk-utils.c:432
+#: src/gtk-utils.c:366
 msgid "Change password visibility"
 msgstr "Пароль көрінуін іске қосу/сөндіру"
 
@@ -990,7 +1046,7 @@ msgstr "Қо_су"
 msgid "_Cancel"
 msgstr "Ба_с тарту"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:41
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "Жа_бу"
 
@@ -1022,172 +1078,53 @@ msgstr "Сақтау опциялары"
 msgid "Reset Options"
 msgstr "Опцияларды тастау"
 
-#: src/ui/add-dialog-options.ui:35
-msgid "Add"
-msgstr "Қосу"
-
-#: src/ui/add-dialog-options.ui:58
+#: src/ui/add-dialog-options.ui:38
 msgid "Include _files:"
 msgstr "Файлдар_ды қоса:"
 
-#: src/ui/add-dialog-options.ui:74
+#: src/ui/add-dialog-options.ui:50
 msgid "E_xclude files:"
 msgstr "Фа_йлдардан бөлек:"
 
-#: src/ui/add-dialog-options.ui:90
+#: src/ui/add-dialog-options.ui:62
 msgid "_Exclude folders:"
 msgstr "Бумалардан бөл_ек:"
 
-#: src/ui/add-dialog-options.ui:105 src/ui/add-dialog-options.ui:120
-#: src/ui/add-dialog-options.ui:134 src/ui/extract-dialog-options.ui:104
-msgid "example: *.o; *.bak"
-msgstr "мысалы: *.o; *.bak"
-
-#: src/ui/add-dialog-options.ui:169 src/ui/extract-dialog-options.ui:144
-msgid "Actions"
-msgstr "Әрекеттер"
-
-#: src/ui/add-dialog-options.ui:189
+#: src/ui/add-dialog-options.ui:110
 msgid "Add only if _newer"
 msgstr "Жаңалау _болса ғана қосу"
 
-#: src/ui/add-dialog-options.ui:206
+#: src/ui/add-dialog-options.ui:117
 msgid "_Follow symbolic links"
 msgstr "_Символдық сілтемелерден өту"
 
-#: src/ui/app-menubar.ui:4
-msgid "_File"
-msgstr "_Файл"
-
-#: src/ui/app-menubar.ui:8 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "Жаң_а архив…"
-
-#: src/ui/app-menubar.ui:13 src/ui/gears-menu.ui:13
-msgid "_Open…"
-msgstr "_Ашу…"
-
-#: src/ui/app-menubar.ui:18
-msgid "_Extract Files…"
-msgstr "Файлдарды _тарқату…"
-
-#: src/ui/app-menubar.ui:25
-msgid "Save _As…"
-msgstr "Қал_айша сақтау…"
-
-#: src/ui/app-menubar.ui:30 src/ui/gears-menu.ui:27
-msgid "_Test Integrity"
-msgstr "Бү_тіндігін тексеру"
-
-#: src/ui/app-menubar.ui:34
-msgid "Properties"
-msgstr "Қасиеттері"
-
-#: src/ui/app-menubar.ui:47
-msgid "_Edit"
-msgstr "_Түзету"
-
-#: src/ui/app-menubar.ui:51
-msgid "Cu_t"
-msgstr "Қиы_п алу"
-
-#: src/ui/app-menubar.ui:56
-msgid "_Copy"
-msgstr "Кө_шіру"
-
-#: src/ui/app-menubar.ui:68
-msgid "_Add Files…"
-msgstr "Фа_йлдарды қосу…"
-
-#: src/ui/app-menubar.ui:72 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "Атын ауысты_ру…"
-
-#: src/ui/app-menubar.ui:77
-msgid "_Delete Files…"
-msgstr "Файлдарды ө_шіру…"
-
-#: src/ui/app-menubar.ui:84 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "Бар_лығын таңдау"
-
-#: src/ui/app-menubar.ui:89
-msgid "D_eselect All"
-msgstr "Ере_кшелеуді алып тастау"
-
-#: src/ui/app-menubar.ui:94
-msgid "_Find"
-msgstr "_Табу"
-
-#: src/ui/app-menubar.ui:101
-msgid "Set Pass_word…"
-msgstr "Паро_льді орнату…"
-
-#: src/ui/app-menubar.ui:106
-msgid "_View"
-msgstr "Тү_рі"
-
-#: src/ui/app-menubar.ui:110
-msgid "Sidebar"
-msgstr "Бүйір панелі"
-
-#: src/ui/app-menubar.ui:116 src/ui/gears-menu.ui:38
-msgid "View All _Files"
-msgstr "Барлық _файлдарды көрсету"
-
-#: src/ui/app-menubar.ui:122 src/ui/gears-menu.ui:43
-msgid "View as a F_older"
-msgstr "Бума тү_рінде қарау"
-
-#: src/ui/app-menubar.ui:130 src/ui/gears-menu.ui:59
-msgid "_Help"
-msgstr "_Көмек"
-
-#: src/ui/app-menubar.ui:133
-msgid "Contents"
-msgstr "Құрамасы"
-
-#: src/ui/app-menubar.ui:138
-msgid "Keyboard Shortcuts"
-msgstr "Пернетақта жарлықтары"
-
-#: src/ui/app-menubar.ui:143
-msgid "_About"
-msgstr "Осы тур_алы"
-
-#: src/ui/ask-password.ui:53 src/ui/new-archive-dialog.ui:156
+#: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_Пароль:"
 
-#: src/ui/delete.ui:13 src/ui/extract-dialog-options.ui:41
+#: src/ui/delete.ui:12 src/ui/extract-dialog-options.ui:16
 msgid "_All files"
 msgstr "Б_арлық файлдар"
 
-#: src/ui/delete.ui:31 src/ui/extract-dialog-options.ui:59
+#: src/ui/delete.ui:20 src/ui/extract-dialog-options.ui:23
 msgid "_Selected files"
 msgstr "_Таңдалған файлдар"
 
-#: src/ui/delete.ui:54 src/ui/extract-dialog-options.ui:83
+#: src/ui/delete.ui:31 src/ui/extract-dialog-options.ui:34
 msgid "_Files:"
 msgstr "_Файлдар:"
 
-#: src/ui/delete.ui:74
-msgid "example: *.txt; *.doc"
-msgstr "мысалы: *.txt; *.doc"
-
-#: src/ui/extract-dialog-options.ui:20
-msgctxt "Action"
-msgid "Extract"
-msgstr "Тарқату"
-
-#: src/ui/extract-dialog-options.ui:165
+#: src/ui/extract-dialog-options.ui:58
 msgid "_Keep directory structure"
 msgstr "Бума құрылысын сақ_тау"
 
-#: src/ui/extract-dialog-options.ui:182
+#: src/ui/extract-dialog-options.ui:65
 msgid "Do not _overwrite newer files"
 msgstr "Жаңалау фа_йлдарды үстінен жазбау"
+
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "Бар_лығын таңдау"
 
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
@@ -1197,145 +1134,175 @@ msgstr "Ерекше_леуді барлығынан алып тастау"
 msgid "Show Hidden Files"
 msgstr "Жасырын файлдарды көрсету"
 
-#: src/ui/file-selector.ui:112 src/ui/file-selector.ui:113
-msgid "Go up one level"
-msgstr "Бір деңгейге жоғары өту"
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "Жаң_а архив…"
 
-#: src/ui/gears-menu.ui:19
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "_Ашу…"
+
+#: src/ui/gears-menu.ui:17
 msgid "_Save As…"
 msgstr "Қ_алайша сақтау…"
 
-#: src/ui/gears-menu.ui:23
+#: src/ui/gears-menu.ui:21
 msgid "Pass_word…"
 msgstr "Паро_ль…"
 
-#: src/ui/gears-menu.ui:31
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "Бү_тіндігін тексеру"
+
+#: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "Қас_иеттері"
 
-#: src/ui/gears-menu.ui:49
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "Барлық _файлдарды көрсету"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "Бума тү_рінде қарау"
+
+#: src/ui/gears-menu.ui:46
 msgid "Side_bar"
 msgstr "Бүйір панелі"
 
-#: src/ui/gears-menu.ui:55
+#: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "П_ернетақта жарлықтары"
 
-#: src/ui/gears-menu.ui:64
-msgid "_About Archive Manager"
-msgstr "Архивтер басқарушысы _туралы"
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "_Көмек"
 
-#: src/ui/help-overlay.ui:13
+#: src/ui/gears-menu.ui:61
+msgid "_About File Roller"
+msgstr "File Roller тур_алы"
+
+#: src/ui/help-overlay.ui:12
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Жалпы"
 
-#: src/ui/help-overlay.ui:18
+#: src/ui/help-overlay.ui:16
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Көмекті көрсету"
 
-#: src/ui/help-overlay.ui:24
+#: src/ui/help-overlay.ui:22
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "Пернетақта жарлықтары"
 
-#: src/ui/help-overlay.ui:31
+#: src/ui/help-overlay.ui:28
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Терезені жабу"
 
-#: src/ui/help-overlay.ui:38
+#: src/ui/help-overlay.ui:34
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Шығу"
 
-#: src/ui/help-overlay.ui:47
+#: src/ui/help-overlay.ui:41
 msgctxt "shortcut window"
 msgid "Archive"
 msgstr "Архив"
 
-#: src/ui/help-overlay.ui:52
+#: src/ui/help-overlay.ui:45
 msgctxt "shortcut window"
 msgid "Create new archive"
 msgstr "Жаңа архивті жасау"
 
-#: src/ui/help-overlay.ui:59
+#: src/ui/help-overlay.ui:51
 msgctxt "shortcut window"
 msgid "Open an archive"
 msgstr "Архивті ашу"
 
-#: src/ui/help-overlay.ui:66
+#: src/ui/help-overlay.ui:57
 msgctxt "shortcut window"
-msgid "Extract an archive"
-msgstr "Архивті тарқату"
+msgid "Extract files from the archive"
+msgstr "Архивтен файлдарды тарқату"
 
-#: src/ui/help-overlay.ui:73
+#: src/ui/help-overlay.ui:63
+msgctxt "shortcut window"
+msgid "Add files to the archive"
+msgstr "Архивке файлдарды қосу"
+
+#: src/ui/help-overlay.ui:69
 msgctxt "shortcut window"
 msgid "Save with another name"
 msgstr "Басқа атаумен сақтау"
 
-#: src/ui/help-overlay.ui:80
+#: src/ui/help-overlay.ui:75
 msgctxt "shortcut window"
 msgid "View archive properties"
 msgstr "Архив баптауларын көрсету"
 
-#: src/ui/help-overlay.ui:87
+#: src/ui/help-overlay.ui:81
 msgctxt "shortcut window"
 msgid "Rename file or folder in an archive"
 msgstr "Архивте сақталған бумаларды қайта жасау"
 
-#: src/ui/help-overlay.ui:95
+#: src/ui/help-overlay.ui:88
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Қарау"
 
-#: src/ui/help-overlay.ui:100
+#: src/ui/help-overlay.ui:92
 msgctxt "shortcut window"
 msgid "Display the tree view of the folders in the side pane"
 msgstr "Бүйір панелінде бумалардың ағаш тектес көрінісін көрсету"
 
-#: src/ui/help-overlay.ui:107
+#: src/ui/help-overlay.ui:98
 msgctxt "shortcut window"
 msgid "View the content of an archive as a list of files"
 msgstr "Архив мазмұнын файлдар тізімі ретінде қарау"
 
-#: src/ui/help-overlay.ui:114
+#: src/ui/help-overlay.ui:104
 msgctxt "shortcut window"
 msgid "View the content of an archive as a folder structure"
 msgstr "Архив мазмұнын бумалар құрылысы ретінде қарау"
 
-#: src/ui/help-overlay.ui:121
+#: src/ui/help-overlay.ui:110
 msgctxt "shortcut window"
 msgid "Refresh"
 msgstr "Жаңарту"
 
-#: src/ui/help-overlay.ui:129
+#: src/ui/help-overlay.ui:116
+msgctxt "shortcut window"
+msgid "Focus the location"
+msgstr "Орналасуға фокус орнату"
+
+#: src/ui/help-overlay.ui:123
 msgctxt "shortcut window"
 msgid "Common"
 msgstr "Жалпы"
 
-#: src/ui/help-overlay.ui:134
+#: src/ui/help-overlay.ui:127
 msgctxt "shortcut window"
 msgid "Find"
 msgstr "Іздеу"
 
-#: src/ui/help-overlay.ui:141
+#: src/ui/help-overlay.ui:133
 msgctxt "shortcut window"
 msgid "Select all"
 msgstr "Барлығын таңдау"
 
-#: src/ui/help-overlay.ui:148
+#: src/ui/help-overlay.ui:139
 msgctxt "shortcut window"
 msgid "Deselect all"
 msgstr "Таңдауды алып тастау"
 
-#: src/ui/help-overlay.ui:155
+#: src/ui/help-overlay.ui:145
 msgctxt "shortcut window"
 msgid "Delete files or folders from an archive"
 msgstr "Архивтен файлдар немесе бумаларды өшіру"
 
-#: src/ui/help-overlay.ui:162
+#: src/ui/help-overlay.ui:151
 msgctxt "shortcut window"
 msgid "Stop the operation"
 msgstr "Әрекетті тоқтату"
@@ -1364,82 +1331,213 @@ msgstr "Көшіру"
 msgid "Paste"
 msgstr "Кірістіру"
 
-#: src/ui/menus.ui:44 src/ui/menus.ui:80 src/ui/menus.ui:116
-msgid "Delete"
-msgstr "Өшіру"
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "Атын ауысты_ру…"
 
-#: src/ui/new-archive-dialog.ui:27
-msgid "_Filename:"
-msgstr "_Файл аты:"
+#: src/ui/new-archive-dialog.ui:15
+msgid "File"
+msgstr "Файл"
 
-#: src/ui/new-archive-dialog.ui:110
+#: src/ui/new-archive-dialog.ui:26
+msgid "Extension"
+msgstr "Кеңейтуі"
+
+#: src/ui/new-archive-dialog.ui:35 src/ui/properties.ui:46
 msgid "Location"
 msgstr "Орналасуы"
 
-#: src/ui/new-archive-dialog.ui:190
-msgid "_Encrypt the file list too"
-msgstr "_Файл тізімін қоса шифрлеу"
+#: src/ui/new-archive-dialog.ui:54
+msgid "Encrypt"
+msgstr "Шифрлеу"
 
-#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: src/ui/new-archive-dialog.ui:212
-msgid "Split into _volumes of"
-msgstr "Көле_мдері келесі бөліктерге бөлу"
+#: src/ui/new-archive-dialog.ui:55
+msgid "Ask a password to extract the files"
+msgstr "Файлдар тарқату үшін парольді сұрау"
 
-#: src/ui/new-archive-dialog.ui:233
-msgid "10,0"
-msgstr "10,0"
+#: src/ui/new-archive-dialog.ui:63
+msgid "Encrypt File List"
+msgstr "Файлдар тізімін шифрлеу"
 
-#. MB means megabytes
-#: src/ui/new-archive-dialog.ui:250
+#: src/ui/new-archive-dialog.ui:64
+msgid "Ask the password to see the file list"
+msgstr "Файлдар тізімін қарау үшін парольді сұрау"
+
+#: src/ui/new-archive-dialog.ui:84
+msgid "Split in Volumes"
+msgstr "Бөліктерге бөлу"
+
+#: src/ui/new-archive-dialog.ui:85
+msgid "Split the archive in smaller files"
+msgstr "Архивті кішірек файлдарға бөлу"
+
+#. File size
+#: src/ui/new-archive-dialog.ui:88
+msgid "Size"
+msgstr "Өлшемі"
+
+#. Short for Megabytes
+#: src/ui/new-archive-dialog.ui:106
 msgid "MB"
 msgstr "МБ"
 
-#: src/ui/new-archive-dialog.ui:271
-msgid "_Other Options"
-msgstr "Басқа _опциялар"
-
-#: src/ui/password.ui:51
+#: src/ui/password.ui:30
 msgid "_Encrypt the file list"
 msgstr "_Файл тізімін шифрлеу"
 
-#: src/ui/properties.ui:15
-msgctxt "File"
-msgid "Name:"
-msgstr "Аты:"
+#: src/ui/properties.ui:92
+msgid "Last Modified"
+msgstr "Соңғы өзгертілген"
 
-#. after the colon there is a folder name.
-#: src/ui/properties.ui:45
-msgid "Location:"
-msgstr "Орналасуы:"
+#: src/ui/properties.ui:120
+msgid "Type"
+msgstr "Түрі"
 
-#. after the colon there is a file type.
-#: src/ui/properties.ui:74
-msgid "Type:"
-msgstr "Түрі:"
+#: src/ui/properties.ui:152
+msgid "Compressed Size"
+msgstr "Сығылған өлшемі"
 
-#: src/ui/properties.ui:103
-msgid "Last modified:"
-msgstr "Соңғы өзгертілген:"
+#: src/ui/properties.ui:180
+msgid "Uncrompressed Size"
+msgstr "Сығылмаған өлшемі"
 
-#: src/ui/properties.ui:131
-msgid "Archive size:"
-msgstr "Архив көлемі:"
+#: src/ui/properties.ui:208
+msgid "Compression Ratio"
+msgstr "Сығу деңгейі"
 
-#: src/ui/properties.ui:159
-msgid "Content size:"
-msgstr "Құрама көлемі:"
+#: src/ui/properties.ui:236
+msgctxt "properties dialog"
+msgid "Number of Files"
+msgstr "Файлдар саны"
 
-#: src/ui/properties.ui:186
-msgid "Compression ratio:"
-msgstr "Сығу деңгейі:"
-
-#: src/ui/properties.ui:213
-msgid "Number of files:"
-msgstr "Файлдар саны:"
-
-#: src/ui/update.ui:48
+#: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңіз:"
+
+#~ msgctxt "Window title"
+#~ msgid "Add Files"
+#~ msgstr "Файлдарды қосу"
+
+#~ msgctxt "Window title"
+#~ msgid "Load Options"
+#~ msgstr "Жүктеу опциялары"
+
+#, c-format
+#~ msgid "%s Properties"
+#~ msgstr "%s қасиеттері"
+
+#~ msgid "Update Files"
+#~ msgstr "Файлдарды жаңарту"
+
+#~ msgctxt "Window title"
+#~ msgid "Extract archive"
+#~ msgstr "Архивті тарқату"
+
+#, c-format
+#~ msgid "Could not display the folder “%s”"
+#~ msgstr "\"%s\" бумасын көрсету мүмкін емес"
+
+#~ msgctxt "Action"
+#~ msgid "_Extract"
+#~ msgstr "_Тарқату"
+
+#~ msgid "Find files by name"
+#~ msgstr "Файлдарды аттары бойынша табу"
+
+#~ msgid "Go to the home location"
+#~ msgstr "Үй бумасына өту"
+
+#~ msgid "Could not display help"
+#~ msgstr "Көмекті көрсету мүмкін емес"
+
+#~ msgid "example: *.o; *.bak"
+#~ msgstr "мысалы: *.o; *.bak"
+
+#~ msgid "Actions"
+#~ msgstr "Әрекеттер"
+
+#~ msgid "Save _As…"
+#~ msgstr "Қал_айша сақтау…"
+
+#~ msgid "_Edit"
+#~ msgstr "_Түзету"
+
+#~ msgid "Cu_t"
+#~ msgstr "Қиы_п алу"
+
+#~ msgid "_Copy"
+#~ msgstr "Кө_шіру"
+
+#~ msgid "_Add Files…"
+#~ msgstr "Фа_йлдарды қосу…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "Файлдарды ө_шіру…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "Ере_кшелеуді алып тастау"
+
+#~ msgid "_Find"
+#~ msgstr "_Табу"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "Паро_льді орнату…"
+
+#~ msgid "_View"
+#~ msgstr "Тү_рі"
+
+#~ msgid "Sidebar"
+#~ msgstr "Бүйір панелі"
+
+#~ msgid "Contents"
+#~ msgstr "Құрамасы"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "Пернетақта жарлықтары"
+
+#~ msgid "_About"
+#~ msgstr "Осы тур_алы"
+
+#~ msgid "example: *.txt; *.doc"
+#~ msgstr "мысалы: *.txt; *.doc"
+
+#~ msgctxt "Action"
+#~ msgid "Extract"
+#~ msgstr "Тарқату"
+
+#~ msgid "Go up one level"
+#~ msgstr "Бір деңгейге жоғары өту"
+
+#~ msgid "_About Archive Manager"
+#~ msgstr "Архивтер басқарушысы _туралы"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Extract an archive"
+#~ msgstr "Архивті тарқату"
+
+#~ msgid "_Filename:"
+#~ msgstr "_Файл аты:"
+
+#~ msgid "_Encrypt the file list too"
+#~ msgstr "_Файл тізімін қоса шифрлеу"
+
+#~ msgid "10,0"
+#~ msgstr "10,0"
+
+#~ msgid "_Other Options"
+#~ msgstr "Басқа _опциялар"
+
+#~ msgid "Location:"
+#~ msgstr "Орналасуы:"
+
+#~ msgid "Type:"
+#~ msgstr "Түрі:"
+
+#~ msgid "Archive size:"
+#~ msgstr "Архив көлемі:"
+
+#~ msgid "Content size:"
+#~ msgstr "Құрама көлемі:"
 
 #~| msgid "Archive Manager"
 #~ msgid "org.gnome.ArchiveManager"
@@ -1457,9 +1555,6 @@ msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңі
 
 #~ msgid "Create a compressed archive with the selected objects"
 #~ msgstr "Таңдалған объектілерден сығылған архив жасау"
-
-#~ msgid "Password"
-#~ msgstr "пароль"
 
 #~ msgid "File is not a valid .desktop file"
 #~ msgstr "Файл дұрыс .desktop файлы емес"
@@ -1553,9 +1648,6 @@ msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңі
 #~ msgid "Information about the program"
 #~ msgstr "Бағдарлама туралы ақпарат"
 
-#~ msgid "Add files to the archive"
-#~ msgstr "Архивке файлдарды қосу"
-
 #~ msgid "Close the current archive"
 #~ msgstr "Ағымдағы архивті жабу"
 
@@ -1564,9 +1656,6 @@ msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңі
 
 #~ msgid "Copy the selection"
 #~ msgstr "Ерекшелеуді көшіру"
-
-#~ msgid "Cut the selection"
-#~ msgstr "Ерекшелеуді қиып алу"
 
 #~ msgid "Paste the clipboard"
 #~ msgstr "Алмасу буферінен кірістіру"
@@ -1579,9 +1668,6 @@ msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңі
 
 #~ msgid "Deselect all files"
 #~ msgstr "Ерекшелеуді алып тастау"
-
-#~ msgid "Extract files from the archive"
-#~ msgstr "Файлдарды архивтен тарқату"
 
 #~ msgid "New…"
 #~ msgstr "Жаңа..."
@@ -1689,9 +1775,6 @@ msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңі
 #~ msgid "Over_write existing files"
 #~ msgstr "Файлдар бар болса, үсті_нен жазу"
 
-#~ msgid "Do not e_xtract older files"
-#~ msgstr "Ескі фа_йлдарды тарқатпау"
-
 #~ msgctxt "File"
 #~ msgid "New"
 #~ msgstr "Жаңа"
@@ -1705,9 +1788,6 @@ msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңі
 #~ msgid "All Supported Files"
 #~ msgstr "Барлық қолдауы бар файлдар"
 
-#~ msgid "By Extension"
-#~ msgstr "Кеңейтуі бойынша"
-
 #~ msgid "File Format"
 #~ msgstr "Файл пішімі"
 
@@ -1715,8 +1795,8 @@ msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңі
 #~ msgstr "Кеңейту(лер)"
 
 #~ msgid ""
-#~ "The program was not able to find out the file format you want to use for `"
-#~ "%s'. Please make sure to use a known extension for that file or manually "
+#~ "The program was not able to find out the file format you want to use for "
+#~ "`%s'. Please make sure to use a known extension for that file or manually "
 #~ "choose a file format from the list below."
 #~ msgstr ""
 #~ "Бағдарлама `%s' үшін қолданғыңыз келетін файл пішімін таба алмады. Бұл "
