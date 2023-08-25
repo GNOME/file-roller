@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.9.90\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-19 12:21+0000\n"
-"PO-Revision-Date: 2023-06-10 23:25+0200\n"
+"POT-Creation-Date: 2023-08-20 12:45+0000\n"
+"PO-Revision-Date: 2023-08-25 10:11+0200\n"
 "Last-Translator: Jordi Mas i Hernàndez <jmas@softcatala.org>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -24,7 +24,7 @@ msgstr ""
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -34,11 +34,11 @@ msgstr "Obre, modifica i crea fitxers d'arxiu comprimit"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"File Roller is the default GNOME application for opening, creating, and "
-"modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
-"El Gestor d'arxius és l'aplicació per defecte del GNOME per a obrir, crear i "
-"modificar arxius i fitxers d'arxiu comprimits."
+"El Gestor d'arxius és una aplicació del GNOME per a obrir, crear i modificar "
+"arxius i fitxers d'arxiu comprimits."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
@@ -297,7 +297,7 @@ msgid "Wrong password."
 msgstr "La contrasenya no és correcta."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "Comprimeix"
 
@@ -344,7 +344,7 @@ msgstr ""
 "No teniu els permisos necessaris per a descomprimir arxius a la carpeta «%s»"
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Extreu"
@@ -391,7 +391,7 @@ msgstr "Contrasenya"
 msgid "Enter a password for “%s”"
 msgstr "Introduïu la contrasenya per «%s»"
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "Propietats"
 
@@ -509,7 +509,7 @@ msgstr "Inicia com a servei"
 msgid "Show version"
 msgstr "Mostra la versió"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "- Creeu i modifiqueu un arxiu"
 
@@ -1038,7 +1038,7 @@ msgstr "Enganxa la selecció"
 msgid "_Destination folder:"
 msgstr "Carpeta de _destinació:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "_Enganxa"
 
@@ -1073,7 +1073,7 @@ msgstr "_Afegeix"
 msgid "_Cancel"
 msgstr "_Cancel·la"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "_Tanca"
 
@@ -1125,103 +1125,6 @@ msgstr "_Afegeix només si és més recent"
 msgid "_Follow symbolic links"
 msgstr "_Segueix els enllaços simbòlics"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_Fitxer"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "Arxiu _nou…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "_Obre…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "_Extreu fitxers…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "_Anomena i desa…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "_Comprova la integritat"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "_Edita"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "_Retalla"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "C_opia"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "_Afegeix fitxers…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "_Canvia el nom…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "_Suprimeix fitxers…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "Selecciona-ho _tot"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "Desse_lecciona-ho tot"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "_Cerca"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "Estableix una _contrasenya…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "_Visualitza"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "Barra lateral"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "Visualitza tots els _fitxers"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "Visualitza-ho com una _carpeta"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "A_juda"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "Continguts"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "Dreceres de teclat"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "_Quant a"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_Contrasenya:"
@@ -1246,6 +1149,10 @@ msgstr "_Mantingues l'estructura de directoris"
 msgid "Do not _overwrite newer files"
 msgstr "No _sobreescriguis els fitxers nous"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "Selecciona-ho _tot"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "Desse_lecciona-ho tot"
@@ -1253,6 +1160,14 @@ msgstr "Desse_lecciona-ho tot"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "Mostra els fitxers ocults"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "Arxiu _nou…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "_Obre…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1262,9 +1177,21 @@ msgstr "_Anomena i desa…"
 msgid "Pass_word…"
 msgstr "_Contrasenya…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "_Comprova la integritat"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "_Propietats"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "Visualitza tots els _fitxers"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "Visualitza-ho com una _carpeta"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1273,6 +1200,10 @@ msgstr "_Barra lateral"
 #: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "_Dreceres de teclat"
+
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "A_juda"
 
 #: src/ui/gears-menu.ui:61
 msgid "_About File Roller"
@@ -1427,6 +1358,10 @@ msgstr "Copia"
 msgid "Paste"
 msgstr "Enganxa"
 
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "_Canvia el nom…"
+
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
 msgstr "Fitxer"
@@ -1434,6 +1369,10 @@ msgstr "Fitxer"
 #: src/ui/new-archive-dialog.ui:26
 msgid "Extension"
 msgstr "Extensió"
+
+#: src/ui/new-archive-dialog.ui:35 src/ui/properties.ui:46
+msgid "Location"
+msgstr "Ubicació"
 
 #: src/ui/new-archive-dialog.ui:54
 msgid "Encrypt"
@@ -1473,10 +1412,6 @@ msgstr "MB"
 msgid "_Encrypt the file list"
 msgstr "_Xifra la llista de fitxers"
 
-#: src/ui/properties.ui:46
-msgid "Location"
-msgstr "Ubicació"
-
 #: src/ui/properties.ui:92
 msgid "Last Modified"
 msgstr "Última modificació"
@@ -1505,6 +1440,54 @@ msgstr "Nombre de fitxers"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "S_eleccioneu els fitxers que voleu actualitzar:"
+
+#~ msgid "_File"
+#~ msgstr "_Fitxer"
+
+#~ msgid "_Extract Files…"
+#~ msgstr "_Extreu fitxers…"
+
+#~ msgid "Save _As…"
+#~ msgstr "_Anomena i desa…"
+
+#~ msgid "_Edit"
+#~ msgstr "_Edita"
+
+#~ msgid "Cu_t"
+#~ msgstr "_Retalla"
+
+#~ msgid "_Copy"
+#~ msgstr "C_opia"
+
+#~ msgid "_Add Files…"
+#~ msgstr "_Afegeix fitxers…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "_Suprimeix fitxers…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "Desse_lecciona-ho tot"
+
+#~ msgid "_Find"
+#~ msgstr "_Cerca"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "Estableix una _contrasenya…"
+
+#~ msgid "_View"
+#~ msgstr "_Visualitza"
+
+#~ msgid "Sidebar"
+#~ msgstr "Barra lateral"
+
+#~ msgid "Contents"
+#~ msgstr "Continguts"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "Dreceres de teclat"
+
+#~ msgid "_About"
+#~ msgstr "_Quant a"
 
 #~ msgctxt "Window title"
 #~ msgid "Add Files"
