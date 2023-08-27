@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-19 12:21+0000\n"
-"PO-Revision-Date: 2023-05-20 05:16+0200\n"
+"POT-Creation-Date: 2023-08-27 09:28+0000\n"
+"PO-Revision-Date: 2023-08-27 16:08+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -30,8 +30,8 @@ msgstr "გახსენით, შეცვალეთ და შექმ�
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"File Roller is the default GNOME application for opening, creating, and "
-"modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
@@ -275,7 +275,7 @@ msgid "Wrong password."
 msgstr "არასწორი პაროლი."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "შეკუმშვა"
 
@@ -318,7 +318,7 @@ msgid ""
 msgstr ""
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "გაშლა"
@@ -363,7 +363,7 @@ msgstr "პაროლი"
 msgid "Enter a password for “%s”"
 msgstr "შეიყვანეთ პაროლი \"%s\"-სთვის"
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "თვისებები"
 
@@ -464,7 +464,7 @@ msgstr "სერვისის სახით გაშვება"
 msgid "Show version"
 msgstr "ვერსიის ჩვენება"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "— შექმენით და შეცვალეთ არქივი"
 
@@ -891,7 +891,7 @@ msgstr "ჩავანაცვლო ფაილი \"%s\"?"
 #: src/fr-window.c:5759
 #, c-format
 msgid "Another file with the same name already exists in “%s”."
-msgstr ""
+msgstr "\"%s\"-ში უფრო სხვა ფაილი იგივე სახელით უკვე არსებობს."
 
 #: src/fr-window.c:5765
 msgid "Replace _All"
@@ -992,7 +992,7 @@ msgstr "მონიშნულის ჩასმა"
 msgid "_Destination folder:"
 msgstr "_დანიშნულების საქაღალდე:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "ჩასმა"
 
@@ -1025,7 +1025,7 @@ msgstr "_დამატება"
 msgid "_Cancel"
 msgstr "გაუქმება"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "დახურვა"
 
@@ -1077,103 +1077,6 @@ msgstr "დაამატეთ მხოლოდ იმ შემთხვე
 msgid "_Follow symbolic links"
 msgstr "_სიმბმულების მიყოლა"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_ფაილი"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "_ახალი არქივი…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "_გახსნა…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "_ფაილების გაშლა…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "_შენახვა, როგორც…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "_მთლიანობის შემოწმება"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "_ჩასწორება"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "ამოჭრა"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "_კოპირება"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "_ფაილების დამატება…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "_გადარქმევა…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "_ფაილების წაშლა…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "ყველაფრის _მონიშვნა"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "მონიშვნის _მოხსნა"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "_ძებნა"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "_პაროლის დაყენება…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "_ნახვა"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "გვერდითა ზოლი"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "ყველა ფაილის _ნახვა"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "როგორც საქაღალდის, ნახვა"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "_დახმარება"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "შიგთავსი"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "კლავიატურის მალსახმობები"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "_შესახებ"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_პაროლი:"
@@ -1198,6 +1101,10 @@ msgstr "საქაღალდეების სტრუქტურის �
 msgid "Do not _overwrite newer files"
 msgstr "უფრო ახალ ფაილებზე არ გადაწერა"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "ყველაფრის _მონიშვნა"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "მონიშვნის მოხსნა"
@@ -1205,6 +1112,14 @@ msgstr "მონიშვნის მოხსნა"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "დამალული ფაილების ჩვენება"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "_ახალი არქივი…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "_გახსნა…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1214,9 +1129,21 @@ msgstr "_შენახვა, როგორც…"
 msgid "Pass_word…"
 msgstr "პაროლი…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "_მთლიანობის შემოწმება"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "_პარამეტრები"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "ყველა ფაილის _ნახვა"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "როგორც საქაღალდის, ნახვა"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1225,6 +1152,10 @@ msgstr "გვერდით პანელი"
 #: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "კლავიატურის მალსახმობები"
+
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "_დახმარება"
 
 #: src/ui/gears-menu.ui:61
 msgid "_About File Roller"
@@ -1379,6 +1310,10 @@ msgstr "კოპირება"
 msgid "Paste"
 msgstr "ჩასმა"
 
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "_გადარქმევა…"
+
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
 msgstr "ფაილი"
@@ -1386,6 +1321,10 @@ msgstr "ფაილი"
 #: src/ui/new-archive-dialog.ui:26
 msgid "Extension"
 msgstr "გაფართოება"
+
+#: src/ui/new-archive-dialog.ui:35 src/ui/properties.ui:46
+msgid "Location"
+msgstr "მდებარეობა"
 
 #: src/ui/new-archive-dialog.ui:54
 msgid "Encrypt"
@@ -1425,10 +1364,6 @@ msgstr "მბ"
 msgid "_Encrypt the file list"
 msgstr "_ფაილების სიის დაშიფვრა"
 
-#: src/ui/properties.ui:46
-msgid "Location"
-msgstr "მდებარეობა"
-
 #: src/ui/properties.ui:92
 msgid "Last Modified"
 msgstr "ბოლო ცვლილება"
@@ -1442,7 +1377,7 @@ msgid "Compressed Size"
 msgstr "შეკუმშული ზომა"
 
 #: src/ui/properties.ui:180
-msgid "Uncrompressed Size"
+msgid "Uncompressed Size"
 msgstr "შეუკუმშავი ზომა"
 
 #: src/ui/properties.ui:208
@@ -1457,6 +1392,54 @@ msgstr "ფაილების რაოდენობა"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "_აირჩიეთ ფაილები, რომლებიც გნებავთ, განაახლოთ:"
+
+#~ msgid "_File"
+#~ msgstr "_ფაილი"
+
+#~ msgid "_Extract Files…"
+#~ msgstr "_ფაილების გაშლა…"
+
+#~ msgid "Save _As…"
+#~ msgstr "_შენახვა, როგორც…"
+
+#~ msgid "_Edit"
+#~ msgstr "_ჩასწორება"
+
+#~ msgid "Cu_t"
+#~ msgstr "ამოჭრა"
+
+#~ msgid "_Copy"
+#~ msgstr "_კოპირება"
+
+#~ msgid "_Add Files…"
+#~ msgstr "_ფაილების დამატება…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "_ფაილების წაშლა…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "მონიშვნის _მოხსნა"
+
+#~ msgid "_Find"
+#~ msgstr "_ძებნა"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "_პაროლის დაყენება…"
+
+#~ msgid "_View"
+#~ msgstr "_ნახვა"
+
+#~ msgid "Sidebar"
+#~ msgstr "გვერდითა ზოლი"
+
+#~ msgid "Contents"
+#~ msgstr "შიგთავსი"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "კლავიატურის მალსახმობები"
+
+#~ msgid "_About"
+#~ msgstr "_შესახებ"
 
 #~ msgid "_About Archive Manager"
 #~ msgstr "არქივის მმართველის შესახებ"
