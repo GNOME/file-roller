@@ -9,16 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-06-28 14:03+0000\n"
-"PO-Revision-Date: 2023-06-28 22:20+0300\n"
+"POT-Creation-Date: 2023-08-27 09:28+0000\n"
+"PO-Revision-Date: 2023-08-27 17:27+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Lokalize 20.12.0\n"
 "X-Project-Style: gnome\n"
 
@@ -33,15 +33,12 @@ msgid "Open, modify and create compressed archive files"
 msgstr "Відкриття, редагування та створення архівів"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
-#| msgid ""
-#| "File Roller is the default GNOME application for opening, creating, and "
-#| "modifying archive and compressed archive files."
 msgid ""
 "File Roller is a GNOME application for opening, creating, and modifying "
 "archive and compressed archive files."
 msgstr ""
-"File Roller — програма GNOME для відкривання, створення та "
-"редагування архівів і архівованих файлів."
+"File Roller — програма GNOME для відкривання, створення та редагування "
+"архівів і архівованих файлів."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
@@ -1359,6 +1356,10 @@ msgstr "Файл"
 msgid "Extension"
 msgstr "Суфікс"
 
+#: src/ui/new-archive-dialog.ui:35 src/ui/properties.ui:46
+msgid "Location"
+msgstr "Шлях"
+
 #: src/ui/new-archive-dialog.ui:54
 msgid "Encrypt"
 msgstr "Зашифрувати"
@@ -1397,10 +1398,6 @@ msgstr "МБ"
 msgid "_Encrypt the file list"
 msgstr "_Шифрувати список файлів"
 
-#: src/ui/properties.ui:46
-msgid "Location"
-msgstr "Шлях"
-
 #: src/ui/properties.ui:92
 msgid "Last Modified"
 msgstr "Востаннє змінено"
@@ -1414,8 +1411,9 @@ msgid "Compressed Size"
 msgstr "Стиснутий розмір"
 
 #: src/ui/properties.ui:180
-msgid "Uncrompressed Size"
-msgstr "Розмір розпакованого"
+#| msgid "Uncrompressed Size"
+msgid "Uncompressed Size"
+msgstr "Нестиснутий розмір"
 
 #: src/ui/properties.ui:208
 msgid "Compression Ratio"
