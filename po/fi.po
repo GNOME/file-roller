@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-26 08:47+0000\n"
-"PO-Revision-Date: 2023-05-31 20:50+0300\n"
+"POT-Creation-Date: 2023-08-27 09:28+0000\n"
+"PO-Revision-Date: 2023-08-27 19:34+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -22,12 +22,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 "X-POT-Import-Date: 2012-03-05 14:50:08+0000\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "Pakettienkäsittely"
 
@@ -37,10 +37,10 @@ msgstr "Avaa, muokkaa ja luo pakattuja arkistotiedostoja"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"File Roller is the default GNOME application for opening, creating, and "
-"modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
-"Pakettienkäsittely on Gnomen oletussovellus pakattujen arkistotiedostojen "
+"Pakettienkäsittely on Gnome-sovellus pakattujen arkistotiedostojen "
 "avaamiseen, luomiseen ja muokkaamiseen."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
@@ -292,7 +292,7 @@ msgid "Wrong password."
 msgstr "Väärä salasana."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "Pakkaa"
 
@@ -338,7 +338,7 @@ msgid ""
 msgstr "Sinulla ei ole oikeuksia purkaa arkistoja kansiossa “%s”"
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Pura"
@@ -385,7 +385,7 @@ msgstr "Salasana"
 msgid "Enter a password for “%s”"
 msgstr "Anna salasana arkistolle “%s”"
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "Ominaisuudet"
 
@@ -497,7 +497,7 @@ msgstr "Käynnistä palveluna"
 msgid "Show version"
 msgstr "Näytä versio"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "— Luo ja muokkaa arkistoja"
 
@@ -1027,7 +1027,7 @@ msgstr "Liitä valinta"
 msgid "_Destination folder:"
 msgstr "_Kohdekansio:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "_Liitä"
 
@@ -1062,7 +1062,7 @@ msgstr "_Lisää"
 msgid "_Cancel"
 msgstr "_Peru"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "_Sulje"
 
@@ -1114,103 +1114,6 @@ msgstr "Lisää vain jos _uudempi"
 msgid "_Follow symbolic links"
 msgstr "_Seuraa symbolisia linkkejä"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_Tiedosto"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "_Uusi arkisto…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "_Avaa…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "_Pura tiedostot…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "Tallenna _nimellä…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "_Tarkista eheys"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "_Muokkaa"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "_Leikkaa"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "_Kopioi"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "_Lisää tiedostoja…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "_Nimeä uudelleen…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "_Poista tiedostot…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "_Valitse kaikki"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "_Älä valitse mitään"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "_Etsi"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "_Aseta salasana…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "_Näytä"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "Sivupalkki"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "Näytä kaikki tie_dostot"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "Näytä _kansiona"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "O_hje"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "Sisältö"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "Pikanäppäimet"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "Ti_etoja"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "Salasa_na:"
@@ -1235,6 +1138,10 @@ msgstr "_Säilytä hakemistorakenne"
 msgid "Do not _overwrite newer files"
 msgstr "_Älä korvaa uudempia tiedostoja"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "_Valitse kaikki"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "_Älä valitse mitään"
@@ -1242,6 +1149,14 @@ msgstr "_Älä valitse mitään"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "Näytä piilotiedostot"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "_Uusi arkisto…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "_Avaa…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1251,9 +1166,21 @@ msgstr "_Tallenna nimellä…"
 msgid "Pass_word…"
 msgstr "_Salasana…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "_Tarkista eheys"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "_Ominaisuudet"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "Näytä kaikki tie_dostot"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "Näytä _kansiona"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1262,6 +1189,10 @@ msgstr "Sivupalkki"
 #: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "_Pikanäppäimet"
+
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "O_hje"
 
 #: src/ui/gears-menu.ui:61
 msgid "_About File Roller"
@@ -1416,6 +1347,10 @@ msgstr "Kopioi"
 msgid "Paste"
 msgstr "Liitä"
 
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "_Nimeä uudelleen…"
+
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
 msgstr "Tiedosto"
@@ -1423,6 +1358,10 @@ msgstr "Tiedosto"
 #: src/ui/new-archive-dialog.ui:26
 msgid "Extension"
 msgstr "Pääte"
+
+#: src/ui/new-archive-dialog.ui:35 src/ui/properties.ui:46
+msgid "Location"
+msgstr "Sijainti"
 
 #: src/ui/new-archive-dialog.ui:54
 msgid "Encrypt"
@@ -1462,10 +1401,6 @@ msgstr "Mt"
 msgid "_Encrypt the file list"
 msgstr "Salaa _tiedostolista"
 
-#: src/ui/properties.ui:46
-msgid "Location"
-msgstr "Sijainti"
-
 #: src/ui/properties.ui:92
 msgid "Last Modified"
 msgstr "Viimeksi muokattu"
@@ -1479,7 +1414,7 @@ msgid "Compressed Size"
 msgstr "Pakattu koko"
 
 #: src/ui/properties.ui:180
-msgid "Uncrompressed Size"
+msgid "Uncompressed Size"
 msgstr "Pakkaamaton koko"
 
 #: src/ui/properties.ui:208
@@ -1494,6 +1429,54 @@ msgstr "Tiedostojen määrä"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "_Valitse päivitettävät tiedostot:"
+
+#~ msgid "_File"
+#~ msgstr "_Tiedosto"
+
+#~ msgid "_Extract Files…"
+#~ msgstr "_Pura tiedostot…"
+
+#~ msgid "Save _As…"
+#~ msgstr "Tallenna _nimellä…"
+
+#~ msgid "_Edit"
+#~ msgstr "_Muokkaa"
+
+#~ msgid "Cu_t"
+#~ msgstr "_Leikkaa"
+
+#~ msgid "_Copy"
+#~ msgstr "_Kopioi"
+
+#~ msgid "_Add Files…"
+#~ msgstr "_Lisää tiedostoja…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "_Poista tiedostot…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "_Älä valitse mitään"
+
+#~ msgid "_Find"
+#~ msgstr "_Etsi"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "_Aseta salasana…"
+
+#~ msgid "_View"
+#~ msgstr "_Näytä"
+
+#~ msgid "Sidebar"
+#~ msgstr "Sivupalkki"
+
+#~ msgid "Contents"
+#~ msgstr "Sisältö"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "Pikanäppäimet"
+
+#~ msgid "_About"
+#~ msgstr "Ti_etoja"
 
 #~ msgid "_About Archive Manager"
 #~ msgstr "_Tietoja - Pakettienkäsittely"
