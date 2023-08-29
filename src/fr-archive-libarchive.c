@@ -1457,7 +1457,12 @@ _archive_write_set_format_from_context (struct archive *a,
 
 		if (archive_filter == ARCHIVE_FILTER_XZ) {
 			archive_write_set_filter_option (a, NULL, "threads", fr_get_thread_count());
-                }
+		}
+#if (ARCHIVE_VERSION_NUMBER >= 3006000)
+		if (archive_filter == ARCHIVE_FILTER_ZSTD) {
+			archive_write_set_filter_option (a, NULL, "threads", fr_get_thread_count());
+		}
+#endif
 	}
 }
 
