@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-06-28 08:55+0000\n"
-"PO-Revision-Date: 2023-07-05 15:58+0200\n"
+"POT-Creation-Date: 2023-08-27 09:28+0000\n"
+"PO-Revision-Date: 2023-08-27 12:02+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -290,7 +290,7 @@ msgid "Wrong password."
 msgstr "Felaktigt lösenord."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "Komprimera"
 
@@ -337,7 +337,7 @@ msgstr ""
 "Du har inte de rättigheter som krävs för att extrahera arkiv i mappen ”%s”"
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Extrahera"
@@ -384,7 +384,7 @@ msgstr "Lösenord"
 msgid "Enter a password for “%s”"
 msgstr "Ange ett lösenord för ”%s”"
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "Egenskaper"
 
@@ -497,7 +497,7 @@ msgstr "Starta som en tjänst"
 msgid "Show version"
 msgstr "Visa version"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "— Skapa och ändra ett arkiv"
 
@@ -1027,7 +1027,7 @@ msgstr "Klistra in markering"
 msgid "_Destination folder:"
 msgstr "_Målmapp:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "_Klistra in"
 
@@ -1062,7 +1062,7 @@ msgstr "_Lägg till"
 msgid "_Cancel"
 msgstr "A_vbryt"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "S_täng"
 
@@ -1114,103 +1114,6 @@ msgstr "Lägg till endast om _nyare"
 msgid "_Follow symbolic links"
 msgstr "Följ s_ymboliska länkar"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_Arkiv"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "_Nytt arkiv…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "Ö_ppna…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "_Extrahera filer…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "Sp_ara som…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "Testa _integritet"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "_Redigera"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "Kl_ipp ut"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "K_opiera"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "_Lägg till filer…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "_Byt namn…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "_Ta bort filer…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "Markera _alla"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "A_vmarkera alla"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "_Sök"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "Ställ in lös_enord…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "_Visa"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "Sidopanel"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "Visa alla _filer"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "Visa som en _mapp"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "_Hjälp"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "Innehåll"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "Tangentbordsgenvägar"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "_Om"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_Lösenord:"
@@ -1235,6 +1138,10 @@ msgstr "_Behåll katalogstruktur"
 msgid "Do not _overwrite newer files"
 msgstr "Skriv _inte över nyare filer"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "Markera _alla"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "Avma_rkera alla"
@@ -1242,6 +1149,14 @@ msgstr "Avma_rkera alla"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "Visa dolda filer"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "_Nytt arkiv…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "Ö_ppna…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1251,9 +1166,21 @@ msgstr "_Spara som…"
 msgid "Pass_word…"
 msgstr "Lös_enord…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "Testa _integritet"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "_Egenskaper"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "Visa alla _filer"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "Visa som en _mapp"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1262,6 +1189,10 @@ msgstr "Sido_panel"
 #: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "_Tangentbordsgenvägar"
+
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "_Hjälp"
 
 #: src/ui/gears-menu.ui:61
 msgid "_About File Roller"
@@ -1416,6 +1347,10 @@ msgstr "Kopiera"
 msgid "Paste"
 msgstr "Klistra in"
 
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "_Byt namn…"
+
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
 msgstr "Arkiv"
@@ -1423,6 +1358,10 @@ msgstr "Arkiv"
 #: src/ui/new-archive-dialog.ui:26
 msgid "Extension"
 msgstr "Filändelse"
+
+#: src/ui/new-archive-dialog.ui:35 src/ui/properties.ui:46
+msgid "Location"
+msgstr "Plats"
 
 #: src/ui/new-archive-dialog.ui:54
 msgid "Encrypt"
@@ -1462,10 +1401,6 @@ msgstr "MB"
 msgid "_Encrypt the file list"
 msgstr "_Kryptera fillistan"
 
-#: src/ui/properties.ui:46
-msgid "Location"
-msgstr "Plats"
-
 #: src/ui/properties.ui:92
 msgid "Last Modified"
 msgstr "Senast ändrad"
@@ -1479,7 +1414,7 @@ msgid "Compressed Size"
 msgstr "Komprimerad storlek"
 
 #: src/ui/properties.ui:180
-msgid "Uncrompressed Size"
+msgid "Uncompressed Size"
 msgstr "Okomprimerad storlek"
 
 #: src/ui/properties.ui:208
@@ -1494,6 +1429,54 @@ msgstr "Antal filer"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "Ma_rkera filerna som du vill uppdatera:"
+
+#~ msgid "_File"
+#~ msgstr "_Arkiv"
+
+#~ msgid "_Extract Files…"
+#~ msgstr "_Extrahera filer…"
+
+#~ msgid "Save _As…"
+#~ msgstr "Sp_ara som…"
+
+#~ msgid "_Edit"
+#~ msgstr "_Redigera"
+
+#~ msgid "Cu_t"
+#~ msgstr "Kl_ipp ut"
+
+#~ msgid "_Copy"
+#~ msgstr "K_opiera"
+
+#~ msgid "_Add Files…"
+#~ msgstr "_Lägg till filer…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "_Ta bort filer…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "A_vmarkera alla"
+
+#~ msgid "_Find"
+#~ msgstr "_Sök"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "Ställ in lös_enord…"
+
+#~ msgid "_View"
+#~ msgstr "_Visa"
+
+#~ msgid "Sidebar"
+#~ msgstr "Sidopanel"
+
+#~ msgid "Contents"
+#~ msgstr "Innehåll"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "Tangentbordsgenvägar"
+
+#~ msgid "_About"
+#~ msgstr "_Om"
 
 #~ msgid "_About Archive Manager"
 #~ msgstr "_Om Arkivhanterare"
