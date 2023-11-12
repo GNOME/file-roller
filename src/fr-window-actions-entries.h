@@ -65,6 +65,10 @@ static const GActionEntry fr_window_actions[] = {
 		.activate = fr_window_activate_extract_files,
 	},
 	{
+		.name = "extract-all-by-default",
+		.activate = fr_window_activate_extract_all_by_default,
+	},
+	{
 		.name = "find",
 		.activate = fr_toggle_action_activated,
 		.state = "false",

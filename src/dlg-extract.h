@@ -27,5 +27,6 @@
 
 void dlg_extract (GtkWidget *widget, gpointer data);
 void dlg_extract_folder_from_sidebar (GtkWidget *widget, gpointer data);
+void dlg_extract_all_by_default (GtkWidget *widget, gpointer callback_data);
 
 #endif /* DLG_EXTRACT_H */

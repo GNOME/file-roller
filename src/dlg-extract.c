@@ -306,7 +306,8 @@ files_entry_changed_cb (GtkEditable  *widget,
 static void
 dlg_extract__common (FrWindow *window,
 	             GList    *selected_files,
-	             char     *base_dir_for_selection)
+	             char     *base_dir_for_selection,
+		     gboolean  all_by_default)
 {
 	DialogData *data;
 
@@ -337,7 +338,7 @@ dlg_extract__common (FrWindow *window,
 
 	fr_file_selector_dialog_set_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog), fr_window_get_extract_default_dir (window));
 
-	if (data->selected_files != NULL)
+	if ((data->selected_files != NULL) && !all_by_default)
 		gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("selected_files_radiobutton")), TRUE);
 	else {
 		gtk_widget_set_sensitive (GET_WIDGET ("selected_files_radiobutton"), FALSE);
@@ -378,7 +379,7 @@ dlg_extract (GtkWidget *widget,
 	char     *base_dir;
 
 	files = fr_window_get_selection (window, FALSE, &base_dir);
-	dlg_extract__common (window, files, base_dir);
+	dlg_extract__common (window, files, base_dir, FALSE);
 }
 
 
@@ -391,5 +392,18 @@ dlg_extract_folder_from_sidebar (GtkWidget *widget,
 	char     *base_dir;
 
 	files = fr_window_get_selection (window, TRUE, &base_dir);
-	dlg_extract__common (window, files, base_dir);
+	dlg_extract__common (window, files, base_dir, FALSE);
+}
+
+
+void
+dlg_extract_all_by_default (GtkWidget *widget,
+			    gpointer   callback_data)
+{
+	FrWindow *window = callback_data;
+	GList    *files;
+	char     *base_dir;
+
+	files = fr_window_get_selection (window, FALSE, &base_dir);
+	dlg_extract__common (window, files, base_dir, TRUE);
 }

@@ -1054,6 +1054,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	fr_window_enable_action (window, "edit-cut", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (private->list_mode != FR_WINDOW_LIST_MODE_FLAT));
 	fr_window_enable_action (window, "edit-password", ! running && (! no_archive && window->archive->propPassword));
 	fr_window_enable_action (window, "extract-files", file_op);
+	fr_window_enable_action (window, "extract-all-by-default", file_op);
 	fr_window_enable_action (window, "find", ! no_archive);
 	fr_window_enable_action (window, "navigate-to", ! no_archive && private->filter_mode && one_file_selected);
 	fr_window_enable_action (window, "open-folder", file_op && one_file_selected && dir_selected);
@@ -4856,7 +4857,7 @@ fr_window_construct (FrWindow *window)
 	adw_button_content_set_label (ADW_BUTTON_CONTENT (content), C_("Action", "_Extract…"));
 	adw_button_content_set_icon_name (ADW_BUTTON_CONTENT (content), "archive-extract-symbolic");
 	adw_button_content_set_use_underline (ADW_BUTTON_CONTENT (content), true);
-	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), "win.extract-files");
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), "win.extract-all-by-default");
 	gtk_button_set_child (GTK_BUTTON (button), content);
 	gtk_widget_set_tooltip_text (GTK_BUTTON (button), _("Extract Files"));
 	gtk_size_group_add_widget (header_bar_size_group, button);

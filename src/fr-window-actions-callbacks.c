@@ -140,6 +140,14 @@ fr_window_activate_extract_files (GSimpleAction *action,
 	dlg_extract (NULL, FR_WINDOW (user_data));
 }
 
+void
+fr_window_activate_extract_all_by_default (GSimpleAction *action,
+					   GVariant      *parameter,
+					   gpointer       user_data)
+{
+	dlg_extract_all_by_default (NULL, FR_WINDOW (user_data));
+}
+
 
 void
 fr_window_activate_find (GSimpleAction *action,
