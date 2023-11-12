@@ -58,7 +58,7 @@
 #define MAX_MESSAGE_LENGTH 50
 
 #define PROGRESS_DIALOG_DEFAULT_WIDTH 600
-#define PROGRESS_TIMEOUT_MSECS 1000
+#define SHOW_PROGRESS_DELAY 500
 #undef  LOG_PROGRESS
 
 #define HIDE_PROGRESS_TIMEOUT_MSECS 500
@@ -2345,7 +2345,7 @@ open_progress_dialog (FrWindow *window,
 	if (open_now)
 		display_progress_dialog (window);
 	else
-		private->progress_timeout = g_timeout_add (PROGRESS_TIMEOUT_MSECS,
+		private->progress_timeout = g_timeout_add (SHOW_PROGRESS_DELAY,
 								display_progress_dialog,
 								window);
 }
