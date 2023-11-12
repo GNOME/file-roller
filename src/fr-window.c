@@ -61,7 +61,7 @@
 #define SHOW_PROGRESS_DELAY 500
 #undef  LOG_PROGRESS
 
-#define HIDE_PROGRESS_TIMEOUT_MSECS 500
+#define HIDE_PROGRESS_DELAY 500
 #define DEFAULT_NAME_COLUMN_WIDTH 250
 #define SIZE_COLUMN_WIDTH 150
 #define TIME_COLUMN_WIDTH 250
@@ -1937,7 +1937,7 @@ close_progress_dialog (FrWindow *window,
 	else {
 		if (private->hide_progress_timeout != 0)
 			return;
-		private->hide_progress_timeout = g_timeout_add (HIDE_PROGRESS_TIMEOUT_MSECS,
+		private->hide_progress_timeout = g_timeout_add (HIDE_PROGRESS_DELAY,
 								     real_close_progress_dialog,
 								     window);
 	}
