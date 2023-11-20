@@ -58,8 +58,8 @@ like tar and zip. The supported file types are:
 * Homepage: https://wiki.gnome.org/Apps/FileRoller
 * Report issues: https://gitlab.gnome.org/GNOME/file-roller/issues/
 * Discuss: https://discourse.gnome.org/tags/c/applications/7/file-roller
-* Donate: https://www.gnome.org/friends/
-* Translate: https://wiki.gnome.org/TranslationProject
+* Donate: https://www.gnome.org/donate/
+* Translate: https://l10n.gnome.org/module/file-roller/
 
 ## Dependencies
 
