@@ -100,18 +100,15 @@ fr_archive_libarchive_finalize (GObject *object)
 
 const char *libarchiver_mime_types[] = {
 	"application/epub+zip",
-	"application/vnd.debian.binary-package",
 	"application/vnd.ms-cab-compressed",
 	"application/vnd.rar",
 	"application/x-7z-compressed",
-	"application/x-ar",
 	"application/x-bzip-compressed-tar",
 	"application/x-cbr",
 	"application/x-cbz",
 	"application/x-cd-image",
 	"application/x-compressed-tar",
 	"application/x-cpio",
-	"application/x-deb",
 	"application/x-lha",
 	"application/x-lrzip-compressed-tar",
 	"application/x-lzip-compressed-tar",
@@ -208,8 +205,6 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 	if ((strcmp (mime_type, "application/vnd.ms-cab-compressed") == 0)
 	    || (strcmp (mime_type, "application/vnd.rar") == 0)
 	    || (strcmp (mime_type, "application/x-cbr") == 0)
-	    || (strcmp (mime_type, "application/x-deb") == 0)
-	    || (strcmp (mime_type, "application/vnd.debian.binary-package") == 0)
 	    || (strcmp (mime_type, "application/x-lha") == 0)
 	    || (strcmp (mime_type, "application/x-rar") == 0)
 	    || (strcmp (mime_type, "application/x-rpm") == 0)
@@ -1361,9 +1356,6 @@ _archive_write_set_format_from_context (struct archive *a,
 	}
 	else if (_g_str_equal (mime_type, "application/x-xar")) {
 		archive_write_set_format_xar (a);
-	}
-	else if (_g_str_equal (mime_type, "application/x-ar")) {
-		archive_write_set_format_ar_svr4 (a);
 	}
 	else if (_g_str_equal (mime_type, "application/x-7z-compressed")) {
 		archive_write_set_format_7zip (a);
