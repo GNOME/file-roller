@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-05-26 08:47+0000\n"
-"PO-Revision-Date: 2023-06-23 02:40+0330\n"
+"POT-Creation-Date: 2023-08-27 09:28+0000\n"
+"PO-Revision-Date: 2023-11-25 15:13+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <>\n"
 "Language: fa\n"
@@ -24,11 +24,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 #: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:476 src/fr-window.c:1866 src/fr-window.c:4577
+#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
 msgid "File Roller"
 msgstr "پرونده‌پیچ"
 
@@ -38,11 +38,11 @@ msgstr "گشودن، تغییر و ایجاد پرونده‌های بایگان
 
 #: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
-"File Roller is the default GNOME application for opening, creating, and "
-"modifying archive and compressed archive files."
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
 msgstr ""
-"پرونده‌پیچ نرم‌افزار پیش‌گزیدهٔ گنوم برای گشودن، ایجاد و تغییر بایگانی‌ها و "
-"پرونده‌های بایگانی فشرده است.."
+"پرونده‌پیچ نرم‌افزاری گنومی برای گشودن، ایجاد و تغییر بایگانی‌ها و پرونده‌های "
+"بایگانی فشرده است.."
 
 #: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid "File Roller supports a wide range of different archive files, including:"
@@ -292,7 +292,7 @@ msgid "Wrong password."
 msgstr "گذرواژهٔ نادرست."
 
 #: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:594
+#: src/fr-application.c:582
 msgid "Compress"
 msgstr "فشرده‌سازی"
 
@@ -337,7 +337,7 @@ msgid ""
 msgstr "اجازهٔ لازم را برای استخراج بایگانی‌ها در شاخهٔ «%s» ندارید"
 
 #: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:617
+#: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "استخراج"
@@ -384,7 +384,7 @@ msgstr "گذرواژه"
 msgid "Enter a password for “%s”"
 msgstr "یک گذرواژه برای «%s» وارد کنید"
 
-#: src/dlg-prop.c:71 src/ui/app-menubar.ui:36
+#: src/dlg-prop.c:71
 msgid "Properties"
 msgstr "ویژگی‌ها"
 
@@ -495,7 +495,7 @@ msgstr "شروع به عنوان یک سرویس"
 msgid "Show version"
 msgstr "نمایش نسخه"
 
-#: src/fr-application.c:505
+#: src/fr-application.c:493
 msgid "— Create and modify an archive"
 msgstr "— ایجاد و تغییر یک بایگانی"
 
@@ -1023,7 +1023,7 @@ msgstr "چسباندن گزیده"
 msgid "_Destination folder:"
 msgstr "شاخهٔ _مقصد:"
 
-#: src/fr-window.c:8052 src/ui/app-menubar.ui:63
+#: src/fr-window.c:8052
 msgid "_Paste"
 msgstr "_جای‌گذاری"
 
@@ -1058,7 +1058,7 @@ msgstr "ا_فزودن"
 msgid "_Cancel"
 msgstr "_لغو"
 
-#: src/gtk-utils.h:31 src/ui/app-menubar.ui:43
+#: src/gtk-utils.h:31
 msgid "_Close"
 msgstr "_بستن"
 
@@ -1110,103 +1110,6 @@ msgstr "فقط در صورت _جدیدتر بودن اضافه شود"
 msgid "_Follow symbolic links"
 msgstr "_دنبال کردن پیوندهای نمادین"
 
-#: src/ui/app-menubar.ui:6
-msgid "_File"
-msgstr "_پرونده"
-
-#: src/ui/app-menubar.ui:10 src/ui/gears-menu.ui:8
-msgid "_New Archive…"
-msgstr "بایگانی _جدید…"
-
-#: src/ui/app-menubar.ui:15 src/ui/gears-menu.ui:12
-msgid "_Open…"
-msgstr "گشودن…"
-
-#: src/ui/app-menubar.ui:20
-msgid "_Extract Files…"
-msgstr "ا_ستخراج پرونده‌ها…"
-
-#: src/ui/app-menubar.ui:27
-msgid "Save _As…"
-msgstr "ذخیره به _نام…"
-
-#: src/ui/app-menubar.ui:32 src/ui/gears-menu.ui:25
-msgid "_Test Integrity"
-msgstr "_آزمون یکپارچگی"
-
-#: src/ui/app-menubar.ui:49
-msgid "_Edit"
-msgstr "_ویرایش"
-
-#: src/ui/app-menubar.ui:53
-msgid "Cu_t"
-msgstr "_بریدن"
-
-#: src/ui/app-menubar.ui:58
-msgid "_Copy"
-msgstr "_رونوشت"
-
-#: src/ui/app-menubar.ui:70
-msgid "_Add Files…"
-msgstr "_افزودن پرونده‌ها…"
-
-#: src/ui/app-menubar.ui:74 src/ui/menus.ui:40 src/ui/menus.ui:76
-#: src/ui/menus.ui:112
-msgid "_Rename…"
-msgstr "_تغییر نام…"
-
-#: src/ui/app-menubar.ui:79
-msgid "_Delete Files…"
-msgstr "_حذف پرونده‌ها…"
-
-#: src/ui/app-menubar.ui:86 src/ui/file-selector.ui:7
-msgid "_Select All"
-msgstr "_گزینش همه"
-
-#: src/ui/app-menubar.ui:91
-msgid "D_eselect All"
-msgstr "_ناگزینش همه"
-
-#: src/ui/app-menubar.ui:96
-msgid "_Find"
-msgstr "_یافتن"
-
-#: src/ui/app-menubar.ui:103
-msgid "Set Pass_word…"
-msgstr "تنظیم _گذرواژه…"
-
-#: src/ui/app-menubar.ui:108
-msgid "_View"
-msgstr "_نما"
-
-#: src/ui/app-menubar.ui:112
-msgid "Sidebar"
-msgstr "نوار کناری"
-
-#: src/ui/app-menubar.ui:118 src/ui/gears-menu.ui:35
-msgid "View All _Files"
-msgstr "نمایش همهٔ _پرونده‌ها"
-
-#: src/ui/app-menubar.ui:124 src/ui/gears-menu.ui:40
-msgid "View as a F_older"
-msgstr "نمایش به شکل _شاخه"
-
-#: src/ui/app-menubar.ui:132 src/ui/gears-menu.ui:57
-msgid "_Help"
-msgstr "_راهنما"
-
-#: src/ui/app-menubar.ui:135
-msgid "Contents"
-msgstr "محتویات"
-
-#: src/ui/app-menubar.ui:140
-msgid "Keyboard Shortcuts"
-msgstr "میان‌برهای صفحه‌کلید"
-
-#: src/ui/app-menubar.ui:145
-msgid "_About"
-msgstr "_درباره"
-
 #: src/ui/ask-password.ui:29
 msgid "_Password:"
 msgstr "_گذرواژه:"
@@ -1231,6 +1134,10 @@ msgstr "_نگاه داشتن ساختار شاخه"
 msgid "Do not _overwrite newer files"
 msgstr "پرونده‌های جدیدتر _رونویسی نشوند"
 
+#: src/ui/file-selector.ui:7
+msgid "_Select All"
+msgstr "_گزینش همه"
+
 #: src/ui/file-selector.ui:11
 msgid "Dese_lect All"
 msgstr "_ناگزینش همه"
@@ -1238,6 +1145,14 @@ msgstr "_ناگزینش همه"
 #: src/ui/file-selector.ui:17
 msgid "Show Hidden Files"
 msgstr "نمایش پرونده‌های مخفی"
+
+#: src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "بایگانی _جدید…"
+
+#: src/ui/gears-menu.ui:12
+msgid "_Open…"
+msgstr "گشودن…"
 
 #: src/ui/gears-menu.ui:17
 msgid "_Save As…"
@@ -1247,9 +1162,21 @@ msgstr "_ذخیره به عنوان…"
 msgid "Pass_word…"
 msgstr "_گذرواژه…"
 
+#: src/ui/gears-menu.ui:25
+msgid "_Test Integrity"
+msgstr "_آزمون یکپارچگی"
+
 #: src/ui/gears-menu.ui:29
 msgid "_Properties"
 msgstr "_ترجیحات"
+
+#: src/ui/gears-menu.ui:35
+msgid "View All _Files"
+msgstr "نمایش همهٔ _پرونده‌ها"
+
+#: src/ui/gears-menu.ui:40
+msgid "View as a F_older"
+msgstr "نمایش به شکل _شاخه"
 
 #: src/ui/gears-menu.ui:46
 msgid "Side_bar"
@@ -1258,6 +1185,10 @@ msgstr "_نوار کناری"
 #: src/ui/gears-menu.ui:53
 msgid "_Keyboard Shortcuts"
 msgstr "_میان‌برهای صفحه‌کلید"
+
+#: src/ui/gears-menu.ui:57
+msgid "_Help"
+msgstr "_راهنما"
 
 #: src/ui/gears-menu.ui:61
 msgid "_About File Roller"
@@ -1412,6 +1343,10 @@ msgstr "رونوشت"
 msgid "Paste"
 msgstr "جای‌گذاری"
 
+#: src/ui/menus.ui:40 src/ui/menus.ui:76 src/ui/menus.ui:112
+msgid "_Rename…"
+msgstr "_تغییر نام…"
+
 #: src/ui/new-archive-dialog.ui:15
 msgid "File"
 msgstr "پرونده"
@@ -1419,6 +1354,10 @@ msgstr "پرونده"
 #: src/ui/new-archive-dialog.ui:26
 msgid "Extension"
 msgstr "افزونه"
+
+#: src/ui/new-archive-dialog.ui:35 src/ui/properties.ui:46
+msgid "Location"
+msgstr "مکان"
 
 #: src/ui/new-archive-dialog.ui:54
 msgid "Encrypt"
@@ -1458,10 +1397,6 @@ msgstr "مگابایتی"
 msgid "_Encrypt the file list"
 msgstr "_رمزنگاری سیاههٔ پرونده‌ها"
 
-#: src/ui/properties.ui:46
-msgid "Location"
-msgstr "مکان"
-
 #: src/ui/properties.ui:92
 msgid "Last Modified"
 msgstr "آخرین تغییر"
@@ -1475,7 +1410,7 @@ msgid "Compressed Size"
 msgstr "اندازهٔ فشرده شده"
 
 #: src/ui/properties.ui:180
-msgid "Uncrompressed Size"
+msgid "Uncompressed Size"
 msgstr "اندازهٔ فشرده نشده"
 
 #: src/ui/properties.ui:208
@@ -1490,6 +1425,54 @@ msgstr "تعداد پرونده‌ها"
 #: src/ui/update.ui:33
 msgid "S_elect the files you want to update:"
 msgstr "پرونده‌هایی را که مي‌خواهید _به‌روز کنید برگزینید:"
+
+#~ msgid "_File"
+#~ msgstr "_پرونده"
+
+#~ msgid "_Extract Files…"
+#~ msgstr "ا_ستخراج پرونده‌ها…"
+
+#~ msgid "Save _As…"
+#~ msgstr "ذخیره به _نام…"
+
+#~ msgid "_Edit"
+#~ msgstr "_ویرایش"
+
+#~ msgid "Cu_t"
+#~ msgstr "_بریدن"
+
+#~ msgid "_Copy"
+#~ msgstr "_رونوشت"
+
+#~ msgid "_Add Files…"
+#~ msgstr "_افزودن پرونده‌ها…"
+
+#~ msgid "_Delete Files…"
+#~ msgstr "_حذف پرونده‌ها…"
+
+#~ msgid "D_eselect All"
+#~ msgstr "_ناگزینش همه"
+
+#~ msgid "_Find"
+#~ msgstr "_یافتن"
+
+#~ msgid "Set Pass_word…"
+#~ msgstr "تنظیم _گذرواژه…"
+
+#~ msgid "_View"
+#~ msgstr "_نما"
+
+#~ msgid "Sidebar"
+#~ msgstr "نوار کناری"
+
+#~ msgid "Contents"
+#~ msgstr "محتویات"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "میان‌برهای صفحه‌کلید"
+
+#~ msgid "_About"
+#~ msgstr "_درباره"
 
 #~ msgctxt "Action"
 #~ msgid "_Extract"
