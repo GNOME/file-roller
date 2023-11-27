@@ -25,6 +25,7 @@
 #include "dlg-ask-password.h"
 #include "file-utils.h"
 #include "fr-window.h"
+#include "gio-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 
@@ -140,7 +141,7 @@ dlg_ask_password__common (FrWindow       *window,
 	} else
 		g_assert_not_reached ();
 
-	filename = _g_file_get_display_basename (file);
+	filename = _g_file_get_display_name (file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("Password required for “%s”"), filename);
 	gtk_label_set_label (GTK_LABEL (GET_WIDGET ("title_label")), message);

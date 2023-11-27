@@ -208,7 +208,7 @@ set_file (FrNewArchiveDialog *self, GFile *file, GError **error)
 	gboolean result = TRUE;
 
 	int active_extension_idx = -1;
-	char *name = _g_file_get_display_basename (file);
+	char *name = _g_file_get_display_name (file);
 	if (name != NULL) {
 		const char *ext = _g_filename_get_extension (name);
 		if (ext == NULL) {
@@ -693,7 +693,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		char     *message;
 		char     *secondary_message;
 
-		filename = _g_file_get_display_basename (file);
+		filename = _g_file_get_display_name (file);
 		message = g_strdup_printf (_("A file named “%s” already exists.  Do you want to replace it?"), filename);
 		secondary_message = g_strdup_printf (_("The file already exists in “%s”.  Replacing it will overwrite its contents."), g_file_info_get_display_name (parent_info));
 		GtkWidget *msg_dialog = _gtk_message_dialog_new (

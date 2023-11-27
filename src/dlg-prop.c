@@ -23,6 +23,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <adwaita.h>
+#include "gio-utils.h"
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gtk-utils.h"
@@ -81,7 +82,7 @@ dlg_prop (FrWindow *window)
 
 	/* Name */
 
-	char *utf8_text = _g_file_get_display_basename (fr_window_get_archive_file (window));
+	char *utf8_text = _g_file_get_display_name (fr_window_get_archive_file (window));
 	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("filename_label")), utf8_text);
 
 	g_free (utf8_text);
