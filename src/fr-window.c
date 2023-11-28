@@ -8001,7 +8001,7 @@ fr_window_archive_encrypt (FrWindow   *window,
 	else
 		temp_destination_parent = NULL;
 	temp_destination = _g_file_get_temp_work_dir (temp_destination_parent);
-	basename = g_file_get_basename (fr_archive_get_file (window->archive));
+	basename = _g_file_get_display_name (fr_archive_get_file (window->archive));
 	temp_new_file = g_file_get_child (temp_destination, basename);
 
 	g_free (basename);
@@ -8013,7 +8013,7 @@ fr_window_archive_encrypt (FrWindow   *window,
 		char      *utf8_name;
 		char      *message;
 
-		utf8_name = _g_file_get_display_basename (temp_new_file);
+		utf8_name = _g_file_get_display_name (temp_new_file);
 		message = g_strdup_printf (_("Could not save the archive “%s”"), utf8_name);
 		g_free (utf8_name);
 
