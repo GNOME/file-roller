@@ -3017,7 +3017,7 @@ get_local_copy_for_file (GFile *remote_file)
 		char  *archive_name;
 		char  *local_path;
 
-		archive_name = g_file_get_basename (remote_file);
+		archive_name = _g_file_get_display_name (remote_file);
 		local_path = g_build_filename (temp_dir, archive_name, NULL);
 		local_copy = g_file_new_for_path (local_path);
 
