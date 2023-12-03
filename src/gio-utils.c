@@ -1487,3 +1487,18 @@ _g_file_make_directory_with_parents (GFile         *file,
 
 	return _g_file_make_directory_and_add_to_created_folders (file, created_folders, cancellable, error);
 }
+
+char *
+_g_file_get_display_name (GFile *file)
+{
+	GFileInfo *info;
+	char *name = NULL;
+
+	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME, G_FILE_QUERY_INFO_NONE, NULL, NULL);
+	if (info != NULL) {
+		name = g_strdup (g_file_info_get_display_name (info));
+		g_object_unref (info);
+	}
+
+	return (name != NULL) ? name : _g_file_get_display_basename (file);
+}

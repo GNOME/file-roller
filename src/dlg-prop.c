@@ -22,6 +22,7 @@
 #include <config.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include "gio-utils.h"
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gtk-utils.h"
@@ -97,7 +98,7 @@ dlg_prop (FrWindow *window)
 	/**/
 
 	label = _gtk_builder_get_widget (data->builder, "p_name_label");
-	utf8_name = _g_file_get_display_basename (fr_window_get_archive_file (window));
+	utf8_name = _g_file_get_display_name (fr_window_get_archive_file (window));
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 
 	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);

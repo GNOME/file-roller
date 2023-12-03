@@ -27,6 +27,7 @@
 #include "file-utils.h"
 #include "fr-init.h"
 #include "fr-new-archive-dialog.h"
+#include "gio-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
@@ -495,7 +496,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		char     *secondary_message;
 		gboolean  overwrite;
 
-		filename = _g_file_get_display_basename (file);
+		filename = _g_file_get_display_name (file);
 		message = g_strdup_printf (_("A file named “%s” already exists.  Do you want to replace it?"), filename);
 		secondary_message = g_strdup_printf (_("The file already exists in “%s”.  Replacing it will overwrite its contents."), g_file_info_get_display_name (parent_info));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (self),

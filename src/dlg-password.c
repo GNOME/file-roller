@@ -23,6 +23,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include "fr-window.h"
+#include "gio-utils.h"
 #include "gtk-utils.h"
 #include "glib-utils.h"
 #include "preferences.h"
@@ -101,7 +102,7 @@ dlg_password (GtkWidget *widget,
 	gtk_style_context_add_class (gtk_widget_get_style_context (gtk_dialog_get_widget_for_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK)),
 				     "suggested-action");
 
-	basename = _g_file_get_display_basename (fr_archive_get_file (window->archive));
+	basename = _g_file_get_display_name (fr_archive_get_file (window->archive));
 	title = g_strdup_printf (_("Enter a password for “%s”"), basename);
 	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("title_label")), title);
 

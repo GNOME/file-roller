@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 #include "dlg-update.h"
 #include "file-utils.h"
+#include "gio-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "fr-init.h"
@@ -167,7 +168,7 @@ update_file_list (DialogData *data)
 		/* primary text */
 
 		file_name = _g_file_get_display_basename (file->extracted_file);
-		archive_name = _g_file_get_display_basename (fr_window_get_archive_file (data->window));
+		archive_name = _g_file_get_display_name (fr_window_get_archive_file (data->window));
 		label = g_markup_printf_escaped (_("Update the file “%s” in the archive “%s”?"), file_name, archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
 		/*gtk_label_set_markup (GTK_LABEL (data->update_file_primary_text_label), markup);*/
@@ -195,7 +196,7 @@ update_file_list (DialogData *data)
 
 		/* primary text */
 
-		archive_name = _g_file_get_display_basename (fr_window_get_archive_file (data->window));
+		archive_name = _g_file_get_display_name (fr_window_get_archive_file (data->window));
 		label = g_markup_printf_escaped (_("Update the files in the archive “%s”?"), archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
 		gtk_label_set_markup (GTK_LABEL (data->update_files_primary_text_label), markup);

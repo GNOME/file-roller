@@ -164,5 +164,6 @@ gboolean _g_file_make_directory_with_parents
 				      GHashTable            *created_folders,
 				      GCancellable          *cancellable,
 				      GError               **error);
+char *   _g_file_get_display_name    (GFile                 *file);
 
 #endif /* _GIO_UTILS_H */

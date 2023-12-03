@@ -50,6 +50,7 @@
 #include "fr-window-actions-entries.h"
 #include "fr-file-data.h"
 #include "file-utils.h"
+#include "gio-utils.h"
 #include "glib-utils.h"
 #include "gth-icon-cache.h"
 #include "fr-init.h"
@@ -1842,7 +1843,7 @@ fr_window_update_dir_tree (FrWindow *window)
 		GtkTreeIter  node;
 		char        *name;
 
-		name = _g_file_get_display_basename (fr_archive_get_file (window->archive));
+		name = _g_file_get_display_name (fr_archive_get_file (window->archive));
 
 		gtk_tree_store_append (private->tree_store, &node, NULL);
 		gtk_tree_store_set (private->tree_store, &node,
@@ -2002,7 +2003,7 @@ fr_window_update_title (FrWindow *window)
 		return;
 	}
 
-	name = _g_file_get_display_basename (fr_window_get_archive_file (window));
+	name = _g_file_get_display_name (fr_window_get_archive_file (window));
 	title = g_strdup_printf ("%s %s",
 				 name,
 				 window->archive->read_only ? _("[read only]") : "");
@@ -2318,7 +2319,7 @@ get_action_description (FrWindow *window,
 	char *message;
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 
-	basename = _g_file_get_display_basename (file);
+	basename = _g_file_get_display_name (file);
 
 	message = NULL;
 	switch (action) {
@@ -2816,7 +2817,7 @@ fr_window_show_confirmation_dialog_with_open_archive (FrWindow *window)
 	char      *basename;
 	char      *message;
 
-	basename = _g_file_get_display_basename (private->saving_file);
+	basename = _g_file_get_display_name (private->saving_file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("“%s” created successfully"), basename);
 
@@ -3042,7 +3043,7 @@ _handle_archive_operation_error (FrWindow  *window,
 
 		case FR_ACTION_LOADING_ARCHIVE:
 			dialog_parent = private->load_error_parent_window;
-			utf8_name = _g_file_get_display_basename (private->archive_file);
+			utf8_name = _g_file_get_display_name (private->archive_file);
 			msg = g_strdup_printf (_("Could not open “%s”"), utf8_name);
 			g_free (utf8_name);
 			break;
@@ -6249,7 +6250,7 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	char                     *message;
 	g_autoptr(GNotification)  notification;
 
-	basename = _g_file_get_display_basename (private->saving_file);
+	basename = _g_file_get_display_name (private->saving_file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("“%s” created successfully"), basename);
 	notification = g_notification_new (private->batch_title);
@@ -7650,7 +7651,7 @@ fr_window_archive_save_as (FrWindow   *window,
 		char      *utf8_name;
 		char      *message;
 
-		utf8_name = _g_file_get_display_basename (file);
+		utf8_name = _g_file_get_display_name (file);
 		message = g_strdup_printf (_("Could not save the archive “%s”"), utf8_name);
 		g_free (utf8_name);
 
@@ -8932,8 +8933,8 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 	/**/
 
 	g_free (private->custom_action_message);
-	from_archive = _g_file_get_display_basename (data->file);
-	to_archive = _g_file_get_display_basename (private->archive_file);
+	from_archive = _g_file_get_display_name (data->file);
+	to_archive = _g_file_get_display_name (private->archive_file);
 	if (data->op == FR_CLIPBOARD_OP_CUT)
 		/* Translators: %s are archive filenames */
 		private->custom_action_message = g_strdup_printf (_("Moving the files from “%s” to “%s”"), from_archive, to_archive);
