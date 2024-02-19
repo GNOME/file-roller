@@ -4735,8 +4735,8 @@ fr_window_construct (FrWindow *window)
 
 	private->filter_entry = gtk_search_entry_new ();
 	gtk_widget_set_hexpand (private->filter_entry, TRUE);
-	AdwClamp *filter_entry_limiter = adw_clamp_new ();
-	adw_clamp_set_child (filter_entry_limiter, private->filter_entry);
+	GtkWidget *filter_entry_limiter = adw_clamp_new ();
+	adw_clamp_set_child (ADW_CLAMP (filter_entry_limiter), private->filter_entry);
 	g_signal_connect (GTK_SEARCH_ENTRY (private->filter_entry),
 			  "search-changed",
 			  G_CALLBACK (filter_entry_search_changed_cb),
@@ -4860,7 +4860,7 @@ fr_window_construct (FrWindow *window)
 	adw_button_content_set_use_underline (ADW_BUTTON_CONTENT (content), true);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), "win.extract-all-by-default");
 	gtk_button_set_child (GTK_BUTTON (button), content);
-	gtk_widget_set_tooltip_text (GTK_BUTTON (button), _("Extract Files"));
+	gtk_widget_set_tooltip_text (button, _("Extract Files"));
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_start (GTK_HEADER_BAR (private->headerbar), button);
 
