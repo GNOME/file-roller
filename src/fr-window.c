@@ -8418,7 +8418,6 @@ open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 	}
 
 	context = gdk_display_get_app_launch_context (gtk_widget_get_display (GTK_WIDGET (odata->window)));
-	gdk_app_launch_context_set_screen (context, gtk_widget_get_screen (GTK_WIDGET (odata->window)));
 	gdk_app_launch_context_set_timestamp (context, 0);
 	if (! g_app_info_launch_uris (app, files_to_open, G_APP_LAUNCH_CONTEXT (context), &error)) {
 		_gtk_error_dialog_run (GTK_WINDOW (odata->window),
