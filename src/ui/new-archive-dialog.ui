@@ -11,12 +11,17 @@
     <child>
       <object class="AdwPreferencesGroup">
         <child>
-          <object class="AdwActionRow" id="filename_row">
+          <object class="AdwEntryRow" id="filename_row">
             <property name="title" translatable="yes">File</property>
-            <property name="activatable">True</property>
+            <property name="activates-default">True</property>
             <child>
-              <object class="GtkImage">
-                <property name="icon-name">go-next-symbolic</property>
+              <object class="GtkButton" id="choose_filename_button">
+                <style>
+                  <class name="flat"/>
+                  <class name="image-button"/>
+                </style>
+                <property name="valign">center</property>
+                <property name="icon-name">folder-symbolic</property>
               </object>
             </child>
           </object>

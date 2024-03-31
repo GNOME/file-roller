@@ -108,7 +108,7 @@ dlg_batch_add_files (FrWindow *window,
 			  G_CALLBACK (dialog_response_cb),
 			  window);
 
-	fr_new_archive_dialog_show (FR_NEW_ARCHIVE_DIALOG (dialog));
+	fr_new_archive_dialog_show_options (FR_NEW_ARCHIVE_DIALOG (dialog));
 
 	g_object_unref (parent);
 	g_free (filename);

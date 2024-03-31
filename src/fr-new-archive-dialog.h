@@ -44,6 +44,7 @@ GtkWidget *     fr_new_archive_dialog_new                 (const char          *
 							   const char          *default_name,
 							   GFile               *original_file);
 void		fr_new_archive_dialog_show                (FrNewArchiveDialog  *dialog);
+void		fr_new_archive_dialog_show_options        (FrNewArchiveDialog  *self);
 
 /**
  * fr_new_archive_dialog_set_files_to_add:

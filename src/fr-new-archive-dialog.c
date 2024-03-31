@@ -179,9 +179,9 @@ static void
 update_filename_label (FrNewArchiveDialog *self)
 {
 	if (self->filename != NULL)
-		adw_action_row_set_subtitle (ADW_ACTION_ROW (GET_WIDGET ("filename_row")), self->filename);
+		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("filename_row")), self->filename);
 	else
-		adw_action_row_set_subtitle (ADW_ACTION_ROW (GET_WIDGET ("filename_row")), "");
+		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("filename_row")), "");
 }
 
 
@@ -203,6 +203,19 @@ static void update_from_selected_format (FrNewArchiveDialog *self, int n_format)
 
 
 static gboolean
+extension_is_valid_archive_extension (FrNewArchiveDialog *self, const char *ext)
+{
+	if (ext == NULL)
+		return false;
+	for (int i = 0; self->supported_types[i] != -1; i++) {
+		if (g_strcmp0 (ext, mime_type_desc[self->supported_types[i]].default_ext) == 0)
+			return true;
+	}
+	return false;
+}
+
+
+static gboolean
 set_file (FrNewArchiveDialog *self, GFile *file, GError **error)
 {
 	gboolean result = TRUE;
@@ -211,7 +224,7 @@ set_file (FrNewArchiveDialog *self, GFile *file, GError **error)
 	char *name = _g_file_get_display_name (file);
 	if (name != NULL) {
 		const char *ext = _g_filename_get_extension (name);
-		if (ext == NULL) {
+		if (!extension_is_valid_archive_extension (self, ext)) {
 			/* If the extension is not specified use the last selected extension. */
 			int n_format = get_selected_format (self);
 			if (n_format >= 0) {
@@ -414,12 +427,6 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	/* Set widgets data. */
 
-	/* Filename */
-
-	if (default_name != NULL)
-		self->filename = g_strdup (default_name);
-	update_filename_label (self);
-
 	/* Folder */
 
 	self->folder = (folder != NULL) ? g_object_ref (folder) : _g_file_get_home ();
@@ -438,6 +445,21 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	adw_combo_row_set_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")), active_extension_idx);
 	g_free (active_extension);
 
+	/* Filename */
+
+	if (default_name != NULL) {
+		const char *ext = _g_filename_get_extension (default_name);
+		if (!extension_is_valid_archive_extension (self, ext)) {
+			/* If the extension is not specified use the last selected extension. */
+			ext = mime_type_desc[self->supported_types[active_extension_idx]].default_ext;
+			self->filename = g_strconcat (default_name, ext, NULL);
+		}
+		else {
+			self->filename = g_strdup (default_name);
+		}
+	}
+	update_filename_label (self);
+
 	/* Encrypt */
 
 	adw_expander_row_set_enable_expansion (ADW_EXPANDER_ROW (GET_WIDGET ("encrypt_archive_expander_row")), FALSE);
@@ -455,8 +477,8 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 			  "notify::selected",
 			  G_CALLBACK (combo_box_selected_notify_cb),
 			  self);
-	g_signal_connect_swapped (GET_WIDGET ("filename_row"),
-				  "activated",
+	g_signal_connect_swapped (GET_WIDGET ("choose_filename_button"),
+				  "clicked",
 				  G_CALLBACK (choose_file),
 				  self);
 
@@ -560,6 +582,13 @@ fr_new_archive_dialog_show (FrNewArchiveDialog *self)
 		choose_file (self);
 	else
 		gtk_window_present (GTK_WINDOW (self));
+}
+
+void
+fr_new_archive_dialog_show_options (FrNewArchiveDialog *self)
+{
+	self->state = STATE_OPTIONS;
+	gtk_window_present (GTK_WINDOW (self));
 }
 
 
