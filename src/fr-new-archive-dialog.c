@@ -203,13 +203,16 @@ static void update_from_selected_format (FrNewArchiveDialog *self, int n_format)
 
 
 static gboolean
-extension_is_valid_archive_extension (FrNewArchiveDialog *self, const char *ext)
+extension_is_valid_archive_extension (FrNewArchiveDialog *self, const char *ext, int *idx)
 {
 	if (ext == NULL)
 		return false;
 	for (int i = 0; self->supported_types[i] != -1; i++) {
-		if (g_strcmp0 (ext, mime_type_desc[self->supported_types[i]].default_ext) == 0)
+		if (g_strcmp0 (ext, mime_type_desc[self->supported_types[i]].default_ext) == 0) {
+			if (idx != NULL)
+				*idx = i;
 			return true;
+		}
 	}
 	return false;
 }
@@ -224,7 +227,7 @@ set_file (FrNewArchiveDialog *self, GFile *file, GError **error)
 	char *name = _g_file_get_display_name (file);
 	if (name != NULL) {
 		const char *ext = _g_filename_get_extension (name);
-		if (!extension_is_valid_archive_extension (self, ext)) {
+		if (!extension_is_valid_archive_extension (self, ext, NULL)) {
 			/* If the extension is not specified use the last selected extension. */
 			int n_format = get_selected_format (self);
 			if (n_format >= 0) {
@@ -406,13 +409,8 @@ update_from_selected_format (FrNewArchiveDialog *self, int n_format)
 }
 
 
-static void
-combo_box_selected_notify_cb (GObject    *gobject,
-			      GParamSpec *pspec,
-			      gpointer    user_data)
+static void update_filename_from_extension_selector (FrNewArchiveDialog *self)
 {
-	FrNewArchiveDialog *self = FR_NEW_ARCHIVE_DIALOG (user_data);
-
 	if (self->filename != NULL) {
 		int n_format = get_selected_format (self);
 		if (n_format >= 0) {
@@ -432,6 +430,15 @@ combo_box_selected_notify_cb (GObject    *gobject,
 			}
 		}
 	}
+}
+
+
+static void
+combo_box_selected_notify_cb (GObject    *gobject,
+			      GParamSpec *pspec,
+			      gpointer    user_data)
+{
+	update_filename_from_extension_selector (FR_NEW_ARCHIVE_DIALOG (user_data));
 }
 
 
@@ -495,14 +502,25 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	/* Filename */
 
 	if (default_name != NULL) {
-		const char *ext = _g_filename_get_extension (default_name);
-		if (!extension_is_valid_archive_extension (self, ext)) {
-			/* If the extension is not specified use the last selected extension. */
-			ext = mime_type_desc[self->supported_types[active_extension_idx]].default_ext;
-			self->filename = g_strconcat (default_name, ext, NULL);
+		if (action == FR_NEW_ARCHIVE_ACTION_SAVE_AS) {
+			/* Give priority to the selected extension, changing the default name if needed. */
+			self->filename = g_strdup (default_name);
+			update_filename_from_extension_selector (self);
 		}
 		else {
-			self->filename = g_strdup (default_name);
+			/* Give priority to the file name, changing the selected extension if it is not the same. */
+			const char *ext = _g_filename_get_extension (default_name);
+			int ext_idx;
+			if (!extension_is_valid_archive_extension (self, ext, &ext_idx)) {
+				/* If the extension is not specified use the last selected extension. */
+				ext = mime_type_desc[self->supported_types[active_extension_idx]].default_ext;
+				self->filename = g_strconcat (default_name, ext, NULL);
+			}
+			else {
+				/* Update the selected extension. */
+				adw_combo_row_set_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")), ext_idx);
+				self->filename = g_strdup (default_name);
+			}
 		}
 	}
 	update_filename_label (self);
