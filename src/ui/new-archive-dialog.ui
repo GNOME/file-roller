@@ -40,10 +40,29 @@
             <property name="title" translatable="yes">Location</property>
             <property name="subtitle"></property>
             <child>
-              <object class="GtkLabel" id="location_name">
+              <object class="GtkButton" id="choose_location_button">
                 <style>
-                  <class name="dim-label"/>
+                  <class name="flat"/>
                 </style>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">6</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">folder-symbolic</property>
+                        <property name="valign">baseline</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="location_name">
+                        <property name="valign">baseline</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

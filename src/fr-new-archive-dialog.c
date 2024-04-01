@@ -346,6 +346,53 @@ choose_file (FrNewArchiveDialog *self)
 
 
 static void
+location_chooser_response_cb (GtkDialog *dialog,
+			      int        response,
+			      gpointer   user_data)
+{
+	FrNewArchiveDialog *self = user_data;
+
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
+		gtk_window_destroy (GTK_WINDOW (dialog));
+		return;
+	}
+
+	GFile *location = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
+	if (location == NULL)
+		return;
+
+	_g_object_unref (self->folder);
+	self->folder = g_object_ref (location);
+	update_folder_label (self);
+
+	g_object_unref (location);
+	gtk_window_destroy (GTK_WINDOW (dialog));
+}
+
+
+static void
+choose_location (FrNewArchiveDialog *self)
+{
+	GtkWidget *file_sel = gtk_file_chooser_dialog_new (
+		C_("Window title", "New Archive"),
+		gtk_window_get_transient_for (GTK_WINDOW (self)),
+		GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+		_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+		_GTK_LABEL_OPEN, GTK_RESPONSE_OK,
+		NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel), self->folder, NULL);
+	_gtk_dialog_add_to_window_group (GTK_DIALOG (file_sel));
+	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
+	g_signal_connect (GTK_FILE_CHOOSER_DIALOG (file_sel),
+			  "response",
+			  G_CALLBACK (location_chooser_response_cb),
+			  self);
+	gtk_window_present (GTK_WINDOW (file_sel));
+}
+
+
+static void
 update_from_selected_format (FrNewArchiveDialog *self, int n_format)
 {
 	if (n_format < 0)
@@ -480,6 +527,10 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	g_signal_connect_swapped (GET_WIDGET ("choose_filename_button"),
 				  "clicked",
 				  G_CALLBACK (choose_file),
+				  self);
+	g_signal_connect_swapped (GET_WIDGET ("choose_location_button"),
+				  "clicked",
+				  G_CALLBACK (choose_location),
 				  self);
 
 	update_from_selected_format (self, -1);
