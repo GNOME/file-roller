@@ -6840,7 +6840,7 @@ fr_window_action_save_as (FrWindow *window)
 			  "response",
 			  G_CALLBACK (save_as_archive_dialog_response_cb),
 			  window);
-	fr_new_archive_dialog_show (FR_NEW_ARCHIVE_DIALOG (dialog));
+	fr_new_archive_dialog_show_options (FR_NEW_ARCHIVE_DIALOG (dialog));
 
 	g_free (archive_name);
 }
