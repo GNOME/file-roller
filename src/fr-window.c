@@ -3783,15 +3783,24 @@ fr_window_on_drop (GtkDropTarget *target,
 {
 	FrWindow *window = data;
 
-	if (!G_VALUE_HOLDS (value, G_TYPE_FILE))
+	GList *file_list = NULL;
+	if (G_VALUE_HOLDS (value, G_TYPE_FILE)) {
+		GFile *file = g_value_get_object (value);
+		file_list = g_list_append (NULL, file);
+	}
+	else if (G_VALUE_HOLDS (value, GDK_TYPE_FILE_LIST)) {
+		GSList *slist = g_value_get_boxed (value);
+		for (GSList *sscan = slist; sscan; sscan = sscan->next) {
+			file_list = g_list_prepend (file_list, sscan->data);
+		}
+		file_list = g_list_reverse (file_list);
+	}
+	else {
 		return FALSE;
+	}
 
-	// FIXME: support multiple files.
-	GFile *file = g_value_get_object (value);
-	GList *list = g_list_append (NULL, file);
-	fr_window_on_dropped_files (window, list);
-
-	g_list_free (list);
+	fr_window_on_dropped_files (window, file_list);
+	g_list_free (file_list);
 
 	return TRUE;
 }
@@ -4829,7 +4838,7 @@ fr_window_construct (FrWindow *window)
 	/* Drop target */
 
 	GtkDropTarget *target = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY);
-	gtk_drop_target_set_gtypes (target, (GType[2]) { G_TYPE_FILE, }, 1);
+	gtk_drop_target_set_gtypes (target, (GType[3]) { GDK_TYPE_FILE_LIST, G_TYPE_FILE, }, 1);
 	g_signal_connect (target, "drop", G_CALLBACK (fr_window_on_drop), window);
 	gtk_widget_add_controller (GTK_WIDGET (window), GTK_EVENT_CONTROLLER (target));
 
