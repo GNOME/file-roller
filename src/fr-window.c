@@ -4838,7 +4838,7 @@ fr_window_construct (FrWindow *window)
 	/* Drop target */
 
 	GtkDropTarget *target = gtk_drop_target_new (G_TYPE_INVALID, GDK_ACTION_COPY);
-	gtk_drop_target_set_gtypes (target, (GType[3]) { GDK_TYPE_FILE_LIST, G_TYPE_FILE, }, 1);
+	gtk_drop_target_set_gtypes (target, (GType[3]) { GDK_TYPE_FILE_LIST, G_TYPE_FILE, }, 2);
 	g_signal_connect (target, "drop", G_CALLBACK (fr_window_on_drop), window);
 	gtk_widget_add_controller (GTK_WIDGET (window), GTK_EVENT_CONTROLLER (target));
 
