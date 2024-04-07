@@ -314,10 +314,16 @@ file_chooser_response_cb (GtkDialog *dialog,
 	else {
 		self->state = STATE_OPTIONS;
 		gtk_window_destroy (GTK_WINDOW (dialog));
-		if (choosing_file && !format_has_other_options (self))
+		if (choosing_file && !format_has_other_options (self)) {
+			// Save the last used format.
+			int n_format = get_selected_format (self);
+			if (n_format >= 0)
+				g_settings_set_string (self->settings, PREF_NEW_DEFAULT_EXTENSION, mime_type_desc[n_format].default_ext);
 			gtk_dialog_response (GTK_DIALOG (self), GTK_RESPONSE_OK);
-		else
+		}
+		else {
 			gtk_window_present (GTK_WINDOW (self));
+		}
 	}
 
 	g_object_unref (file);
