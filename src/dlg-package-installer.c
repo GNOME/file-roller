@@ -261,6 +261,11 @@ file_buffer_ready_cb (GObject      *source_object,
 		return;
 	}
 
+	if (buffer == NULL) {
+		package_installer_terminated (idata, FR_ERROR_GENERIC, _("Archive type not supported."));
+		return;
+	}
+
 	uri = g_file_get_uri (file);
 	mime_type = g_content_type_guess (uri, (guchar *) buffer, buffer_size, &result_uncertain);
 	if (result_uncertain) {

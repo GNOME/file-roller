@@ -183,10 +183,15 @@ bookmark_file_ready_cb (GObject      *source_object,
 {
 	LoadContext *ctx = user_data;
 	FrPlacesSidebarPrivate *private = fr_places_sidebar_get_instance_private (ctx->self);
-	char *content;
+	char *content = NULL;
 	gsize content_size;
 
 	if (! _g_file_load_buffer_finish (G_FILE (source_object), result, &content, &content_size, NULL)) {
+		load_context_add_root (ctx);
+		return;
+	}
+
+	if (content == NULL) {
 		load_context_add_root (ctx);
 		return;
 	}

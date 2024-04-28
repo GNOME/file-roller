@@ -730,6 +730,13 @@ open_archive_buffer_ready_cb (GObject      *source_object,
 		return;
 	}
 
+	if (open_data->buffer == NULL) {
+		error = g_error_new_literal (FR_ERROR,
+			FR_ERROR_UNSUPPORTED_FORMAT,
+			_("Archive type not supported."));
+		open_data_complete_with_error (open_data, error);
+	}
+
 	archive = NULL;
 	uri = g_file_get_uri (open_data->file);
 	local_mime_type = g_content_type_guess (uri, (guchar *) open_data->buffer, open_data->buffer_size, &result_uncertain);
