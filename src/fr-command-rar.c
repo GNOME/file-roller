@@ -201,6 +201,7 @@ parse_name_field (char         *line,
 	FrFileData *fdata;
 	char       *name_field;
 
+	fr_file_data_free (rar_comm->fdata);
 	rar_comm->fdata = fdata = fr_file_data_new ();
 
 	/* read file name. */
@@ -812,6 +813,9 @@ fr_command_rar_finalize (GObject *object)
 {
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND_RAR (object));
+
+	FrCommandRar *rar_comm = FR_COMMAND_RAR (object);
+	fr_file_data_free (rar_comm->fdata);
 
 	if (G_OBJECT_CLASS (fr_command_rar_parent_class)->finalize)
 		G_OBJECT_CLASS (fr_command_rar_parent_class)->finalize (object);
