@@ -211,7 +211,13 @@ parse_name_field (char         *line,
 	name_field = NULL;
 	if (rar_comm->rar5) {
 		/* rar-5 output adds trailing spaces to short file names :( */
-		const char *field = _g_str_get_last_field (line, attribute_field_with_space (line) ? 9 : 8);
+		int field_idx = attribute_field_with_space (line) ? 9 : 8;
+		const char *field = _g_str_get_last_field (line, field_idx);
+		if (field == NULL) {
+			// Sometimes the checksum column is empty (seen for directories).
+			field_idx--;
+			field = _g_str_get_last_field (line, field_idx);
+		}
 		if (field != NULL)
 			name_field = g_strchomp (g_strdup (field));
 	}
