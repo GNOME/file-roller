@@ -4767,7 +4767,7 @@ fr_window_construct (FrWindow *window)
 						       PANGO_TYPE_WEIGHT);
 	private->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (private->tree_store));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (private->tree_view), FALSE);
-	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (private->tree_view), FALSE);
+	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (private->tree_view), TRUE);
 	gtk_tree_view_set_level_indentation (GTK_TREE_VIEW (private->tree_view), 15);
 	add_dir_tree_columns (window, GTK_TREE_VIEW (private->tree_view));
 
