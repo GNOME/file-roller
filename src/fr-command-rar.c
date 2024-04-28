@@ -194,12 +194,12 @@ attribute_field_with_space (char *line)
 }
 
 
-static void
+static gboolean
 parse_name_field (char         *line,
 		  FrCommandRar *rar_comm)
 {
-	char     *name_field;
 	FrFileData *fdata;
+	char       *name_field;
 
 	rar_comm->fdata = fdata = fr_file_data_new ();
 
@@ -207,14 +207,19 @@ parse_name_field (char         *line,
 
 	fdata->encrypted = (line[0] == '*') ? TRUE : FALSE;
 
-	if (rar_comm->rar5)
+	name_field = NULL;
+	if (rar_comm->rar5) {
 		/* rar-5 output adds trailing spaces to short file names :( */
-		name_field = g_strchomp (g_strdup (_g_str_get_last_field (line, attribute_field_with_space (line) ? 9 : 8)));
-	else
+		const char *field = _g_str_get_last_field (line, attribute_field_with_space (line) ? 9 : 8);
+		if (field != NULL)
+			name_field = g_strchomp (g_strdup (field));
+	}
+	else {
 		name_field = g_strdup (line + 1);
+	}
 
 	if (name_field == NULL)
-		return;
+		return FALSE;
 
 	if (*name_field == '/') {
 		fdata->full_path = g_strdup (name_field);
@@ -229,6 +234,8 @@ parse_name_field (char         *line,
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	g_free (name_field);
+
+	return TRUE;
 }
 
 static gboolean
@@ -281,8 +288,10 @@ process_line (char     *line,
 		return;
 	}
 
-	if (rar_comm->rar4_odd_line || rar_comm->rar5)
-		parse_name_field (line, rar_comm);
+	if (rar_comm->rar4_odd_line || rar_comm->rar5) {
+		if (!parse_name_field (line, rar_comm))
+			return;
+	}
 
 	if (! rar_comm->rar4_odd_line) {
 		FrFileData *fdata;
@@ -315,7 +324,8 @@ process_line (char     *line,
 			fr_file_data_free (rar_comm->fdata);
 			rar_comm->fdata = NULL;
 			rar_comm->rar4_odd_line = TRUE;
-			parse_name_field (line, rar_comm);
+			if (!parse_name_field (line, rar_comm))
+				return;
 		}
 		else {
 			if ((strcmp (ratio_field, "<->") == 0)
@@ -851,4 +861,6 @@ fr_command_rar_init (FrCommandRar *self)
 	base->propPassword                 = TRUE;
 	base->propTest                     = TRUE;
 	base->propListFromFile             = TRUE;
+
+	self->fdata = NULL;
 }
