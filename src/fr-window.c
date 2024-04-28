@@ -3937,7 +3937,7 @@ dir_tree_selection_changed_cb (GtkTreeSelection *selection,
 	GtkTreeIter  iter;
 
 	if (gtk_tree_selection_get_selected (selection, NULL, &iter)) {
-	FrWindowPrivate *private = fr_window_get_instance_private (window);
+		FrWindowPrivate *private = fr_window_get_instance_private (window);
 		char *path;
 
 		gtk_tree_model_get (GTK_TREE_MODEL (private->tree_store),
