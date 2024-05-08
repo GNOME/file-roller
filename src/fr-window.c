@@ -3706,7 +3706,7 @@ dropped_files_create_archive_dialog_response (GtkDialog *dialog,
 			  "response",
 			  G_CALLBACK (new_archive_dialog_response_cb),
 			  window);
-	fr_new_archive_dialog_show (FR_NEW_ARCHIVE_DIALOG (new_archive_dialog));
+	fr_new_archive_dialog_show_options (FR_NEW_ARCHIVE_DIALOG (new_archive_dialog));
 
 	g_free (archive_name);
 	_g_object_unref (folder);
@@ -6531,7 +6531,7 @@ fr_window_action_new_archive (FrWindow *window)
 			  G_CALLBACK (new_archive_dialog_response_cb),
 			  window);
 	fr_window_set_dialog (window, "new_archive", dialog);
-	fr_new_archive_dialog_show (FR_NEW_ARCHIVE_DIALOG (dialog));
+	fr_new_archive_dialog_show_options (FR_NEW_ARCHIVE_DIALOG (dialog));
 }
 
 
