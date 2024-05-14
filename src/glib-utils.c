@@ -1050,11 +1050,11 @@ _g_filename_get_extension (const char *filename)
 	p = len - 1;
 	while ((p >= 0) && (ptr[p] != '.'))
 		p--;
-	if (p < 0)
+	if ((p < 0) || (ptr[p] != '.'))
 		return NULL;
 
 	ext = filename + p;
-	if (ext - 4 > filename) {
+	if (ext - 4 >= filename) {
 		const char *test = ext - 4;
 		/* .tar.rz cannot be uncompressed in one step */
 		if ((strncmp (test, ".tar", 4) == 0) && (strncmp (ext, ".rz", 2) != 0))

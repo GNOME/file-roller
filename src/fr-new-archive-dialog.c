@@ -59,6 +59,7 @@ struct _FrNewArchiveDialog {
 	char       *filename;
 	GFile      *folder;
 	State       state;
+	gboolean    filename_is_valid;
 };
 
 
@@ -136,6 +137,7 @@ fr_new_archive_dialog_init (FrNewArchiveDialog *self)
 	self->filename = NULL;
 	self->folder = NULL;
 	self->state = STATE_FILENAME;
+	self->filename_is_valid = FALSE;
 }
 
 
@@ -152,7 +154,7 @@ _fr_new_archive_dialog_update_sensitivity (FrNewArchiveDialog *self)
 	gtk_widget_set_sensitive (GET_WIDGET ("password_entry_row"), self->can_encrypt);
 	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_row"), self->can_encrypt_header);
 	gtk_widget_set_sensitive (GET_WIDGET ("volume_group"), self->can_create_volumes);
-	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), self->filename != NULL);
+	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), self->filename_is_valid);
 }
 
 
@@ -176,12 +178,14 @@ _g_path_remove_extension_if_archive (const char *filename)
 
 
 static void
-update_filename_label (FrNewArchiveDialog *self)
+update_filename_entry (FrNewArchiveDialog *self)
 {
-	if (self->filename != NULL)
+	if (self->filename != NULL) {
 		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("filename_row")), self->filename);
-	else
+	}
+	else {
 		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("filename_row")), "");
+	}
 }
 
 
@@ -262,9 +266,10 @@ set_file (FrNewArchiveDialog *self, GFile *file, GError **error)
 
 		g_free (self->filename);
 		self->filename = g_strdup (name);
+		self->filename_is_valid = TRUE;
 
 		adw_combo_row_set_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")), active_extension_idx);
-		update_filename_label (self);
+		update_filename_entry (self);
 		update_folder_label (self);
 		update_from_selected_format (self, self->supported_types[active_extension_idx]);
 	}
@@ -428,14 +433,48 @@ static void update_filename_from_extension_selector (FrNewArchiveDialog *self)
 				g_free (filename_no_ext);
 				g_free (self->filename);
 				self->filename = tmp;
+				self->filename_is_valid = TRUE;
 				changed = TRUE;
 			}
 			if (changed) {
-				update_filename_label (self);
+				update_filename_entry (self);
 				update_from_selected_format (self, n_format);
 			}
 		}
 	}
+}
+
+
+static void
+filename_changed_cb (GtkEditable *editable,
+		     gpointer     user_data)
+{
+	FrNewArchiveDialog *self = FR_NEW_ARCHIVE_DIALOG (user_data);
+	const char *filename = gtk_editable_get_text (GTK_EDITABLE (GET_WIDGET ("filename_row")));
+
+	if ((filename == NULL) || (*filename == 0)) {
+		gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), FALSE);
+		return;
+	}
+
+	if (g_strcmp0 (filename, self->filename) == 0) {
+		return;
+	}
+
+	g_free (self->filename);
+	self->filename = NULL;
+	self->filename_is_valid = FALSE;
+
+	const char *ext = _g_filename_get_extension (filename);
+	int active_extension_idx = 0;
+	if (extension_is_valid_archive_extension (self, ext, &active_extension_idx)) {
+		self->filename = g_strdup (filename);
+		self->filename_is_valid = g_strcmp0 (self->filename, ext) != 0;
+		adw_combo_row_set_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")), active_extension_idx);
+		update_from_selected_format (self, self->supported_types[active_extension_idx]);
+	}
+
+	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), self->filename_is_valid);
 }
 
 
@@ -528,8 +567,15 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 				self->filename = g_strdup (default_name);
 			}
 		}
+		self->filename_is_valid = self->filename != NULL;
+		update_filename_entry (self);
 	}
-	update_filename_label (self);
+	else {
+		// Set the extension without filename.
+		self->filename_is_valid = FALSE;
+		const char *ext = mime_type_desc[self->supported_types[active_extension_idx]].default_ext;
+		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("filename_row")), ext);
+	}
 
 	/* Encrypt */
 
@@ -544,6 +590,10 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	/* Signals */
 
+	g_signal_connect (GET_WIDGET ("filename_row"),
+			  "changed",
+			  G_CALLBACK (filename_changed_cb),
+			  self);
 	g_signal_connect (GET_WIDGET ("extension_combo_row"),
 			  "notify::selected",
 			  G_CALLBACK (combo_box_selected_notify_cb),
