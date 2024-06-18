@@ -101,8 +101,15 @@ dlg_open_with_native_appchooser (FrWindow *window,
 	GList     *scan;
 	g_autoptr(XdpParent) parent = NULL;
 	g_autoptr(XdpPortal) portal = NULL;
+	g_autoptr(GError) error = NULL;
 
-	portal = xdp_portal_new ();
+	portal = xdp_portal_initable_new (&error);
+
+	if (error) {
+		g_warning ("Failed to create XdpPortal instance: %s", error->message);
+		return;
+	}
+
 	parent = xdp_parent_new_gtk (GTK_WINDOW (window));
 
 	for (scan = file_list; scan; scan = scan->next) {
