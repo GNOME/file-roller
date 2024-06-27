@@ -51,6 +51,8 @@ main (int argc, char **argv)
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
+	g_set_prgname ("org.gnome.FileRoller");
+
 	GtkApplication *app = fr_application_new ();
 	int status = g_application_run (G_APPLICATION (app), argc, argv);
 
