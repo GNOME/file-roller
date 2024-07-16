@@ -133,6 +133,7 @@ static struct {
 		{ "multipart/x-zip", TRUE },
 		{ "application/x-7z-compressed", TRUE},
 		{ "application/x-7z-compressed-tar", TRUE},
+		{ "application/vnd.rar", TRUE },
 		{ NULL, FALSE }
 };
 
