@@ -94,14 +94,31 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/MacPaw/unar/archive/v1.10.5.tar.gz",
-                    "sha256": "3531fc266e3413aa91adf40d3754360adeb162d85f5af0cb9f0ea1a3d998222f",
+                    "url": "https://github.com/MacPaw/XADMaster/archive/v1.10.8/XADMaster-v1.10.8.tar.gz",
+                    "sha256": "652953d7988b3c33f4f52b61c357afd1a7c2fc170e5e6e2219f4432b0c4cd39f",
+                    "dest": "XADMaster",
                     "x-checker-data": {
                         "type": "json",
-                        "url": "https://api.github.com/repos/MacPaw/unar/releases/latest",
+                        "url": "https://api.github.com/repos/MacPaw/XADMaster/releases/latest",
                         "version-query": ".tag_name | sub(\"^v\"; \"\")",
-                        "url-query": "\"https://github.com/MacPaw/unar/archive/v\" + $version + \".tar.gz\""
+                        "url-query": "\"https://github.com/MacPaw/XADMaster/archive/v\" + $version + \".tar.gz\""
                     }
+                },
+                {
+                    "type": "archive",
+                    "url": "https://github.com/MacPaw/universal-detector/archive/1.1/universal-detector-1.1.tar.gz",
+                    "sha256": "8e8532111d0163628eb828a60d67b53133afad3f710b1967e69d3b8eee28a811",
+                    "dest": "UniversalDetector",
+                    "x-checker-data": {
+                        "type": "json",
+                        "url": "https://api.github.com/repos/MacPaw/universal-detector/releases/latest",
+                        "version-query": ".tag_name | sub(\"^\"; \"\")",
+                        "url-query": "\"https://github.com/MacPaw/universal-detector/archive/\" + $version + \".tar.gz\""
+                    }
+                },
+                {
+                    "type": "patch",
+                    "path": "unar-int-conversion.patch"
                 }
             ]
         },

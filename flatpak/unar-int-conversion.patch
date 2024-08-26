@@ -1,0 +1,53 @@
+From 94ec97fea5a5286a2506a2e28e50dfcad64a599c Mon Sep 17 00:00:00 2001
+From: Florian Weimer <fweimer@redhat.com>
+Date: Fri, 22 Dec 2023 10:27:47 +0100
+Subject: [PATCH] Reorder method order to avoid int-conversion compilation
+ issue
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Without this change, GCC 14 will fail compilation with an error:
+
+XADRAR5Parser.m: In function ‘+[XADRAR5Parser recognizeFileWithHandle:firstBytes:name:]’:
+XADRAR5Parser.m:79:5: warning: ‘XADRAR5Parser’ may not respond to ‘+signatureLocationInData:’
+   79 |     off_t signatureLocation = [self signatureLocationInData:data];
+      |     ^~~~~
+XADRAR5Parser.m:79:5: warning: (messages without a matching method signature will be assumed to return ‘id’ and accept ‘...’ as arguments)
+XADRAR5Parser.m:79:31: error: initialization of ‘off_t’ {aka ‘long int’} from ‘id’ makes integer from pointer without a cast
+   79 |     off_t signatureLocation = [self signatureLocationInData:data];
+      |                               ^
+---
+ XADRAR5Parser.m | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/XADMaster/XADRAR5Parser.m b/XADMaster/XADRAR5Parser.m
+index b89d841c..9f609d4c 100644
+--- a/XADMaster/XADRAR5Parser.m
++++ b/XADMaster/XADRAR5Parser.m
+@@ -74,12 +74,6 @@ +(int)requiredHeaderSize
+ 	return 8;
+ }
+ 
+-+(BOOL)recognizeFileWithHandle:(CSHandle *)handle firstBytes:(NSData *)data name:(NSString *)name
+-{
+-    off_t signatureLocation = [self signatureLocationInData:data];
+-    return signatureLocation != RAR5SignatureNotFound;
+-}
+-
+ + (off_t)signatureLocationInData:(NSData *)data {
+     const uint8_t *bytes=[data bytes];
+     int length=[data length];
+@@ -98,6 +92,12 @@ + (off_t)signatureLocationInData:(NSData *)data {
+     return RAR5SignatureNotFound;
+ }
+ 
+++(BOOL)recognizeFileWithHandle:(CSHandle *)handle firstBytes:(NSData *)data name:(NSString *)name
++{
++    off_t signatureLocation = [self signatureLocationInData:data];
++    return signatureLocation != RAR5SignatureNotFound;
++}
++
+ +(NSArray *)volumesForHandle:(CSHandle *)handle firstBytes:(NSData *)data name:(NSString *)name
+ {
+     // Check if multipart
