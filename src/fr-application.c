@@ -425,7 +425,8 @@ service_timeout_cb (gpointer user_data)
 
 
 static void
-fr_application_register_archive_manager_service (FrApplication *self)
+fr_application_register_archive_manager_service (FrApplication *self,
+                                                 bool as_service)
 {
 	gsize         size;
 	guchar       *buffer;
@@ -433,7 +434,8 @@ fr_application_register_archive_manager_service (FrApplication *self)
 	gsize         bytes_read;
 	GError       *error = NULL;
 
-	g_application_hold (G_APPLICATION (self));
+	if (as_service)
+		g_application_hold (G_APPLICATION (self));
 
 	g_resources_get_info (ORG_GNOME_ARCHIVEMANAGER_XML, 0, &size, NULL, NULL);
 	buffer = g_new (guchar, size + 1);
@@ -458,7 +460,8 @@ fr_application_register_archive_manager_service (FrApplication *self)
 		}
 	}
 
-	g_timeout_add_seconds (SERVICE_TIMEOUT, service_timeout_cb, self);
+	if (as_service)
+		g_timeout_add_seconds (SERVICE_TIMEOUT, service_timeout_cb, self);
 
 	_g_object_unref (stream);
 	g_free (buffer);
@@ -473,7 +476,6 @@ fr_application_startup (GApplication *application)
 	g_set_application_name (_("File Roller"));
 	gtk_window_set_default_icon_name ("org.gnome.FileRoller");
 	g_application_set_resource_base_path (application, "/org/gnome/FileRoller");
-	fr_application_register_archive_manager_service (FR_APPLICATION (application));
 	fr_initialize_data ();
 
 	fr_initialize_app_menu (application);
@@ -545,6 +547,8 @@ fr_application_command_line (GApplication            *application,
 	}
 	g_strfreev (argv);
 	g_option_context_free (context);
+
+	fr_application_register_archive_manager_service (FR_APPLICATION (application), arg_service);
 
 	if (remaining_args == NULL) { /* No archive specified. */
 		if (! arg_service)
