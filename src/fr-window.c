@@ -4956,10 +4956,6 @@ fr_window_construct (FrWindow *window)
 		private->folder_popup_menu = gtk_popover_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (builder, "folder-popup")));
 		private->sidebar_folder_popup_menu = gtk_popover_menu_new_from_model (G_MENU_MODEL (gtk_builder_get_object (builder, "sidebar-popup")));
 
-		gtk_popover_set_offset (GTK_POPOVER (private->file_popup_menu), 0, 30);
-		gtk_popover_set_offset (GTK_POPOVER (private->folder_popup_menu), 0, 30);
-		gtk_popover_set_offset (GTK_POPOVER (private->sidebar_folder_popup_menu), 0, 30);
-
 		gtk_box_prepend (GTK_BOX (listpane), private->file_popup_menu);
 		gtk_box_prepend (GTK_BOX (listpane), private->folder_popup_menu);
 		gtk_box_prepend (GTK_BOX (private->sidepane), private->sidebar_folder_popup_menu);
