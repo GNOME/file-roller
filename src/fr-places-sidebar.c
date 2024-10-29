@@ -89,8 +89,20 @@ row_box_for_file (GFile      *file,
 				  G_FILE_QUERY_INFO_NONE,
 				  NULL,
 				  NULL);
-	if (info == NULL)
-		return NULL;
+	if (info == NULL) {
+		info = g_file_info_new ();
+
+		char *name = _g_file_get_display_name (file);
+		g_file_info_set_display_name (info, name);
+
+		char *uri = g_file_get_uri (file);
+		GIcon *icon = g_themed_icon_new (g_str_has_prefix (uri, "file://") ? "folder-symbolic" : "folder-remote-symbolic");
+		g_file_info_set_symbolic_icon (info, icon);
+
+		g_object_unref (icon);
+		g_free (uri);
+		g_free (name);
+	}
 
 	GtkWidget *icon = gtk_image_new_from_gicon (g_file_info_get_symbolic_icon (info));
 	GtkWidget *label = gtk_label_new ((display_name != NULL) ? display_name : g_file_info_get_display_name (info));
