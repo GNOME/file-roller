@@ -278,14 +278,6 @@ fr_places_sidebar_init (FrPlacesSidebar *self)
 	}
 	g_object_unref (location);
 
-	location = g_file_new_for_uri ("starred:///");
-	row = row_box_for_file (location, NULL);
-	if (row != NULL) {
-		gtk_list_box_append (GTK_LIST_BOX (private->list_box), row);
-		g_hash_table_add (ctx->locations, g_object_ref (location));
-	}
-	g_object_unref (location);
-
 	location = _g_file_get_home ();
 	/* Translators: this is the name of the home directory. */
 	row = row_box_for_file (location, _("Home"));
