@@ -2842,6 +2842,7 @@ _archive_operation_completed (FrWindow *window,
 		return;
 
 	operation_canceled = g_error_matches (error, FR_ERROR, FR_ERROR_STOPPED);
+	private->action = FR_ACTION_NONE;
 
 	switch (action) {
 	case FR_ACTION_CREATING_NEW_ARCHIVE:
