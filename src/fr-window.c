@@ -4829,6 +4829,21 @@ fr_window_construct (FrWindow *window)
 	adw_status_page_set_icon_name (ADW_STATUS_PAGE (status_page), "org.gnome.FileRoller");
 	adw_status_page_set_title (ADW_STATUS_PAGE (status_page), _("No Archive Opened"));
 	adw_status_page_set_description (ADW_STATUS_PAGE (status_page), _("Open an archive or create a new one."));
+	GtkWidget *status_buttons = gtk_box_new (GTK_ORIENTATION_VERTICAL, 18);
+	gtk_widget_set_halign (status_buttons, GTK_ALIGN_CENTER);
+
+	GtkWidget *status_button;
+	status_button = gtk_button_new_with_mnemonic (C_("Action", "Open"));
+	gtk_widget_add_css_class (status_button, "pill");
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (status_button), "app.open");
+	gtk_box_append (GTK_BOX (status_buttons), status_button);
+
+	status_button = gtk_button_new_with_mnemonic (_("New Archive"));
+	gtk_widget_add_css_class (status_button, "pill");
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (status_button), "app.new");
+	gtk_box_append (GTK_BOX (status_buttons), status_button);
+
+	adw_status_page_set_child (ADW_STATUS_PAGE (status_page), status_buttons);
 
 	private->paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_paned_set_start_child (GTK_PANED (private->paned), private->sidepane);
