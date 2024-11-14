@@ -735,6 +735,7 @@ open_archive_buffer_ready_cb (GObject      *source_object,
 			FR_ERROR_UNSUPPORTED_FORMAT,
 			_("Archive type not supported."));
 		open_data_complete_with_error (open_data, error);
+		return;
 	}
 
 	archive = NULL;
