@@ -76,7 +76,7 @@
 
 #define EMPTY_STATUS "empty-status"
 #define ARCHIVE_CONTENT "archive-content"
-
+#define LOADING_ARCHIVE "loading-archive"
 
 typedef struct {
 	FrBatchActionType type;
@@ -2813,7 +2813,11 @@ fr_window_update_stack_content (FrWindow *window)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	gboolean no_archive = (window->archive == NULL) || ! private->archive_present;
-	gtk_stack_set_visible_child_name (GTK_STACK (private->content_stack), no_archive ? EMPTY_STATUS : ARCHIVE_CONTENT);
+	gboolean loading_archive = private->action == FR_ACTION_LOADING_ARCHIVE;
+	gtk_stack_set_visible_child_name (GTK_STACK (private->content_stack),
+		no_archive ? (loading_archive ? LOADING_ARCHIVE : EMPTY_STATUS)
+		: ARCHIVE_CONTENT
+	);
 }
 
 
@@ -3003,6 +3007,8 @@ _archive_operation_started (FrWindow *window,
 					       || private->batch_mode));
 		break;
 	default:
+		if (action == FR_ACTION_LOADING_ARCHIVE)
+			fr_window_update_stack_content (window);
 		open_progress_dialog (window, private->batch_mode);
 		break;
 	}
@@ -4850,9 +4856,12 @@ fr_window_construct (FrWindow *window)
 	gtk_paned_set_end_child (GTK_PANED (private->paned), listpane);
 	gtk_paned_set_position (GTK_PANED (private->paned), g_settings_get_int (private->settings_ui, PREF_UI_SIDEBAR_WIDTH));
 
+	GtkWidget *empty_page = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+
 	private->content_stack = gtk_stack_new ();
 	gtk_stack_add_named (GTK_STACK (private->content_stack), status_page, EMPTY_STATUS);
 	gtk_stack_add_named (GTK_STACK (private->content_stack), private->paned, ARCHIVE_CONTENT);
+	gtk_stack_add_named (GTK_STACK (private->content_stack), empty_page, LOADING_ARCHIVE);
 	gtk_stack_set_visible_child_name (GTK_STACK (private->content_stack), EMPTY_STATUS);
 	fr_window_attach (FR_WINDOW (window), private->content_stack, FR_WINDOW_AREA_CONTENTS);
 
@@ -5215,8 +5224,10 @@ fr_window_archive_close (FrWindow *window)
 	g_return_if_fail (window != NULL);
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 
-	if (! private->archive_new && ! private->archive_present)
+	if (! private->archive_new && ! private->archive_present) {
+		fr_window_update_stack_content (window);
 		return;
+	}
 
 	fr_window_free_open_files (window);
 
