@@ -4612,6 +4612,8 @@ fr_window_construct (FrWindow *window)
 	private->list_mode = private->last_list_mode = g_settings_get_enum (private->settings_listing, PREF_LISTING_LIST_MODE);
 	g_settings_set_boolean (private->settings_listing, PREF_LISTING_SHOW_PATH, (private->list_mode == FR_WINDOW_LIST_MODE_FLAT));
 
+	private->view_sidebar = g_settings_get_boolean (private->settings_ui, PREF_UI_VIEW_SIDEBAR);
+
 	private->history = NULL;
 	private->history_current = NULL;
 
