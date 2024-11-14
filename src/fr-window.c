@@ -60,9 +60,10 @@
 
 #define PROGRESS_DIALOG_DEFAULT_WIDTH 600
 #define SHOW_PROGRESS_DELAY 500
+#define SHOW_PROGRESS_SMALL_DELAY 200
 #undef  LOG_PROGRESS
 
-#define HIDE_PROGRESS_DELAY 500
+#define HIDE_PROGRESS_DELAY 200
 #define DEFAULT_NAME_COLUMN_WIDTH 250
 #define SIZE_COLUMN_WIDTH 150
 #define TIME_COLUMN_WIDTH 250
@@ -2343,12 +2344,16 @@ open_progress_dialog (FrWindow *window,
 		return;
 
 	create_the_progress_dialog (window);
-	if (open_now)
+	if (open_now) {
 		display_progress_dialog (window);
-	else
-		private->progress_timeout = g_timeout_add (SHOW_PROGRESS_DELAY,
-								display_progress_dialog,
-								window);
+	}
+	else {
+		private->progress_timeout = g_timeout_add (
+			!private->archive_present ? SHOW_PROGRESS_SMALL_DELAY : SHOW_PROGRESS_DELAY,
+			display_progress_dialog,
+			window
+		);
+	}
 }
 
 
