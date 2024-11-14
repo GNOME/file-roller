@@ -422,24 +422,26 @@ update_from_selected_format (FrNewArchiveDialog *self, int n_format)
 
 static void update_filename_from_extension_selector (FrNewArchiveDialog *self)
 {
-	if (self->filename != NULL) {
-		int n_format = get_selected_format (self);
-		if (n_format >= 0) {
-			bool changed = FALSE;
-			const char *ext = _g_filename_get_extension (self->filename);
-			if (g_strcmp0 (ext, mime_type_desc[n_format].default_ext) != 0) {
-				char *filename_no_ext = _g_path_remove_extension_if_archive (self->filename);
-				char *tmp = g_strconcat (filename_no_ext, mime_type_desc[n_format].default_ext, NULL);
-				g_free (filename_no_ext);
-				g_free (self->filename);
-				self->filename = tmp;
-				self->filename_is_valid = TRUE;
-				changed = TRUE;
+	int n_format = get_selected_format (self);
+	if (n_format >= 0) {
+		bool changed = FALSE;
+		const char *ext = _g_filename_get_extension (self->filename);
+		if (g_strcmp0 (ext, mime_type_desc[n_format].default_ext) != 0) {
+			char *filename_no_ext = _g_path_remove_extension_if_archive (self->filename);
+			if (filename_no_ext == NULL) {
+				filename_no_ext = g_strdup ("");
 			}
-			if (changed) {
-				update_filename_entry (self);
-				update_from_selected_format (self, n_format);
-			}
+			const char *new_ext = mime_type_desc[n_format].default_ext;
+			char *tmp = g_strconcat (filename_no_ext, new_ext, NULL);
+			g_free (filename_no_ext);
+			g_free (self->filename);
+			self->filename = tmp;
+			self->filename_is_valid = g_strcmp0 (self->filename, new_ext) != 0;
+			changed = TRUE;
+		}
+		if (changed) {
+			update_filename_entry (self);
+			update_from_selected_format (self, n_format);
 		}
 	}
 }
@@ -462,7 +464,7 @@ filename_changed_cb (GtkEditable *editable,
 	}
 
 	g_free (self->filename);
-	self->filename = NULL;
+	self->filename = g_strdup (filename);
 	self->filename_is_valid = FALSE;
 
 	const char *ext = _g_filename_get_extension (filename);
@@ -574,6 +576,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 		// Set the extension without filename.
 		self->filename_is_valid = FALSE;
 		const char *ext = mime_type_desc[self->supported_types[active_extension_idx]].default_ext;
+		self->filename = g_strdup (ext);
 		gtk_editable_set_text (GTK_EDITABLE (GET_WIDGET ("filename_row")), ext);
 	}
 
