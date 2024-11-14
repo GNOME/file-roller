@@ -60,7 +60,6 @@
 
 #define PROGRESS_DIALOG_DEFAULT_WIDTH 600
 #define SHOW_PROGRESS_DELAY 500
-#define SHOW_PROGRESS_SMALL_DELAY 200
 #undef  LOG_PROGRESS
 
 #define HIDE_PROGRESS_DELAY 200
@@ -2349,7 +2348,7 @@ open_progress_dialog (FrWindow *window,
 	}
 	else {
 		private->progress_timeout = g_timeout_add (
-			!private->archive_present ? SHOW_PROGRESS_SMALL_DELAY : SHOW_PROGRESS_DELAY,
+			SHOW_PROGRESS_DELAY,
 			display_progress_dialog,
 			window
 		);
