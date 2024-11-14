@@ -94,7 +94,7 @@ typedef struct {
 	gboolean     junk_paths;
 	char        *password;
 	gboolean     ask_to_open_destination;
-	gboolean     avoid_tarbombs;
+	gboolean     force_directory_creation;
 } ExtractData;
 
 
@@ -5493,7 +5493,7 @@ extract_data_new (FrWindow    *window,
 		  FrOverwrite  overwrite,
 		  gboolean     junk_paths,
 		  gboolean     ask_to_open_destination,
-		  gboolean     avoid_tarbombs)
+		  gboolean     force_directory_creation)
 {
 	ExtractData *edata;
 
@@ -5507,7 +5507,7 @@ extract_data_new (FrWindow    *window,
 	if (base_dir != NULL)
 		edata->base_dir = g_strdup (base_dir);
 	edata->ask_to_open_destination = ask_to_open_destination;
-	edata->avoid_tarbombs = avoid_tarbombs;
+	edata->force_directory_creation = force_directory_creation;
 
 	return edata;
 }
@@ -5948,6 +5948,8 @@ confirm_create_folder_on_extract_dialog_response (GtkDialog   *dialog,
 		fr_window_dnd_extraction_finished (edata->window, TRUE);
 	}
 	else {
+		edata->force_directory_creation = TRUE;
+
 		/* Try again. */
 		_fr_window_archive_extract_from_edata_maybe (edata->window, edata);
 	}
@@ -5973,7 +5975,7 @@ _fr_window_archive_extract_from_edata_maybe (FrWindow    *window,
 		if (edata->overwrite == FR_OVERWRITE_ASK)
 			edata->overwrite = FR_OVERWRITE_YES;
 
-		if (! ForceDirectoryCreation && ! edata->avoid_tarbombs) {
+		if (! ForceDirectoryCreation && ! edata->force_directory_creation) {
 			char      *folder_name;
 			char      *msg;
 			GtkWidget *msg_dialog;
