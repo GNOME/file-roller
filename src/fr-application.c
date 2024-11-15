@@ -400,19 +400,15 @@ on_bus_acquired_for_archive_manager (GDBusConnection *connection,
 				     gpointer         user_data)
 {
 	FrApplication *self = user_data;
-	guint          registration_id;
-	g_autoptr (GError) error = NULL;
 
-	registration_id = g_dbus_connection_register_object (connection,
-							     "/org/gnome/ArchiveManager1",
-							     self->introspection_data->interfaces[0],
-							     &interface_vtable,
-							     NULL,
-							     NULL,  /* user_data_free_func */
-							     &error); /* GError** */
-	if (registration_id == 0) {
-		g_error ("%s", error->message);
-	}
+	// Ignore errors.
+	g_dbus_connection_register_object (connection,
+		"/org/gnome/ArchiveManager1",
+		self->introspection_data->interfaces[0],
+		&interface_vtable,
+		NULL,
+		NULL,  /* user_data_free_func */
+		NULL); /* GError** */
 }
 
 
