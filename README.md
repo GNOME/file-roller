@@ -36,6 +36,7 @@ like tar and zip. The supported file types are:
     * brotli (.tar.br)
     * bzip (.tar.bz, .tbz)
     * bzip2 (.tar.bz2, .tbz2)
+    * bzip3 (.tar.bz3, .tbz3)
     * compress (.tar.Z, .taz)
     * lrzip (.tar.lrz, .tlrz)
     * lzip (.tar.lz, .tlz)
@@ -50,8 +51,8 @@ like tar and zip. The supported file types are:
 * ZIP Archived Comic Book (.cbz)
 * ZOO Compressed Archive File (.zoo)
 * Single files compressed with gzip (.gz), brotli (.br), bzip (.bz),
-  bzip2 (.bz2), compress (.Z), lrzip (.lrz), lzip (.lz), lzop (.lzo),
-  rzip(.rz), and xz (.xz), Zstandard (.zst).
+  bzip2 (.bz2), bzip3 (.bz3), compress (.Z), lrzip (.lrz), lzip (.lz),
+  lzop (.lzo), rzip(.rz), and xz (.xz), Zstandard (.zst).
 
 ## Useful links
 
