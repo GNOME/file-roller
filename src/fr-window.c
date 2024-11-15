@@ -2817,6 +2817,10 @@ fr_window_update_stack_content (FrWindow *window)
 		no_archive ? (loading_archive ? LOADING_ARCHIVE : EMPTY_STATUS)
 		: ARCHIVE_CONTENT
 	);
+	if (no_archive)
+		gtk_widget_add_css_class (private->headerbar, "flat");
+	else
+		gtk_widget_remove_css_class (private->headerbar, "flat");
 }
 
 
@@ -5000,6 +5004,7 @@ fr_window_construct (FrWindow *window)
 	fr_window_update_sensitivity (window);
 	fr_window_update_current_location (window);
 	fr_window_update_columns_visibility (window);
+	fr_window_update_stack_content (window);
 
 	/* Add notification callbacks. */
 
