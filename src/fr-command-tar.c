@@ -208,6 +208,9 @@ add_compress_arg (FrCommand *comm)
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip-compressed-tar"))
 		fr_process_add_arg (comm->process, "--use-compress-program=bzip2");
 
+	else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip3-compressed-tar"))
+		fr_process_add_arg (comm->process, "--use-compress-program=bzip3");
+
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-tarz")) {
 		if (_g_program_is_in_path ("gzip"))
 			fr_process_add_arg (comm->process, "-z");
@@ -588,6 +591,27 @@ fr_command_tar_recompress (FrCommand *comm)
 
 		new_name = g_strconcat (c_tar->uncomp_filename, ".bz2", NULL);
 	}
+	else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip3-compressed-tar")) {
+		fr_process_begin_command (comm->process, "bzip3");
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
+		//switch (archive->compression) {
+		//case FR_COMPRESSION_VERY_FAST:
+		//	fr_process_add_arg (comm->process, "-1"); break;
+		//case FR_COMPRESSION_FAST:
+		//	fr_process_add_arg (comm->process, "-3"); break;
+		//case FR_COMPRESSION_NORMAL:
+		//	fr_process_add_arg (comm->process, "-6"); break;
+		//case FR_COMPRESSION_MAXIMUM:
+		//	fr_process_add_arg (comm->process, "-9"); break;
+		//}
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "-e");
+		fr_process_add_arg (comm->process, "--");
+		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+		fr_process_end_command (comm->process);
+
+		new_name = g_strconcat (c_tar->uncomp_filename, ".bz3", NULL);
+	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-tarz")) {
 		fr_process_begin_command (comm->process, "compress");
 		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
@@ -861,6 +885,17 @@ get_uncompressed_name (FrCommandTar *c_tar,
 		else if (_g_filename_has_extension (e_filename, ".tar.bz2"))
 			new_name[l - 4] = 0;
 	}
+	else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip3-compressed-tar")) {
+		/* X.tbz3    -->  X.tar
+		 * X.tar.bz3 -->  X.tar */
+		if (_g_filename_has_extension (e_filename, ".tbz3")) {
+			new_name[l - 3] = 'a';
+			new_name[l - 2] = 'r';
+			new_name[l - 1] = 0;
+		}
+		else if (_g_filename_has_extension (e_filename, ".tar.bz3"))
+			new_name[l - 4] = 0;
+	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-tarz")) {
 		/* X.taz   -->  X.tar
 		 * X.tar.Z -->  X.tar */
@@ -1036,6 +1071,16 @@ fr_command_tar_uncompress (FrCommand *comm)
 			fr_process_add_arg (comm->process, tmp_name);
 			fr_process_end_command (comm->process);
 		}
+		else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip3-compressed-tar")) {
+			fr_process_begin_command (comm->process, "bzip3");
+			fr_process_set_working_dir (comm->process, tmp_dir);
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
+			fr_process_add_arg (comm->process, "-f");
+			fr_process_add_arg (comm->process, "-d");
+			fr_process_add_arg (comm->process, "--");
+			fr_process_add_arg (comm->process, tmp_name);
+			fr_process_end_command (comm->process);
+		}
 		else if (_g_mime_type_matches (archive->mime_type, "application/x-tarz")) {
 			if (_g_program_is_in_path ("gzip")) {
 				fr_process_begin_command (comm->process, "gzip");
@@ -1161,6 +1206,7 @@ fr_command_tar_handle_error (FrCommand   *comm,
 const char *tar_mime_types[] = { "application/x-compressed-tar",
 				 "application/x-brotli-compressed-tar",
 				 "application/x-bzip-compressed-tar",
+				 "application/x-bzip3-compressed-tar",
 				 "application/x-tar",
 				 "application/x-7z-compressed-tar",
 				 "application/x-lrzip-compressed-tar",
@@ -1208,6 +1254,10 @@ fr_command_tar_get_capabilities (FrArchive  *archive,
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-bzip-compressed-tar")) {
 		if (_g_program_is_available ("bzip2", check_command))
+			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
+	}
+	else if (_g_mime_type_matches (mime_type, "application/x-bzip3-compressed-tar")) {
+		if (_g_program_is_available ("bzip3", check_command))
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-tarz")) {
@@ -1296,6 +1346,8 @@ fr_command_tar_get_packages (FrArchive  *archive,
 		return FR_PACKAGES ("tar,brotli");
 	else if (_g_mime_type_matches (mime_type, "application/x-bzip-compressed-tar"))
 		return FR_PACKAGES ("tar,bzip2");
+	else if (_g_mime_type_matches (mime_type, "application/x-bzip3-compressed-tar"))
+		return FR_PACKAGES ("tar,bzip3");
 	else if (_g_mime_type_matches (mime_type, "application/x-tarz"))
 		return FR_PACKAGES ("tar,gzip,ncompress");
 	else if (_g_mime_type_matches (mime_type, "application/x-lrzip-compressed-tar"))

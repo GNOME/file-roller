@@ -255,6 +255,14 @@ fr_command_cfile_add (FrCommand  *comm,
 		fr_process_end_command (comm->process);
 		compressed_filename = g_strconcat (filename, ".bz2", NULL);
 	}
+	else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip3")) {
+		fr_process_begin_command (comm->process, "bzip3");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "--");
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		compressed_filename = g_strconcat (filename, ".bz3", NULL);
+	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-compress")) {
 		fr_process_begin_command (comm->process, "compress");
 		fr_process_set_working_dir (comm->process, temp_dir);
@@ -423,6 +431,14 @@ fr_command_cfile_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, temp_file);
 		fr_process_end_command (comm->process);
 	}
+	else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip3")) {
+		fr_process_begin_command (comm->process, "bzip3");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "-d");
+		fr_process_add_arg (comm->process, temp_file);
+		fr_process_end_command (comm->process);
+	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-compress")) {
 		if (_g_program_is_in_path ("gzip")) {
 			fr_process_begin_command (comm->process, "gzip");
@@ -530,6 +546,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 const char *cfile_mime_type[] = { "application/x-gzip",
 				  "application/x-brotli",
 				  "application/x-bzip",
+				  "application/x-bzip3",
 				  "application/x-compress",
 				  "application/x-lz4",
 				  "application/x-lzip",
@@ -566,6 +583,10 @@ fr_command_cfile_get_capabilities (FrArchive  *archive,
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-bzip")) {
 		if (_g_program_is_available ("bzip2", check_command))
+			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
+	}
+	else if (_g_mime_type_matches (mime_type, "application/x-bzip3")) {
+		if (_g_program_is_available ("bzip3", check_command))
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-compress")) {
@@ -617,6 +638,8 @@ fr_command_cfile_get_packages (FrArchive  *archive,
 		return FR_PACKAGES ("brotli");
 	else if (_g_mime_type_matches (mime_type, "application/x-bzip"))
 		return FR_PACKAGES ("bzip2");
+	else if (_g_mime_type_matches (mime_type, "application/x-bzip3"))
+		return FR_PACKAGES ("bzip3");
 	else if (_g_mime_type_matches (mime_type, "application/x-compress"))
 		return FR_PACKAGES ("ncompress");
 	else if (_g_mime_type_matches (mime_type, "application/x-lzip"))
