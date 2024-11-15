@@ -669,11 +669,16 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 			      gpointer   user_data)
 {
 	OverwriteDialogData *data = user_data;
-	gboolean overwrite = (response_id == GTK_RESPONSE_OK);
 
 	gtk_window_destroy (GTK_WINDOW (dialog));
 
-	if (overwrite) {
+	if ((response_id == GTK_RESPONSE_CANCEL) || (response_id == GTK_RESPONSE_DELETE_EVENT)) {
+		data->callback (data->dialog, NULL, NULL, data->user_data);
+		overwrite_dialog_data_free (data);
+		return;
+	}
+
+	if (response_id == GTK_RESPONSE_OK) {
 		GError *error = NULL;
 
 		g_file_delete (data->file, NULL, &error);
