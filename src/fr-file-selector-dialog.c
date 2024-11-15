@@ -647,11 +647,111 @@ new_folder_button_clicked_cb (GtkButton *button,
 
 
 static void
+load_data_done (LoadData *load_data, GError *error)
+{
+	FrFileSelectorDialog *self = load_data->dialog;
+
+	if ((error != NULL) && !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+		_gtk_error_dialog_run (GTK_WINDOW (self), _("Could not load the location"), "%s", error->message);
+	if (self->current_operation == load_data)
+		self->current_operation = NULL;
+	load_data_free (load_data);
+}
+
+
+static void
+volume_mount_ready_cb (GObject      *source_object,
+		       GAsyncResult *result,
+		       gpointer      user_data)
+{
+	LoadData             *load_data = user_data;
+	FrFileSelectorDialog *self = load_data->dialog;
+	GError               *error = NULL;
+
+	if (! g_volume_mount_finish (G_VOLUME (source_object),
+				     result,
+				     &error))
+	{
+		load_data_done (load_data, error);
+		return;
+	}
+
+	// Try to load again.
+
+	GMount *mount = g_volume_get_mount (G_VOLUME (source_object));
+	if (mount == NULL) {
+		error = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_NOT_MOUNTED, "");
+		load_data_done (load_data, error);
+		return;
+	}
+
+	GFile *root = g_mount_get_root (mount);
+	if (root == NULL) {
+		error = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_NOT_MOUNTED, "");
+		load_data_done (load_data, error);
+		return;
+	}
+	fr_file_selector_dialog_set_current_folder (self, root);
+
+	load_data_free (load_data);
+}
+
+
+static void
+mount_mountable_ready_cb (GObject      *source_object,
+			  GAsyncResult *result,
+			  gpointer      user_data)
+{
+	LoadData             *load_data = user_data;
+	FrFileSelectorDialog *self = load_data->dialog;
+	GError               *error = NULL;
+
+	if (! g_file_start_mountable_finish (G_FILE (source_object),
+					     result,
+					     &error))
+	{
+		load_data_done (load_data, error);
+		return;
+	}
+
+	// Try to load again.
+
+	fr_file_selector_dialog_set_current_folder (self, load_data->folder);
+	load_data_free (load_data);
+}
+
+
+static void
 places_sidebar_open_cb (FrPlacesSidebar *sidebar,
 			GFile           *location,
+			GFileInfo       *info,
 			gpointer         user_data)
 {
 	FrFileSelectorDialog *self = user_data;
+	if ((info != NULL) && g_file_info_get_file_type (info) == G_FILE_TYPE_MOUNTABLE) {
+		self->current_operation = load_data_new (self, location);
+
+		GMountOperation *mount_op = gtk_mount_operation_new (GTK_WINDOW (self));
+		GVolume *volume = (GVolume *) g_file_info_get_attribute_object (info, FR_FILE_ATTRIBUTE_VOLUME);
+		if (volume != NULL) {
+			g_volume_mount (volume,
+					0,
+					mount_op,
+					self->current_operation->cancellable,
+					volume_mount_ready_cb,
+					self->current_operation);
+		}
+		else {
+			g_file_mount_mountable (location,
+						0,
+						mount_op,
+						self->current_operation->cancellable,
+						mount_mountable_ready_cb,
+						self->current_operation);
+		}
+		g_object_unref (mount_op);
+		return;
+	}
 	fr_file_selector_dialog_set_current_folder (self, location);
 }
 
@@ -911,13 +1011,7 @@ folder_mount_enclosing_volume_ready_cb (GObject      *source_object,
 	g_file_mount_enclosing_volume_finish (G_FILE (source_object), result, &error);
 
 	if ((error != NULL) && ! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_ALREADY_MOUNTED)) {
-		if (! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-			_gtk_error_dialog_run (GTK_WINDOW (self), _("Could not load the location"), "%s", error->message);
-
-		if (load_data->dialog->current_operation == load_data)
-			load_data->dialog->current_operation = NULL;
-		load_data_free (load_data);
-
+		load_data_done (load_data, error);
 		return;
 	}
 
@@ -952,17 +1046,10 @@ get_folder_content_done_cb (GError   *error,
 						       load_data);
 
 			g_object_unref (operation);
-
 			return;
 		}
 
-		if (! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-			_gtk_error_dialog_run (GTK_WINDOW (self), _("Could not load the location"), "%s", error->message);
-
-		if (load_data->dialog->current_operation == load_data)
-			load_data->dialog->current_operation = NULL;
-		load_data_free (load_data);
-
+		load_data_done (load_data, error);
 		return;
 	}
 

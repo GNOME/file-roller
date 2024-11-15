@@ -25,6 +25,8 @@
 #include <gtk/gtk.h>
 #include "typedefs.h"
 
+#define FR_FILE_ATTRIBUTE_VOLUME "fr::volume"
+
 #define FR_TYPE_PLACES_SIDEBAR fr_places_sidebar_get_type ()
 G_DECLARE_DERIVABLE_TYPE (FrPlacesSidebar, fr_places_sidebar, FR, PLACES_SIDEBAR, GtkBox)
 
