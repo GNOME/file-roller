@@ -133,7 +133,7 @@ extract_cb_possibly_try_to_create_destination_directory (DialogData  *data)
 	if (! data->do_not_extract && ! _g_file_make_directory_tree (data->destination, 0755, &error)) {
 		GtkWidget  *d;
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (data->window),
+		d = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Extraction not performed"),
@@ -194,7 +194,7 @@ extract_cb_check_permissions (DialogData  *data)
 
 		utf8_path = _g_file_get_display_basename (data->destination);
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (data->window),
+		d = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Extraction not performed"),
