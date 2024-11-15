@@ -8377,7 +8377,6 @@ monitor_extracted_files (OpenFilesData *odata)
 }
 
 
-#ifdef USE_NATIVE_APPCHOOSER
 static void
 open_extracted_files_with_native_appchooser (OpenFilesData *odata)
 {
@@ -8406,7 +8405,8 @@ open_extracted_files_with_native_appchooser (OpenFilesData *odata)
 		gtk_show_uri (window, uri, GDK_CURRENT_TIME);
 	}
 }
-#else
+
+
 static void
 open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 {
@@ -8481,17 +8481,19 @@ open_extracted_files_with_nonnative_appchooser (OpenFilesData *odata)
 	g_object_unref (app);
 	_g_string_list_free (files_to_open);
 }
-#endif
 
 
 static void
 fr_window_open_extracted_files (OpenFilesData *odata)
 {
 #ifdef USE_NATIVE_APPCHOOSER
-	open_extracted_files_with_native_appchooser (odata);
-#else
-	open_extracted_files_with_nonnative_appchooser (odata);
+	// Use the native appchooser only for a single file.
+	if (odata->cdata->file_list->next == NULL) {
+		open_extracted_files_with_native_appchooser (odata);
+	}
+	else
 #endif
+	open_extracted_files_with_nonnative_appchooser (odata);
 }
 
 

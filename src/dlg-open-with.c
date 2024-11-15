@@ -40,7 +40,6 @@ typedef struct {
 } OpenData;
 
 
-#ifdef USE_NATIVE_APPCHOOSER
 static void
 open_with_portal_cb (GObject	  *source_obj,
 		     GAsyncResult *result,
@@ -59,7 +58,33 @@ open_with_portal_cb (GObject	  *source_obj,
 				       error->message);
 	}
 }
-#else
+
+
+static void
+dlg_open_with_native_appchooser (FrWindow *window,
+				 GFile    *file)
+{
+	g_autoptr(XdpParent) parent = NULL;
+	g_autoptr(XdpPortal) portal = NULL;
+	g_autoptr(GError) error = NULL;
+
+	portal = xdp_portal_initable_new (&error);
+
+	if (error) {
+		g_warning ("Failed to create XdpPortal instance: %s", error->message);
+		return;
+	}
+
+	parent = xdp_parent_new_gtk (GTK_WINDOW (window));
+
+	g_autofree char *uri;
+	uri = g_file_get_uri (file);
+	xdp_portal_open_uri (portal, parent, uri,
+			XDP_OPEN_URI_FLAG_ASK, NULL,
+			open_with_portal_cb, window);
+}
+
+
 static void
 app_chooser_response_cb (GtkDialog *dialog,
 			 int        response_id,
@@ -90,40 +115,10 @@ app_chooser_response_cb (GtkDialog *dialog,
 	}
 }
 
-#endif
 
-
-#ifdef USE_NATIVE_APPCHOOSER
-static void
-dlg_open_with_native_appchooser (FrWindow *window,
-				 GList    *file_list)
-{
-	GList     *scan;
-	g_autoptr(XdpParent) parent = NULL;
-	g_autoptr(XdpPortal) portal = NULL;
-	g_autoptr(GError) error = NULL;
-
-	portal = xdp_portal_initable_new (&error);
-
-	if (error) {
-		g_warning ("Failed to create XdpPortal instance: %s", error->message);
-		return;
-	}
-
-	parent = xdp_parent_new_gtk (GTK_WINDOW (window));
-
-	for (scan = file_list; scan; scan = scan->next) {
-		g_autofree char *uri;
-		uri = g_file_get_uri (G_FILE (scan->data));
-		xdp_portal_open_uri (portal, parent, uri,
-				     XDP_OPEN_URI_FLAG_ASK, NULL,
-				     open_with_portal_cb, window);
-	}
-}
-#else
 static void
 dlg_open_with_nonnative_appchooser (FrWindow *window,
-			  GList    *file_list)
+				    GList    *file_list)
 {
 	OpenData  *o_data;
 	GtkWidget *app_chooser;
@@ -142,18 +137,20 @@ dlg_open_with_nonnative_appchooser (FrWindow *window,
 	gtk_widget_show (app_chooser);
 }
 
-#endif
-
 
 void
 dlg_open_with (FrWindow *window,
 	       GList    *file_list)
 {
 #ifdef USE_NATIVE_APPCHOOSER
-	dlg_open_with_native_appchooser (window, file_list);
-#else
-	dlg_open_with_nonnative_appchooser (window, file_list);
+	// Use the native appchooser only for a single file.
+	if (file_list->next == NULL) {
+		GFile *file = (GFile *) file_list->data;
+		dlg_open_with_native_appchooser (window, file);
+	}
+	else
 #endif
+	dlg_open_with_nonnative_appchooser (window, file_list);
 }
 
 
