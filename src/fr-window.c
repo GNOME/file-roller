@@ -6631,6 +6631,7 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 {
 	ConvertData *cdata = user_data;
 	FrWindow    *window = cdata->window;
+	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	GError      *error = NULL;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
@@ -6649,6 +6650,11 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 		g_error_free (error);
 		return;
 	}
+
+	/* update the file because multi-volume archives can have
+	 * a different name after creation. */
+	_g_object_unref (private->saving_file);
+	private->saving_file = fr_archive_get_file (cdata->new_archive);
 
 	fr_window_show_confirmation_dialog_with_open_archive (window);
 	fr_window_batch_exec_next_action (window);
