@@ -1004,9 +1004,8 @@ folder_mount_enclosing_volume_ready_cb (GObject      *source_object,
 					GAsyncResult *result,
 					gpointer      user_data)
 {
-	LoadData             *load_data = user_data;
-	FrFileSelectorDialog *self = load_data->dialog;
-	GError               *error = NULL;
+	LoadData *load_data = user_data;
+	GError *error = NULL;
 
 	g_file_mount_enclosing_volume_finish (G_FILE (source_object), result, &error);
 
