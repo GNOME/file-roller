@@ -1537,6 +1537,5 @@ debug (const char *file,
 	g_fprintf (stderr, "[FR] %s:%d (%s):\n\t%s\n", file, line, function, str);
 
 	g_free (str);
-#else /* ! DEBUG */
 #endif
 }
