@@ -1,6 +1,6 @@
 option('warn-deprecated',
   type : 'boolean',
-  value : true,
+  value : false,
   description : 'Enable deprecated declaration warnings in debug mode'
 )
 
@@ -30,8 +30,8 @@ option(
   type: 'boolean',
   value: true,
   description: '''Whether to use desktop environment’s native app chooser via
-  XDG portal. Offers better desktop integration but ‘Open with…’ dialogue will
-  ask for each file individually, when opening multiple files.''',
+  XDG portal. Offers better desktop integration but only works when opening a
+  single file.''',
 )
 
 option(
