@@ -5572,23 +5572,28 @@ archive_extraction_ready_cb (GObject      *source_object,
 	if (ask_to_open_destination && ! edata->junk_paths) {
 		/* collect the files to show in the file manager */
 
-		GHashTable *names_hash;
-		gboolean    stop = FALSE;
+		GHashTable *names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+		for (GList *scan = edata->file_list; scan; scan = scan->next) {
+			char *filename = scan->data;
 
-		names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-		for (guint i = 0; ! stop && (i < window->archive->files->len); i++) {
-			FrFileData *fdata = g_ptr_array_index (window->archive->files, i);
-			char     *first_level;
-			char     *second_slash;
+			FrFileData *fdata = g_hash_table_lookup (window->archive->files_hash, filename);
+			if (fdata == NULL)
+				continue;
 
 			if ((fdata->full_path == NULL) || (fdata->full_path[0] == 0))
 				continue;
 
-			second_slash = strchr (fdata->full_path + 1, '/');
-			if (second_slash != NULL)
-				first_level = g_strndup (fdata->full_path, second_slash - fdata->full_path);
+			const char *relative_path = fdata->full_path;
+			if (edata->base_dir != NULL)
+				relative_path += strlen (edata->base_dir);
 			else
-				first_level = g_strdup (fdata->full_path);
+				relative_path += 1; /* skip first '/' */
+			const char *second_slash = strchr (relative_path, '/');
+			char *first_level;
+			if (second_slash != NULL)
+				first_level = g_strndup (relative_path, second_slash - relative_path);
+			else
+				first_level = g_strdup (relative_path);
 
 			/* avoid to insert duplicated entries */
 
@@ -5601,7 +5606,7 @@ archive_extraction_ready_cb (GObject      *source_object,
 				if (private->last_extraction_files_first_level != NULL) {
 					_g_object_list_unref (private->last_extraction_files_first_level);
 					private->last_extraction_files_first_level = NULL;
-					stop = TRUE;
+					break;
 				}
 				else {
 					g_hash_table_insert (names_hash, g_strdup (first_level), GINT_TO_POINTER (1));
