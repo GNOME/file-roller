@@ -33,6 +33,8 @@
 #define PREF_FILE_SELECTOR_WINDOW_SIZE "window-size"
 #define PREF_FILE_SELECTOR_SHOW_HIDDEN "show-hidden"
 #define PREF_FILE_SELECTOR_SIDEBAR_SIZE "sidebar-size"
+#define PREF_FILE_SELECTOR_SORT_METHOD "sort-method"
+#define PREF_FILE_SELECTOR_SORT_TYPE "sort-type"
 #define FILE_LIST_LINES 45
 #define FILE_LIST_CHARS 60
 #define SIDEBAR_CHARS   12
@@ -279,6 +281,18 @@ fr_file_selector_dialog_unmap (GtkWidget *widget)
 	g_settings_set_int (self->settings,
 			    PREF_FILE_SELECTOR_SIDEBAR_SIZE,
 			    gtk_paned_get_position (GTK_PANED (GET_WIDGET ("main_paned"))));
+
+	int sorted_column;
+	GtkSortType sort_type;
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), &sorted_column, &sort_type);
+
+	FrWindowSortMethod sort_method = FR_WINDOW_SORT_BY_NAME;
+	if (sorted_column == FILE_LIST_COLUMN_SIZE)
+		sort_method = FR_WINDOW_SORT_BY_SIZE;
+	else if (sorted_column == FILE_LIST_COLUMN_MODIFIED)
+		sort_method = FR_WINDOW_SORT_BY_TIME;
+	g_settings_set_enum (self->settings, PREF_FILE_SELECTOR_SORT_METHOD, sort_method);
+	g_settings_set_enum (self->settings, PREF_FILE_SELECTOR_SORT_TYPE, sort_type);
 
 	if (self->current_operation != NULL)
 		g_cancellable_cancel (self->current_operation->cancellable);
@@ -879,7 +893,18 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, files_name_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_SIZE, files_size_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_MODIFIED, files_modified_column_sort_func, self, NULL);
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, GTK_SORT_ASCENDING);
+
+	int sorted_column = FILE_LIST_COLUMN_NAME;
+	FrWindowSortMethod sort_method = g_settings_get_enum (self->settings, PREF_FILE_SELECTOR_SORT_METHOD);
+	if (sort_method == FR_WINDOW_SORT_BY_SIZE)
+		sorted_column = FILE_LIST_COLUMN_SIZE;
+	else if (sort_method == FR_WINDOW_SORT_BY_TIME)
+		sorted_column = FILE_LIST_COLUMN_MODIFIED;
+	GtkSortType sort_type = g_settings_get_enum (self->settings, PREF_FILE_SELECTOR_SORT_TYPE);
+
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")),
+					      sorted_column,
+					      sort_type);
 
 	GtkWidget *location_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (location_box)), "toolbar");
