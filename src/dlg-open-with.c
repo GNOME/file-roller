@@ -40,6 +40,7 @@ typedef struct {
 } OpenData;
 
 
+#ifdef USE_NATIVE_APPCHOOSER
 static void
 open_with_portal_cb (GObject	  *source_obj,
 		     GAsyncResult *result,
@@ -83,6 +84,7 @@ dlg_open_with_native_appchooser (FrWindow *window,
 			XDP_OPEN_URI_FLAG_ASK, NULL,
 			open_with_portal_cb, window);
 }
+#endif
 
 
 static void
