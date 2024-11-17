@@ -22,6 +22,8 @@
 #include <config.h>
 #include <string.h>
 #include "gtk-utils.h"
+#include "glib-utils.h"
+#include "gio-utils.h"
 
 
 void
@@ -669,31 +671,27 @@ _gtk_widget_set_margin (GtkWidget *widget, int margin)
 }
 
 
-void
-_gtk_show_folder (GtkWindow *parent_window,
-		  GFile     *folder)
-{
-	char *uri = g_file_get_uri (folder);
-	gtk_show_uri (parent_window, uri, GDK_CURRENT_TIME);
-	g_free (uri);
-}
-
-
 typedef struct {
 	GtkWindow *window;
 	GFile     *folder;
+	GFunc      callback;
+	gpointer   user_data;
 } OpenFolderData;
 
 
 static OpenFolderData *
 open_folder_data_new (GtkWindow *window,
-		      GFile     *folder)
+		      GFile     *folder,
+		      GFunc      callback,
+		      gpointer   user_data)
 {
 	OpenFolderData *data;
 
 	data = g_new (OpenFolderData, 1);
 	data->window = g_object_ref (window);
 	data->folder = g_object_ref (folder);
+	data->callback = callback;
+	data->user_data = user_data;
 
 	return data;
 }
@@ -705,6 +703,48 @@ open_folder_data_free (OpenFolderData *data)
 	g_object_unref (data->window);
 	g_object_unref (data->folder);
 	g_free (data);
+}
+
+
+static void
+_gtk_show_folder_cb (GObject      *source_object,
+		     GAsyncResult *res,
+		     gpointer      user_data)
+{
+	OpenFolderData *data = user_data;
+	GError         *error = NULL;
+
+	if (!gtk_show_uri_full_finish (data->window, res, &error)) {
+		char *utf8_name = _g_file_get_display_name (data->folder);
+		char *msg = g_strdup_printf (_("Could not open “%s”"), utf8_name);
+		_gtk_error_dialog_run (data->window, msg, "%s", error->message);
+
+		g_free (msg);
+		g_free (utf8_name);
+		g_error_free (error);
+	}
+	if (data->callback != NULL)
+		data->callback (data->window, data->user_data);
+	open_folder_data_free (data);
+}
+
+
+void
+_gtk_show_folder (GtkWindow *parent_window,
+		  GFile     *folder,
+		  GFunc      callback,
+		  gpointer   user_data)
+{
+	char *uri = g_file_get_uri (folder);
+	gtk_show_uri_full (
+		parent_window,
+		uri,
+		GDK_CURRENT_TIME,
+		NULL,
+		_gtk_show_folder_cb,
+		open_folder_data_new (parent_window, folder, callback, user_data)
+	);
+	g_free (uri);
 }
 
 
@@ -721,8 +761,12 @@ file_manager_show_items_cb (GObject      *source_object,
 	proxy = G_DBUS_PROXY (source_object);
 	values = g_dbus_proxy_call_finish (proxy, res, &error);
 	if (values == NULL) {
-		_gtk_show_folder (data->window, data->folder);
+		_gtk_show_folder (data->window, data->folder, data->callback, data->user_data);
 		g_clear_error (&error);
+	}
+	else {
+		if (data->callback != NULL)
+			data->callback (data->window, data->user_data);
 	}
 
 	if (values != NULL)
@@ -734,7 +778,9 @@ file_manager_show_items_cb (GObject      *source_object,
 
 void
 _gtk_show_file_in_container (GtkWindow *parent_window,
-			     GFile     *file)
+			     GFile     *file,
+			     GFunc      callback,
+			     gpointer   user_data)
 {
 	GFile           *parent;
 	GDBusConnection *connection;
@@ -778,7 +824,7 @@ _gtk_show_file_in_container (GtkWindow *parent_window,
 					   G_MAXINT,
 					   NULL,
 					   file_manager_show_items_cb,
-					   open_folder_data_new (parent_window, parent));
+					   open_folder_data_new (parent_window, parent, callback, user_data));
 
 			g_free (startup_id);
 			g_strfreev (uris);
@@ -787,7 +833,7 @@ _gtk_show_file_in_container (GtkWindow *parent_window,
 		}
 	}
 
-	_gtk_show_folder (parent_window, parent);
+	_gtk_show_folder (parent_window, parent, callback, user_data);
 
 	g_object_unref (parent);
 }

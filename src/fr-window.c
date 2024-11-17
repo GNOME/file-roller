@@ -77,6 +77,7 @@
 #define ARCHIVE_CONTENT "archive-content"
 #define LOADING_ARCHIVE "loading-archive"
 
+
 typedef struct {
 	FrBatchActionType type;
 	void *            data;
@@ -1949,30 +1950,46 @@ close_progress_dialog (FrWindow *window,
 
 
 static void
-open_folder (GtkWindow *parent_window,
-	     GFile     *folder,
-	     GList     *files)
+open_folder_async (FrWindow   *window,
+		   GFile      *folder,
+		   GList      *files,
+		   GFunc       callback,
+		   gpointer    user_data)
 {
-	if (folder == NULL)
+	if (folder == NULL) {
+		callback (window, user_data);
 		return;
+	}
 
 	/* Only use ShowItems if its a single file to avoid Nautilus to open
 	 * multiple windows */
 
 	if ((files == NULL) || (files->next != NULL)) {
-		_gtk_show_folder (parent_window, folder);
-		return;
+		_gtk_show_folder (GTK_WINDOW (window), folder, callback, user_data);
 	}
-
-	_gtk_show_file_in_container (parent_window, (GFile *) files->data);
+	else {
+		_gtk_show_file_in_container (GTK_WINDOW (window), (GFile *) files->data, callback, user_data);
+	}
 }
 
 
 static void
-fr_window_view_extraction_destination_folder (FrWindow *window)
+fr_window_view_extraction_destination_folder (FrWindow *window, GFunc callback, gpointer user_data)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
-	open_folder (GTK_WINDOW (window), private->last_extraction_destination, private->last_extraction_files_first_level);
+	open_folder_async (
+		window,
+		private->last_extraction_destination,
+		private->last_extraction_files_first_level,
+		callback,
+		user_data
+	);
+}
+
+
+static void
+progress_dialog_response__open_folder_cb (FrWindow  *window) {
+	close_progress_dialog (window, TRUE);
 }
 
 
@@ -2005,8 +2022,7 @@ progress_dialog_response (GtkDialog *dialog,
 		close_progress_dialog (window, TRUE);
 		break;
 	case DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER:
-		fr_window_view_extraction_destination_folder (window);
-		close_progress_dialog (window, TRUE);
+		fr_window_view_extraction_destination_folder (window, (GFunc) progress_dialog_response__open_folder_cb, NULL);
 		break;
 	default:
 		break;
@@ -2432,6 +2448,15 @@ fr_window_close_confirmation_dialog (FrWindow  *window,
 
 
 static void
+confirmation_response__open_folder_cb (FrWindow  *window,
+				       gpointer   user_data)
+{
+	GtkDialog *dialog = user_data;
+	fr_window_close_confirmation_dialog (window, dialog);
+}
+
+
+static void
 confirmation_dialog_response (GtkDialog *dialog,
 			      int        response_id,
 			      FrWindow  *window)
@@ -2456,8 +2481,7 @@ confirmation_dialog_response (GtkDialog *dialog,
 		break;
 
 	case DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER:
-		fr_window_view_extraction_destination_folder (window);
-		fr_window_close_confirmation_dialog (window, dialog);
+		fr_window_view_extraction_destination_folder (window, (GFunc) confirmation_response__open_folder_cb, dialog);
 		break;
 
 	default:
@@ -8382,6 +8406,8 @@ monitor_extracted_files (OpenFilesData *odata)
 }
 
 
+#ifdef USE_NATIVE_APPCHOOSER
+
 static void
 open_extracted_files_with_native_appchooser (OpenFilesData *odata)
 {
@@ -8410,6 +8436,8 @@ open_extracted_files_with_native_appchooser (OpenFilesData *odata)
 		gtk_show_uri (window, uri, GDK_CURRENT_TIME);
 	}
 }
+
+#endif
 
 
 static void

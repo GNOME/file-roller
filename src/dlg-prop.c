@@ -53,7 +53,7 @@ static void
 open_location_clicked_cb (GtkButton *button,
 			  DialogData *data)
 {
-	_gtk_show_file_in_container (GTK_WINDOW (data->dialog), fr_window_get_archive_file (data->window));
+	_gtk_show_file_in_container (GTK_WINDOW (data->dialog), fr_window_get_archive_file (data->window), NULL, NULL);
 }
 
 
