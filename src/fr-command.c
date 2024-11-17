@@ -1862,7 +1862,7 @@ extract_from_archive (FrCommand  *self,
 {
 	GList *scan;
 
-	g_object_set (self, "password", password, NULL);
+	fr_archive_set_password (FR_ARCHIVE (self), password);
 
 	if (file_list == NULL) {
 		fr_command_extract (self,

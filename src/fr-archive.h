@@ -368,6 +368,8 @@ void          fr_archive_set_mime_type           (FrArchive           *archive,
 const char *  fr_archive_get_mime_type           (FrArchive           *archive);
 const char *  fr_archive_get_packages            (FrArchive           *archive,
 						  const char          *mime_type);
+void          fr_archive_set_password            (FrArchive           *archive,
+						  const char          *password);
 void          fr_archive_set_stoppable           (FrArchive           *archive,
 						  gboolean             stoppable);
 

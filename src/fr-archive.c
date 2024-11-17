@@ -172,8 +172,7 @@ fr_archive_set_property (GObject      *object,
 		fr_archive_set_mime_type (self, g_value_get_string (value));
 		break;
 	case PROP_PASSWORD:
-		g_free (self->password);
-		self->password = g_strdup (g_value_get_string (value));
+		fr_archive_set_password (self, g_value_get_string (value));
 		break;
 	case PROP_ENCRYPT_HEADER:
 		self->encrypt_header = g_value_get_boolean (value);
@@ -527,6 +526,17 @@ const char *
 fr_archive_get_mime_type (FrArchive  *self)
 {
 	return self->mime_type;
+}
+
+
+void
+fr_archive_set_password (FrArchive  *self,
+			 const char *new_password)
+{
+	if (self->password == new_password)
+		return;
+	g_free (self->password);
+	self->password = g_strdup (new_password);
 }
 
 
