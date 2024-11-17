@@ -44,6 +44,7 @@ struct _FrCommandRar
 	gboolean   rar4_odd_line;
 	gboolean   rar5;
 	gboolean   rar5_30;
+	int        name_column_start;
 	FrFileData *fdata;
 };
 
@@ -196,6 +197,7 @@ attribute_field_with_space (char *line)
 
 static gboolean
 parse_name_field (char         *line,
+		  int           line_len,
 		  FrCommandRar *rar_comm)
 {
 	FrFileData *fdata;
@@ -211,15 +213,22 @@ parse_name_field (char         *line,
 	name_field = NULL;
 	if (rar_comm->rar5) {
 		/* rar-5 output adds trailing spaces to short file names :( */
-		int field_idx = attribute_field_with_space (line) ? 9 : 8;
-		const char *field = _g_str_get_last_field (line, field_idx);
-		if (field == NULL) {
-			// Sometimes the checksum column is empty (seen for directories).
-			field_idx--;
-			field = _g_str_get_last_field (line, field_idx);
+		const char *field = NULL;
+		if ((rar_comm->name_column_start > 0) && (rar_comm->name_column_start < line_len)) {
+			field = line + rar_comm->name_column_start;
 		}
-		if (field != NULL)
+		if (field == NULL) {
+			int field_idx = attribute_field_with_space (line) ? 9 : 8;
+			const char *field = _g_str_get_last_field (line, field_idx);
+			if (field == NULL) {
+				// Sometimes the checksum column is empty (seen for directories).
+				field_idx--;
+				field = _g_str_get_last_field (line, field_idx);
+			}
+		}
+		if (field != NULL) {
 			name_field = g_strchomp (g_strdup (field));
+		}
 	}
 	else {
 		name_field = g_strdup (line + 1);
@@ -264,8 +273,10 @@ process_line (char     *line,
 	FrCommand     *comm = FR_COMMAND (data);
 	FrCommandRar  *rar_comm = FR_COMMAND_RAR (comm);
 	char         **fields;
+	int            line_len;
 
 	g_return_if_fail (line != NULL);
+	line_len = strlen (line);
 
 	if (! rar_comm->list_started) {
 		if ((strncmp (line, "RAR ", 4) == 0) || (strncmp (line, "UNRAR ", 6) == 0)) {
@@ -285,8 +296,16 @@ process_line (char     *line,
 			if (! rar_comm->rar5)
 			    rar_comm->rar4_odd_line = TRUE;
 		}
-		else if (strncmp (line, "Volume ", 7) == 0)
+		else if (strncmp (line, "Volume ", 7) == 0) {
 			FR_ARCHIVE (comm)->multi_volume = TRUE;
+		}
+		else if (rar_comm->rar5 && (strncmp (line, " Attributes", 11) == 0)) {
+			// This is the header line, find where the name column starts.
+			const char *name_field = strstr (line, "Name");
+			if (name_field != NULL) {
+				rar_comm->name_column_start = name_field - line;
+			}
+		}
 		return;
 	}
 
@@ -296,7 +315,7 @@ process_line (char     *line,
 	}
 
 	if (rar_comm->rar4_odd_line || rar_comm->rar5) {
-		if (!parse_name_field (line, rar_comm))
+		if (!parse_name_field (line, line_len, rar_comm))
 			return;
 	}
 
@@ -331,7 +350,7 @@ process_line (char     *line,
 			fr_file_data_free (rar_comm->fdata);
 			rar_comm->fdata = NULL;
 			rar_comm->rar4_odd_line = TRUE;
-			if (!parse_name_field (line, rar_comm))
+			if (!parse_name_field (line, line_len, rar_comm))
 				return;
 		}
 		else {
@@ -403,6 +422,7 @@ list__begin (gpointer data)
 	FrCommandRar *comm = data;
 
 	comm->list_started = FALSE;
+	comm->name_column_start = -1;
 }
 
 
