@@ -78,7 +78,18 @@ dlg_prop (FrWindow *window)
 	gtk_box_append (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))),
 			_gtk_builder_get_widget (data->builder, "content"));
 
+	GtkWidget *header_bar = gtk_dialog_get_header_bar (GTK_DIALOG (data->dialog));
+	if (header_bar != NULL)
+		gtk_widget_add_css_class (header_bar, "flat");
+
 	/* Set widgets data. */
+
+	// Icon
+
+	GIcon *icon = g_content_type_get_icon (window->archive->mime_type);
+	if (icon != NULL) {
+		gtk_image_set_from_gicon (GTK_IMAGE (GET_WIDGET ("icon")), icon);
+	}
 
 	/* Name */
 
