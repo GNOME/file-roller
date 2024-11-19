@@ -774,20 +774,37 @@ fr_command_rar_handle_error (FrCommand *comm,
 		return;
 	}
 
+	gboolean checksum_error = FALSE;
+	gboolean cannot_find_volume = FALSE;
+	char *volume_filename = NULL;
+
 	for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
-		char *line = scan->data;
+		const char *line = scan->data;
 
 		if (strncmp (line, "Unexpected end of archive", 25) == 0) {
 			/* FIXME: handle this type of errors at a higher level when the freeze is over. */
 		}
 
-		if (strncmp (line, "Cannot find volume", 18) == 0) {
-			char *volume_filename = g_path_get_basename (line + strlen ("Cannot find volume "));
-			fr_error_take_gerror (error, g_error_new (FR_ERROR, FR_ERROR_MISSING_VOLUME, _("Could not find the volume: %s"), volume_filename));
-
-			g_free (volume_filename);
+		if (strncmp (line, "Checksum error in the encrypted file", 36) == 0) {
+			checksum_error = TRUE;
 			break;
 		}
+
+		if (strncmp (line, "Cannot find volume", 18) == 0) {
+			if (!cannot_find_volume) {
+				volume_filename = g_path_get_basename (line + strlen ("Cannot find volume "));
+				cannot_find_volume = TRUE;
+			}
+		}
+	}
+
+	// Sometimes rar writes both errors, give priority to the checksum error.
+	if (checksum_error) {
+		fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
+	}
+	else if (cannot_find_volume) {
+		fr_error_take_gerror (error, g_error_new (FR_ERROR, FR_ERROR_MISSING_VOLUME, _("Could not find the volume: %s"), volume_filename));
+		g_free (volume_filename);
 	}
 }
 
