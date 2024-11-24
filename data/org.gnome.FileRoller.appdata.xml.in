@@ -36,6 +36,39 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="44.4" date="2024-11-24" type="stable">
+      <description>
+        <p>This release adds the following feature:</p>
+        <ul>
+          <li>Added bzip3 support.</li>
+          <li>File selector: show volumes and allow to mount unmounted volumes.</li>
+          <li>New archive dialog: allow to use all the possible extensions a mime type
+   supports.</li>
+          <li>New archive dialog: allow to specify a name without extension, which will be
+   concatenated to the selected extension to get the full name.</li>
+          <li>File selector: save and restore the sort order.</li>
+          <li>Properties dialog: show an icon, make the headerbar flat.</li>
+        </ul>
+        <p>This release fixes the following bugs:</p>
+        <ul>
+          <li>Error opening rar archive in RAR4 format and password protected.</li>
+          <li>Rar: fixed file list parsing for some encrypted archives.</li>
+          <li>Fixed error when renaming a file inside an encrypted archive.</li>
+          <li>Disabled the native appchooser by default.</li>
+          <li>'Show destination' sometimes opens the wrong folder.</li>
+          <li>'Show destination' sometimes doesn't show anything.</li>
+          <li>Use the native appchooser only for a single file.</li>
+          <li>Show flat headerbar in empty state.</li>
+          <li>Fixed error messages impossible to close.</li>
+          <li>Fixed segfaults when opening an empty .deb file.</li>
+          <li>--extract-to keeps asking to create a directory.</li>
+          <li>Fixed wrong context menu item activation.</li>
+          <li>Avoid the exit timeout unless file-roller was launched with `--service`.</li>
+          <li>Error when opening the created archive after saving as 7zip multi-volume.</li>
+        </ul>
+        <p>This release updates translations.</p>
+      </description>
+    </release>
     <release version="44.3" date="2024-05-19" type="stable">
       <description>
         <p>This release fixes the following bugs:</p>

@@ -1,3 +1,44 @@
+Version 44.4
+~~~~~~~~~~~~
+Released: 2024-11-24
+
+Features:
+ * Added bzip3 support. (!266)
+ * File selector: show volumes and allow to mount unmounted volumes. (!258)
+ * New archive dialog: allow to use all the possible extensions a mime type
+   supports, and allow to specify a name without extension, which will be
+   concatenated to the selected extension to get the full name. (!275) (!267)
+ * File selector: save and restore the sort order. (!246)
+ * Properties dialog: show an icon, make the headerbar flat.
+
+Bugfixes:
+ * Error opening rar archive in RAR4 format and password protected. (!279)
+ * Rar: fixed file list parsing for some encrypted archives. (!277)
+ * Fixed error when renaming a file inside an encrypted archive. (!276)
+ * Disabled the native appchooser by default. (!217)
+ * 'Show destination' sometimes opens the wrong folder. (!255)
+ * 'Show destination' sometimes doesn't show anything.
+ * Use the native appchooser only for a single file. (!221)
+ * Show flat headerbar in empty state. (!216)
+ * Fixed error messages impossible to close. (!257)
+ * Fixed segfaults when opening an empty .deb file. (!253)
+ * --extract-to keeps asking to create a directory. (!254)
+ * Fixed wrong context menu item activation. (!268)
+ * Avoid the exit timeout unless file-roller was launched with `--service`. (FeRD (Frank
+   Dana)) (!34)
+ * Error when opening the created archive after saving as 7zip multi-volume.
+
+Translations:
+ * Belarusian (Yuras Shumovich)
+ * Brazilian Portuguese (Juliano de Souza Camargo)
+ * English - United Kingdom (Andi Chandler)
+ * Hindi (Scrambled777)
+ * Portuguese (Hugo Carvalho)
+ * Slovak (Dušan Kazik)
+ * srpski (Marko M. Kostić)
+ * Thai (Theppitak Karoonboonyanan)
+ * српски (Марко М. Костић)
+
 Version 44.3
 ~~~~~~~~~~~~
 Released: 2024-05-19
