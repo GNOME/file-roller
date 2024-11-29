@@ -569,7 +569,18 @@ fr_command_7z_handle_error (FrCommand *command,
 			    || (strstr (line, "Enter password") != NULL))
 			{
 				fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
-				break;
+				return;
+			}
+		}
+
+		for (scan = g_list_last (command->process->err.raw); scan; scan = scan->prev) {
+			char *line = scan->data;
+
+			if ((strstr (line, "Wrong password?") != NULL)
+			    || (strstr (line, "Enter password") != NULL))
+			{
+				fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
+				return;
 			}
 		}
 	}
