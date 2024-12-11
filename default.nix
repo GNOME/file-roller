@@ -98,7 +98,7 @@ makeDerivation rec {
     meson
     ninja
     pkg-config
-    wrapGAppsHook
+    wrapGAppsHook4
   ] ++ lib.optionals shell [
     niv
   ];
@@ -108,8 +108,8 @@ makeDerivation rec {
     cpio
     file
     glib
-    gnome.adwaita-icon-theme
-    gnome.nautilus
+    adwaita-icon-theme
+    nautilus
     gtk4
     json-glib
     libarchive
