@@ -4,9 +4,6 @@ build:
     stage: test
     image: nixpkgs/nix:latest
     script:
-        # Sandboxing would require privileged docker.
-        - mkdir -p /etc/nix
-        - echo 'sandbox = false' > /etc/nix/nix.conf
         - nix-build
 
 flatpak:
