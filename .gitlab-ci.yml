@@ -1,4 +1,26 @@
-include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml"
+include:
+  - "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml"
+
+  - component: gitlab.gnome.org/GNOME/citemplates/release-service@master
+    inputs:
+      dist-job-name: "build-and-test"
+      tarball-artifact-path: "${TARBALL_ARTIFACT_DIR}/${CI_PROJECT_NAME}-${CI_COMMIT_TAG}.tar.xz"
+
+variables:
+  MESON_BUILD_DIR: _build
+  TARBALL_ARTIFACT_DIR: "${MESON_BUILD_DIR}/meson-dist"
+
+build-and-test:
+  image: nixpkgs/nix:latest
+  script:
+    - nix-shell --run "meson setup '${MESON_BUILD_DIR}'"
+    - nix-shell --run "meson compile -C '${MESON_BUILD_DIR}'"
+    - nix-shell --run "meson test -C '${MESON_BUILD_DIR}'"
+    - nix-shell --run "meson dist -C '${MESON_BUILD_DIR}' --include-subprojects"
+  artifacts:
+    name: "Tarball"
+    paths:
+      - "${TARBALL_ARTIFACT_DIR}/"
 
 build-nix-derivation:
   image: nixpkgs/nix:latest
