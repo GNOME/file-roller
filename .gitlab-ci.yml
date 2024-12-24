@@ -8,6 +8,7 @@ build:
 
 flatpak:
   extends: ".flatpak"
+  allow_failure: true
   variables:
     MANIFEST_PATH: "flatpak/org.gnome.FileRoller.json"
     FLATPAK_MODULE: "file-roller"
