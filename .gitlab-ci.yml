@@ -1,21 +1,21 @@
-include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml'
+include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml"
 
 build:
-    stage: test
-    image: nixpkgs/nix:latest
-    script:
-        - nix-build
+  stage: test
+  image: nixpkgs/nix:latest
+  script:
+    - nix-build
 
 flatpak:
-    extends: '.flatpak'
-    variables:
-        MANIFEST_PATH: "flatpak/org.gnome.FileRoller.json"
-        FLATPAK_MODULE: "file-roller"
-        APP_ID: "org.gnome.FileRoller"
-        RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
-        BUNDLE: "file-roller-dev.flatpak"
+  extends: ".flatpak"
+  variables:
+    MANIFEST_PATH: "flatpak/org.gnome.FileRoller.json"
+    FLATPAK_MODULE: "file-roller"
+    APP_ID: "org.gnome.FileRoller"
+    RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
+    BUNDLE: "file-roller-dev.flatpak"
 
 nightly:
-  extends: '.publish_nightly'
-  dependencies: ['flatpak']
-  needs: ['flatpak']
+  extends: ".publish_nightly"
+  dependencies: ["flatpak"]
+  needs: ["flatpak"]
