@@ -1,6 +1,6 @@
 include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml"
 
-build:
+build-nix-derivation:
   image: nixpkgs/nix:latest
   script:
     - nix-build
