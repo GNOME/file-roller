@@ -465,10 +465,10 @@ static void update_filename_from_extension_selector (FrNewArchiveDialog *self)
 	bool changed = FALSE;
 	const char *file_ext = _g_filename_get_extension (self->filename);
 	const char *new_ext = file_ext_type[selected_ext->ext].ext;
-	if (extension_is_valid_archive_extension (self, file_ext, NULL)
+	if (extension_is_valid_archive_extension (self, new_ext, NULL)
 		&& (g_strcmp0 (file_ext, new_ext) != 0))
 	{
-		char *filename_no_ext = g_strndup (self->filename, strlen (self->filename) - strlen (file_ext));
+		char *filename_no_ext = (file_ext != NULL) ? g_strndup (self->filename, strlen (self->filename) - strlen (file_ext)) : g_strdup (self->filename);
 		if (filename_no_ext == NULL) {
 			filename_no_ext = g_strdup ("");
 		}
