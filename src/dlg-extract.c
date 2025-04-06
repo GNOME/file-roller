@@ -338,12 +338,11 @@ dlg_extract__common (FrWindow *window,
 
 	fr_file_selector_dialog_set_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog), fr_window_get_extract_default_dir (window));
 
+	gtk_widget_set_sensitive (GET_WIDGET ("selected_files_radiobutton"), (data->selected_files != NULL));
 	if ((data->selected_files != NULL) && !all_by_default)
 		gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("selected_files_radiobutton")), TRUE);
-	else {
-		gtk_widget_set_sensitive (GET_WIDGET ("selected_files_radiobutton"), FALSE);
+	else
 		gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("all_files_radiobutton")), TRUE);
-	}
 
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("keep_newer_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_SKIP_NEWER));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (GET_WIDGET ("keep_structure_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_RECREATE_FOLDERS));
