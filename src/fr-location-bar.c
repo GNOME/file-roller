@@ -249,6 +249,7 @@ fr_location_bar_init (FrLocationBar *self)
 	gtk_widget_set_margin_start (private->location_entry, 5);
 	gtk_widget_set_margin_end (private->location_entry, 5);
 	_gtk_box_pack_end (GTK_BOX (location_box), private->location_entry, TRUE, FALSE);
+	gtk_label_set_mnemonic_widget (GTK_LABEL (location_label), private->location_entry);
 
 	/* Pack widgets */
 
