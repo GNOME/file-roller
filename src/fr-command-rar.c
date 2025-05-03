@@ -213,17 +213,30 @@ parse_name_field (char         *line,
 	name_field = NULL;
 	if (rar_comm->rar5) {
 		/* rar-5 output adds trailing spaces to short file names :( */
-		const char *field = NULL;
-		if ((rar_comm->name_column_start > 0) && (rar_comm->name_column_start < line_len)) {
-			field = line + rar_comm->name_column_start;
+		int field_idx = attribute_field_with_space (line) ? 9 : 8;
+		const char *field = _g_str_get_last_field (line, field_idx);
+		const char *prev_field = NULL;
+
+		// long file size will cause offset to name column title, 
+		// so we use checksum to locate filename
+		if(field != NULL) {
+			const int checksum_offset_to_name = 10;
+			prev_field = _g_str_get_last_field(line, field_idx - 1);
+			if(prev_field != NULL && (prev_field - line + checksum_offset_to_name < line_len)) {
+				field = prev_field + checksum_offset_to_name;
+			}
 		}
+		// if ((rar_comm->name_column_start > 0) && (rar_comm->name_column_start < line_len)) {
+		// 	field = line + rar_comm->name_column_start;
+		// }
 		if (field == NULL) {
-			int field_idx = attribute_field_with_space (line) ? 9 : 8;
-			const char *field = _g_str_get_last_field (line, field_idx);
-			if (field == NULL) {
-				// Sometimes the checksum column is empty (seen for directories).
-				field_idx--;
-				field = _g_str_get_last_field (line, field_idx);
+			const int time_offset_to_name = 17;
+			// Sometimes the checksum column is empty (seen for directories).
+			// so we use time column to locate filename column
+			field_idx--;
+			prev_field = _g_str_get_last_field (line, field_idx - 1);
+			if(prev_field != NULL && (prev_field - line + time_offset_to_name < line_len)) {
+				field = prev_field + time_offset_to_name;
 			}
 		}
 		if (field != NULL) {
