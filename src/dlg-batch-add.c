@@ -76,6 +76,7 @@ dlg_batch_add_files (FrWindow *window,
 	GFile     *parent;
 	char      *filename;
 	GtkWidget *dialog;
+	FrNewArchiveAction action;
 
 	g_return_if_fail (file_list != NULL);
 
@@ -95,9 +96,20 @@ dlg_batch_add_files (FrWindow *window,
 		parent = g_object_ref (_g_file_get_home ());
 	}
 
+	// get the action type
+	action = FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES;
+	if (file_list->next == NULL) {
+		// only one file in the list check if that is a directory
+		GFileType type = g_file_query_file_type(G_FILE(file_list->data), G_FILE_QUERY_INFO_NONE, NULL);
+		if(G_FILE_TYPE_DIRECTORY != type) {
+			// there is only one file in the list and it is not a directory, so we can compress it as single file
+			action = FR_NEW_ARCHIVE_ACTION_NEW_SINGLE_FILE;
+		}
+	}
+
 	dialog = fr_new_archive_dialog_new (_("Compress"),
 					    NULL,
-					    ((file_list->next == NULL) ? FR_NEW_ARCHIVE_ACTION_NEW_SINGLE_FILE : FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES),
+					    action,
 					    parent,
 					    filename,
 					    NULL);
