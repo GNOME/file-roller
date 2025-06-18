@@ -212,10 +212,16 @@ parse_name_field (char         *line,
 
 	name_field = NULL;
 	if (rar_comm->rar5) {
-		/* rar-5 output adds trailing spaces to short file names :( */
 		const char *field = NULL;
 		if ((rar_comm->name_column_start > 0) && (rar_comm->name_column_start < line_len)) {
 			field = line + rar_comm->name_column_start;
+			// If the file size has 10 digits or more the name is
+			// shifted to the right, in this case the checksum could
+			// end after name_column_start.
+			if ((*field != ' ') && (*(field - 1) != ' ')) {
+				// Skip the checksum.
+				field = strchr (field, ' ');
+			}
 		}
 		if (field == NULL) {
 			int field_idx = attribute_field_with_space (line) ? 9 : 8;
@@ -227,7 +233,8 @@ parse_name_field (char         *line,
 			}
 		}
 		if (field != NULL) {
-			name_field = g_strchomp (g_strdup (field));
+			// rar-5 output adds trailing spaces to short file names :(
+			name_field = g_strstrip (g_strdup (field));
 		}
 	}
 	else {
