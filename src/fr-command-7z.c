@@ -333,8 +333,9 @@ fr_command_7z_add (FrCommand  *command,
 	fr_process_add_arg (command->process, "-bd");
 	fr_process_add_arg (command->process, "-bb1");
 	fr_process_add_arg (command->process, "-y");
-	if (follow_links)
-		fr_process_add_arg (command->process, "-l");
+	if (!follow_links) {
+		fr_process_add_arg (command->process, "-snl");
+	}
 	add_password_arg (command, archive->password, FALSE);
 	if ((archive->password != NULL)
 	    && (*archive->password != 0)
