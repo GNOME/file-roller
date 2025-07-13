@@ -64,11 +64,11 @@ configure_file(
   install_dir: join_paths(datadir, 'dbus-1/services'),
 )
 
-# .appdata file
+# .metainfo file
 
 i18n.merge_file(
-  input: 'org.gnome.FileRoller.appdata.xml.in',
-  output: 'org.gnome.FileRoller.appdata.xml',
+  input: 'org.gnome.FileRoller.metainfo.xml.in',
+  output: 'org.gnome.FileRoller.metainfo.xml',
   type: 'xml',
   po_dir: po_dir,
   install: true,
