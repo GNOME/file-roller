@@ -256,6 +256,7 @@ fr_command_unarchiver_handle_error (FrCommand   *comm,
 const char *unarchiver_mime_type[] = { "application/x-cbr",
 				       "application/x-rar",
 				       "application/vnd.rar",
+				       "application/x-stuffit",
 				       NULL };
 
 
