@@ -761,6 +761,11 @@ get_selected_file (FrNewArchiveDialog  *self,
 		);
 		return NULL;
 	}
+	if (g_path_is_absolute (basename)) {
+		GFile *file = g_file_new_for_path (basename);
+		g_free (basename);
+		return file;
+	}
 	GFile *file = g_file_get_child_for_display_name (self->folder, basename, error);
 
 	g_free (basename);
