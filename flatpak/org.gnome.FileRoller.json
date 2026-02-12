@@ -127,24 +127,6 @@
             ]
         },
         {
-            "name": "zstd",
-            "buildsystem": "meson",
-            "subdir": "build/meson",
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/facebook/zstd/releases/download/v1.5.5/zstd-1.5.5.tar.gz",
-                    "sha256": "9c4396cc829cfae319a6e2615202e82aad41372073482fce286fac78646d3ee4",
-                    "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/facebook/zstd/releases/latest",
-                        "version-query": ".tag_name | sub(\"^v\"; \"\")",
-                        "url-query": ".assets[] | select(.name==\"zstd-\" + $version + \".tar.gz\") | .browser_download_url"
-                    }
-                }
-            ]
-        },
-        {
             "name": "rpm2cpio",
             "buildsystem": "simple",
             "build-commands": [
