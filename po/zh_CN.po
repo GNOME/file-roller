@@ -15,71 +15,39 @@
 # Boyuan Yang <073plan@gmail.com>, 2016.
 # Mingcong Bai <jeffbai@aosc.xyz>, 2015, 2017.
 # Dingzhong Chen <wsxy162@@gmail.com>, 2018, 2019.
-# lumingzh <lumingzh@qq.com>, 2022-2023.
+# lumingzh <lumingzh@qq.com>, 2022-2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
-"POT-Creation-Date: 2023-08-27 09:28+0000\n"
-"PO-Revision-Date: 2023-09-02 10:53+0800\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues/\n"
+"POT-Creation-Date: 2026-02-12 09:28+0000\n"
+"PO-Revision-Date: 2026-02-13 08:39+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
-"Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
+"Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Gtranslator 42.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 49.0\n"
 
-#: data/org.gnome.FileRoller.appdata.xml.in:9
-#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application-menu.c:131
-#: src/fr-application.c:473 src/fr-window.c:1866 src/fr-window.c:4577
+#: data/org.gnome.FileRoller.desktop.in.in:2
+#: data/org.gnome.FileRoller.metainfo.xml.in:9 src/fr-application-menu.c:131
+#: src/fr-application.c:472 src/fr-window.c:1869 src/fr-window.c:4627
 msgid "File Roller"
 msgstr "文件压缩器"
 
-#: data/org.gnome.FileRoller.appdata.xml.in:10
-msgid "Open, modify and create compressed archive files"
-msgstr "打开，修改和创建压缩存档文件"
-
-#: data/org.gnome.FileRoller.appdata.xml.in:12
-msgid ""
-"File Roller is a GNOME application for opening, creating, and modifying "
-"archive and compressed archive files."
-msgstr ""
-"文件压缩器是 GNOME 用来打开、创建和修改归档文件及压缩的归档文件的应用程序。"
-
-#: data/org.gnome.FileRoller.appdata.xml.in:16
-msgid ""
-"File Roller supports a wide range of different archive files, including:"
-msgstr "文件压缩器支持许多不同的归档文件，包括:"
-
-#: data/org.gnome.FileRoller.appdata.xml.in:20
-msgid "gzip archives (.tar.gz, .tgz)"
-msgstr "gzip 档案 (.tar.gz,.tgz)"
-
-#: data/org.gnome.FileRoller.appdata.xml.in:21
-msgid "bzip archives (.tar.bz, .tbz)"
-msgstr "bzip 档案 (.tar.bz,.tbz)"
-
-#: data/org.gnome.FileRoller.appdata.xml.in:22
-msgid "zip archives (.zip)"
-msgstr "zip 档案 (.zip)"
-
-#: data/org.gnome.FileRoller.appdata.xml.in:23
-msgid "xz archives (.tar.xz)"
-msgstr "xz 档案 (.tar.xz)"
-
-#: data/org.gnome.FileRoller.desktop.in.in:4
+#: data/org.gnome.FileRoller.desktop.in.in:3
 msgid "Archive Manager"
 msgstr "归档管理器"
 
-#: data/org.gnome.FileRoller.desktop.in.in:5
+#: data/org.gnome.FileRoller.desktop.in.in:4
 msgid "Create and modify an archive"
 msgstr "创建并修改归档文件"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.FileRoller.desktop.in.in:7
+#: data/org.gnome.FileRoller.desktop.in.in:6
 msgid "zip;tar;extract;unpack;"
 msgstr "zip;tar;extract;unpack;提取;解包;压缩;归档;"
 
@@ -163,76 +131,112 @@ msgstr "查看侧边栏"
 msgid "Whether to display the sidebar."
 msgstr "是否显示侧边栏。"
 
-#: data/org.gnome.FileRoller.gschema.xml:130
+#: data/org.gnome.FileRoller.gschema.xml:136
 msgid "Editors"
 msgstr "编辑器"
 
-#: data/org.gnome.FileRoller.gschema.xml:131
+#: data/org.gnome.FileRoller.gschema.xml:137
 msgid ""
 "List of applications entered in the “Open File” dialog and not associated "
 "with the file type."
 msgstr "进入“打开文件”对话框但未与该文件类型关联的应用程序的列表。"
 
-#: data/org.gnome.FileRoller.gschema.xml:135
+#: data/org.gnome.FileRoller.gschema.xml:141
 msgid "Compression level"
 msgstr "压缩率"
 
-#: data/org.gnome.FileRoller.gschema.xml:136
+#: data/org.gnome.FileRoller.gschema.xml:142
 msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
 msgstr "向归档添加文件时使用的压缩率。可取的值：很快、快、正常、最大。"
 
-#: data/org.gnome.FileRoller.gschema.xml:140
-#: data/org.gnome.FileRoller.gschema.xml:178
+#: data/org.gnome.FileRoller.gschema.xml:146
+#: data/org.gnome.FileRoller.gschema.xml:184
 msgid "Encrypt the archive header"
 msgstr "加密归档头"
 
-#: data/org.gnome.FileRoller.gschema.xml:141
-#: data/org.gnome.FileRoller.gschema.xml:179
+#: data/org.gnome.FileRoller.gschema.xml:147
+#: data/org.gnome.FileRoller.gschema.xml:185
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr "是否加密归档头。如果头部加密，在列出归档内容时也会要求密码。"
 
-#: data/org.gnome.FileRoller.gschema.xml:155
+#: data/org.gnome.FileRoller.gschema.xml:161
 msgid "Do not overwrite newer files"
 msgstr "不覆盖较新的文件"
 
-#: data/org.gnome.FileRoller.gschema.xml:159
+#: data/org.gnome.FileRoller.gschema.xml:165
 msgid "Recreate the folders stored in the archive"
 msgstr "更新归档中的文件夹"
 
-#: data/org.gnome.FileRoller.gschema.xml:183
+#: data/org.gnome.FileRoller.gschema.xml:189
 msgid "Show/hide the extra options"
 msgstr "显示/隐藏额外选项"
 
-#: data/org.gnome.FileRoller.gschema.xml:184
+#: data/org.gnome.FileRoller.gschema.xml:190
 msgid "Whether to show other options. If set the extra options will be shown."
 msgstr "是否显示其他选项。如果启用，则将显示额外选项。"
 
-#: data/org.gnome.FileRoller.gschema.xml:188
+#: data/org.gnome.FileRoller.gschema.xml:194
 msgid "Default volume size"
 msgstr "默认卷大小"
 
-#: data/org.gnome.FileRoller.gschema.xml:189
+#: data/org.gnome.FileRoller.gschema.xml:195
 msgid "The default size for volumes."
 msgstr "卷的默认大小。"
 
-#: nautilus/nautilus-fileroller.c:255
+#: data/org.gnome.FileRoller.metainfo.xml.in:10
+msgid "Open, modify and create compressed archive files"
+msgstr "打开，修改和创建压缩存档文件"
+
+#: data/org.gnome.FileRoller.metainfo.xml.in:12
+msgid ""
+"File Roller is a GNOME application for opening, creating, and modifying "
+"archive and compressed archive files."
+msgstr ""
+"文件压缩器是 GNOME 用来打开、创建和修改归档文件及压缩的归档文件的应用程序。"
+
+#: data/org.gnome.FileRoller.metainfo.xml.in:16
+msgid ""
+"File Roller supports a wide range of different archive files, including:"
+msgstr "文件压缩器支持许多不同的归档文件，包括:"
+
+#: data/org.gnome.FileRoller.metainfo.xml.in:20
+msgid "gzip archives (.tar.gz, .tgz)"
+msgstr "gzip 档案 (.tar.gz,.tgz)"
+
+#: data/org.gnome.FileRoller.metainfo.xml.in:21
+msgid "bzip archives (.tar.bz, .tbz)"
+msgstr "bzip 档案 (.tar.bz,.tbz)"
+
+#: data/org.gnome.FileRoller.metainfo.xml.in:22
+msgid "zip archives (.zip)"
+msgstr "zip 档案 (.zip)"
+
+#: data/org.gnome.FileRoller.metainfo.xml.in:23
+msgid "xz archives (.tar.xz)"
+msgstr "xz 档案 (.tar.xz)"
+
+#: data/org.gnome.FileRoller.metainfo.xml.in:36
+msgid "File Roller's main interface"
+msgstr "文件压缩器的主界面"
+
+#: nautilus/nautilus-fileroller.c:258
 msgid "Extract Here"
 msgstr "提取到此处"
 
 #. Translators: the current position is the current folder
-#: nautilus/nautilus-fileroller.c:257
+#: nautilus/nautilus-fileroller.c:260
 msgid "Extract the selected archive to the current position"
 msgstr "将选中的归档文件提取到当前位置"
 
-#: nautilus/nautilus-fileroller.c:274
+#: nautilus/nautilus-fileroller.c:277
 msgid "Extract To…"
 msgstr "提取到…"
 
-#: nautilus/nautilus-fileroller.c:275
+#: nautilus/nautilus-fileroller.c:278
 msgid "Extract the selected archive"
 msgstr "提取选中的归档文件"
 
@@ -268,26 +272,26 @@ msgstr "保存选项"
 msgid "_Options Name:"
 msgstr "选项名称(_O)："
 
-#: src/dlg-ask-password.c:116
+#: src/dlg-ask-password.c:117
 msgctxt "Window title"
 msgid "Password"
 msgstr "密码"
 
-#: src/dlg-ask-password.c:122
+#: src/dlg-ask-password.c:123
 msgid "_OK"
 msgstr "确定(_O)"
 
 #. Translators: %s is a filename
-#: src/dlg-ask-password.c:145
+#: src/dlg-ask-password.c:146
 #, c-format
 msgid "Password required for “%s”"
 msgstr "“%s”需要密码"
 
-#: src/dlg-ask-password.c:154
+#: src/dlg-ask-password.c:155
 msgid "Wrong password."
 msgstr "密码错误。"
 
-#: src/dlg-batch-add.c:98 src/fr-application.c:248 src/fr-application.c:286
+#: src/dlg-batch-add.c:110 src/fr-application.c:248 src/fr-application.c:286
 #: src/fr-application.c:582
 msgid "Compress"
 msgstr "压缩"
@@ -301,7 +305,7 @@ msgstr "删除"
 msgid "_Delete"
 msgstr "删除(_D)"
 
-#: src/dlg-extract.c:92 src/fr-window.c:5944
+#: src/dlg-extract.c:92 src/fr-window.c:6019
 #, c-format
 msgid ""
 "Destination folder “%s” does not exist.\n"
@@ -312,17 +316,17 @@ msgstr ""
 "\n"
 "您是否想要创建？"
 
-#: src/dlg-extract.c:99 src/fr-window.c:5951
+#: src/dlg-extract.c:99 src/fr-window.c:6026
 msgid "Create _Folder"
 msgstr "创建文件夹(_F)"
 
 #: src/dlg-extract.c:139 src/dlg-extract.c:171 src/dlg-extract.c:200
-#: src/fr-window.c:5849 src/fr-window.c:5854 src/fr-window.c:5974
-#: src/fr-window.c:5992 src/fr-window.c:5997
+#: src/fr-window.c:5922 src/fr-window.c:5927 src/fr-window.c:6049
+#: src/fr-window.c:6067 src/fr-window.c:6072
 msgid "Extraction not performed"
 msgstr "提取操作未执行"
 
-#: src/dlg-extract.c:140 src/fr-window.c:5969
+#: src/dlg-extract.c:140 src/fr-window.c:6044
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "无法创建目标文件夹：%s。"
@@ -333,14 +337,14 @@ msgid ""
 "You don’t have the right permissions to extract archives in the folder “%s”"
 msgstr "您没有权限将归档文件提取到文件夹“%s”中"
 
-#: src/dlg-extract.c:323 src/fr-application.c:322 src/fr-application.c:348
+#: src/dlg-extract.c:324 src/fr-application.c:322 src/fr-application.c:348
 #: src/fr-application.c:605
 msgctxt "Window title"
 msgid "Extract"
 msgstr "提取"
 
-#: src/dlg-open-with.c:57 src/fr-new-archive-dialog.c:293 src/fr-window.c:7915
-#: src/fr-window.c:8077 src/fr-window.c:8111 src/fr-window.c:8423
+#: src/dlg-open-with.c:57 src/fr-new-archive-dialog.c:297 src/fr-window.c:7996
+#: src/fr-window.c:8158 src/fr-window.c:8192 src/fr-window.c:8507
 msgid "Could not perform the operation"
 msgstr "无法执行这个操作"
 
@@ -348,14 +352,15 @@ msgstr "无法执行这个操作"
 msgid "There was an internal error trying to search for applications:"
 msgstr "在试图搜索应用程序时出现了一个内部错误："
 
-#: src/dlg-package-installer.c:279 src/dlg-package-installer.c:288
-#: src/dlg-package-installer.c:317 src/fr-archive.c:756
-#: src/fr-new-archive-dialog.c:239 src/fr-window.c:3545 src/fr-window.c:6706
-#: src/fr-window.c:7072 src/fr-window.c:8646
+#: src/dlg-package-installer.c:265 src/dlg-package-installer.c:284
+#: src/dlg-package-installer.c:293 src/dlg-package-installer.c:322
+#: src/fr-archive.c:746 src/fr-archive.c:774 src/fr-new-archive-dialog.c:240
+#: src/fr-new-archive-dialog.c:760 src/fr-window.c:3586 src/fr-window.c:6787
+#: src/fr-window.c:7153 src/fr-window.c:8732
 msgid "Archive type not supported."
 msgstr "不支持的归档文件类型。"
 
-#: src/dlg-package-installer.c:300
+#: src/dlg-package-installer.c:305
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -364,38 +369,38 @@ msgstr ""
 "没有为 %s 文件安装的命令。\n"
 "您想搜索一个命令来打开这个文件吗？"
 
-#: src/dlg-package-installer.c:304
+#: src/dlg-package-installer.c:309
 msgid "Could not open this file type"
 msgstr "无法打开该文件类型"
 
-#: src/dlg-package-installer.c:307
+#: src/dlg-package-installer.c:312
 msgid "_Search Command"
 msgstr "搜索命令(_S)"
 
-#: src/dlg-password.c:91 src/ui/new-archive-dialog.ui:58
+#: src/dlg-password.c:92 src/ui/new-archive-dialog.ui:82
 msgid "Password"
 msgstr "密码"
 
-#: src/dlg-password.c:103
+#: src/dlg-password.c:104
 #, c-format
 msgid "Enter a password for “%s”"
 msgstr "输入归档文件“%s”的密码"
 
-#: src/dlg-prop.c:71
+#: src/dlg-prop.c:72
 msgid "Properties"
 msgstr "属性"
 
-#: src/dlg-prop.c:109 src/fr-window.c:1477 src/fr-window.c:1505
+#: src/dlg-prop.c:121 src/fr-window.c:1480 src/fr-window.c:1508
 msgid "%d %B %Y, %H:%M"
 msgstr "%Y年%-m月%-d日 %H:%M"
 
-#: src/dlg-update.c:171
+#: src/dlg-update.c:172
 #, c-format
 msgid "Update the file “%s” in the archive “%s”?"
 msgstr "更新归档“%2$s”中的文件“%1$s”？"
 
 #. secondary text
-#: src/dlg-update.c:183 src/dlg-update.c:209
+#: src/dlg-update.c:184 src/dlg-update.c:210
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don’t update "
@@ -407,16 +412,16 @@ msgstr[0] ""
 "%d 个文件已被外部应用程序修改。如果您不更新归档中的文件，您的所有更改将会丢"
 "失。"
 
-#: src/dlg-update.c:199
+#: src/dlg-update.c:200
 #, c-format
 msgid "Update the files in the archive “%s”?"
 msgstr "更新归档“%s”中的文件吗？"
 
-#: src/dlg-update.c:314 src/dlg-update.c:328
+#: src/dlg-update.c:315 src/dlg-update.c:329
 msgid "_Update"
 msgstr "更新(_U)"
 
-#: src/dlg-update.c:318
+#: src/dlg-update.c:319
 msgctxt "Window title"
 msgid "Update"
 msgstr "更新"
@@ -440,7 +445,7 @@ msgstr ""
 "tuhaihe <1132321739qq@gmail.com>, 2012, 2013\n"
 "Mingcong Bai <jeffbai@aosc.xyz>, 2015, 2017\n"
 "Dingzhong Chen <wsxy162@gmail.com>, 2018, 2019\n"
-"lumingzh <lumingzh@qq.com>, 2023"
+"lumingzh <lumingzh@qq.com>, 2023-2026"
 
 #: src/fr-application.c:58
 msgid "Add files to the specified archive and quit the program"
@@ -492,54 +497,54 @@ msgstr "以服务启动"
 msgid "Show version"
 msgstr "显示版本"
 
-#: src/fr-application.c:493
+#: src/fr-application.c:491
 msgid "— Create and modify an archive"
 msgstr "— 创建并修改归档文件"
 
-#: src/fr-archive.c:1866
+#: src/fr-archive.c:1884
 msgid "You don’t have the right permissions."
 msgstr "您没有正确的权限。"
 
-#: src/fr-archive.c:1866
+#: src/fr-archive.c:1884
 msgid "This archive type cannot be modified"
 msgstr "此归档文件类型无法修改"
 
-#: src/fr-archive.c:1880 src/fr-new-archive-dialog.c:676
+#: src/fr-archive.c:1898 src/fr-new-archive-dialog.c:881
 msgid "You can’t add an archive to itself."
 msgstr "您无法将归档文件添加到其自身。"
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:296 src/fr-command-rar.c:495 src/fr-command-tar.c:325
+#: src/fr-command-7z.c:296 src/fr-command-rar.c:539 src/fr-command-tar.c:328
 #, c-format
 msgid "Adding “%s”"
 msgstr "正在添加“%s”"
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:449 src/fr-command-rar.c:627 src/fr-command-tar.c:446
+#: src/fr-command-7z.c:450 src/fr-command-rar.c:671 src/fr-command-tar.c:449
 #, c-format
 msgid "Extracting “%s”"
 msgstr "正在提取“%s”"
 
 #. Translators: %s is a filename.
-#: src/fr-command-rar.c:576 src/fr-command-tar.c:391
+#: src/fr-command-rar.c:620 src/fr-command-tar.c:394
 #, c-format
 msgid "Removing “%s”"
 msgstr "正在移除“%s”"
 
-#: src/fr-command-rar.c:749
+#: src/fr-command-rar.c:813
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "找不到卷：%s"
 
-#: src/fr-command-tar.c:401
+#: src/fr-command-tar.c:404
 msgid "Deleting files from archive"
 msgstr "从归档文件中删除文件"
 
-#: src/fr-command-tar.c:506
+#: src/fr-command-tar.c:509
 msgid "Recompressing archive"
 msgstr "重新归档文件"
 
-#: src/fr-command-tar.c:825
+#: src/fr-command-tar.c:849
 msgid "Decompressing archive"
 msgstr "解压缩文件"
 
@@ -548,26 +553,26 @@ msgstr "解压缩文件"
 msgid "Archive not found"
 msgstr "未找到归档"
 
-#: src/fr-file-selector-dialog.c:597 src/fr-file-selector-dialog.c:610
+#: src/fr-file-selector-dialog.c:611 src/fr-file-selector-dialog.c:624
 msgid "Could not create the folder"
 msgstr "无法创建该文件夹"
 
-#: src/fr-file-selector-dialog.c:635
+#: src/fr-file-selector-dialog.c:649
 msgctxt "Window title"
 msgid "New Folder"
 msgstr "新建文件夹"
 
-#: src/fr-file-selector-dialog.c:636
+#: src/fr-file-selector-dialog.c:650
 msgid "_Name:"
 msgstr "名称(_N)："
 
-#: src/fr-file-selector-dialog.c:797
-msgid "New Folder"
-msgstr "新建文件夹"
-
-#: src/fr-file-selector-dialog.c:915 src/fr-file-selector-dialog.c:960
+#: src/fr-file-selector-dialog.c:669
 msgid "Could not load the location"
 msgstr "无法加载该位置"
+
+#: src/fr-file-selector-dialog.c:922
+msgid "New Folder"
+msgstr "新建文件夹"
 
 #: src/fr-location-bar.c:210
 msgid "Previous visited location"
@@ -582,368 +587,369 @@ msgid "Parent location"
 msgstr "上级位置"
 
 #. Translators: after the colon there is a folder name.
-#: src/fr-location-bar.c:236 src/fr-window.c:4917
+#: src/fr-location-bar.c:236 src/fr-window.c:4986
 msgid "_Location:"
 msgstr "位置(_L)："
 
-#: src/fr-new-archive-dialog.c:315
+#: src/fr-new-archive-dialog.c:343 src/fr-new-archive-dialog.c:395
 msgctxt "Window title"
 msgid "New Archive"
 msgstr "新建归档文件"
 
-#: src/fr-new-archive-dialog.c:535
+#: src/fr-new-archive-dialog.c:713
 msgid "Could not delete the old archive."
 msgstr "无法删除旧归档文件。"
 
-#: src/fr-new-archive-dialog.c:576 src/fr-new-archive-dialog.c:592
-#: src/fr-new-archive-dialog.c:632 src/fr-new-archive-dialog.c:651
-#: src/fr-new-archive-dialog.c:674 src/fr-window.c:2718
+#: src/fr-new-archive-dialog.c:781 src/fr-new-archive-dialog.c:797
+#: src/fr-new-archive-dialog.c:837 src/fr-new-archive-dialog.c:856
+#: src/fr-new-archive-dialog.c:879 src/fr-window.c:2748
 msgid "Could not create the archive"
 msgstr "无法创建归档文件"
 
-#: src/fr-new-archive-dialog.c:578
+#: src/fr-new-archive-dialog.c:783
 msgid "You have to specify an archive name."
 msgstr "您必须指定归档文件名称。"
 
-#: src/fr-new-archive-dialog.c:634
+#: src/fr-new-archive-dialog.c:839
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "您没有在此文件夹中创建归档文件的权限"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:653 src/glib-utils.c:1182
+#: src/fr-new-archive-dialog.c:858 src/glib-utils.c:1182
 msgid "New name is the same as old one, please type other name."
 msgstr "新文件名与旧文件名相同，请输入一个其他的名称。"
 
-#: src/fr-new-archive-dialog.c:697
+#: src/fr-new-archive-dialog.c:907
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "文件“%s”已经存在。您要替换它吗？"
 
-#: src/fr-new-archive-dialog.c:698
+#: src/fr-new-archive-dialog.c:908
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
 msgstr "“%s”中已有该文件。替换它将覆盖其内容。"
 
-#: src/fr-new-archive-dialog.c:705 src/fr-window.c:5768
+#: src/fr-new-archive-dialog.c:915 src/fr-window.c:5841
 msgid "_Replace"
 msgstr "替换(_R)"
 
 #. Translators: this is the name of the home directory.
-#: src/fr-places-sidebar.c:274 src/fr-window.c:4911
+#: src/fr-places-sidebar.c:497 src/fr-window.c:4980
 msgid "Home"
 msgstr "主目录"
 
-#: src/fr-window-actions-callbacks.c:322
+#: src/fr-window-actions-callbacks.c:330
 msgctxt "Window title"
 msgid "Open"
 msgstr "打开"
 
-#: src/fr-window-actions-callbacks.c:334
+#: src/fr-window-actions-callbacks.c:342
 msgid "All archives"
 msgstr "全部归档文件"
 
-#: src/fr-window-actions-callbacks.c:341
+#: src/fr-window-actions-callbacks.c:349
 msgid "All files"
 msgstr "全部文件"
 
-#: src/fr-window.c:1106
+#: src/fr-window.c:1109
 msgid "Operation completed"
 msgstr "操作完成"
 
-#: src/fr-window.c:1485
+#: src/fr-window.c:1488
 msgid "Folder"
 msgstr "文件夹"
 
-#: src/fr-window.c:1873
+#: src/fr-window.c:1876
 msgid "[read only]"
 msgstr "[只读]"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2032 src/fr-window.c:2070
+#: src/fr-window.c:2050 src/fr-window.c:2088
 #, c-format
 msgid "Creating “%s”"
 msgstr "正在创建“%s”"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2036
+#: src/fr-window.c:2054
 #, c-format
 msgid "Loading “%s”"
 msgstr "正在加载“%s”"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2040
+#: src/fr-window.c:2058
 #, c-format
 msgid "Reading “%s”"
 msgstr "正在读取“%s”"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2044
+#: src/fr-window.c:2062
 #, c-format
 msgid "Deleting the files from “%s”"
 msgstr "正在删除“%s”中的文件"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2048
+#: src/fr-window.c:2066
 #, c-format
 msgid "Testing “%s”"
 msgstr "正在测试“%s”"
 
-#: src/fr-window.c:2051
+#: src/fr-window.c:2069
 msgid "Getting the file list"
 msgstr "正在获取文件列表"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2055
+#: src/fr-window.c:2073
 #, c-format
 msgid "Copying the files to add to “%s”"
 msgstr "正在复制要添加到“%s”的文件"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2059
+#: src/fr-window.c:2077
 #, c-format
 msgid "Adding the files to “%s”"
 msgstr "正在向“%s”添加文件"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2063
+#: src/fr-window.c:2081
 #, c-format
 msgid "Extracting the files from “%s”"
 msgstr "正在提取“%s”中的文件"
 
-#: src/fr-window.c:2066
+#: src/fr-window.c:2084
 msgid "Copying the extracted files to the destination"
 msgstr "正在将提取的文件复制到目标位置"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2075
+#: src/fr-window.c:2093
 #, c-format
 msgid "Saving “%s”"
 msgstr "正在保存“%s”"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2082
+#: src/fr-window.c:2100
 #, c-format
 msgid "Renaming the files in “%s”"
 msgstr "正在重命名“%s”中的文件"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2086
+#: src/fr-window.c:2104
 #, c-format
 msgid "Updating the files in “%s”"
 msgstr "正在更新“%s”中的文件"
 
-#: src/fr-window.c:2377
+#: src/fr-window.c:2399
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "剩余 %'d 个文件"
 
-#: src/fr-window.c:2381 src/fr-window.c:3004
+#: src/fr-window.c:2403 src/fr-window.c:3045
 msgid "Please wait…"
 msgstr "请稍候…"
 
-#: src/fr-window.c:2483
+#: src/fr-window.c:2513
 msgid "Extraction completed successfully"
 msgstr "提取成功完成"
 
-#: src/fr-window.c:2486
+#: src/fr-window.c:2516
 msgid "_Show the Files"
 msgstr "显示文件(_S)"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2504 src/fr-window.c:5272
+#: src/fr-window.c:2534 src/fr-window.c:5340
 #, c-format
 msgid "“%s” created successfully"
 msgstr "已成功创建“%s”"
 
-#: src/fr-window.c:2511
+#: src/fr-window.c:2541
 msgid "_Open the Archive"
 msgstr "打开归档文件(_O)"
 
-#: src/fr-window.c:2601 src/fr-window.c:2775
+#: src/fr-window.c:2631 src/fr-window.c:2805
 msgid "Command exited abnormally."
 msgstr "命令异常退出。"
 
-#: src/fr-window.c:2723
+#: src/fr-window.c:2753
 msgid "An error occurred while extracting files."
 msgstr "提取文件时发生了错误。"
 
-#: src/fr-window.c:2729
+#: src/fr-window.c:2759 src/gtk-utils.c:719
 #, c-format
 msgid "Could not open “%s”"
 msgstr "无法打开“%s”"
 
-#: src/fr-window.c:2734
+#: src/fr-window.c:2764
 msgid "An error occurred while loading the archive."
 msgstr "装入归档文件时出现了一个错误。"
 
-#: src/fr-window.c:2738
+#: src/fr-window.c:2768
 msgid "An error occurred while deleting files from the archive."
 msgstr "从归档文件中删除文件时出现了一个错误。"
 
-#: src/fr-window.c:2744
+#: src/fr-window.c:2774
 msgid "An error occurred while adding files to the archive."
 msgstr "将文件添加到归档文件时出现了一个错误。"
 
-#: src/fr-window.c:2748
+#: src/fr-window.c:2778
 msgid "An error occurred while testing archive."
 msgstr "测试归档文件时出现了一个错误。"
 
-#: src/fr-window.c:2753
+#: src/fr-window.c:2783
 msgid "An error occurred while saving the archive."
 msgstr "保存归档文件时出现了一个错误。"
 
-#: src/fr-window.c:2757
+#: src/fr-window.c:2787
 msgid "An error occurred while renaming the files."
 msgstr "重命名文件时发生了错误。"
 
-#: src/fr-window.c:2761
+#: src/fr-window.c:2791
 msgid "An error occurred while updating the files."
 msgstr "更新文件时发生了错误。"
 
-#: src/fr-window.c:2765
+#: src/fr-window.c:2795
 msgid "An error occurred."
 msgstr "出现了一个错误。"
 
-#: src/fr-window.c:2771
+#: src/fr-window.c:2801
 msgid "Command not found."
 msgstr "命令没有找到。"
 
-#: src/fr-window.c:2940
+#: src/fr-window.c:2979
 msgid "Test Result"
 msgstr "测试结果"
 
-#: src/fr-window.c:3696 src/fr-window.c:6511
+#: src/fr-window.c:3737 src/fr-window.c:4875 src/fr-window.c:6586
 msgid "New Archive"
 msgstr "新建归档文件"
 
-#: src/fr-window.c:3734
+#: src/fr-window.c:3775
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "您想要将此文件添加到当前归档文件还是打开为新归档文件？"
 
-#: src/fr-window.c:3758
+#: src/fr-window.c:3799
 msgid "Do you want to create a new archive with these files?"
 msgstr "您是否想要创建包含这些文件在内的新归档文件？"
 
-#: src/fr-window.c:3761
+#: src/fr-window.c:3802
 msgid "Create _Archive"
 msgstr "创建归档文件(_A)"
 
-#: src/fr-window.c:4024
+#: src/fr-window.c:4074
 msgid "Folders"
 msgstr "文件夹"
 
-#: src/fr-window.c:4074 src/ui/file-selector.ui:116
+#: src/fr-window.c:4124 src/ui/file-selector.ui:116
 msgctxt "File"
 msgid "Size"
 msgstr "大小"
 
-#: src/fr-window.c:4075
+#: src/fr-window.c:4125
 msgctxt "File"
 msgid "Type"
 msgstr "类型"
 
-#: src/fr-window.c:4076 src/ui/file-selector.ui:135
+#: src/fr-window.c:4126 src/ui/file-selector.ui:135
 msgctxt "File"
 msgid "Modified"
 msgstr "已修改"
 
-#: src/fr-window.c:4077
+#: src/fr-window.c:4127
 msgctxt "File"
 msgid "Location"
 msgstr "位置"
 
-#: src/fr-window.c:4086 src/ui/file-selector.ui:80
+#: src/fr-window.c:4136 src/ui/file-selector.ui:80
 msgctxt "File"
 msgid "Name"
 msgstr "名称"
 
-#: src/fr-window.c:4813
+#: src/fr-window.c:4864
 msgid "No Archive Opened"
 msgstr "无打开的归档文件"
 
-#: src/fr-window.c:4814
+#: src/fr-window.c:4865
 msgid "Open an archive or create a new one."
 msgstr "打开归档文件或创建新归档。"
 
-#: src/fr-window.c:4856
-msgctxt "Action"
-msgid "_Extract…"
-msgstr "提取(_E)…"
-
-#: src/fr-window.c:4861
-msgid "Extract Files"
-msgstr "提取文件"
-
-#: src/fr-window.c:4865
-msgctxt "Action"
-msgid "Add Files"
-msgstr "添加文件"
-
-#: src/fr-window.c:4882
-msgid "Main Menu"
-msgstr "主菜单"
-
-#: src/fr-window.c:4890
-msgid "Search"
-msgstr "搜索"
-
-#: src/fr-window.c:4905
-msgid "Back"
-msgstr "后退"
-
-#: src/fr-window.c:4907
-msgid "Forward"
-msgstr "前进"
-
-#: src/fr-window.c:4909
-msgid "Up"
-msgstr "上"
-
-#: src/fr-window.c:5277 src/ui/menus.ui:7 src/ui/menus.ui:52 src/ui/menus.ui:88
+#: src/fr-window.c:4870 src/fr-window.c:5345 src/ui/menus.ui:7
+#: src/ui/menus.ui:52 src/ui/menus.ui:88
 msgctxt "Action"
 msgid "Open"
 msgstr "打开"
 
-#: src/fr-window.c:5756
+#: src/fr-window.c:4925
+msgctxt "Action"
+msgid "_Extract…"
+msgstr "提取(_E)…"
+
+#: src/fr-window.c:4930
+msgid "Extract Files"
+msgstr "提取文件"
+
+#: src/fr-window.c:4934
+msgctxt "Action"
+msgid "Add Files"
+msgstr "添加文件"
+
+#: src/fr-window.c:4951
+msgid "Main Menu"
+msgstr "主菜单"
+
+#: src/fr-window.c:4959
+msgid "Search"
+msgstr "搜索"
+
+#: src/fr-window.c:4974
+msgid "Back"
+msgstr "后退"
+
+#: src/fr-window.c:4976
+msgid "Forward"
+msgstr "前进"
+
+#: src/fr-window.c:4978
+msgid "Up"
+msgstr "上"
+
+#: src/fr-window.c:5829
 #, c-format
 msgid "Replace file “%s”?"
 msgstr "要替换文件“%s”吗？"
 
-#: src/fr-window.c:5759
+#: src/fr-window.c:5832
 #, c-format
 msgid "Another file with the same name already exists in “%s”."
 msgstr "在“%s”中已存在另一个相同文件名的文件。"
 
-#: src/fr-window.c:5765
+#: src/fr-window.c:5838
 msgid "Replace _All"
 msgstr "全部替换(_A)"
 
-#: src/fr-window.c:5766
+#: src/fr-window.c:5839
 msgid "Replace _Nothing"
 msgstr "取消替换(_N)"
 
-#: src/fr-window.c:5767
+#: src/fr-window.c:5840
 msgid "_Skip"
 msgstr "跳过(_S)"
 
-#: src/fr-window.c:6698 src/fr-window.c:7064
+#: src/fr-window.c:6779 src/fr-window.c:7145
 #, c-format
 msgid "Could not save the archive “%s”"
 msgstr "无法保存归档文件“%s”"
 
-#: src/fr-window.c:6830
+#: src/fr-window.c:6911
 msgid "Save"
 msgstr "保存"
 
-#: src/fr-window.c:7157
+#: src/fr-window.c:7238
 msgid "Last Output"
 msgstr "上次的输出"
 
-#: src/fr-window.c:7392
+#: src/fr-window.c:7473
 #, c-format
 msgid ""
 "A folder named “%s” already exists.\n"
@@ -954,11 +960,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:7392 src/fr-window.c:7394
+#: src/fr-window.c:7473 src/fr-window.c:7475
 msgid "Please use a different name."
 msgstr "请使用其它不同的文件名。"
 
-#: src/fr-window.c:7394
+#: src/fr-window.c:7475
 #, c-format
 msgid ""
 "A file named “%s” already exists.\n"
@@ -969,55 +975,55 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:7466 src/fr-window.c:7481
+#: src/fr-window.c:7547 src/fr-window.c:7562
 msgid "Could not rename the folder"
 msgstr "无法重命名文件夹"
 
-#: src/fr-window.c:7466 src/fr-window.c:7481
+#: src/fr-window.c:7547 src/fr-window.c:7562
 msgid "Could not rename the file"
 msgstr "无法重命名文件"
 
-#: src/fr-window.c:7569
+#: src/fr-window.c:7650
 msgid "Rename"
 msgstr "重命名"
 
-#: src/fr-window.c:7570
+#: src/fr-window.c:7651
 msgid "_New folder name:"
 msgstr "新文件夹名(_N)："
 
-#: src/fr-window.c:7570
+#: src/fr-window.c:7651
 msgid "_New file name:"
 msgstr "新文件名(_N)："
 
-#: src/fr-window.c:7574
+#: src/fr-window.c:7655
 msgid "_Rename"
 msgstr "重命名(_R)"
 
-#: src/fr-window.c:7917
+#: src/fr-window.c:7998
 msgid "Source and destination are the same."
 msgstr "来源和目标相同。"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:7966
+#: src/fr-window.c:8047
 #, c-format
 msgid "Moving the files from “%s” to “%s”"
 msgstr "正在将“%s”中的文件移动到“%s”"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:7969
+#: src/fr-window.c:8050
 #, c-format
 msgid "Copying the files from “%s” to “%s”"
 msgstr "正在将“%s”中的文件复制到“%s”"
 
-#: src/fr-window.c:8047
+#: src/fr-window.c:8128
 msgid "Paste Selection"
 msgstr "粘贴选中内容"
 
-#: src/fr-window.c:8048
+#: src/fr-window.c:8129
 msgid "_Destination folder:"
 msgstr "目标文件夹(_D)："
 
-#: src/fr-window.c:8052
+#: src/fr-window.c:8133
 msgid "_Paste"
 msgstr "粘贴(_P)"
 
@@ -1034,11 +1040,11 @@ msgid ""
 "characters: %s, please type other name."
 msgstr "文件名“%s”非法，因为它不能含有字符：%s，请再输入一个文件名。"
 
-#: src/gtk-utils.c:211
+#: src/gtk-utils.c:213
 msgid "C_ommand Line Output:"
 msgstr "命令行输出(_O)："
 
-#: src/gtk-utils.c:366
+#: src/gtk-utils.c:368
 msgid "Change password visibility"
 msgstr "改变密码可见性"
 
@@ -1343,45 +1349,45 @@ msgstr "重命名(_R)…"
 msgid "File"
 msgstr "文件"
 
-#: src/ui/new-archive-dialog.ui:26
+#: src/ui/new-archive-dialog.ui:31
 msgid "Extension"
 msgstr "扩展"
 
-#: src/ui/new-archive-dialog.ui:35 src/ui/properties.ui:46
+#: src/ui/new-archive-dialog.ui:40 src/ui/properties.ui:52
 msgid "Location"
 msgstr "位置"
 
-#: src/ui/new-archive-dialog.ui:54
+#: src/ui/new-archive-dialog.ui:78
 msgid "Encrypt"
 msgstr "加密"
 
-#: src/ui/new-archive-dialog.ui:55
+#: src/ui/new-archive-dialog.ui:79
 msgid "Ask a password to extract the files"
 msgstr "询问密码以提取文件"
 
-#: src/ui/new-archive-dialog.ui:63
+#: src/ui/new-archive-dialog.ui:87
 msgid "Encrypt File List"
 msgstr "加密文件列表"
 
-#: src/ui/new-archive-dialog.ui:64
+#: src/ui/new-archive-dialog.ui:88
 msgid "Ask the password to see the file list"
 msgstr "询问密码以查看文件列表"
 
-#: src/ui/new-archive-dialog.ui:84
+#: src/ui/new-archive-dialog.ui:108
 msgid "Split in Volumes"
 msgstr "拆分为卷"
 
-#: src/ui/new-archive-dialog.ui:85
+#: src/ui/new-archive-dialog.ui:109
 msgid "Split the archive in smaller files"
 msgstr "拆分归档为较小文件"
 
 #. File size
-#: src/ui/new-archive-dialog.ui:88
+#: src/ui/new-archive-dialog.ui:112
 msgid "Size"
 msgstr "大小"
 
 #. Short for Megabytes
-#: src/ui/new-archive-dialog.ui:106
+#: src/ui/new-archive-dialog.ui:130
 msgid "MB"
 msgstr "MB"
 
@@ -1389,27 +1395,27 @@ msgstr "MB"
 msgid "_Encrypt the file list"
 msgstr "加密文件列表(_E)"
 
-#: src/ui/properties.ui:92
+#: src/ui/properties.ui:98
 msgid "Last Modified"
 msgstr "最后修改"
 
-#: src/ui/properties.ui:120
+#: src/ui/properties.ui:126
 msgid "Type"
 msgstr "类型"
 
-#: src/ui/properties.ui:152
+#: src/ui/properties.ui:158
 msgid "Compressed Size"
 msgstr "已压缩的大小"
 
-#: src/ui/properties.ui:180
+#: src/ui/properties.ui:186
 msgid "Uncompressed Size"
 msgstr "未压缩的大小"
 
-#: src/ui/properties.ui:208
+#: src/ui/properties.ui:214
 msgid "Compression Ratio"
 msgstr "压缩率"
 
-#: src/ui/properties.ui:236
+#: src/ui/properties.ui:242
 msgctxt "properties dialog"
 msgid "Number of Files"
 msgstr "文件数"
@@ -1809,8 +1815,8 @@ msgstr "选择您要更新的文件(_E)："
 #~ msgstr "扩展名"
 
 #~ msgid ""
-#~ "The program was not able to find out the file format you want to use for `"
-#~ "%s'. Please make sure to use a known extension for that file or manually "
+#~ "The program was not able to find out the file format you want to use for "
+#~ "`%s'. Please make sure to use a known extension for that file or manually "
 #~ "choose a file format from the list below."
 #~ msgstr ""
 #~ "本程序无法确定 %s 所使用的文件格式。请确定您使用了正确的文件扩展名，或者从"
