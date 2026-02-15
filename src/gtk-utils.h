@@ -65,7 +65,7 @@ GtkWidget *   _gtk_error_dialog_new                (GtkWindow        *parent,
 void          _gtk_error_dialog_run                (GtkWindow        *parent,
 						    const gchar      *main_message,
 						    const gchar      *format,
-						    ...);
+						    ...) G_GNUC_PRINTF (3, 4);
 void          _gtk_dialog_add_to_window_group      (GtkDialog        *dialog);
 void          _gtk_entry_set_locale_text           (GtkEntry         *entry,
 						    const char       *text);

@@ -191,6 +191,7 @@ gchar * 	   fr_get_thread_count 		   (void);
 
 /* debug */
 
+G_GNUC_PRINTF (4, 5)
 void                debug                          (const char          *file,
 						    int                  line,
 						    const char          *function,
