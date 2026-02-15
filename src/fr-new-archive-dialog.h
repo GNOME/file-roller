@@ -23,6 +23,7 @@
 #define FR_NEW_ARCHIVE_DIALOG_H
 
 #include <gtk/gtk.h>
+#include <stdint.h>
 
 typedef enum {
 	FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES,
@@ -58,6 +59,6 @@ void            fr_new_archive_dialog_get_file            (FrNewArchiveDialog  *
 							   gpointer user_data);
 const char *    fr_new_archive_dialog_get_password        (FrNewArchiveDialog  *dialog);
 gboolean        fr_new_archive_dialog_get_encrypt_header  (FrNewArchiveDialog  *dialog);
-int             fr_new_archive_dialog_get_volume_size     (FrNewArchiveDialog  *dialog);
+uint64_t        fr_new_archive_dialog_get_volume_size     (FrNewArchiveDialog  *dialog);
 
 #endif /* FR_NEW_ARCHIVE_DIALOG_H */

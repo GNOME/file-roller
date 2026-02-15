@@ -179,7 +179,7 @@ fr_archive_set_property (GObject      *object,
 		self->compression = g_value_get_enum (value);
 		break;
 	case PROP_VOLUME_SIZE:
-		self->volume_size = g_value_get_uint (value);
+		self->volume_size = g_value_get_uint64 (value);
 		break;
         default:
                 break;
@@ -215,7 +215,7 @@ fr_archive_get_property (GObject    *object,
 		g_value_set_enum (value, self->compression);
 		break;
 	case PROP_VOLUME_SIZE:
-		g_value_set_uint (value, self->volume_size);
+		g_value_set_uint64 (value, self->volume_size);
 		break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -366,13 +366,13 @@ fr_archive_class_init (FrArchiveClass *klass)
 							    G_PARAM_READWRITE));
 	g_object_class_install_property (gobject_class,
 					 PROP_VOLUME_SIZE,
-					 g_param_spec_uint ("volume-size",
-							    "Volume size",
-							    "The size of each volume or 0 to not use volumes",
-							    0L,
-							    G_MAXUINT,
-							    0,
-							    G_PARAM_READWRITE));
+					 g_param_spec_uint64 ("volume-size",
+							      "Volume size",
+							      "The size of each volume or 0 to not use volumes",
+							      0L,
+							      G_MAXUINT64,
+							      0,
+							      G_PARAM_READWRITE));
 
 	/* signals */
 
@@ -937,7 +937,7 @@ typedef struct {
 	char                *password;
 	gboolean             encrypt_header;
 	FrCompression        compression;
-	guint                volume_size;
+	uint64_t             volume_size;
 	GCancellable        *cancellable;
 	GAsyncReadyCallback  callback;
 	gpointer             user_data;
@@ -1043,7 +1043,7 @@ fr_archive_add_files (FrArchive           *archive,
 		      const char          *password,
 		      gboolean             encrypt_header,
 		      FrCompression        compression,
-		      guint                volume_size,
+		      uint64_t             volume_size,
 		      GCancellable        *cancellable,
 		      GAsyncReadyCallback  callback,
 		      gpointer             user_data)
@@ -1126,7 +1126,7 @@ fr_archive_add_files_with_filter (FrArchive           *archive,
 				  const char          *password,
 				  gboolean             encrypt_header,
 				  FrCompression        compression,
-				  guint                volume_size,
+				  uint64_t             volume_size,
 				  GCancellable        *cancellable,
 				  GAsyncReadyCallback  callback,
 				  gpointer             user_data)
@@ -1561,7 +1561,7 @@ fr_archive_paste_clipboard (FrArchive           *archive,
 			    char                *password,
 			    gboolean             encrypt_header,
 			    FrCompression        compression,
-			    guint                volume_size,
+			    uint64_t             volume_size,
 			    FrClipboardOp        op,
 			    char                *base_dir,
 			    GList               *files,
@@ -1601,7 +1601,7 @@ struct _DroppedItemsData {
 	char                *password;
 	gboolean             encrypt_header;
 	FrCompression        compression;
-	guint                volume_size;
+	uint64_t             volume_size;
 	GCancellable        *cancellable;
 	GAsyncReadyCallback  callback;
 	gpointer             user_data;
@@ -1615,7 +1615,7 @@ dropped_items_data_new (FrArchive           *archive,
 			const char          *password,
 			gboolean             encrypt_header,
 			FrCompression        compression,
-			guint                volume_size,
+			uint64_t             volume_size,
 			GCancellable        *cancellable,
 			GAsyncReadyCallback  callback,
 			gpointer             user_data)
@@ -1862,7 +1862,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 			      const char          *password,
 			      gboolean             encrypt_header,
 			      FrCompression        compression,
-			      guint                volume_size,
+			      uint64_t             volume_size,
 			      GCancellable        *cancellable,
 			      GAsyncReadyCallback  callback,
 			      gpointer             user_data)
@@ -1928,7 +1928,7 @@ fr_archive_update_open_files (FrArchive           *archive,
 			      const char          *password,
 			      gboolean             encrypt_header,
 			      FrCompression        compression,
-			      guint                volume_size,
+			      uint64_t             volume_size,
 			      GCancellable        *cancellable,
 			      GAsyncReadyCallback  callback,
 			      gpointer             user_data)

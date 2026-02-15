@@ -274,7 +274,7 @@ typedef struct {
 	char *           second_password;
 	gboolean         encrypt_header;
 	FrCompression    compression;
-	guint            volume_size;
+	uint64_t         volume_size;
 
 	guint            activity_timeout_handle;   /* activity timeout
 						     * handle. */
@@ -6368,7 +6368,7 @@ fr_window_get_compression (FrWindow *window)
 
 void
 fr_window_set_volume_size (FrWindow *window,
-			   guint     volume_size)
+                           uint64_t  volume_size)
 {
 	g_return_if_fail (window != NULL);
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
@@ -6377,7 +6377,7 @@ fr_window_set_volume_size (FrWindow *window,
 }
 
 
-guint
+uint64_t
 fr_window_get_volume_size (FrWindow *window)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
@@ -6612,7 +6612,7 @@ typedef struct {
 	char      *mime_type;
 	char      *password;
 	gboolean   encrypt_header;
-	guint      volume_size;
+	uint64_t   volume_size;
 	GFile     *temp_extraction_dir;
 } ConvertData;
 
@@ -6622,7 +6622,7 @@ convert_data_new (GFile      *file,
 		  const char *mime_type,
 		  const char *password,
 		  gboolean    encrypt_header,
-		  guint       volume_size)
+		  uint64_t    volume_size)
 {
 	ConvertData *cdata;
 
@@ -6759,7 +6759,7 @@ fr_window_archive_save_as (FrWindow   *window,
 			   const char *mime_type,
 			   const char *password,
 			   gboolean    encrypt_header,
-			   guint       volume_size)
+			   uint64_t    volume_size)
 {
 	FrWindowPrivate *private = fr_window_get_instance_private (window);
 	FrArchive   *new_archive;
@@ -6852,7 +6852,7 @@ save_as_new_get_file_cb (FrNewArchiveDialog *dialog,
 	FrWindow   *window = user_data;
 	const char *password;
 	gboolean    encrypt_header;
-	int         volume_size;
+	uint64_t    volume_size;
 	GSettings  *settings;
 
 	if (file == NULL)

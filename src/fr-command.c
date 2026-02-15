@@ -22,6 +22,7 @@
 #include <config.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/param.h>
@@ -62,7 +63,7 @@ typedef struct {
 	char               *password;
 	gboolean            encrypt_header;
 	FrCompression       compression;
-	guint               volume_size;
+	uint64_t            volume_size;
 	GCancellable       *cancellable;
 	GSimpleAsyncResult *result;
 } XferData;
@@ -912,7 +913,7 @@ _fr_command_add (FrCommand      *self,
 		 const char     *password,
 		 gboolean        encrypt_header,
 		 FrCompression   compression,
-		 guint           volume_size,
+		 uint64_t        volume_size,
 		 GCancellable   *cancellable,
 		 GError        **error)
 {
@@ -1241,7 +1242,7 @@ _fr_command_add_local_files (FrCommand           *self,
 			     const char          *password,
 			     gboolean             encrypt_header,
 			     FrCompression        compression,
-			     guint                volume_size,
+			     uint64_t             volume_size,
 			     GCancellable        *cancellable,
 			     GSimpleAsyncResult  *command_result)
 {
@@ -1344,7 +1345,7 @@ copy_remote_files (FrCommand           *self,
 		   const char          *password,
 		   gboolean             encrypt_header,
 		   FrCompression        compression,
-		   guint                volume_size,
+		   uint64_t             volume_size,
 		   GFile               *tmp_dir,
 		   GCancellable        *cancellable,
 		   GSimpleAsyncResult  *result)
@@ -1441,7 +1442,7 @@ fr_command_add_files (FrArchive           *base,
 		      const char          *password,
 		      gboolean             encrypt_header,
 		      FrCompression        compression,
-		      guint                volume_size,
+		      uint64_t             volume_size,
 		      GCancellable        *cancellable,
 		      GAsyncReadyCallback  callback,
 		      gpointer             user_data)
@@ -2696,7 +2697,7 @@ fr_command_paste_clipboard (FrArchive           *archive,
 		    	    char                *password,
 		    	    gboolean             encrypt_header,
 		    	    FrCompression        compression,
-		    	    guint                volume_size,
+		    	    uint64_t             volume_size,
 		    	    FrClipboardOp        op,
 		    	    char                *base_dir,
 		    	    GList               *files,
@@ -2808,7 +2809,7 @@ fr_command_add_dropped_files (FrArchive           *archive,
 		   	      const char          *password,
 		   	      gboolean             encrypt_header,
 		   	      FrCompression        compression,
-		   	      guint                volume_size,
+		   	      uint64_t             volume_size,
 		   	      GCancellable        *cancellable,
 		   	      GAsyncReadyCallback  callback,
 		   	      gpointer             user_data)
@@ -2878,7 +2879,7 @@ fr_command_update_open_files (FrArchive           *archive,
 			      const char          *password,
 			      gboolean             encrypt_header,
 			      FrCompression        compression,
-			      guint                volume_size,
+			      uint64_t             volume_size,
 		   	      GCancellable        *cancellable,
 		   	      GAsyncReadyCallback  callback,
 		   	      gpointer             user_data)

@@ -191,8 +191,8 @@ void            fr_window_set_compression 	       (FrWindow      *window,
 						        FrCompression  compression);
 FrCompression   fr_window_get_compression 	       (FrWindow      *window);
 void            fr_window_set_volume_size 	       (FrWindow      *window,
-						        guint          volume_size);
-guint           fr_window_get_volume_size 	       (FrWindow      *window);
+						        uint64_t       volume_size);
+uint64_t        fr_window_get_volume_size              (FrWindow      *window);
 
 /**/
 
