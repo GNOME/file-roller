@@ -93,7 +93,7 @@ static const GOptionEntry options[] = {
 	  NULL,
 	  NULL },
 
-	{ NULL }
+	G_OPTION_ENTRY_NULL,
 };
 
 
