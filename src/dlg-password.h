@@ -23,6 +23,8 @@
 #define DLG_PASSWORD_H
 
 #include "fr-window.h"
+#include "glib.h"
+#include "gtk/gtk.h"
 
 void dlg_password (GtkWidget *widget,
 		   gpointer   callback_data);

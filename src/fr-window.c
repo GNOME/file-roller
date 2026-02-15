@@ -50,6 +50,7 @@
 #include "fr-init.h"
 #include "gtk-utils.h"
 #include "open-file.h"
+#include "preferences.h"
 #include "typedefs.h"
 
 #define LAST_OUTPUT_SCHEMA_NAME "LastOutput"

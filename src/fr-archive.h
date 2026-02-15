@@ -22,6 +22,7 @@
 #ifndef FR_ARCHIVE_H
 #define FR_ARCHIVE_H
 
+#include <gio/gio.h>
 #include <glib.h>
 #include "fr-file-data.h"
 #include "typedefs.h"

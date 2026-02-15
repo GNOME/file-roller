@@ -24,6 +24,8 @@
 
 #include "fr-archive.h"
 #include "fr-window.h"
+#include "glib.h"
+#include "gtk/gtk.h"
 
 void dlg_extract (GtkWidget *widget, gpointer data);
 void dlg_extract_folder_from_sidebar (GtkWidget *widget, gpointer data);

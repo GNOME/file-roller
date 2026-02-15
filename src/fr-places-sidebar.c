@@ -21,6 +21,7 @@
 
 #include <config.h>
 #include "fr-enum-types.h"
+#include <glib/gi18n.h>
 #include "fr-marshal.h"
 #include "fr-places-sidebar.h"
 #include "gio-utils.h"
