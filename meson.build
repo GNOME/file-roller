@@ -141,11 +141,13 @@ if get_option('buildtype').contains('debug')
     '-Wall',
     '-Wextra',
     '-Wcast-align',
+    '-Wdiscarded-qualifiers',
     '-Wmissing-prototypes',
     '-Wnested-externs',
     '-Wpointer-arith',
     '-Wformat-security',
     '-Wno-unused-parameter',
+    '-Wshadow',
   ]
 else
   warn_deprecated = false
