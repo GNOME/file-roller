@@ -78,8 +78,7 @@ fr_new_archive_dialog_finalize (GObject *object)
 
 	self = FR_NEW_ARCHIVE_DIALOG (object);
 
-	g_list_foreach (self->valid_extensions, (GFunc) g_free, NULL);
-	g_list_free (self->valid_extensions);
+	g_list_free_full (g_steal_pointer (&self->valid_extensions), g_free);
 	_g_object_list_unref (self->files_to_add);
 	_g_object_unref (self->original_file);
 	g_free (self->filename);
