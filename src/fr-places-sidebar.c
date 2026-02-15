@@ -522,16 +522,14 @@ static void update_entries (FrPlacesSidebar *self) {
 }
 
 
-static gboolean
+static void
 update_volume_list_cb (gpointer user_data)
 {
-	FrPlacesSidebar *self = user_data;
+	g_autoptr (FrPlacesSidebar) self = user_data;
 	FrPlacesSidebarPrivate *private = fr_places_sidebar_get_instance_private (self);
 
 	private->update_volumes_id = 0;
 	update_entries (self);
-
-	return G_SOURCE_REMOVE;
 }
 
 
@@ -547,11 +545,7 @@ mount_monitor_changed_cb (GVolumeMonitor *volume_monitor,
 		return;
 
 	g_object_ref (self);
-	private->update_volumes_id = g_idle_add_full (G_PRIORITY_DEFAULT_IDLE,
-		update_volume_list_cb,
-		self,
-		(GDestroyNotify) g_object_unref
-	);
+	private->update_volumes_id = g_idle_add_once (update_volume_list_cb, self);
 }
 
 static void
