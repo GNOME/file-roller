@@ -242,6 +242,8 @@ _g_file_get_mime_type (GFile    *file,
 	return result;
 }
 
+static gboolean
+_g_file_is_temp_work_dir (GFile *file);
 
 gboolean
 _g_file_is_temp_dir (GFile *file)
@@ -558,7 +560,7 @@ _g_file_get_temp_work_dir (GFile *parent_folder)
 }
 
 
-gboolean
+static gboolean
 _g_file_is_temp_work_dir (GFile *file)
 {
 	gboolean  result = FALSE;
@@ -586,88 +588,6 @@ _g_file_is_temp_work_dir (GFile *file)
 	g_free (path);
 
 	return result;
-}
-
-
-gboolean
-_g_file_query_dir_is_empty (GFile *file)
-{
-	GFileEnumerator *enumerator;
-	GFileInfo       *info;
-	GError          *error = NULL;
-	int              n = 0;
-
-	if (! g_file_query_exists (file, NULL))
-		return TRUE;
-
-	enumerator = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &error);
-	if (error != NULL) {
-		g_warning ("%s", error->message);
-		g_error_free (error);
-		g_object_unref (enumerator);
-		return TRUE;
-	}
-
-	while ((n == 0) && ((info = g_file_enumerator_next_file (enumerator, NULL, &error)) != NULL)) {
-		if (error != NULL) {
-			g_warning ("%s", error->message);
-			g_error_free (error);
-		}
-		else if (! IS_SPECIAL_DIR (g_file_info_get_name (info)))
-			n++;
-		g_object_unref (info);
-	}
-
-	g_object_unref (enumerator);
-
-	return (n == 0);
-}
-
-
-gboolean
-_g_file_dir_contains_one_object (GFile *file)
-{
-	GFileEnumerator *enumerator;
-	GFileInfo       *info;
-	GError          *error = NULL;
-	int              n = 0;
-
-	if (! g_file_query_exists (file, NULL))
-		return FALSE;
-
-	enumerator = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &error);
-	if (error != NULL) {
-		g_warning ("%s", error->message);
-		g_error_free (error);
-		g_object_unref (enumerator);
-		return FALSE;
-	}
-
-	while ((info = g_file_enumerator_next_file (enumerator, NULL, &error)) != NULL) {
-		const char *name;
-
-		if (error != NULL) {
-			g_warning ("%s", error->message);
-			g_error_free (error);
-			g_object_unref (info);
-			continue;
-		}
-
-		name = g_file_info_get_name (info);
-		if (strcmp (name, ".") == 0 || strcmp (name, "..") == 0) {
-			g_object_unref (info);
- 			continue;
-		}
-
-		g_object_unref (info);
-
-		if (++n > 1)
-			break;
-	}
-
-	g_object_unref (enumerator);
-
-	return (n == 1);
 }
 
 

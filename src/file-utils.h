@@ -57,9 +57,6 @@ GFile *             _g_file_new_user_config_subdir        (const char  *child_na
 GFile *             _g_file_get_dir_content_if_unique     (GFile       *file);
 guint64             _g_file_get_free_space                (GFile       *file);
 GFile *             _g_file_get_temp_work_dir             (GFile       *parent_folder);
-gboolean            _g_file_is_temp_work_dir              (GFile       *file);
-gboolean            _g_file_query_dir_is_empty            (GFile       *file);
-gboolean            _g_file_dir_contains_one_object       (GFile       *file);
 
 /* program */
 
