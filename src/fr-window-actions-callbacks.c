@@ -31,6 +31,7 @@
 #include "fr-window.h"
 #include "fr-window-actions-callbacks.h"
 #include "gtk-utils.h"
+#include "preferences.h"
 
 
 void

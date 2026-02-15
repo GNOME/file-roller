@@ -34,6 +34,7 @@
 #include "fr-init.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
+#include "preferences.h"
 
 
 #define ORG_GNOME_ARCHIVEMANAGER_XML "/org/gnome/FileRoller/../data/org.gnome.ArchiveManager1.xml"

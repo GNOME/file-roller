@@ -22,6 +22,8 @@
 #ifndef DLG_PASSWORD_H
 #define DLG_PASSWORD_H
 
+#include <glib.h>
+#include <gtk/gtk.h>
 #include "fr-window.h"
 
 void dlg_password (GtkWidget *widget,

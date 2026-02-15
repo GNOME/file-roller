@@ -25,6 +25,7 @@
 #include "fr-application.h"
 #include "fr-application-menu.h"
 #include "fr-enum-types.h"
+#include "fr-window.h"
 #include "fr-window-actions-callbacks.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"

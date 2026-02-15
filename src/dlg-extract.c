@@ -28,6 +28,7 @@
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
+#include "preferences.h"
 #include "typedefs.h"
 #include "dlg-extract.h"
 
