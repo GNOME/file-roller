@@ -754,7 +754,7 @@ child_setup (gpointer user_data)
 	FrProcessPrivate *private = fr_process_get_instance_private (process);
 
 	if (private->use_standard_locale)
-		putenv ("LC_MESSAGES=C");
+		setenv ("LC_MESSAGES", "C", TRUE);
 
 	/* detach from the tty */
 
