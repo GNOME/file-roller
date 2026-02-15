@@ -224,7 +224,7 @@ parse_name_field (char         *line,
 		}
 		if (field == NULL) {
 			int field_idx = attribute_field_with_space (line) ? 9 : 8;
-			const char *field = _g_str_get_last_field (line, field_idx);
+			field = _g_str_get_last_field (line, field_idx);
 			if (field == NULL) {
 				// Sometimes the checksum column is empty (seen for directories).
 				field_idx--;
