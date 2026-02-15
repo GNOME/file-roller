@@ -39,15 +39,15 @@ extract_to_callback (NautilusMenuItem *item,
 {
 	GList            *files;
 	GList            *scan;
-	NautilusFileInfo *file;
+	NautilusFileInfo *first_file;
 	g_autofree char *default_dir = NULL;
 	GString          *cmd;
 	g_autofree char *quoted_default_dir = NULL;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
-	file = files->data;
+	first_file = files->data;
 
-	default_dir = nautilus_file_info_get_parent_uri (file);
+	default_dir = nautilus_file_info_get_parent_uri (first_file);
 	quoted_default_dir = g_shell_quote (default_dir);
 
 	cmd = g_string_new ("file-roller");
