@@ -42,22 +42,24 @@
 #define FILES_FRACTION(self)    ((double) ((FrArchivePrivate*) fr_archive_get_instance_private (self))->completed_files + 0.5) / (((FrArchivePrivate*) fr_archive_get_instance_private (self))->total_files + 1)
 
 
-char *action_names[] = { "NONE",
-			 "CREATING_NEW_ARCHIVE",
-			 "LOADING_ARCHIVE",
-			 "LISTING_CONTENT",
-			 "DELETING_FILES",
-			 "TESTING_ARCHIVE",
-			 "GETTING_FILE_LIST",
-			 "COPYING_FILES_FROM_REMOTE",
-			 "ADDING_FILES",
-			 "EXTRACTING_FILES",
-			 "COPYING_FILES_TO_REMOTE",
-			 "CREATING_ARCHIVE",
-			 "SAVING_REMOTE_ARCHIVE",
-			 "RENAMING_FILES",
-			 "PASTING_FILES",
-			 "UPDATING_FILES" };
+const char *action_names[] = {
+	"NONE",
+	"CREATING_NEW_ARCHIVE",
+	"LOADING_ARCHIVE",
+	"LISTING_CONTENT",
+	"DELETING_FILES",
+	"TESTING_ARCHIVE",
+	"GETTING_FILE_LIST",
+	"COPYING_FILES_FROM_REMOTE",
+	"ADDING_FILES",
+	"EXTRACTING_FILES",
+	"COPYING_FILES_TO_REMOTE",
+	"CREATING_ARCHIVE",
+	"SAVING_REMOTE_ARCHIVE",
+	"RENAMING_FILES",
+	"PASTING_FILES",
+	"UPDATING_FILES",
+};
 
 
 typedef struct _DroppedItemsData DroppedItemsData;

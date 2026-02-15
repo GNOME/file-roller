@@ -52,7 +52,7 @@ typedef enum {
 } FrAction;
 
 #ifdef DEBUG
-extern char *action_names[];
+extern const char *action_names[];
 #endif
 
 #define FR_TYPE_ARCHIVE            (fr_archive_get_type ())

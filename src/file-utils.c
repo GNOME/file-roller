@@ -678,7 +678,7 @@ gboolean
 _g_program_is_in_path (const char *filename)
 {
 	char *str;
-	char *value;
+	const char *value;
 	int   result = FALSE;
 
 	value = g_hash_table_lookup (ProgramsCache, filename);
@@ -695,7 +695,7 @@ _g_program_is_in_path (const char *filename)
 
 	g_hash_table_insert (ProgramsCache,
 			     g_strdup (filename),
-			     result ? "1" : "0");
+			     (gpointer) (result ? "1" : "0"));
 
 	return result;
 }

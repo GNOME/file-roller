@@ -99,8 +99,8 @@ extract_here_callback (NautilusMenuItem *item,
 
 /** mime-types which aren't supported by nautilus itself */
 static struct {
-	char     *mime_type;
-	gboolean  is_compressed;
+	const char *mime_type;
+	gboolean    is_compressed;
 } archive_mime_types[] = {
 		{ "application/x-ace", TRUE },
 		{ "application/x-alz", TRUE },
