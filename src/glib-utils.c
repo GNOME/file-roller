@@ -58,18 +58,16 @@ _g_clear_object (gpointer p)
 }
 
 
+static gpointer
+_g_object_ref_copy_func (gconstpointer ptr, G_GNUC_UNUSED gpointer user_data)
+{
+    return g_object_ref ((gpointer) ptr);
+}
+
 GList *
 _g_object_list_ref (GList *list)
 {
-	GList *new_list;
-
-	if (list == NULL)
-		return NULL;
-
-	new_list = g_list_copy (list);
-	g_list_foreach (new_list, (GFunc) g_object_ref, NULL);
-
-	return new_list;
+	return g_list_copy_deep (list, _g_object_ref_copy_func, NULL);
 }
 
 
