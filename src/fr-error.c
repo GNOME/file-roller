@@ -39,7 +39,7 @@ fr_error_quark (void)
 G_DEFINE_BOXED_TYPE (FrError,
 		     fr_error,
 		     fr_error_copy,
-		     fr_error_free);
+		     fr_error_free)
 
 
 FrError *
