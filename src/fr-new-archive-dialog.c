@@ -521,6 +521,8 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 		self->supported_types = save_type;
 		gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_SAVE, GTK_RESPONSE_OK);
 		break;
+	default:
+		g_assert_not_reached ();
 	}
 	gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_OK);
 
