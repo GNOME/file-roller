@@ -60,8 +60,7 @@ response_cb (GtkDialog  *widget,
 	GList    *file_list = NULL;
 	gboolean  do_not_remove_if_null = FALSE;
 
-	switch (response_id) {
-	case GTK_RESPONSE_OK:
+	if (response_id == GTK_RESPONSE_OK) {
 		selected_files = gtk_check_button_get_active (GTK_CHECK_BUTTON (data->d_selected_files_radio));
 		pattern_files = gtk_check_button_get_active (GTK_CHECK_BUTTON (data->d_files_radio));
 
@@ -86,7 +85,6 @@ response_cb (GtkDialog  *widget,
 			fr_window_archive_remove (window, file_list);
 
 		_g_string_list_free (file_list);
-		break;
 	}
 
 	/* close the dialog. */
