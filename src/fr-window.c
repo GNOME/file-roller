@@ -1988,7 +1988,7 @@ fr_window_view_extraction_destination_folder (FrWindow *window, GFunc callback, 
 
 
 static void
-progress_dialog_response__open_folder_cb (FrWindow  *window) {
+progress_dialog_response__open_folder_cb (FrWindow  *window, G_GNUC_UNUSED gpointer user_data) {
 	close_progress_dialog (window, TRUE);
 }
 
