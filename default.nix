@@ -101,6 +101,7 @@ makeDerivation rec {
     wrapGAppsHook4
   ] ++ lib.optionals shell [
     niv
+    clang-tools
   ];
 
   # Dependencies for host platform
