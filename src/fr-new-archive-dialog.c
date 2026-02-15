@@ -978,10 +978,10 @@ fr_new_archive_dialog_get_encrypt_header (FrNewArchiveDialog *self)
 }
 
 
-int
+uint64_t
 fr_new_archive_dialog_get_volume_size (FrNewArchiveDialog *self)
 {
-	guint volume_size = 0;
+	uint64_t volume_size = 0;
 
 	Extension *selected_ext = get_selected_extension (self);
 	if ((selected_ext != NULL) &&

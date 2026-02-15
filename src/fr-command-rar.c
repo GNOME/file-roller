@@ -20,6 +20,7 @@
  */
 
 #include <config.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -582,7 +583,7 @@ fr_command_rar_add (FrCommand  *comm,
 	add_password_arg (comm, FR_ARCHIVE (comm)->password, FALSE);
 
 	if (FR_ARCHIVE (comm)->volume_size > 0)
-		fr_process_add_arg_printf (comm->process, "-v%ub", FR_ARCHIVE (comm)->volume_size);
+		fr_process_add_arg_printf (comm->process, "-v%" PRIu64 "b", FR_ARCHIVE (comm)->volume_size);
 
 	/* disable percentage indicator */
 	fr_process_add_arg (comm->process, "-Idp");

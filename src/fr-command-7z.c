@@ -19,6 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <config.h>
 #include <stdlib.h>
@@ -371,7 +372,7 @@ fr_command_7z_add (FrCommand  *command,
 		fr_process_add_arg (command->process, "-sfx");
 
 	if (archive->volume_size > 0)
-		fr_process_add_arg_printf (command->process, "-v%ub", archive->volume_size);
+		fr_process_add_arg_printf (command->process, "-v%" PRIu64 "b", archive->volume_size);
 
 	if (from_file != NULL)
 		fr_process_add_arg_concat (command->process, "-i@", from_file, NULL);

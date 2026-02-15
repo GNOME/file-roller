@@ -23,6 +23,7 @@
 #define FR_ARCHIVE_H
 
 #include <glib.h>
+#include <stdint.h>
 #include "fr-file-data.h"
 #include "typedefs.h"
 
@@ -82,7 +83,7 @@ struct _FrArchive {
 	gboolean       encrypt_header;
 	FrCompression  compression;
 	gboolean       multi_volume;
-	guint          volume_size;
+	uint64_t       volume_size;
 	gboolean       read_only;                  /* Whether archive is
 						    * read-only for whatever
 						    * reason. */
@@ -271,7 +272,7 @@ struct _FrArchiveClass {
 					    const char          *password,
 					    gboolean             encrypt_header,
 					    FrCompression        compression,
-					    guint                volume_size,
+					    uint64_t             volume_size,
 					    GCancellable        *cancellable,
 					    GAsyncReadyCallback  callback,
 					    gpointer             user_data);
@@ -313,7 +314,7 @@ struct _FrArchiveClass {
 					    char                *password,
 					    gboolean             encrypt_header,
 					    FrCompression        compression,
-					    guint                volume_size,
+					    uint64_t             volume_size,
 					    FrClipboardOp        op,
 					    char                *base_dir,
 					    GList               *files,
@@ -328,7 +329,7 @@ struct _FrArchiveClass {
 				   	    const char          *password,
 				   	    gboolean             encrypt_header,
 				   	    FrCompression        compression,
-				   	    guint                volume_size,
+				   	    uint64_t             volume_size,
 					    GCancellable        *cancellable,
 					    GAsyncReadyCallback  callback,
 					    gpointer             user_data);
@@ -338,7 +339,7 @@ struct _FrArchiveClass {
 					    const char          *password,
 					    gboolean             encrypt_header,
 					    FrCompression        compression,
-					    guint                volume_size,
+					    uint64_t             volume_size,
 					    GCancellable        *cancellable,
 					    GAsyncReadyCallback  callback,
 					    gpointer             user_data);
@@ -413,7 +414,7 @@ void          fr_archive_add_files               (FrArchive           *archive,
 						  const char          *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,
-						  guint                volume_size,
+						  uint64_t             volume_size,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
@@ -434,7 +435,7 @@ void          fr_archive_add_files_with_filter   (FrArchive           *archive,
 						  const char          *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,
-						  guint                volume_size,
+						  uint64_t             volume_size,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
@@ -514,7 +515,7 @@ void          fr_archive_paste_clipboard         (FrArchive           *archive,
 						  char                *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,
-						  guint                volume_size,
+						  uint64_t             volume_size,
 						  FrClipboardOp        op,
 						  char                *base_dir,
 						  GList               *files,
@@ -534,7 +535,7 @@ void          fr_archive_add_dropped_items       (FrArchive           *archive,
 						  const char          *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,
-						  guint                volume_size,
+						  uint64_t             volume_size,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
@@ -550,7 +551,7 @@ void          fr_archive_update_open_files       (FrArchive           *archive,
 						  const char          *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,
-						  guint                volume_size,
+						  uint64_t             volume_size,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);

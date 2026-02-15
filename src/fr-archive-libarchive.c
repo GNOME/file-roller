@@ -1183,7 +1183,7 @@ struct _SaveData {
 	char            *password;
 	gboolean         encrypt_header;
 	FrCompression    compression;
-	guint            volume_size;
+	uint64_t         volume_size;
 	void            *buffer;
 	gsize            buffer_size;
 	SaveDataFunc     begin_operation;
@@ -1711,7 +1711,7 @@ _fr_archive_libarchive_save (FrArchive          *archive,
 			     const char         *password,
 			     gboolean            encrypt_header,
 			     FrCompression       compression,
-			     guint               volume_size,
+			     uint64_t            volume_size,
 			     GCancellable       *cancellable,
 			     GSimpleAsyncResult *result,
 			     SaveDataFunc        begin_operation,
@@ -1889,7 +1889,7 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 				 const char          *password,
 				 gboolean             encrypt_header,
 				 FrCompression        compression,
-				 guint                volume_size,
+				 uint64_t             volume_size,
 				 GCancellable        *cancellable,
 				 GAsyncReadyCallback  callback,
 				 gpointer             user_data)
@@ -2163,7 +2163,7 @@ fr_archive_libarchive_paste_clipboard (FrArchive           *archive,
 				       char                *password,
 				       gboolean             encrypt_header,
 				       FrCompression        compression,
-				       guint                volume_size,
+				       uint64_t             volume_size,
 				       FrClipboardOp        op,
 				       char                *base_dir,
 				       GList               *files,
@@ -2221,7 +2221,7 @@ fr_archive_libarchive_add_dropped_files (FrArchive           *archive,
 					 const char          *password,
 					 gboolean             encrypt_header,
 					 FrCompression        compression,
-					 guint                volume_size,
+					 uint64_t             volume_size,
 					 GCancellable        *cancellable,
 					 GAsyncReadyCallback  callback,
 					 gpointer             user_data)
@@ -2273,7 +2273,7 @@ fr_archive_libarchive_update_open_files (FrArchive           *archive,
 					 const char          *password,
 					 gboolean             encrypt_header,
 					 FrCompression        compression,
-					 guint                volume_size,
+					 uint64_t             volume_size,
 					 GCancellable        *cancellable,
 					 GAsyncReadyCallback  callback,
 					 gpointer             user_data)
