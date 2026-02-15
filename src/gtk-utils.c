@@ -20,9 +20,7 @@
  */
 
 #include <config.h>
-#include <string.h>
 #include "gtk-utils.h"
-#include "glib-utils.h"
 #include "gio-utils.h"
 
 

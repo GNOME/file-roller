@@ -25,9 +25,7 @@
 #include <unistd.h>
 #include <gio/gio.h>
 #include <adwaita.h>
-#include "file-utils.h"
 #include "fr-init.h"
-#include "fr-location-button.h"
 #include "fr-new-archive-dialog.h"
 #include "gio-utils.h"
 #include "glib-utils.h"

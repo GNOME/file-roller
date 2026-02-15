@@ -22,7 +22,6 @@
 #ifndef DLG_PASSWORD_H
 #define DLG_PASSWORD_H
 
-#include "fr-window.h"
 #include "glib.h"
 #include "gtk/gtk.h"
 

@@ -28,7 +28,6 @@
 #include <glib/gi18n.h>
 #include "fr-file-data.h"
 #include "file-utils.h"
-#include "gio-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-rar.h"

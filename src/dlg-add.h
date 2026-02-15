@@ -22,7 +22,6 @@
 #ifndef DLG_ADD_FOLDER_H
 #define DLG_ADD_FOLDER_H
 
-#include <gtk/gtk.h>
 #include "fr-window.h"
 
 void  dlg_add (FrWindow *window);

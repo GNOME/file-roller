@@ -22,7 +22,6 @@
 
 #include <config.h>
 #include <string.h>
-#include "file-utils.h"
 #include "fr-command.h"
 #include "gio-utils.h"
 #include "glib-utils.h"

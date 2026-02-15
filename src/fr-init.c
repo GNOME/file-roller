@@ -22,13 +22,11 @@
 #include <config.h>
 #include <stdlib.h>
 #include <glib/gi18n.h>
-#include "fr-file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #if ENABLE_LIBARCHIVE
 # include "fr-archive-libarchive.h"
 #endif
-#include "fr-command.h"
 #include "fr-command-ace.h"
 #include "fr-command-alz.h"
 #include "fr-command-ar.h"
@@ -52,10 +50,7 @@
 #include "fr-command-zoo.h"
 #include "fr-command-7z.h"
 #include "fr-init.h"
-#include "fr-process.h"
-#include "fr-window.h"
 #include "typedefs.h"
-#include "preferences.h"
 
 
 /* The capabilities are computed automatically in

@@ -20,11 +20,9 @@
  */
 
 #include <config.h>
-#include <string.h>
 #include <gtk/gtk.h>
 #include <adwaita.h>
 #include "gio-utils.h"
-#include "glib-utils.h"
 #include "file-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"

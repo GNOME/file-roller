@@ -26,7 +26,6 @@
 #include <gio/gio.h>
 #include <sys/types.h>
 #include "fr-error.h"
-#include "typedefs.h"
 
 #define FR_TYPE_PROCESS (fr_process_get_type ())
 G_DECLARE_FINAL_TYPE (FrProcess, fr_process, FR, PROCESS, GObject)

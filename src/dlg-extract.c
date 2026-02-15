@@ -20,7 +20,6 @@
  */
 
 #include <config.h>
-#include <string.h>
 #include <unistd.h>
 #include "file-utils.h"
 #include "fr-init.h"

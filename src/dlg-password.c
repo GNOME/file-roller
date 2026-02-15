@@ -20,13 +20,9 @@
  */
 
 #include <config.h>
-#include <string.h>
-#include <gtk/gtk.h>
 #include "fr-window.h"
 #include "gio-utils.h"
 #include "gtk-utils.h"
-#include "glib-utils.h"
-#include "preferences.h"
 #include "dlg-password.h"
 
 

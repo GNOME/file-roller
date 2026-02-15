@@ -22,8 +22,6 @@
 #ifndef DLG_EXTRACT_H
 #define DLG_EXTRACT_H
 
-#include "fr-archive.h"
-#include "fr-window.h"
 #include "glib.h"
 #include "gtk/gtk.h"
 

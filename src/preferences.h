@@ -23,8 +23,6 @@
 #define PREFERENCES_H
 
 #include <gtk/gtk.h>
-#include "typedefs.h"
-#include "fr-window.h"
 
 #define FILE_ROLLER_SCHEMA                "org.gnome.FileRoller"
 #define FILE_ROLLER_SCHEMA_LISTING        FILE_ROLLER_SCHEMA ".Listing"

@@ -22,8 +22,6 @@
 #include <config.h>
 #include <unistd.h>
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <sys/param.h>
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -33,11 +31,9 @@
 #include "gio-utils.h"
 #include "fr-file-data.h"
 #include "fr-archive.h"
-#include "fr-command.h"
 #include "fr-enum-types.h"
 #include "fr-error.h"
 #include "fr-marshal.h"
-#include "fr-process.h"
 #include "fr-init.h"
 
 #define FILE_ARRAY_INITIAL_SIZE	256
