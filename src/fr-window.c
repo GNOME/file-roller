@@ -21,7 +21,6 @@
 
 #include <config.h>
 #include <adwaita.h>
-#include <math.h>
 #include <string.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
@@ -30,7 +29,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include "dlg-batch-add.h"
-#include "dlg-delete.h"
 #include "dlg-extract.h"
 #include "dlg-open-with.h"
 #include "dlg-ask-password.h"

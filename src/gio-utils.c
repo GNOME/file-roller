@@ -23,7 +23,6 @@
 #include <string.h>
 #include <glib.h>
 #include <gio/gio.h>
-#include "file-utils.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
 

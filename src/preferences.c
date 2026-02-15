@@ -20,12 +20,7 @@
  */
 
 #include <config.h>
-#include <string.h>
-#include "typedefs.h"
 #include "preferences.h"
-#include "fr-init.h"
-#include "file-utils.h"
-#include "fr-window.h"
 
 
 void

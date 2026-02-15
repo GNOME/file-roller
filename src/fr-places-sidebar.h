@@ -23,7 +23,6 @@
 #define FR_PLACES_SIDEBAR_H
 
 #include <gtk/gtk.h>
-#include "typedefs.h"
 
 #define FR_FILE_ATTRIBUTE_VOLUME "fr::volume"
 

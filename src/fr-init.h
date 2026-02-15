@@ -22,7 +22,6 @@
 #ifndef FR_INIT_H
 #define FR_INIT_H
 
-#include "preferences.h"
 #include "fr-process.h"
 #include "fr-window.h"
 

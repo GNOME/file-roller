@@ -24,7 +24,6 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include "fr-window.h"
 
 void dlg_password (GtkWidget *widget,
 		   gpointer   callback_data);

@@ -23,7 +23,6 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include "glib-utils.h"
-#include "file-utils.h"
 #include "fr-file-data.h"
 
 

@@ -23,17 +23,14 @@
 #include <config.h>
 #include <string.h>
 #include <sys/types.h>
-#include <signal.h>
 #include <stdlib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <glib/gprintf.h>
-#include "file-utils.h"
 #include "fr-application.h"
 #include "fr-application-menu.h"
 #include "fr-init.h"
 #include "glib-utils.h"
-#include "gtk-utils.h"
 #include "preferences.h"
 
 

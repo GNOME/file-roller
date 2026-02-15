@@ -22,7 +22,6 @@
 #ifndef _GLIB_UTILS_H
 #define _GLIB_UTILS_H
 
-#include <time.h>
 #include <glib.h>
 #include <gio/gio.h>
 

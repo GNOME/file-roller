@@ -26,7 +26,6 @@
 #include "fr-places-sidebar.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
-#include "gtk-utils.h"
 
 
 enum {

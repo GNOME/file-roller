@@ -20,7 +20,6 @@
  */
 
 #include <config.h>
-#include <gtk/gtk.h>
 #include "fr-window.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"

@@ -23,15 +23,12 @@
 #define _XOPEN_SOURCE       /* See feature_test_macros(7) */
 #define _XOPEN_SOURCE_EXTENDED 1  /* for strptime */
 #include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <json-glib/json-glib.h>
 #include "fr-file-data.h"
 #include "file-utils.h"
-#include "gio-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-unarchiver.h"
