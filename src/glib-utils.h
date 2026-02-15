@@ -26,11 +26,7 @@
 #include <glib.h>
 #include <gio/gio.h>
 
-#ifndef __GNUC__
-#define __FUNCTION__ ""
-#endif
-
-#define DEBUG_INFO __FILE__, __LINE__, __FUNCTION__
+#define DEBUG_INFO __FILE__, __LINE__, __func__
 #define MIME_TYPE_DIRECTORY "folder"
 #define MIME_TYPE_ARCHIVE "application/x-archive"
 #define DEF_ACTION_CALLBACK(x) void x (GSimpleAction *action, GVariant *parameter, gpointer user_data);
