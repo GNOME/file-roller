@@ -163,14 +163,6 @@ dlg_delete__common (FrWindow *window,
 			  "response",
 			  G_CALLBACK (response_cb),
 			  data);
-//	g_signal_connect_swapped (GTK_BUTTON (cancel_button),
-//				  "clicked",
-//				  G_CALLBACK (gtk_window_destroy),
-//				  G_OBJECT (data->dialog));
-//	g_signal_connect (GTK_BUTTON (ok_button),
-//			  "clicked",
-//			  G_CALLBACK (ok_clicked_cb),
-//			  data);
 	g_signal_connect (GTK_ENTRY (data->d_files_entry),
 			  "changed",
 			  G_CALLBACK (entry_changed_cb),
