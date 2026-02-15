@@ -259,59 +259,12 @@ _g_str_escape (const char *str,
 }
 
 
-/* escape with backslash the file name. */
-char *
-_g_str_shell_escape (const char *filename)
-{
-	return _g_str_escape (filename, "$'`\"\\!?* ()[]&|:;<>#");
-}
-
-
-char *
-_g_strdup_with_max_size (const char *s,
-			 int         max_size)
-{
-	char *result;
-	int   l = strlen (s);
-
-	if (l > max_size) {
-		char *first_half;
-		char *second_half;
-		int   offset;
-		int   half_max_size = max_size / 2 + 1;
-
-		first_half = g_strndup (s, half_max_size);
-		offset = half_max_size + l - max_size;
-		second_half = g_strndup (s + offset, half_max_size);
-
-		result = g_strconcat (first_half, "...", second_half, NULL);
-
-		g_free (first_half);
-		g_free (second_half);
-	} else
-		result = g_strdup (s);
-
-	return result;
-}
-
-
 const char *
 _g_str_eat_spaces (const char *line)
 {
 	if (line == NULL)
 		return NULL;
 	while ((*line == ' ') && (*line != 0))
-		line++;
-	return line;
-}
-
-
-const char *
-_g_str_eat_void_chars (const char *line)
-{
-	if (line == NULL)
-		return NULL;
-	while (((*line == ' ') || (*line == '\t')) && (*line != 0))
 		line++;
 	return line;
 }
@@ -409,52 +362,6 @@ _g_utf8_all_spaces (const char *text)
 		if (! g_unichar_isspace (c))
 			return FALSE;
 	}
-
-	return TRUE;
-}
-
-
-/* string vector */
-
-
-char **
-_g_strv_prepend (char       **str_array,
-		 const char  *str)
-{
-	char **result;
-	int    i;
-	int    j;
-
-	result = g_new (char *, g_strv_length (str_array) + 1);
-	i = 0;
-	result[i++] = g_strdup (str);
-	for (j = 0; str_array[j] != NULL; j++)
-		result[i++] = g_strdup (str_array[j]);
-	result[i] = NULL;
-
-	return result;
-}
-
-
-gboolean
-_g_strv_remove (char       **str_array,
-		const char  *str)
-{
-	int i;
-	int j;
-
-	if (str == NULL)
-		return FALSE;
-
-	for (i = 0; str_array[i] != NULL; i++)
-		if (strcmp (str_array[i], str) == 0)
-			break;
-
-	if (str_array[i] == NULL)
-		return FALSE;
-
-	for (j = i; str_array[j] != NULL; j++)
-		str_array[j] = str_array[j + 1];
 
 	return TRUE;
 }
@@ -709,86 +616,6 @@ _g_regexp_split_from_patterns (const char         *pattern_string,
 /* uri/path/filename */
 
 
-const char *
-_g_uri_get_home (void)
-{
-	static char *home_uri = NULL;
-	if (home_uri == NULL)
-		home_uri = g_filename_to_uri (g_get_home_dir (), NULL, NULL);
-	return home_uri;
-}
-
-
-char *
-_g_uri_get_home_relative (const char *partial_uri)
-{
-	return g_strconcat (_g_uri_get_home (),
-			    "/",
-			    partial_uri,
-			    NULL);
-}
-
-
-const char *
-_g_uri_remove_host (const char *uri)
-{
-        const char *idx, *sep;
-
-        if (uri == NULL)
-                return NULL;
-
-        idx = strstr (uri, "://");
-        if (idx == NULL)
-                return uri;
-        idx += 3;
-        if (*idx == '\0')
-                return "/";
-        sep = strstr (idx, "/");
-        if (sep == NULL)
-                return idx;
-        return sep;
-}
-
-
-char *
-_g_uri_get_host (const char *uri)
-{
-	const char *idx;
-
-	idx = strstr (uri, "://");
-	if (idx == NULL)
-		return NULL;
-	idx = strstr (idx + 3, "/");
-	if (idx == NULL)
-		return NULL;
-	return g_strndup (uri, (idx - uri));
-}
-
-
-char *
-_g_uri_get_root (const char *uri)
-{
-	char *host;
-	char *root;
-
-	host = _g_uri_get_host (uri);
-	if (host == NULL)
-		return NULL;
-	root = g_strconcat (host, "/", NULL);
-	g_free (host);
-
-	return root;
-}
-
-
-int
-_g_uri_cmp (const char *uri1,
-	    const char *uri2)
-{
-	return g_strcmp0 (uri1, uri2);
-}
-
-
 /* like g_path_get_basename but does not warn about NULL and does not
  * alloc a new string. */
 const gchar *
@@ -883,22 +710,6 @@ _g_path_remove_ending_separator (const char *path)
 		copy_len--;
 
 	return g_strndup (path, copy_len);
-}
-
-
-char *
-_g_path_remove_extension (const gchar *path)
-{
-	const char *ext;
-
-	if (path == NULL)
-		return NULL;
-
-	ext = _g_filename_get_extension (path);
-	if (ext == NULL)
-		return g_strdup (path);
-	else
-		return g_strndup (path, strlen (path) - strlen (ext));
 }
 
 
@@ -1016,17 +827,6 @@ _g_path_get_relative_basename_safe (const char *path,
 				    gboolean    junk_paths)
 {
 	return sanitize_filename (_g_path_get_relative_basename (path, base_dir, junk_paths));
-}
-
-
-gboolean
-_g_filename_is_hidden (const gchar *name)
-{
-	if (name[0] != '.') return FALSE;
-	if (name[1] == '\0') return FALSE;
-	if ((name[1] == '.') && (name[2] == '\0')) return FALSE;
-
-	return TRUE;
 }
 
 
@@ -1256,20 +1056,6 @@ _g_file_get_display_basename (GFile *file)
 	g_free (uri);
 
 	return name;
-}
-
-
-GFile *
-_g_file_new_home_relative (const char *partial_uri)
-{
-	GFile *file;
-	char  *uri;
-
-	uri = g_strconcat (_g_uri_get_home (), "/", partial_uri, NULL);
-	file = g_file_new_for_uri (uri);
-	g_free (uri);
-
-	return file;
 }
 
 

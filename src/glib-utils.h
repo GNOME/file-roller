@@ -30,12 +30,6 @@
 #define MIME_TYPE_ARCHIVE "application/x-archive"
 #define DEF_ACTION_CALLBACK(x) void x (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
-#define get_home_relative_path(x)        \
-	g_strconcat (g_get_home_dir (), \
-		     "/",               \
-		     (x),               \
-		     NULL)
-
 #define g_signal_handlers_disconnect_by_data(instance, data) \
     g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
 					  0, 0, NULL, NULL, (data))
@@ -71,11 +65,7 @@ gboolean            _g_str_equal                   (const char          *s1,
 						    const char          *s2);
 char*               _g_str_escape                  (const char          *str,
 						    const char          *meta_chars);
-char *              _g_str_shell_escape            (const char          *filename);
-char *              _g_strdup_with_max_size        (const char          *s,
-						    int                  max_size);
 const char *        _g_str_eat_spaces              (const char          *line);
-const char *        _g_str_eat_void_chars          (const char          *line);
 char **             _g_str_split_line              (const char          *line,
 						    int                  n_fields);
 const char *        _g_str_get_last_field          (const char          *line,
@@ -85,13 +75,6 @@ const char *        _g_str_get_static              (const char          *s);
 /* utf8 */
 
 gboolean            _g_utf8_all_spaces             (const char          *text);
-
-/* string vector */
-
-char **             _g_strv_prepend                (char               **str_array,
-						    const char          *str);
-gboolean            _g_strv_remove                 (char               **str_array,
-		  	  	  	  	    const char          *str);
 
 /* string list */
 
@@ -110,18 +93,10 @@ GRegex **           _g_regexp_split_from_patterns  (const char          *pattern
 
 /* uri/path/filename */
 
-const char *        _g_uri_get_home                (void);
-char *              _g_uri_get_home_relative       (const char          *partial_uri);
-const char *        _g_uri_remove_host             (const char          *uri);
-char *              _g_uri_get_host                (const char          *uri);
-char *              _g_uri_get_root                (const char          *uri);
-int                 _g_uri_cmp                     (const char          *uri1,
-						    const char          *uri2);
 const char *        _g_path_get_basename           (const char          *path);
 char *              _g_path_get_dir_name           (const char          *path);
 char *              _g_path_remove_level           (const char          *path);
 char *              _g_path_remove_ending_separator(const char          *path);
-char *              _g_path_remove_extension       (const char          *path);
 char *		    _g_path_remove_first_extension (const gchar		*path);
 gboolean            _g_path_is_parent_of           (const char          *dirname,
 						    const char          *filename);
@@ -132,7 +107,6 @@ const char *        _g_path_get_relative_basename_safe
 						   (const char          *path,
 						    const char          *base_dir,
 						    gboolean             junk_paths);
-gboolean            _g_filename_is_hidden          (const char          *name);
 const char *        _g_filename_get_extension      (const char          *filename);
 gboolean            _g_filename_has_extension      (const char          *filename,
 						    const char          *ext);
@@ -153,7 +127,6 @@ int                 _g_file_cmp_uris               (GFile               *a,
 gboolean            _g_file_is_local               (GFile               *file);
 GFile *             _g_file_get_home               (void);
 char *              _g_file_get_display_basename   (GFile               *file);
-GFile *             _g_file_new_home_relative      (const char          *partial_uri);
 GList *             _g_file_list_dup               (GList               *l);
 void                _g_file_list_free              (GList               *l);
 GList *             _g_file_list_new_from_uri_list (GList               *uris);
