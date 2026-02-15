@@ -1368,7 +1368,7 @@ _archive_write_set_format_from_context (struct archive *a,
 	/* set the filter */
 
 	if (archive_filter != ARCHIVE_FILTER_NONE) {
-		char *compression_level = NULL;
+		const char *compression_level = NULL;
 
 		switch (archive_filter) {
 		case ARCHIVE_FILTER_BZIP2:

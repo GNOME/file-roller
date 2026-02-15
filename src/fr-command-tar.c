@@ -1290,7 +1290,7 @@ fr_command_tar_get_capabilities (FrArchive  *archive,
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
-		char *try_command[5] = { "7zzs", "7zz", "7za", "7zr", "7z" };
+		const char *try_command[5] = { "7zzs", "7zz", "7za", "7zr", "7z" };
 
 		for (size_t i = 0; i < G_N_ELEMENTS (try_command); i++) {
 			if (_g_program_is_available (try_command[i], check_command)) {
@@ -1321,7 +1321,7 @@ fr_command_tar_set_mime_type (FrArchive  *archive,
 	FR_ARCHIVE_CLASS (fr_command_tar_parent_class)->set_mime_type (archive, mime_type);
 
 	if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
-		char *try_command[5] = { "7zzs", "7zz", "7za", "7zr", "7z" };
+		const char *try_command[5] = { "7zzs", "7zz", "7za", "7zr", "7z" };
 
 		for (size_t i = 0; i < G_N_ELEMENTS (try_command); i++) {
 			if (_g_program_is_in_path (try_command[i])) {

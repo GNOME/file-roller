@@ -48,8 +48,9 @@ mktime_from_string (char *month,
 		    char *mday,
 		    char *year)
 {
-	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-				   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+	static const char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	                                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
 	struct tm     tm = {0, };
 
 	tm.tm_isdst = -1;

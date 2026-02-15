@@ -1698,7 +1698,7 @@ fr_window_update_dir_tree (FrWindow *window)
 
 			new_dir = dir;
 			g_ptr_array_add (dirs, new_dir);
-			g_hash_table_replace (dir_cache, new_dir, "1");
+			g_hash_table_replace (dir_cache, new_dir, (gpointer) "1");
 
 			dir = _g_path_remove_level (new_dir);
 		}
@@ -1728,7 +1728,7 @@ fr_window_update_dir_tree (FrWindow *window)
 				    TREE_COLUMN_PATH, "/",
 				    TREE_COLUMN_WEIGHT, PANGO_WEIGHT_BOLD,
 				    -1);
-		g_hash_table_replace (dir_cache, "/", gtk_tree_model_get_path (GTK_TREE_MODEL (private->tree_store), &node));
+		g_hash_table_replace (dir_cache, (gpointer) "/", gtk_tree_model_get_path (GTK_TREE_MODEL (private->tree_store), &node));
 
 		g_free (name);
 	}
@@ -2564,8 +2564,8 @@ fr_window_add_to_recent_list (FrWindow *window,
 
 		recent_data = g_new0 (GtkRecentData, 1);
 		recent_data->mime_type = g_content_type_get_mime_type (window->archive->mime_type);
-		recent_data->app_name = "File Roller";
-		recent_data->app_exec = "file-roller";
+		recent_data->app_name = (char *) "File Roller";
+		recent_data->app_exec = (char *) "file-roller";
 		gtk_recent_manager_add_full (gtk_recent_manager_get_default (), uri, recent_data);
 
 		g_free (recent_data->mime_type);
@@ -4119,7 +4119,7 @@ add_file_list_columns (FrWindow    *window,
 		       GtkTreeView *treeview)
 {
 	FrWindowPrivate   *private = fr_window_get_instance_private (window);
-	static char       *titles[] = {
+	static const char *titles[] = {
 		NC_("File", "Size"),
 		NC_("File", "Type"),
 		NC_("File", "Modified"),
