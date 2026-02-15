@@ -111,7 +111,7 @@ fr_new_archive_dialog_unmap (GtkWidget *widget)
 	self = FR_NEW_ARCHIVE_DIALOG (widget);
 
 	g_settings_set_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER, gtk_switch_get_state (GTK_SWITCH (GET_WIDGET ("encrypt_header_switch"))));
-	g_settings_set_int (self->settings, PREF_NEW_VOLUME_SIZE, gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton"))) * MEGABYTE);
+	g_settings_set_uint64 (self->settings, PREF_NEW_VOLUME_SIZE, gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton"))) * MEGABYTE);
 
 	Extension *selected_ext = get_selected_extension (self);
 	if (selected_ext != NULL)
@@ -611,7 +611,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	adw_expander_row_set_enable_expansion (ADW_EXPANDER_ROW (GET_WIDGET ("split_in_volumes_expander_row")), FALSE);
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton")),
-				   (double) g_settings_get_int (self->settings, PREF_NEW_VOLUME_SIZE) / MEGABYTE);
+				   (double) g_settings_get_uint64 (self->settings, PREF_NEW_VOLUME_SIZE) / MEGABYTE);
 
 	/* Signals */
 
