@@ -9,7 +9,7 @@ project(
   ],
 )
 
-glib_version = '>=2.38'
+glib_version = '>=2.70'
 gtk4_version = '>=4.8.1'
 nautilus_version = '>=43.beta'
 json_glib_version = '>=0.14.0'
