@@ -614,21 +614,21 @@ fr_command_7z_get_mime_types (FrArchive *archive)
 
 
 static gboolean
-check_info_subcommand_for_codec_support (char *program_name, char *codec_name) {
+check_info_subcommand_for_codec_support (const char *program_name, const char *codec_name) {
 	if (! _g_program_is_in_path (program_name)) {
 		return FALSE;
 	}
 
 	g_autofree gchar *standard_output = NULL;
 
-	gchar* argv[] = {
+	const char * const argv [] = {
 		program_name,
 		"i",
 		NULL
 	};
 	if (!g_spawn_sync (
 		/* working_directory = */ NULL,
-		argv,
+		(char **) argv,
 		/* envp = */ NULL,
 		G_SPAWN_SEARCH_PATH | G_SPAWN_STDERR_TO_DEV_NULL,
 		/* child_setup = */ NULL,
