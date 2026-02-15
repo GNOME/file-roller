@@ -9,11 +9,21 @@ project(
   ],
 )
 
-glib_version = '>=2.70'
-gtk4_version = '>=4.8.1'
-hdy_version = '>=1.5.0'
+
+glib_major = 2
+glib_minor = 70
+
+gtk_major = 4
+gtk_minor = 8
+gtk_micro = 1
+
+adw_major = 1
+adw_minor = 2
+
+json_major = 1
+json_minor = 0
+
 nautilus_version = '>=43.beta'
-json_glib_version = '>=1.0.0'
 libarchive_version = '>=3.1.900a'
 
 gnome = import('gnome')
@@ -32,12 +42,12 @@ use_native_appchooser = get_option('use_native_appchooser')
 
 libm_dep = c_comp.find_library('m')
 thread_dep = dependency('threads')
-glib_dep = dependency('glib-2.0', version: glib_version)
+glib_dep = dependency('glib-2.0', version: f'>= @glib_major@.@glib_minor@')
 gthread_dep = dependency('gthread-2.0')
-gtk_dep = dependency('gtk4', version: gtk4_version)
+gtk_dep = dependency('gtk4', version: f'>= @gtk_major@.@gtk_minor@.@gtk_micro@')
 libportal_dep = dependency('libportal', version: '>= 0.7', required: use_native_appchooser)
 libportal_gtk4_dep = dependency('libportal-gtk4', version: '>= 0.7', required: use_native_appchooser)
-libadwaita_dep = dependency('libadwaita-1', version: '>= 1.2')
+libadwaita_dep = dependency('libadwaita-1', version: f'>= @adw_major@.@adw_minor@')
 
 # Optional dependencies
 gobject_introspection_dep = dependency('gobject-introspection-1.0', required: get_option('introspection'))
@@ -45,7 +55,7 @@ gobject_introspection_dep = dependency('gobject-introspection-1.0', required: ge
 libnautilus_extension_dep = dependency('libnautilus-extension-4', version: nautilus_version, required: get_option('nautilus-actions'))
 build_nautilus_actions = libnautilus_extension_dep.found()
 
-libjson_glib_dep = dependency('json-glib-1.0', version: json_glib_version, required: false)
+libjson_glib_dep = dependency('json-glib-1.0', version: f'>= @json_major@.@json_minor@', required: false)
 use_json_glib = libjson_glib_dep.found()
 
 libarchive_dep = dependency('libarchive', version: libarchive_version, required: get_option('libarchive'))
@@ -114,7 +124,17 @@ config_inc = include_directories('.')
 
 # C args
 
-c_args = ['-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_38']
+c_args = [
+  f'-DADW_VERSION_MIN_REQUIRED=ADW_VERSION_@adw_major@_@adw_minor@',
+  f'-DADW_VERSION_MAX_ALLOWED=ADW_VERSION_@adw_major@_@adw_minor@',
+  f'-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_@glib_major@_@glib_minor@',
+  f'-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_@glib_major@_@glib_minor@',
+  f'-DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_@gtk_major@_@gtk_minor@',
+  f'-DGDK_VERSION_MAX_ALLOWED=GDK_VERSION_@gtk_major@_@gtk_minor@',
+  f'-DJSON_VERSION_MIN_REQUIRED=JSON_VERSION_@json_major@_@json_minor@',
+  f'-DJSON_VERSION_MAX_ALLOWED=JSON_VERSION_@json_major@_@json_minor@',
+]
+
 if get_option('buildtype').contains('debug')
   warn_deprecated = get_option('warn-deprecated')
   test_args = [
