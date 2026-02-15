@@ -4,6 +4,9 @@ project(
   license: 'GPL-2.0-or-later',
   version: '44.6',
   meson_version: '>=0.59',
+  default_options: [
+    'c_std=gnu99',
+  ],
 )
 
 glib_version = '>=2.38'
