@@ -1098,8 +1098,8 @@ _g_filename_get_random (int         random_part_len,
 	g_rand_free (rand);
 
 	if (suffix != NULL) {
-		strcpy (c, ".");
-		strcpy (c + 1, suffix);
+		*c = '.';
+		memcpy(c + 1, suffix, suffix_len); // Including NUL
 	}
 
 	return result;
