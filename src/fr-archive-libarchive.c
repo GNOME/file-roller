@@ -937,29 +937,29 @@ extract_archive_thread (GSimpleAsyncResult *result,
 			linkname = archive_entry_hardlink (entry);
 			if (linkname != NULL) {
 				g_autofree char *link_fullpath = NULL;
-				const char *relative_path;
+				const char *link_relative_path;
 				g_autoptr (GFile) link_file = NULL;
 				g_autofree char *oldname = NULL;
 				g_autofree char *newname = NULL;
-				int          r;
+				int link_r;
 
 				link_fullpath = (*linkname == '/') ? g_strdup (linkname) : g_strconcat ("/", linkname, NULL);
-				relative_path = _g_path_get_relative_basename_safe (link_fullpath, extract_data->base_dir, extract_data->junk_paths);
-				if (relative_path == NULL) {
+				link_relative_path = _g_path_get_relative_basename_safe (link_fullpath, extract_data->base_dir, extract_data->junk_paths);
+				if (link_relative_path == NULL) {
 					archive_read_data_skip (a);
 					continue;
 				}
 
-				link_file = g_file_get_child (extract_data->destination, relative_path);
+				link_file = g_file_get_child (extract_data->destination, link_relative_path);
 				oldname = g_file_get_path (link_file);
 				newname = g_file_get_path (file);
 
 				if ((oldname != NULL) && (newname != NULL))
-					r = link (oldname, newname);
+					link_r = link (oldname, newname);
 				else
-					r = -1;
+					link_r = -1;
 
-				if (r == 0) {
+				if (link_r == 0) {
 					__LA_INT64_T filesize;
 
 					if (archive_entry_size_is_set (entry))

@@ -1702,14 +1702,14 @@ add_dropped_items_ready_cb (GObject      *source_object,
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	if (error != NULL) {
 		FrArchivePrivate *private = fr_archive_get_instance_private (archive);
-		GSimpleAsyncResult *result;
+		GSimpleAsyncResult *error_result;
 
-		result = g_simple_async_result_new (G_OBJECT (data->archive),
-						    data->callback,
-						    data->user_data,
-						    fr_archive_add_dropped_items);
-		g_simple_async_result_set_from_error (result, error);
-		g_simple_async_result_complete_in_idle (result);
+		error_result = g_simple_async_result_new (G_OBJECT (data->archive),
+		                                          data->callback,
+		                                          data->user_data,
+		                                          fr_archive_add_dropped_items);
+		g_simple_async_result_set_from_error (error_result, error);
+		g_simple_async_result_complete_in_idle (error_result);
 
 		g_error_free (error);
 		dropped_items_data_free (private->dropped_items_data);

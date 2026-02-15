@@ -575,8 +575,8 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 		else {
 			/* Give priority to the file name, changing the selected extension if it is not the same. */
 			const char *ext = _g_filename_get_extension (default_name);
-			int ext_idx;
-			if (!extension_is_valid_archive_extension (self, ext, &ext_idx)) {
+			int position;
+			if (!extension_is_valid_archive_extension (self, ext, &position)) {
 				/* If the extension is not specified use the last selected extension. */
 				Extension *valid_ext = g_list_nth_data (self->valid_extensions, active_extension_idx);
 				if (valid_ext != NULL) {
@@ -586,7 +586,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 			}
 			else {
 				/* Update the selected extension. */
-				adw_combo_row_set_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")), ext_idx);
+				adw_combo_row_set_selected (ADW_COMBO_ROW (GET_WIDGET ("extension_combo_row")), position);
 				self->filename = g_strdup (default_name);
 			}
 		}
@@ -703,14 +703,14 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 
 		g_file_delete (data->file, NULL, &error);
 		if (error != NULL) {
-			GtkWidget *dialog = _gtk_error_dialog_new (
+			GtkWidget *error_dialog = _gtk_error_dialog_new (
 				GTK_WINDOW (data->dialog),
 				GTK_DIALOG_MODAL,
 				NULL,
 				_("Could not delete the old archive."),
 				"%s",
 				error->message);
-			_gtk_dialog_run (GTK_DIALOG (dialog));
+			_gtk_dialog_run (GTK_DIALOG (error_dialog));
 
 			g_error_free (error);
 
