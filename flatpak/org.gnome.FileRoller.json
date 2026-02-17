@@ -1,5 +1,5 @@
 {
-    "app-id": "org.gnome.FileRoller",
+    "id": "org.gnome.FileRoller",
     "runtime": "org.gnome.Platform",
     "runtime-version": "master",
     "sdk": "org.gnome.Sdk",
@@ -177,7 +177,6 @@
         {
             "name": "libportal",
             "buildsystem": "meson",
-            "builddir": true,
             "config-opts": [
                 "-Ddocs=false",
                 "-Dvapi=false",
@@ -201,7 +200,6 @@
             "cleanup": [
                 "org.gnome.FileRoller.ArchiveManager1.service"
             ],
-            "builddir": true,
             "sources": [
                 {
                     "type": "dir",
