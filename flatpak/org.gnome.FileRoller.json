@@ -20,24 +20,46 @@
     ],
     "modules": [
         {
-            "name": "p7zip",
-            "no-autogen": true,
-            "make-args": [
-                "7z"
-            ],
-            "make-install-args": [
-                "DEST_HOME=/app"
+            "name": "7zip",
+            "buildsystem": "simple",
+            "subdir": "CPP/7zip/Bundles/Alone2",
+            "build-options" : {
+                "env": {
+                    "makefile": "../../cmpl_gcc.mak"
+                },
+                "arch": {
+                    "aarch64": {
+                        "env": {
+                            "makefile": "../../cmpl_gcc_arm64.mak"
+                        }
+                    },
+                    "i686": {
+                        "env": {
+                            "makeFlags": "USE_ASM=",
+                            "makefile": "../../cmpl_gcc_x86.mak"
+                        }
+                    },
+                    "x86_64": {
+                        "env": {
+                            "makeFlags": "USE_ASM=",
+                            "makefile": "../../cmpl_gcc_x64.mak"
+                        }
+                    }
+                }
+            },
+            "build-commands": [
+                "make -j $FLATPAK_BUILDER_N_JOBS -f $makefile $makeFlags",
+                "install -D b/*/7zz -t /app/bin"
             ],
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/p7zip-project/p7zip/archive/refs/tags/v17.05.tar.gz",
-                    "sha256": "d2788f892571058c08d27095c22154579dfefb807ebe357d145ab2ddddefb1a6",
+                    "url": "https://github.com/ip7z/7zip/archive/refs/tags/25.01.tar.gz",
+                    "sha256": "8772e4ef86540c98bf4c23a6d9e13b3a25794d4bb30986ef0b1b9f20075b34c9",
                     "x-checker-data": {
-                        "type": "json",
-                        "url": "https://api.github.com/repos/p7zip-project/p7zip/releases/latest",
-                        "version-query": ".tag_name | sub(\"^v\"; \"\")",
-                        "url-query": "\"https://github.com/p7zip-project/p7zip/archive/refs/tags/v\" + $version + \".tar.gz\""
+                        "type": "anitya",
+                        "project-id": 372314,
+                        "url-template": "https://github.com/ip7z/7zip/archive/refs/tags/$version.tar.gz"
                     }
                 }
             ]
