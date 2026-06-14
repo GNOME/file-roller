@@ -165,6 +165,14 @@ process_line (char     *line,
 	}
 	real_filename = g_strndup (str_start, i);
 
+	/* Reject filenames with path traversal sequences to prevent
+	 * escaping the extraction directory via crafted archive entries. */
+	if (strstr (filename, "../") != NULL) {
+		g_free (filename);
+		g_free (real_filename);
+		return;
+	}
+
 	fdata = fr_file_data_new ();
 	fdata->full_path = filename;
 	fdata->original_path = filename;
