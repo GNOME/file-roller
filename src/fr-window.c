@@ -69,9 +69,8 @@
 #define OTHER_COLUMN_WIDTH 150
 #define RECENT_ITEM_MAX_WIDTH 25
 
-#define DEF_WIN_WIDTH 600
-#define DEF_WIN_HEIGHT 480
-#define DEF_SIDEBAR_WIDTH 200
+#define MIN_WIN_WIDTH 360
+#define MIN_WIN_HEIGHT 294
 
 #define EMPTY_STATUS "empty-status"
 #define ARCHIVE_CONTENT "archive-content"
@@ -4638,6 +4637,10 @@ fr_window_construct (FrWindow *window)
 	gtk_window_set_default_size (GTK_WINDOW (window),
 				     g_settings_get_int (private->settings_ui, PREF_UI_WINDOW_WIDTH),
 				     g_settings_get_int (private->settings_ui, PREF_UI_WINDOW_HEIGHT));
+
+	gtk_widget_set_size_request(GTK_WIDGET (window),
+				    MIN_WIN_WIDTH,
+				    MIN_WIN_HEIGHT);
 
 	GtkEventController *key_controller = gtk_event_controller_key_new ();
 	g_signal_connect (key_controller,
