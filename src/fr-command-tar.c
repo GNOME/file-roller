@@ -755,7 +755,6 @@ fr_command_tar_recompress (FrCommand *comm)
 		fr_process_add_arg (comm->process, "a");
 		fr_process_add_arg (comm->process, "-bd");
 		fr_process_add_arg (comm->process, "-y");
-		fr_process_add_arg (comm->process, "-l");
 
 		new_name = g_strconcat (c_tar->uncomp_filename, ".7z", NULL);
 		fr_process_add_arg_concat (comm->process, new_name, NULL);
