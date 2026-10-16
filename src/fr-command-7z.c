@@ -106,7 +106,7 @@ list__process_line (char     *line,
 		return;
 	}
 
-	if (strcmp (line, "") == 0) {
+	if (strcmp (line, "") == 0 || strcmp (line, "----------") == 0) {
 		if (self->fdata != NULL) {
 			if (self->fdata->original_path == NULL) {
 				fr_file_data_free (self->fdata);
