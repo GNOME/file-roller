@@ -78,7 +78,6 @@ you need the following libraries (including their development files):
 
 * glib ≥ 2.38
 * gtk ≥ 3.22.0
-* libhandy ≥1.5.0
 * libportal ≥ 0.5
 * libportal-gtk3 ≥ 0.5
 * libnautilus-extension-4 ≥ 43.beta (optional for Nautilus extension)
