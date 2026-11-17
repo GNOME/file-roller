@@ -39,5 +39,6 @@ flatpak:
 
 nightly:
   extends: ".publish_nightly"
+  allow_failure: true
   dependencies: ["flatpak"]
   needs: ["flatpak"]
