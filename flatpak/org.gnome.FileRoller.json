@@ -54,13 +54,17 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/ip7z/7zip/archive/refs/tags/25.01.tar.gz",
-                    "sha256": "8772e4ef86540c98bf4c23a6d9e13b3a25794d4bb30986ef0b1b9f20075b34c9",
+                    "url": "https://github.com/ip7z/7zip/archive/refs/tags/26.06.tar.gz",
+                    "sha256": "63bbf0ede83e4286ec8a2905ed732a12acc36dd4771984d870b054240ce761fa",
                     "x-checker-data": {
                         "type": "anitya",
                         "project-id": 372314,
                         "url-template": "https://github.com/ip7z/7zip/archive/refs/tags/$version.tar.gz"
                     }
+                },
+                {
+                    "type": "patch",
+                    "path": "7zip-fix.patch"
                 }
             ]
         },
@@ -171,26 +175,6 @@
                 {
                     "type": "patch",
                     "path": "rpm2cpio.patch"
-                }
-            ]
-        },
-        {
-            "name": "libportal",
-            "buildsystem": "meson",
-            "config-opts": [
-                "-Ddocs=false",
-                "-Dvapi=false",
-                "-Dtests=false",
-                "-Dintrospection=false",
-                "-Dbackend-gtk3=disabled",
-                "-Dbackend-qt5=disabled",
-                "-Dbackend-gtk4=enabled"
-            ],
-            "sources": [
-                {
-                    "type": "git",
-                    "url": "https://github.com/flatpak/libportal.git",
-                    "branch": "main"
                 }
             ]
         },
