@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues/\n"
-"POT-Creation-Date: 2026-05-07 05:51+0000\n"
-"PO-Revision-Date: 2026-06-06 22:03+0300\n"
+"POT-Creation-Date: 2026-11-19 08:26+0000\n"
+"PO-Revision-Date: 2026-11-21 22:14+0200\n"
 "Last-Translator: Aurimas Černius <aurimas.cernius@mailo.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -20,12 +20,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Poedit 3.10\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,17,-1,-1,-1,-1,-1\n"
 
 #: data/org.gnome.FileRoller.desktop.in.in:2
-#: data/org.gnome.FileRoller.metainfo.xml.in:9 src/fr-application-menu.c:131
-#: src/fr-application.c:472 src/fr-window.c:1869 src/fr-window.c:4627
+#: data/org.gnome.FileRoller.metainfo.xml.in:9 src/fr-application-menu.c:132
+#: src/fr-application.c:470 src/fr-window.c:1867 src/fr-window.c:4625
 msgid "File Roller"
 msgstr "Failų presas"
 
@@ -182,10 +182,19 @@ msgstr ""
 "Ar rodyti kitus parametrus. Jei nustatyta, bus rodomi papildomi parametrai."
 
 #: data/org.gnome.FileRoller.gschema.xml:194
+#: data/org.gnome.FileRoller.gschema.xml:204
 msgid "Default volume size"
 msgstr "Numatytasis tomo dydis"
 
 #: data/org.gnome.FileRoller.gschema.xml:195
+msgid ""
+"The default size for volumes. DEPRECATED: This key is deprecated and "
+"ignored. Use split-volume-size instead."
+msgstr ""
+"Numatytasis tomų dydis. PASENĘS: šis raktas yra pasenęs ir jo nepaisoma. "
+"Naudokite split-volume-size."
+
+#: data/org.gnome.FileRoller.gschema.xml:205
 msgid "The default size for volumes."
 msgstr "Numatytas tomų dydis."
 
@@ -243,72 +252,72 @@ msgstr "Išskleisti į…"
 msgid "Extract the selected archive"
 msgstr "Išskleisti pažymėtą archyvą"
 
-#: src/dlg-add.c:103
+#: src/dlg-add.c:102
 msgid "Could not add the files to the archive"
 msgstr "Nepavyko įdėti failų į archyvą"
 
-#: src/dlg-add.c:104
+#: src/dlg-add.c:103
 #, c-format
 msgid "You don’t have the right permissions to read files from folder “%s”"
 msgstr "Neturite teisės skaityti failų aplanke „%s“"
 
-#: src/dlg-add.c:187
+#: src/dlg-add.c:186
 msgctxt "Window title"
 msgid "Add"
 msgstr "Pridėti"
 
-#: src/dlg-add.c:748
+#: src/dlg-add.c:747
 msgctxt "Window title"
 msgid "Options"
 msgstr "Parametrai"
 
-#: src/dlg-add.c:759
+#: src/dlg-add.c:758
 msgid "_Apply"
 msgstr "_Pritaikyti"
 
-#: src/dlg-add.c:882
+#: src/dlg-add.c:881
 msgctxt "Window title"
 msgid "Save Options"
 msgstr "Įrašyti parametrus"
 
-#: src/dlg-add.c:883
+#: src/dlg-add.c:882
 msgid "_Options Name:"
 msgstr "_Nustatymo pavadinimas:"
 
-#: src/dlg-ask-password.c:117
+#: src/dlg-ask-password.c:114
 msgctxt "Window title"
 msgid "Password"
 msgstr "Slaptažodis"
 
-#: src/dlg-ask-password.c:123
+#: src/dlg-ask-password.c:120
 msgid "_OK"
 msgstr "_Gerai"
 
 #. Translators: %s is a filename
-#: src/dlg-ask-password.c:146
+#: src/dlg-ask-password.c:143
 #, c-format
 msgid "Password required for “%s”"
 msgstr "„%s“ reikalauja slaptažodžio"
 
-#: src/dlg-ask-password.c:155
+#: src/dlg-ask-password.c:152
 msgid "Wrong password."
 msgstr "Neteisingas slaptažodis."
 
-#: src/dlg-batch-add.c:110 src/fr-application.c:248 src/fr-application.c:286
-#: src/fr-application.c:582
+#: src/dlg-batch-add.c:109 src/fr-application.c:246 src/fr-application.c:284
+#: src/fr-application.c:580
 msgid "Compress"
 msgstr "Suglaudinti"
 
-#: src/dlg-delete.c:127 src/ui/menus.ui:44 src/ui/menus.ui:80
+#: src/dlg-delete.c:124 src/ui/menus.ui:44 src/ui/menus.ui:80
 #: src/ui/menus.ui:116
 msgid "Delete"
 msgstr "Ištrinti"
 
-#: src/dlg-delete.c:133
+#: src/dlg-delete.c:130
 msgid "_Delete"
 msgstr "Iš_trinti"
 
-#: src/dlg-extract.c:92 src/fr-window.c:6019
+#: src/dlg-extract.c:92 src/fr-window.c:6021
 #, c-format
 msgid ""
 "Destination folder “%s” does not exist.\n"
@@ -319,17 +328,17 @@ msgstr ""
 "\n"
 "Ar norite jį sukurti?"
 
-#: src/dlg-extract.c:99 src/fr-window.c:6026
+#: src/dlg-extract.c:99 src/fr-window.c:6028
 msgid "Create _Folder"
 msgstr "Sukurti _aplanką"
 
 #: src/dlg-extract.c:139 src/dlg-extract.c:171 src/dlg-extract.c:200
-#: src/fr-window.c:5922 src/fr-window.c:5927 src/fr-window.c:6049
-#: src/fr-window.c:6067 src/fr-window.c:6072
+#: src/fr-window.c:5924 src/fr-window.c:5929 src/fr-window.c:6051
+#: src/fr-window.c:6069 src/fr-window.c:6074
 msgid "Extraction not performed"
 msgstr "Išskleidimas neatliktas"
 
-#: src/dlg-extract.c:140 src/fr-window.c:6044
+#: src/dlg-extract.c:140 src/fr-window.c:6046
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Nepavyko sukurti paskirties aplanko: %s."
@@ -340,14 +349,14 @@ msgid ""
 "You don’t have the right permissions to extract archives in the folder “%s”"
 msgstr "Neturite reikiamų teisių išskleisti archyvus aplanke „%s“"
 
-#: src/dlg-extract.c:324 src/fr-application.c:322 src/fr-application.c:348
-#: src/fr-application.c:605
+#: src/dlg-extract.c:324 src/fr-application.c:320 src/fr-application.c:346
+#: src/fr-application.c:603
 msgctxt "Window title"
 msgid "Extract"
 msgstr "Išskleisti"
 
-#: src/dlg-open-with.c:57 src/fr-new-archive-dialog.c:297 src/fr-window.c:7996
-#: src/fr-window.c:8158 src/fr-window.c:8192 src/fr-window.c:8507
+#: src/dlg-open-with.c:53 src/fr-new-archive-dialog.c:294 src/fr-window.c:7998
+#: src/fr-window.c:8160 src/fr-window.c:8194 src/fr-window.c:8509
 msgid "Could not perform the operation"
 msgstr "Nepavyko atlikti operacijos"
 
@@ -357,9 +366,9 @@ msgstr "Vidinė klaida ieškant programų:"
 
 #: src/dlg-package-installer.c:265 src/dlg-package-installer.c:284
 #: src/dlg-package-installer.c:293 src/dlg-package-installer.c:322
-#: src/fr-archive.c:746 src/fr-archive.c:774 src/fr-new-archive-dialog.c:240
-#: src/fr-new-archive-dialog.c:760 src/fr-window.c:3586 src/fr-window.c:6787
-#: src/fr-window.c:7153 src/fr-window.c:8732
+#: src/fr-archive.c:744 src/fr-archive.c:772 src/fr-new-archive-dialog.c:237
+#: src/fr-new-archive-dialog.c:759 src/fr-window.c:3584 src/fr-window.c:6789
+#: src/fr-window.c:7155 src/fr-window.c:8734
 msgid "Archive type not supported."
 msgstr "Archyvo tipas nepalaikomas."
 
@@ -380,30 +389,30 @@ msgstr "Nepavyko atverti šio failo tipo"
 msgid "_Search Command"
 msgstr "_Ieškoti komandos"
 
-#: src/dlg-password.c:92 src/ui/new-archive-dialog.ui:82
+#: src/dlg-password.c:88 src/ui/new-archive-dialog.ui:82
 msgid "Password"
 msgstr "Slaptažodis"
 
-#: src/dlg-password.c:104
+#: src/dlg-password.c:100
 #, c-format
 msgid "Enter a password for “%s”"
 msgstr "Įveskite „%s“ slaptažodį"
 
-#: src/dlg-prop.c:72
+#: src/dlg-prop.c:70
 msgid "Properties"
 msgstr "Savybės"
 
-#: src/dlg-prop.c:121 src/fr-window.c:1480 src/fr-window.c:1508
+#: src/dlg-prop.c:119 src/fr-window.c:1478 src/fr-window.c:1506
 msgid "%d %B %Y, %H:%M"
 msgstr "%Y-%B-%d, %H:%M"
 
-#: src/dlg-update.c:172
+#: src/dlg-update.c:169
 #, c-format
 msgid "Update the file “%s” in the archive “%s”?"
 msgstr "Atnaujinti failą „%s“ archyve „%s“?"
 
 #. secondary text
-#: src/dlg-update.c:184 src/dlg-update.c:210
+#: src/dlg-update.c:181 src/dlg-update.c:207
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don’t update "
@@ -421,136 +430,136 @@ msgstr[2] ""
 "%d failų pakeisti išorinės programos. Jei neatnaujinsite failo archyve, visi "
 "pakeitimai bus prarasti."
 
-#: src/dlg-update.c:200
+#: src/dlg-update.c:197
 #, c-format
 msgid "Update the files in the archive “%s”?"
 msgstr "Atnaujinti failus archyve „%s“?"
 
-#: src/dlg-update.c:315 src/dlg-update.c:329
+#: src/dlg-update.c:312 src/dlg-update.c:326
 msgid "_Update"
 msgstr "_Atnaujinti"
 
-#: src/dlg-update.c:319
+#: src/dlg-update.c:316
 msgctxt "Window title"
 msgid "Update"
 msgstr "Atnaujinti"
 
-#: src/fr-application-menu.c:134
+#: src/fr-application-menu.c:135
 msgid "Copyright © 2001–2023 Free Software Foundation, Inc."
 msgstr "Autorinės teisės © 2001-2023 Free Software Foundation, Inc."
 
-#: src/fr-application-menu.c:135
+#: src/fr-application-menu.c:136
 msgid "An archive manager for GNOME."
 msgstr "GNOME archyvų tvarkyklė."
 
-#: src/fr-application-menu.c:141
+#: src/fr-application-menu.c:142
 msgid "translator-credits"
 msgstr ""
 "Žygimantas Beručka <uid0@akl.lt>\n"
 "Aurimas Černius <aurimas.cernius@mailo.com>"
 
-#: src/fr-application.c:58
+#: src/fr-application.c:56
 msgid "Add files to the specified archive and quit the program"
 msgstr "Įdėti failus į nurodytą archyvą ir uždaryti programą"
 
-#: src/fr-application.c:59
+#: src/fr-application.c:57
 msgid "ARCHIVE"
 msgstr "ARCHYVAS"
 
-#: src/fr-application.c:62
+#: src/fr-application.c:60
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Pridėti failus į archyvą paklausus archyvo vardo ir uždaryti programą"
 
-#: src/fr-application.c:66
+#: src/fr-application.c:64
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Išskleisti archyvus į nurodytą aplanką ir uždaryti programą"
 
-#: src/fr-application.c:67 src/fr-application.c:79
+#: src/fr-application.c:65 src/fr-application.c:77
 msgid "FOLDER"
 msgstr "APLANKAS"
 
-#: src/fr-application.c:70
+#: src/fr-application.c:68
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Išskleisti archyvus paklausus paskirties aplanko ir uždaryti programą"
 
-#: src/fr-application.c:74
+#: src/fr-application.c:72
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "Išskleisti archyvus į archyvų aplanką ir užverti programą"
 
-#: src/fr-application.c:78
+#: src/fr-application.c:76
 msgid "Default folder to use for the “--add” and “--extract” commands"
 msgstr "Numatytasis aplankas, naudojamas „--add“ ir „--extract“ komandų"
 
-#: src/fr-application.c:82
+#: src/fr-application.c:80
 msgid "Create destination folder without asking confirmation"
 msgstr "Sukurti paskirties aplanką neklausiant patvirtinimo"
 
-#: src/fr-application.c:86
+#: src/fr-application.c:84
 msgid "Use the notification system to notify the operation completion"
 msgstr "Naudoti pranešimų sistemą pranešti apie veiksmo užbaigimą"
 
-#: src/fr-application.c:89
+#: src/fr-application.c:87
 msgid "Start as a service"
 msgstr "Paleisti kaip tarnybą"
 
-#: src/fr-application.c:92
+#: src/fr-application.c:90
 msgid "Show version"
 msgstr "Rodyti versiją"
 
-#: src/fr-application.c:491
+#: src/fr-application.c:489
 msgid "— Create and modify an archive"
 msgstr "– Kurti ir modifikuoti archyvą"
 
-#: src/fr-archive.c:1884
+#: src/fr-archive.c:1882
 msgid "You don’t have the right permissions."
 msgstr "Neturite reikiamų teisių."
 
-#: src/fr-archive.c:1884
+#: src/fr-archive.c:1882
 msgid "This archive type cannot be modified"
 msgstr "Šio tipo archyvai negali būti keičiami"
 
-#: src/fr-archive.c:1898 src/fr-new-archive-dialog.c:886
+#: src/fr-archive.c:1896 src/fr-new-archive-dialog.c:885
 msgid "You can’t add an archive to itself."
 msgstr "Negalima įdėti archyvo į jį patį."
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:296 src/fr-command-rar.c:539 src/fr-command-tar.c:328
+#: src/fr-command-7z.c:299 src/fr-command-rar.c:542 src/fr-command-tar.c:327
 #, c-format
 msgid "Adding “%s”"
 msgstr "Pridedamas „%s“"
 
 #. Translators: %s is a filename.
-#: src/fr-command-7z.c:450 src/fr-command-rar.c:671 src/fr-command-tar.c:449
+#: src/fr-command-7z.c:453 src/fr-command-rar.c:674 src/fr-command-tar.c:448
 #, c-format
 msgid "Extracting “%s”"
 msgstr "Išskleidžiamas „%s“"
 
 #. Translators: %s is a filename.
-#: src/fr-command-rar.c:620 src/fr-command-tar.c:394
+#: src/fr-command-rar.c:623 src/fr-command-tar.c:393
 #, c-format
 msgid "Removing “%s”"
 msgstr "Šalinamas „%s“"
 
-#: src/fr-command-rar.c:813
+#: src/fr-command-rar.c:816
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "Nepavyko rasti dalies: %s"
 
-#: src/fr-command-tar.c:404
+#: src/fr-command-tar.c:403
 msgid "Deleting files from archive"
 msgstr "Iš archyvo šalinami failai"
 
-#: src/fr-command-tar.c:509
+#: src/fr-command-tar.c:508
 msgid "Recompressing archive"
 msgstr "Iš naujo glaudinamas archyvas"
 
-#: src/fr-command-tar.c:849
+#: src/fr-command-tar.c:847
 msgid "Decompressing archive"
 msgstr "Išglaudinimas archyvas"
 
-#: src/fr-command.c:604
+#: src/fr-command.c:605
 #, c-format
 msgid "Archive not found"
 msgstr "Archyvas nerastas."
@@ -589,158 +598,158 @@ msgid "Parent location"
 msgstr "Tėvinė vieta"
 
 #. Translators: after the colon there is a folder name.
-#: src/fr-location-bar.c:236 src/fr-window.c:4986
+#: src/fr-location-bar.c:236 src/fr-window.c:4988
 msgid "_Location:"
 msgstr "_Vieta:"
 
-#: src/fr-new-archive-dialog.c:343 src/fr-new-archive-dialog.c:395
+#: src/fr-new-archive-dialog.c:340 src/fr-new-archive-dialog.c:392
 msgctxt "Window title"
 msgid "New Archive"
 msgstr "Naujas archyvas"
 
-#: src/fr-new-archive-dialog.c:713
+#: src/fr-new-archive-dialog.c:712
 msgid "Could not delete the old archive."
 msgstr "Nepavyko ištrinti seno archyvo."
 
-#: src/fr-new-archive-dialog.c:786 src/fr-new-archive-dialog.c:802
-#: src/fr-new-archive-dialog.c:842 src/fr-new-archive-dialog.c:861
-#: src/fr-new-archive-dialog.c:884 src/fr-window.c:2748
+#: src/fr-new-archive-dialog.c:785 src/fr-new-archive-dialog.c:801
+#: src/fr-new-archive-dialog.c:841 src/fr-new-archive-dialog.c:860
+#: src/fr-new-archive-dialog.c:883 src/fr-window.c:2746
 msgid "Could not create the archive"
 msgstr "Nepavyko sukurti archyvo"
 
-#: src/fr-new-archive-dialog.c:788
+#: src/fr-new-archive-dialog.c:787
 msgid "You have to specify an archive name."
 msgstr "Turite nurodyti archyvo pavadinimą."
 
-#: src/fr-new-archive-dialog.c:844
+#: src/fr-new-archive-dialog.c:843
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Neturite leidimo sukurti archyvą šiame aplanke"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:863 src/glib-utils.c:1182
+#: src/fr-new-archive-dialog.c:862 src/glib-utils.c:980
 msgid "New name is the same as old one, please type other name."
 msgstr "Naujas vardas yra toks pat kaip ir senas, įveskite kitą vardą."
 
-#: src/fr-new-archive-dialog.c:912
+#: src/fr-new-archive-dialog.c:911
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Failas pavadinimu „%s“ jau yra. Ar norite jį perrašyti?"
 
-#: src/fr-new-archive-dialog.c:913
+#: src/fr-new-archive-dialog.c:912
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
 msgstr "Failas jau yra aplanke „%s“.  Jo pakeitimas perrašys turinį."
 
-#: src/fr-new-archive-dialog.c:920 src/fr-window.c:5841
+#: src/fr-new-archive-dialog.c:919 src/fr-window.c:5843
 msgid "_Replace"
 msgstr "Pa_keisti"
 
 #. Translators: this is the name of the home directory.
-#: src/fr-places-sidebar.c:497 src/fr-window.c:4980
+#: src/fr-places-sidebar.c:497 src/fr-window.c:4982
 msgid "Home"
 msgstr "Namų aplankas"
 
-#: src/fr-window-actions-callbacks.c:330
+#: src/fr-window-actions-callbacks.c:331
 msgctxt "Window title"
 msgid "Open"
 msgstr "Atverti"
 
-#: src/fr-window-actions-callbacks.c:342
+#: src/fr-window-actions-callbacks.c:343
 msgid "All archives"
 msgstr "Visi archyvai"
 
-#: src/fr-window-actions-callbacks.c:349
+#: src/fr-window-actions-callbacks.c:350
 msgid "All files"
 msgstr "Visi failai"
 
-#: src/fr-window.c:1109
+#: src/fr-window.c:1107
 msgid "Operation completed"
 msgstr "Veiksmas užbaigtas"
 
-#: src/fr-window.c:1488
+#: src/fr-window.c:1486
 msgid "Folder"
 msgstr "Aplankas"
 
-#: src/fr-window.c:1876
+#: src/fr-window.c:1874
 msgid "[read only]"
 msgstr "[tik skaitymui]"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2050 src/fr-window.c:2088
+#: src/fr-window.c:2048 src/fr-window.c:2086
 #, c-format
 msgid "Creating “%s”"
 msgstr "Kuriamas „%s“"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2054
+#: src/fr-window.c:2052
 #, c-format
 msgid "Loading “%s”"
 msgstr "Įkeliamas „%s“"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2058
+#: src/fr-window.c:2056
 #, c-format
 msgid "Reading “%s”"
 msgstr "Skaitomas „%s“"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2062
+#: src/fr-window.c:2060
 #, c-format
 msgid "Deleting the files from “%s”"
 msgstr "Iš „%s“ šalinami failai"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2066
+#: src/fr-window.c:2064
 #, c-format
 msgid "Testing “%s”"
 msgstr "Bandomas „%s“"
 
-#: src/fr-window.c:2069
+#: src/fr-window.c:2067
 msgid "Getting the file list"
 msgstr "Gaunamas failų sąrašas"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2073
+#: src/fr-window.c:2071
 #, c-format
 msgid "Copying the files to add to “%s”"
 msgstr "Failai kopijuojami pridėjimui į „%s“"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2077
+#: src/fr-window.c:2075
 #, c-format
 msgid "Adding the files to “%s”"
 msgstr "Failai dedami į „%s“"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2081
+#: src/fr-window.c:2079
 #, c-format
 msgid "Extracting the files from “%s”"
 msgstr "Failai išskleidžiami iš „%s“"
 
-#: src/fr-window.c:2084
+#: src/fr-window.c:2082
 msgid "Copying the extracted files to the destination"
 msgstr "Išskleisti failai kopijuojami į paskirties aplanką"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2093
+#: src/fr-window.c:2091
 #, c-format
 msgid "Saving “%s”"
 msgstr "Įrašomas „%s“"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2100
+#: src/fr-window.c:2098
 #, c-format
 msgid "Renaming the files in “%s”"
 msgstr "Pervadinami „%s“ failai"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2104
+#: src/fr-window.c:2102
 #, c-format
 msgid "Updating the files in “%s”"
 msgstr "Atnaujinami „%s“ failai"
 
-#: src/fr-window.c:2399
+#: src/fr-window.c:2397
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
@@ -748,213 +757,213 @@ msgstr[0] "liko %d failas"
 msgstr[1] "liko %d failai"
 msgstr[2] "liko %d failų"
 
-#: src/fr-window.c:2403 src/fr-window.c:3045
+#: src/fr-window.c:2401 src/fr-window.c:3043
 msgid "Please wait…"
 msgstr "Palaukite…"
 
-#: src/fr-window.c:2513
+#: src/fr-window.c:2511
 msgid "Extraction completed successfully"
 msgstr "Išskleidimas sėkmingai baigtas"
 
-#: src/fr-window.c:2516
+#: src/fr-window.c:2514
 msgid "_Show the Files"
 msgstr "_Rodyti failus"
 
 #. Translators: %s is a filename
-#: src/fr-window.c:2534 src/fr-window.c:5340
+#: src/fr-window.c:2532 src/fr-window.c:5342
 #, c-format
 msgid "“%s” created successfully"
 msgstr "„%s“ sėkmingai sukurtas"
 
-#: src/fr-window.c:2541
+#: src/fr-window.c:2539
 msgid "_Open the Archive"
 msgstr "_Atverti archyvą"
 
-#: src/fr-window.c:2631 src/fr-window.c:2805
+#: src/fr-window.c:2629 src/fr-window.c:2803
 msgid "Command exited abnormally."
 msgstr "Komanda baigė darbą nesėkmingai."
 
-#: src/fr-window.c:2753
+#: src/fr-window.c:2751
 msgid "An error occurred while extracting files."
 msgstr "Įvyko klaida išskleidžiant failus."
 
-#: src/fr-window.c:2759 src/gtk-utils.c:719
+#: src/fr-window.c:2757 src/gtk-utils.c:717
 #, c-format
 msgid "Could not open “%s”"
 msgstr "Nepavyko atverti „%s“"
 
-#: src/fr-window.c:2764
+#: src/fr-window.c:2762
 msgid "An error occurred while loading the archive."
 msgstr "Įvyko klaida įkeliant archyvą."
 
-#: src/fr-window.c:2768
+#: src/fr-window.c:2766
 msgid "An error occurred while deleting files from the archive."
 msgstr "Įvyko klaida šalinant failus iš archyvo."
 
-#: src/fr-window.c:2774
+#: src/fr-window.c:2772
 msgid "An error occurred while adding files to the archive."
 msgstr "Įvyko klaida įtraukiant failus į archyvą."
 
-#: src/fr-window.c:2778
+#: src/fr-window.c:2776
 msgid "An error occurred while testing archive."
 msgstr "Įvyko klaida testuojant archyvą."
 
-#: src/fr-window.c:2783
+#: src/fr-window.c:2781
 msgid "An error occurred while saving the archive."
 msgstr "Įvyko klaida įrašant archyvą."
 
-#: src/fr-window.c:2787
+#: src/fr-window.c:2785
 msgid "An error occurred while renaming the files."
 msgstr "Įvyko klaida pervadinant failus."
 
-#: src/fr-window.c:2791
+#: src/fr-window.c:2789
 msgid "An error occurred while updating the files."
 msgstr "Įvyko klaida atnaujinant failus."
 
-#: src/fr-window.c:2795
+#: src/fr-window.c:2793
 msgid "An error occurred."
 msgstr "Įvyko klaida."
 
-#: src/fr-window.c:2801
+#: src/fr-window.c:2799
 msgid "Command not found."
 msgstr "Komanda nerasta."
 
-#: src/fr-window.c:2979
+#: src/fr-window.c:2977
 msgid "Test Result"
 msgstr "Tikrinimo rezultatas"
 
-#: src/fr-window.c:3737 src/fr-window.c:4875 src/fr-window.c:6586
+#: src/fr-window.c:3735 src/fr-window.c:4877 src/fr-window.c:6588
 msgid "New Archive"
 msgstr "Naujas archyvas"
 
-#: src/fr-window.c:3775
+#: src/fr-window.c:3773
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
 "Ar norite įdėti šį failą į esamą archyvą, ar atverti jį kaip naują archyvą?"
 
-#: src/fr-window.c:3799
+#: src/fr-window.c:3797
 msgid "Do you want to create a new archive with these files?"
 msgstr "Ar norite sukurti naują archyvą su šiais failais?"
 
-#: src/fr-window.c:3802
+#: src/fr-window.c:3800
 msgid "Create _Archive"
 msgstr "Sukurti _archyvą"
 
-#: src/fr-window.c:4074
+#: src/fr-window.c:4072
 msgid "Folders"
 msgstr "Aplankai"
 
-#: src/fr-window.c:4124 src/ui/file-selector.ui:116
+#: src/fr-window.c:4122 src/ui/file-selector.ui:116
 msgctxt "File"
 msgid "Size"
 msgstr "Dydis"
 
-#: src/fr-window.c:4125
+#: src/fr-window.c:4123
 msgctxt "File"
 msgid "Type"
 msgstr "Tipas"
 
-#: src/fr-window.c:4126 src/ui/file-selector.ui:135
+#: src/fr-window.c:4124 src/ui/file-selector.ui:135
 msgctxt "File"
 msgid "Modified"
 msgstr "Keitimo data"
 
-#: src/fr-window.c:4127
+#: src/fr-window.c:4125
 msgctxt "File"
 msgid "Location"
 msgstr "Vieta"
 
-#: src/fr-window.c:4136 src/ui/file-selector.ui:80
+#: src/fr-window.c:4134 src/ui/file-selector.ui:80
 msgctxt "File"
 msgid "Name"
 msgstr "Pavadinimas"
 
-#: src/fr-window.c:4864
+#: src/fr-window.c:4866
 msgid "No Archive Opened"
 msgstr "Nėra atverto archyvo"
 
-#: src/fr-window.c:4865
+#: src/fr-window.c:4867
 msgid "Open an archive or create a new one."
 msgstr "Atverkite archyvą arba sukurkite naują."
 
-#: src/fr-window.c:4870 src/fr-window.c:5345 src/ui/menus.ui:7
+#: src/fr-window.c:4872 src/fr-window.c:5347 src/ui/menus.ui:7
 #: src/ui/menus.ui:52 src/ui/menus.ui:88
 msgctxt "Action"
 msgid "Open"
 msgstr "Atverti"
 
-#: src/fr-window.c:4925
+#: src/fr-window.c:4927
 msgctxt "Action"
 msgid "_Extract…"
 msgstr "_Išskleisti…"
 
-#: src/fr-window.c:4930
+#: src/fr-window.c:4932
 msgid "Extract Files"
 msgstr "Išskleisti failus"
 
-#: src/fr-window.c:4934
+#: src/fr-window.c:4936
 msgctxt "Action"
 msgid "Add Files"
 msgstr "Įdėti failus"
 
-#: src/fr-window.c:4951
+#: src/fr-window.c:4953
 msgid "Main Menu"
 msgstr "Pagrindinis meniu"
 
-#: src/fr-window.c:4959
+#: src/fr-window.c:4961
 msgid "Search"
 msgstr "Ieškoti"
 
-#: src/fr-window.c:4974
+#: src/fr-window.c:4976
 msgid "Back"
 msgstr "Grįžti"
 
-#: src/fr-window.c:4976
+#: src/fr-window.c:4978
 msgid "Forward"
 msgstr "Pirmyn"
 
-#: src/fr-window.c:4978
+#: src/fr-window.c:4980
 msgid "Up"
 msgstr "Aukštyn"
 
-#: src/fr-window.c:5829
+#: src/fr-window.c:5831
 #, c-format
 msgid "Replace file “%s”?"
 msgstr "Pakeisti failą „%s“?"
 
-#: src/fr-window.c:5832
+#: src/fr-window.c:5834
 #, c-format
 msgid "Another file with the same name already exists in “%s”."
 msgstr "Kitas failas tuo pačiu pavadinimu jau yra vietoje „%s“."
 
-#: src/fr-window.c:5838
+#: src/fr-window.c:5840
 msgid "Replace _All"
 msgstr "P_akeisti visus"
 
-#: src/fr-window.c:5839
+#: src/fr-window.c:5841
 msgid "Replace _Nothing"
 msgstr "_Nieko nepakeisti"
 
-#: src/fr-window.c:5840
+#: src/fr-window.c:5842
 msgid "_Skip"
 msgstr "P_raleisti"
 
-#: src/fr-window.c:6779 src/fr-window.c:7145
+#: src/fr-window.c:6781 src/fr-window.c:7147
 #, c-format
 msgid "Could not save the archive “%s”"
 msgstr "Nepavyko įrašyti archyvo „%s“"
 
-#: src/fr-window.c:6911
+#: src/fr-window.c:6913
 msgid "Save"
 msgstr "Įrašyti"
 
-#: src/fr-window.c:7238
+#: src/fr-window.c:7240
 msgid "Last Output"
 msgstr "Paskutinė išvestis"
 
-#: src/fr-window.c:7473
+#: src/fr-window.c:7475
 #, c-format
 msgid ""
 "A folder named “%s” already exists.\n"
@@ -965,11 +974,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:7473 src/fr-window.c:7475
+#: src/fr-window.c:7475 src/fr-window.c:7477
 msgid "Please use a different name."
 msgstr "Naudokite kitą pavadinimą."
 
-#: src/fr-window.c:7475
+#: src/fr-window.c:7477
 #, c-format
 msgid ""
 "A file named “%s” already exists.\n"
@@ -980,65 +989,65 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/fr-window.c:7547 src/fr-window.c:7562
+#: src/fr-window.c:7549 src/fr-window.c:7564
 msgid "Could not rename the folder"
 msgstr "Nepavyko pervadinti aplanko"
 
-#: src/fr-window.c:7547 src/fr-window.c:7562
+#: src/fr-window.c:7549 src/fr-window.c:7564
 msgid "Could not rename the file"
 msgstr "Nepavyko pervadinti failo"
 
-#: src/fr-window.c:7650
+#: src/fr-window.c:7652
 msgid "Rename"
 msgstr "Pervadinti"
 
-#: src/fr-window.c:7651
+#: src/fr-window.c:7653
 msgid "_New folder name:"
 msgstr "_Naujas aplanko pavadinimas:"
 
-#: src/fr-window.c:7651
+#: src/fr-window.c:7653
 msgid "_New file name:"
 msgstr "N_aujas failo pavadinimas:"
 
-#: src/fr-window.c:7655
+#: src/fr-window.c:7657
 msgid "_Rename"
 msgstr "Pe_rvardinti"
 
-#: src/fr-window.c:7998
+#: src/fr-window.c:8000
 msgid "Source and destination are the same."
 msgstr "Šaltinis ir paskirtis sutampa."
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8047
+#: src/fr-window.c:8049
 #, c-format
 msgid "Moving the files from “%s” to “%s”"
 msgstr "Failai perkeliami iš „%s“ į „%s“"
 
 #. Translators: %s are archive filenames
-#: src/fr-window.c:8050
+#: src/fr-window.c:8052
 #, c-format
 msgid "Copying the files from “%s” to “%s”"
 msgstr "Failai kopijuojami iš „%s“ į „%s“"
 
-#: src/fr-window.c:8128
+#: src/fr-window.c:8130
 msgid "Paste Selection"
 msgstr "Įdėti pažymėtus elementus"
 
-#: src/fr-window.c:8129
+#: src/fr-window.c:8131
 msgid "_Destination folder:"
 msgstr "_Paskirties aplankas:"
 
-#: src/fr-window.c:8133
+#: src/fr-window.c:8135
 msgid "_Paste"
 msgstr "Į_dėti"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/glib-utils.c:1177
+#: src/glib-utils.c:975
 msgid "New name is void, please type a name."
 msgstr "Naujas vardas tuščias, įveskite vardą."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: src/glib-utils.c:1187
+#: src/glib-utils.c:985
 #, c-format
 msgid ""
 "Name “%s” is not valid because it contains at least one of the following "
@@ -1047,11 +1056,11 @@ msgstr ""
 "Pavadinimas „%s“ yra netinkamas, nes jame yra bent vienas iš šių simbolių: "
 "%s, įveskite kitą vardą."
 
-#: src/gtk-utils.c:213
+#: src/gtk-utils.c:211
 msgid "C_ommand Line Output:"
 msgstr "Komandų _eilutės išvestis:"
 
-#: src/gtk-utils.c:368
+#: src/gtk-utils.c:366
 msgid "Change password visibility"
 msgstr "Keisti slaptažodžio matomumą"
 
